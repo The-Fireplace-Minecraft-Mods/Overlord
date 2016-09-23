@@ -3,9 +3,12 @@ package the_fireplace.skeletonwars;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -17,6 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.skeletonwars.blocks.BlockSkeletonMaker;
 import the_fireplace.skeletonwars.entity.EntitySkeletonWarrior;
 import the_fireplace.skeletonwars.items.ItemNamePlate;
+import the_fireplace.skeletonwars.items.ItemSansMask;
 import the_fireplace.skeletonwars.network.PacketDispatcher;
 import the_fireplace.skeletonwars.network.SSGuiHandler;
 import the_fireplace.skeletonwars.tileentity.TileEntitySkeletonMaker;
@@ -42,8 +46,11 @@ public class SkeletonWars {
         }
     };
 
+    public static ItemArmor.ArmorMaterial sans = EnumHelper.addArmorMaterial("SANS", "sans_mask", 20, new int[]{0,0,0,0}, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
+
     public static final Block skeleton_maker = new BlockSkeletonMaker();
     public static final Item name_plate = new ItemNamePlate().setUnlocalizedName("name_plate").setCreativeTab(tabSkeletonWars).setMaxStackSize(1);
+    public static final Item sans_mask = new ItemSansMask(sans);
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
@@ -51,6 +58,7 @@ public class SkeletonWars {
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new SSGuiHandler());
         registerBlock(skeleton_maker);
         registerItem(name_plate);
+        registerItem(sans_mask);
         GameRegistry.registerTileEntity(TileEntitySkeletonMaker.class, "skeleton_maker");
         if (event.getSide().isClient())
             registerItemRenders();
@@ -63,6 +71,7 @@ public class SkeletonWars {
     public void registerItemRenders(){
         rmm(skeleton_maker);
         rmm(name_plate);
+        rmm(sans_mask);
     }
 
     @SideOnly(Side.CLIENT)
