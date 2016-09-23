@@ -1,0 +1,16 @@
+[
+{
+  "modid": "skeletonsummoner",
+  "name": "Skeleton Summoner",
+  "description": "Summon Skeleton armies to do your bidding.",
+  "version": "1.0.0",
+  "mcversion": "1.10.2",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["The_Fireplace"],
+  "credits": "iChun for the initial Dual Vertical block code",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
