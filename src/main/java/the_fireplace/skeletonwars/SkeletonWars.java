@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -65,6 +66,7 @@ public class SkeletonWars {
         int eid=-1;
         EntityRegistry.registerModEntity(EntitySkeletonWarrior.class, "skeleton_warrior", ++eid, instance, 32, 10, true);
         proxy.registerEntityRenderers();
+        MinecraftForge.EVENT_BUS.register(new CommonEvents());
     }
 
     @SideOnly(Side.CLIENT)
