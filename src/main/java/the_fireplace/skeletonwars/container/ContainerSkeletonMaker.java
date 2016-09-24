@@ -46,15 +46,18 @@ public class ContainerSkeletonMaker extends Container {
             final EntityEquipmentSlot entityequipmentslot = EQUIPMENT_SLOTS[x];
             this.addSlotToContainer(new Slot(entity, 6 + (3 - x), 28, 8 + x * 18)//tile entity IDs 6 to 9
             {
+                @Override
                 public int getSlotStackLimit()
                 {
                     return 1;
                 }
 
+                @Override
                 public boolean isItemValid(ItemStack stack)
                 {
                     return stack != null && stack.getItem().isValidArmor(stack, entityequipmentslot, null);
                 }
+                @Override
                 @SideOnly(Side.CLIENT)
                 public String getSlotTexture()
                 {

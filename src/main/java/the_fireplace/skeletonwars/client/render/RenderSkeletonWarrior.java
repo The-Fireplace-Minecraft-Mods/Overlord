@@ -24,6 +24,7 @@ public class RenderSkeletonWarrior extends RenderBiped<EntitySkeletonWarrior>
         this.addLayer(new LayerHeldItem(this));
         this.addLayer(new LayerBipedArmor(this)
         {
+            @Override
             protected void initArmor()
             {
                 this.modelLeggings = new ModelSkeletonWarrior(0.5F, true);

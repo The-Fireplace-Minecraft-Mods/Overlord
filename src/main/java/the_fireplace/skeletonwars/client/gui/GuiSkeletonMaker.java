@@ -81,8 +81,6 @@ public class GuiSkeletonMaker extends GuiContainer {
             return false;
         if(te.getMilk() < 2)
             return false;
-        if(te.getStackInSlot(1).stackSize < 64 || te.getStackInSlot(2).stackSize < 64 || te.getStackInSlot(3).stackSize < 64)
-            return false;
-        return true;
+        return !(te.getStackInSlot(1).stackSize < 64 || te.getStackInSlot(2).stackSize < 64 || te.getStackInSlot(3).stackSize < 64);
     }
 }

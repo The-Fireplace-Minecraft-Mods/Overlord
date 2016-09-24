@@ -11,9 +11,7 @@ public class CommonProxy {
         return key;
     }
 
-    public void registerEntityRenderers(){
-
-    }
+    public void registerEntityRenderers(){}
 
     public EntityPlayer getPlayerEntity(MessageContext ctx) {
         return ctx.getServerHandler().playerEntity;
