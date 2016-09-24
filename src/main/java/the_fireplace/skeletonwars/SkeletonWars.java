@@ -64,7 +64,7 @@ public class SkeletonWars {
         if (event.getSide().isClient())
             registerItemRenders();
         int eid=-1;
-        EntityRegistry.registerModEntity(EntitySkeletonWarrior.class, "skeleton_warrior", ++eid, instance, 32, 10, true);
+        EntityRegistry.registerModEntity(EntitySkeletonWarrior.class, "skeleton_warrior", ++eid, instance, 32, 5, true);
         proxy.registerEntityRenderers();
         MinecraftForge.EVENT_BUS.register(new CommonEvents());
     }
