@@ -68,7 +68,14 @@ public class ContainerSkeletonMaker extends Container {
 
         this.addSlotToContainer(new Slot(entity, 10, 8, 26));//tile entity ID 10
 
-        this.addSlotToContainer(new Slot(entity, 11, 48, 26));//tile entity ID 11
+        this.addSlotToContainer(new Slot(entity, 11, 48, 26){
+            @Override
+            @SideOnly(Side.CLIENT)
+            public String getSlotTexture()
+            {
+                return "minecraft:items/empty_armor_slot_shield";
+            }
+        });//tile entity ID 11
     }
 
     @Override
