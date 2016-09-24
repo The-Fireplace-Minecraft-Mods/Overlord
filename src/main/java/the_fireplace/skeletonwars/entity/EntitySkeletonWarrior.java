@@ -2,6 +2,7 @@ package the_fireplace.skeletonwars.entity;
 
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.item.EntityBoat;
@@ -10,6 +11,8 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.projectile.EntityTippedArrow;
+import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -21,12 +24,17 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.skeletonwars.entity.ai.EntityAIFollowMaster;
+import the_fireplace.skeletonwars.entity.ai.EntityAINearestNonTeamTarget;
+import the_fireplace.skeletonwars.entity.ai.EntityAIWarriorBow;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -36,11 +44,12 @@ import java.util.UUID;
  */
 public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
 
-    protected static final DataParameter<Byte> TAMED = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BYTE);
-    protected static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    private static final DataParameter<Byte> TAMED = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BYTE);
+    private static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private static final DataParameter<Integer> SKELETON_POWER_LEVEL = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BOOLEAN);
-
+    private static final DataParameter<Boolean> PASSIVE = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BOOLEAN);
+    private final EntityAIWarriorBow aiArrowAttack = new EntityAIWarriorBow(this, 0.8D, 20, 15.0F);
     private final EntityAIAttackMelee aiAttackOnCollide = new EntityAIAttackMelee(this, 1.2D, false)
     {
         /**
@@ -77,17 +86,29 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     @Override
     protected void initEntityAI()
     {
+        this.tasks.taskEntries.clear();//Clear first so you can call this when the AI Modes change
         this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIRestrictSun(this));
         this.tasks.addTask(3, new EntityAIFleeSun(this, 1.0D));
         this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityWolf.class, 6.0F, 1.0D, 1.2D));
-        //this.tasks.addTask(4, this.aiAttackOnCollide);
         this.tasks.addTask(5, new EntityAIFollowMaster(this, 1.0D, 10.0F, 2.0F));
         this.tasks.addTask(6, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(7, new EntityAILookIdle(this));
+        addAttackTasks();
+        addTargetTasks();
+    }
+
+    public void addAttackTasks(){
+        //this.tasks.addTask(4, this.aiAttackOnCollide);
+    }
+
+    public void addTargetTasks(){
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
+        if(!this.dataManager.get(PASSIVE)) {
+            this.targetTasks.addTask(2, new EntityAINearestNonTeamTarget(this, EntityPlayer.class, true));
+            this.targetTasks.addTask(3, new EntityAINearestNonTeamTarget(this, EntityMob.class, true));
+        }
     }
 
     @Override
@@ -102,9 +123,10 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     {
         super.entityInit();
         this.dataManager.register(TAMED, Byte.valueOf((byte)0));
-        this.dataManager.register(OWNER_UNIQUE_ID, Optional.<UUID>absent());
+        this.dataManager.register(OWNER_UNIQUE_ID, Optional.absent());
         this.dataManager.register(SKELETON_POWER_LEVEL, Integer.valueOf(0));
         this.dataManager.register(SWINGING_ARMS, Boolean.valueOf(false));
+        this.dataManager.register(PASSIVE, Boolean.valueOf(false));
     }
 
     @Override
@@ -228,6 +250,10 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                 this.setTamed(false);
             }
         }
+        if(compound.hasKey("Passive")){
+            boolean b = compound.getBoolean("Passive");
+            this.dataManager.set(PASSIVE, b);
+        }
     }
 
     @Override
@@ -249,6 +275,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         {
             compound.setString("OwnerUUID", this.getOwnerId().toString());
         }
+        compound.setBoolean("Passive", this.dataManager.get(PASSIVE));
     }
 
     @Override
@@ -360,6 +387,10 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                 return true;
             }
 
+            if(entitylivingbase instanceof EntitySkeletonWarrior){
+                return ((EntitySkeletonWarrior) entitylivingbase).getOwnerId() == this.getOwnerId();
+            }
+
             if (entitylivingbase != null)
             {
                 return entitylivingbase.isOnSameTeam(entityIn);
@@ -367,5 +398,47 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         }
 
         return super.isOnSameTeam(entityIn);
+    }
+
+    public void attackEntityWithRangedAttack(EntityLivingBase target, float p_82196_2_)
+    {
+        EntityTippedArrow entitytippedarrow = new EntityTippedArrow(this.worldObj, this);
+        double d0 = target.posX - this.posX;
+        double d1 = target.getEntityBoundingBox().minY + (double)(target.height / 3.0F) - entitytippedarrow.posY;
+        double d2 = target.posZ - this.posZ;
+        double d3 = (double) MathHelper.sqrt_double(d0 * d0 + d2 * d2);
+        entitytippedarrow.setThrowableHeading(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, (float)(14 - this.worldObj.getDifficulty().getDifficultyId() * 4));
+        int i = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.POWER, this);
+        int j = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.PUNCH, this);
+        DifficultyInstance difficultyinstance = this.worldObj.getDifficultyForLocation(new BlockPos(this));
+        entitytippedarrow.setDamage((double)(p_82196_2_ * 2.0F) + this.rand.nextGaussian() * 0.25D + (double)((float)this.worldObj.getDifficulty().getDifficultyId() * 0.11F));
+
+        if (i > 0)
+        {
+            entitytippedarrow.setDamage(entitytippedarrow.getDamage() + (double)i * 0.5D + 0.5D);
+        }
+
+        if (j > 0)
+        {
+            entitytippedarrow.setKnockbackStrength(j);
+        }
+
+        boolean flag = this.isBurning() && difficultyinstance.func_190083_c() && this.rand.nextBoolean();
+        flag = flag || EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.FLAME, this) > 0;
+
+        if (flag)
+        {
+            entitytippedarrow.setFire(100);
+        }
+
+        ItemStack itemstack = this.getHeldItem(EnumHand.OFF_HAND);
+
+        if (itemstack != null && itemstack.getItem() == Items.TIPPED_ARROW)
+        {
+            entitytippedarrow.setPotionEffect(itemstack);
+        }
+
+        this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
+        this.worldObj.spawnEntityInWorld(entitytippedarrow);
     }
 }
