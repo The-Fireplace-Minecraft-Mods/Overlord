@@ -19,6 +19,7 @@ public class PacketDispatcher {
 
     public static final void registerPackets() {
         PacketDispatcher.registerMessage(CreateSkeletonMessage.Handler.class, CreateSkeletonMessage.class, Side.SERVER);
+        PacketDispatcher.registerMessage(SetMilkMessage.Handler.class, SetMilkMessage.class, Side.CLIENT);
     }
 
     private static final void registerMessage(Class handlerClass, Class messageClass, Side side) {
@@ -28,6 +29,10 @@ public class PacketDispatcher {
     //Wrapper methods
     public static final void sendTo(IMessage message, EntityPlayerMP player) {
         PacketDispatcher.dispatcher.sendTo(message, player);
+    }
+
+    public static final void sendToAll(IMessage message) {
+        PacketDispatcher.dispatcher.sendToAll(message);
     }
 
     public static final void sendToAllAround(IMessage message, NetworkRegistry.TargetPoint point) {

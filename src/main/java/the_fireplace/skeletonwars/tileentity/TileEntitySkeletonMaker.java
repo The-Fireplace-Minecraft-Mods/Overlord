@@ -14,6 +14,8 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.text.ITextComponent;
 import the_fireplace.skeletonwars.SkeletonWars;
 import the_fireplace.skeletonwars.entity.EntitySkeletonWarrior;
+import the_fireplace.skeletonwars.network.PacketDispatcher;
+import the_fireplace.skeletonwars.network.SetMilkMessage;
 
 import java.util.UUID;
 
@@ -278,5 +280,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, II
     public void setMilk(byte milk){
         this.milk = milk;
         markDirty();
+        if(!worldObj.isRemote)
+            PacketDispatcher.sendToAll(new SetMilkMessage(pos, milk));//TODO: Find a more efficient way than sending it to everyone
     }
 }
