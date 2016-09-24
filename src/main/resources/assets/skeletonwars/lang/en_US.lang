@@ -5,3 +5,4 @@ item.name_plate.tooltip=owner: %s
 item.sans_mask.name=Sans Mask
 itemGroup.skeletonwars=Skeleton Wars
 skeleton_maker.create=Create!
+entity.skeletonwars.skeleton_warrior.name=Skeleton Warrior
