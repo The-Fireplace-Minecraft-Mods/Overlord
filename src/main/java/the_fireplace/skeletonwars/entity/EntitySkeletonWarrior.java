@@ -16,11 +16,13 @@ import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.util.DamageSource;
@@ -30,8 +32,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import the_fireplace.skeletonwars.SkeletonWars;
 import the_fireplace.skeletonwars.entity.ai.EntityAIFollowMaster;
 import the_fireplace.skeletonwars.entity.ai.EntityAINearestNonTeamTarget;
 import the_fireplace.skeletonwars.entity.ai.EntityAIWarriorBow;
@@ -49,6 +53,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     private static final DataParameter<Integer> SKELETON_POWER_LEVEL = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> PASSIVE = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Integer> MILK_LEVEL = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
     private final EntityAIWarriorBow aiArrowAttack = new EntityAIWarriorBow(this, 0.8D, 20, 15.0F);
     private final EntityAIAttackMelee aiAttackOnCollide = new EntityAIAttackMelee(this, 1.2D, false)
     {
@@ -72,8 +77,10 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         }
     };
 
+    private final InventoryBasic skeletonInventory;
+
     public EntitySkeletonWarrior(World world){
-        super(world);
+        this(world, null);
     }
 
     public EntitySkeletonWarrior(World world, @Nullable UUID owner){
@@ -81,6 +88,9 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         this.setTamed(owner != null);
         if(owner != null)
             this.setOwnerId(owner);
+        this.skeletonInventory = new InventoryBasic("Items", false, 9);
+        ((PathNavigateGround)this.getNavigator()).setBreakDoors(true);
+        this.setCanPickUpLoot(true);
     }
 
     @Override
@@ -91,16 +101,17 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         this.tasks.addTask(2, new EntityAIRestrictSun(this));
         this.tasks.addTask(3, new EntityAIFleeSun(this, 1.0D));
         this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityWolf.class, 6.0F, 1.0D, 1.2D));
-        this.tasks.addTask(5, new EntityAIFollowMaster(this, 1.0D, 10.0F, 2.0F));
-        this.tasks.addTask(6, new EntityAIWander(this, 1.0D));
-        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-        this.tasks.addTask(7, new EntityAILookIdle(this));
+        this.tasks.addTask(4, new EntityAIOpenDoor(this, false));
+        this.tasks.addTask(6, new EntityAIFollowMaster(this, 1.0D, 10.0F, 2.0F));
+        this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
+        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(8, new EntityAILookIdle(this));
         addAttackTasks();
         addTargetTasks();
     }
 
     public void addAttackTasks(){
-        //this.tasks.addTask(4, this.aiAttackOnCollide);
+        //this.tasks.addTask(5, this.aiAttackOnCollide);
     }
 
     public void addTargetTasks(){
@@ -116,6 +127,17 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
+    }
+
+    @Override
+    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack)
+    {
+        if(this.getOwner() != null){
+            if(this.getOwner().equals(player)){
+                FMLNetworkHandler.openGui(player, SkeletonWars.instance, hashCode(), worldObj, (int)this.posX, (int)this.posY, (int)this.posZ);
+            }
+        }
+        return super.processInteract(player, hand, stack);
     }
 
     @Override

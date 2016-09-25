@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import the_fireplace.skeletonwars.client.gui.GuiSkeletonMaker;
 import the_fireplace.skeletonwars.container.ContainerSkeletonMaker;
+import the_fireplace.skeletonwars.entity.EntitySkeletonWarrior;
 import the_fireplace.skeletonwars.tileentity.TileEntitySkeletonMaker;
 
 /**
@@ -21,6 +22,11 @@ public class SSGuiHandler implements IGuiHandler {
                 if (entity != null && entity instanceof TileEntitySkeletonMaker) {
                     return new ContainerSkeletonMaker(player.inventory, (TileEntitySkeletonMaker) entity);
                 } else {
+                    if(world.getEntityByID(ID) != null){
+                        if(world.getEntityByID(ID) instanceof EntitySkeletonWarrior){
+                            //return new ContainerSkeletonWarrior(player.inventory, );
+                        }
+                    }
                     return null;
                 }
             default:
@@ -36,6 +42,11 @@ public class SSGuiHandler implements IGuiHandler {
                 if (entity != null && entity instanceof TileEntitySkeletonMaker) {
                     return new GuiSkeletonMaker(player.inventory, (TileEntitySkeletonMaker) entity);
                 } else {
+                    if(world.getEntityByID(ID) != null){
+                        if(world.getEntityByID(ID) instanceof EntitySkeletonWarrior){
+                            //return new GuiSkeleton(player.inventory, );
+                        }
+                    }
                     return null;
                 }
             default:
