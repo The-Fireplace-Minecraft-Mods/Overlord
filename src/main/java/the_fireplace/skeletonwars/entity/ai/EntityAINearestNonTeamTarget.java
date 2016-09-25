@@ -190,7 +190,7 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
 
                 if (playerToDouble != null)
                 {
-                    d2 *= ((Double) Objects.firstNonNull(playerToDouble.apply(entityplayer1), Double.valueOf(1.0D))).doubleValue();
+                    d2 *= Objects.firstNonNull(playerToDouble.apply(entityplayer1), Double.valueOf(1.0D)).doubleValue();
                 }
 
                 if ((maxYDistance < 0.0D || Math.abs(entityplayer1.posY - posY) < maxYDistance * maxYDistance) && (maxXZDistance < 0.0D || d1 < d2 * d2) && (d0 == -1.0D || d1 < d0))

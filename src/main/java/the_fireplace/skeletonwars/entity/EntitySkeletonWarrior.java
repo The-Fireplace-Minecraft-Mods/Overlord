@@ -1,6 +1,7 @@
 package the_fireplace.skeletonwars.entity;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
@@ -19,6 +20,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -41,6 +43,7 @@ import the_fireplace.skeletonwars.entity.ai.EntityAINearestNonTeamTarget;
 import the_fireplace.skeletonwars.entity.ai.EntityAIWarriorBow;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -77,7 +80,8 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         }
     };
 
-    private final InventoryBasic skeletonInventory;
+    public final InventoryBasic inventory;
+    public final InventoryBasic equipInventory;
 
     public EntitySkeletonWarrior(World world){
         this(world, null);
@@ -88,7 +92,16 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         this.setTamed(owner != null);
         if(owner != null)
             this.setOwnerId(owner);
-        this.skeletonInventory = new InventoryBasic("Items", false, 9);
+        this.inventory = new InventoryBasic("Items", false, 9);
+        this.equipInventory = new InventoryBasic("Equipment", false, 6){
+            @Override
+            public boolean isItemValidForSlot(int index, ItemStack stack)
+            {
+                if(index >= 4)
+                    return true;
+                return stack != null && stack.getItem().isValidArmor(stack, EntityEquipmentSlot.values()[index], null);
+            }
+        };
         ((PathNavigateGround)this.getNavigator()).setBreakDoors(true);
         this.setCanPickUpLoot(true);
     }
@@ -147,6 +160,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         this.dataManager.register(TAMED, Byte.valueOf((byte)0));
         this.dataManager.register(OWNER_UNIQUE_ID, Optional.absent());
         this.dataManager.register(SKELETON_POWER_LEVEL, Integer.valueOf(0));
+        this.dataManager.register(MILK_LEVEL, Integer.valueOf(0));
         this.dataManager.register(SWINGING_ARMS, Boolean.valueOf(false));
         this.dataManager.register(PASSIVE, Boolean.valueOf(false));
     }
@@ -250,6 +264,11 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
             int i = compound.getInteger("SkeletonPowerLevel");
             this.dataManager.set(SKELETON_POWER_LEVEL, i);
         }
+        if (compound.hasKey("SkeletonMilk"))
+        {
+            int i = compound.getInteger("SkeletonMilk");
+            this.dataManager.set(MILK_LEVEL, i);
+        }
         String s;
         if (compound.hasKey("OwnerUUID", 8))
         {
@@ -276,6 +295,30 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
             boolean b = compound.getBoolean("Passive");
             this.dataManager.set(PASSIVE, b);
         }
+        NBTTagList mainInv = (NBTTagList) compound.getTag("SkeletonInventory");
+        if (mainInv != null) {
+            for (int i = 0; i < mainInv.tagCount(); i++) {
+                NBTTagCompound item = (NBTTagCompound) mainInv.get(i);
+                int slot = item.getByte("SlotSkeletonInventory");
+                if (slot >= 0 && slot < inventory.getSizeInventory()) {
+                    inventory.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
+                }
+            }
+        } else {
+            System.out.println("List was null when reading Skeleton Warrior's Inventory");
+        }
+        NBTTagList armorInv = (NBTTagList) compound.getTag("SkeletonEquipment");
+        if (armorInv != null) {
+            for (int i = 0; i < armorInv.tagCount(); i++) {
+                NBTTagCompound item = (NBTTagCompound) armorInv.get(i);
+                int slot = item.getByte("SlotSkeletonEquipment");
+                if (slot >= 0 && slot < equipInventory.getSizeInventory()) {
+                    equipInventory.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
+                }
+            }
+        } else {
+            System.out.println("List was null when reading Skeleton Warrior's Equipment");
+        }
     }
 
     @Override
@@ -289,6 +332,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     {
         super.writeEntityToNBT(compound);
         compound.setInteger("SkeletonPowerLevel", this.dataManager.get(SKELETON_POWER_LEVEL));
+        compound.setInteger("SkeletonMilk", this.dataManager.get(MILK_LEVEL));
         if (this.getOwnerId() == null)
         {
             compound.setString("OwnerUUID", "");
@@ -298,6 +342,34 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
             compound.setString("OwnerUUID", this.getOwnerId().toString());
         }
         compound.setBoolean("Passive", this.dataManager.get(PASSIVE));
+
+        NBTTagList mainInv = new NBTTagList();
+        for (int i = 0; i < inventory.getSizeInventory(); i++) {
+            ItemStack is = inventory.getStackInSlot(i);
+            if (is != null) {
+                NBTTagCompound item = new NBTTagCompound();
+
+                item.setByte("SlotSkeletonInventory", (byte) i);
+                is.writeToNBT(item);
+
+                mainInv.appendTag(item);
+            }
+        }
+        compound.setTag("SkeletonInventory", mainInv);
+
+        NBTTagList armorInv = new NBTTagList();
+        for (int i = 0; i < equipInventory.getSizeInventory(); i++) {
+            ItemStack is = equipInventory.getStackInSlot(i);
+            if (is != null) {
+                NBTTagCompound item = new NBTTagCompound();
+
+                item.setByte("SlotSkeletonEquipment", (byte) i);
+                is.writeToNBT(item);
+
+                armorInv.appendTag(item);
+            }
+        }
+        compound.setTag("SkeletonEquipment", armorInv);
     }
 
     @Override
@@ -462,5 +534,94 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
 
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
         this.worldObj.spawnEntityInWorld(entitytippedarrow);
+    }
+
+    @Override
+    @Nullable
+    public ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn)
+    {
+        return slotIn == EntityEquipmentSlot.MAINHAND ? equipInventory.getStackInSlot(4) : (slotIn == EntityEquipmentSlot.OFFHAND ? equipInventory.getStackInSlot(5) : (slotIn.getSlotType() == EntityEquipmentSlot.Type.ARMOR ? this.equipInventory.getStackInSlot(slotIn.getIndex()) : null));
+    }
+
+    @Override
+    public void setItemStackToSlot(EntityEquipmentSlot slotIn, @Nullable ItemStack stack)
+    {
+        if (slotIn == EntityEquipmentSlot.MAINHAND)
+        {
+            this.playEquipSound(stack);
+            this.equipInventory.setInventorySlotContents(4, stack);
+        }
+        else if (slotIn == EntityEquipmentSlot.OFFHAND)
+        {
+            this.playEquipSound(stack);
+            this.equipInventory.setInventorySlotContents(5, stack);
+        }
+        else if (slotIn.getSlotType() == EntityEquipmentSlot.Type.ARMOR)
+        {
+            this.playEquipSound(stack);
+            this.equipInventory.setInventorySlotContents(slotIn.getIndex(), stack);
+        }
+    }
+
+    @Override
+    public Iterable<ItemStack> getHeldEquipment()
+    {
+        return Lists.newArrayList(this.getHeldItemMainhand(), this.getHeldItemOffhand());
+    }
+
+    @Override
+    public Iterable<ItemStack> getArmorInventoryList()
+    {
+        return Arrays.asList(equipInventory.getStackInSlot(0), equipInventory.getStackInSlot(1), equipInventory.getStackInSlot(2), equipInventory.getStackInSlot(3));
+    }
+
+    @Override
+    @Nullable
+    public ItemStack getHeldItemMainhand()
+    {
+        return equipInventory.getStackInSlot(4);
+    }
+
+    @Override
+    @Nullable
+    public ItemStack getHeldItemOffhand()
+    {
+        return equipInventory.getStackInSlot(5);
+    }
+
+    @Override
+    @Nullable
+    public ItemStack getHeldItem(EnumHand hand)
+    {
+        if (hand == EnumHand.MAIN_HAND)
+        {
+            return getHeldItemMainhand();
+        }
+        else if (hand == EnumHand.OFF_HAND)
+        {
+            return getHeldItemOffhand();
+        }
+        else
+        {
+            throw new IllegalArgumentException("Invalid hand " + hand);
+        }
+    }
+
+    @Override
+    public void setHeldItem(EnumHand hand, @Nullable ItemStack stack)
+    {
+        if (hand == EnumHand.MAIN_HAND)
+        {
+            this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, stack);
+        }
+        else
+        {
+            if (hand != EnumHand.OFF_HAND)
+            {
+                throw new IllegalArgumentException("Invalid hand " + hand);
+            }
+
+            this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, stack);
+        }
     }
 }
