@@ -48,7 +48,7 @@ public class GuiSkeletonMaker extends GuiContainer {
         guiLeft = (width - xSize) / 2;
         guiTop = (height - ySize) / 2;
         this.buttonList.clear();
-        this.buttonList.add(createSkeleton = new GuiButton(0, guiLeft+49, guiTop+61, 60, 18, I18n.format("skeleton_maker.create")));
+        this.buttonList.add(createSkeleton = new GuiButton(0, guiLeft+49, guiTop+60, 60, 20, I18n.format("skeleton_maker.create")));
         createSkeleton.enabled=false;
         super.initGui();
     }
