@@ -51,7 +51,6 @@ import java.util.UUID;
  */
 public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
 
-    private static final DataParameter<Byte> TAMED = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BYTE);
     private static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private static final DataParameter<Integer> SKELETON_POWER_LEVEL = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BOOLEAN);
@@ -89,9 +88,10 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
 
     public EntitySkeletonWarrior(World world, @Nullable UUID owner){
         super(world);
-        this.setTamed(owner != null);
         if(owner != null)
             this.setOwnerId(owner);
+        else
+            this.setOwnerId(UUID.fromString("0b1ec5ad-cb2a-43b7-995d-889320eb2e5b"));
         this.inventory = new InventoryBasic("Items", false, 9);
         this.equipInventory = new InventoryBasic("Equipment", false, 6){
             @Override
@@ -157,7 +157,6 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     protected void entityInit()
     {
         super.entityInit();
-        this.dataManager.register(TAMED, Byte.valueOf((byte)0));
         this.dataManager.register(OWNER_UNIQUE_ID, Optional.absent());
         this.dataManager.register(SKELETON_POWER_LEVEL, Integer.valueOf(0));
         this.dataManager.register(MILK_LEVEL, Integer.valueOf(0));
@@ -284,11 +283,10 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
             try
             {
                 this.setOwnerId(UUID.fromString(s));
-                this.setTamed(true);
             }
             catch (Throwable var4)
             {
-                this.setTamed(false);
+                var4.printStackTrace();
             }
         }
         if(compound.hasKey("Passive")){
@@ -324,7 +322,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     @Override
     public boolean canBeLeashedTo(EntityPlayer player)
     {
-        return this.isTamed() && this.isOwner(player);
+        return this.isOwner(player);
     }
 
     @Override
@@ -335,7 +333,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         compound.setInteger("SkeletonMilk", this.dataManager.get(MILK_LEVEL));
         if (this.getOwnerId() == null)
         {
-            compound.setString("OwnerUUID", "");
+            compound.setString("OwnerUUID", "0b1ec5ad-cb2a-43b7-995d-889320eb2e5b");
         }
         else
         {
@@ -420,47 +418,19 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         }
     }
 
-    public boolean isTamed()
-    {
-        return (this.dataManager.get(TAMED).byteValue() & 4) != 0;
-    }
-
-    public void setTamed(boolean tamed)
-    {
-        byte b0 = this.dataManager.get(TAMED).byteValue();
-
-        if (tamed)
-        {
-            this.dataManager.set(TAMED, Byte.valueOf((byte)(b0 | 4)));
-        }
-        else
-        {
-            this.dataManager.set(TAMED, Byte.valueOf((byte)(b0 & -5)));
-        }
-
-        this.setupTamedAI();
-    }
-
     public boolean isOwner(EntityLivingBase entityIn)
     {
         return entityIn == this.getOwner();
     }
 
-    protected void setupTamedAI()
-    {
-    }
-
     @Override
     public Team getTeam()
     {
-        if (this.isTamed())
-        {
-            EntityLivingBase entitylivingbase = this.getOwner();
+        EntityLivingBase entitylivingbase = this.getOwner();
 
-            if (entitylivingbase != null)
-            {
-                return entitylivingbase.getTeam();
-            }
+        if (entitylivingbase != null)
+        {
+            return entitylivingbase.getTeam();
         }
 
         return super.getTeam();
@@ -472,23 +442,20 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     @Override
     public boolean isOnSameTeam(Entity entityIn)
     {
-        if (this.isTamed())
+        EntityLivingBase entitylivingbase = this.getOwner();
+
+        if (entityIn == entitylivingbase)
         {
-            EntityLivingBase entitylivingbase = this.getOwner();
+            return true;
+        }
 
-            if (entityIn == entitylivingbase)
-            {
-                return true;
-            }
+        if(entitylivingbase instanceof EntitySkeletonWarrior){
+            return ((EntitySkeletonWarrior) entitylivingbase).getOwnerId() == this.getOwnerId();
+        }
 
-            if(entitylivingbase instanceof EntitySkeletonWarrior){
-                return ((EntitySkeletonWarrior) entitylivingbase).getOwnerId() == this.getOwnerId();
-            }
-
-            if (entitylivingbase != null)
-            {
-                return entitylivingbase.isOnSameTeam(entityIn);
-            }
+        if (entitylivingbase != null)
+        {
+            return entitylivingbase.isOnSameTeam(entityIn);
         }
 
         return super.isOnSameTeam(entityIn);
