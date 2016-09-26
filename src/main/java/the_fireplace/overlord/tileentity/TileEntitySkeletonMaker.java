@@ -15,7 +15,7 @@ import net.minecraft.util.text.ITextComponent;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.network.PacketDispatcher;
-import the_fireplace.overlord.network.SetMilkMessage;
+import the_fireplace.overlord.network.packets.SetMilkMessage;
 
 import java.util.UUID;
 

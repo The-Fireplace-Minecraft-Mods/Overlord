@@ -4,11 +4,9 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextComponentTranslation;
 import the_fireplace.overlord.Overlord;
-import the_fireplace.overlord.network.AllyAcceptMessage;
-import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.tools.Alliance;
 import the_fireplace.overlord.tools.Alliances;
 
@@ -37,10 +35,12 @@ public class CommandAllyAccept extends CommandBase {
                     Overlord.instance.pendingAlliances.remove(alliance);
                     EntityPlayer ally = server.getEntityWorld().getPlayerEntityByUUID(UUID.fromString(alliance.getUser1().getUUID()));
                     if(ally != null)
-                        PacketDispatcher.sendTo(new AllyAcceptMessage(((EntityPlayer) sender).getDisplayNameString()), (EntityPlayerMP)ally);
+                        ally.addChatMessage(new TextComponentTranslation("overlord.allyaccept", ((EntityPlayer) sender).getDisplayNameString()));
+                    sender.addChatMessage(new TextComponentTranslation("overlord.allyaccepted", alliance.getUser1().getPlayerName()));
                     return;
                 }
             }
+            sender.addChatMessage(new TextComponentTranslation("overlord.nothingpending"));
         }
     }
 

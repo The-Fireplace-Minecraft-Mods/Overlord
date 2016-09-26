@@ -6,6 +6,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import the_fireplace.overlord.tools.Alliances;
 import the_fireplace.overlord.tools.StringPair;
 
@@ -27,9 +28,12 @@ public class CommandAllyList extends CommandBase {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (sender instanceof EntityPlayer) {
             if(!Alliances.getInstance().getAllies(((EntityPlayer) sender).getUniqueID()).isEmpty()) {
+                sender.addChatMessage(new TextComponentTranslation("overlord.allylist"));
                 for(StringPair pait:Alliances.getInstance().getAllies(((EntityPlayer) sender).getUniqueID())){
                     sender.addChatMessage(new TextComponentString(pait.getPlayerName()));
                 }
+            }else{
+                sender.addChatMessage(new TextComponentTranslation("overlord.nofriends"));
             }
         }
     }

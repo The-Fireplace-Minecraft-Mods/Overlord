@@ -1,4 +1,4 @@
-package the_fireplace.overlord.network;
+package the_fireplace.overlord.network.packets;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;

@@ -11,7 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.container.ContainerSkeletonMaker;
-import the_fireplace.overlord.network.CreateSkeletonMessage;
+import the_fireplace.overlord.network.packets.CreateSkeletonMessage;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
 
