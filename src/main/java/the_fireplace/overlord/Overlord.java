@@ -2,33 +2,42 @@ package the_fireplace.overlord;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.command.ICommandManager;
+import net.minecraft.command.ServerCommandManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.blocks.BlockSkeletonMaker;
+import the_fireplace.overlord.command.*;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.items.ItemOverlordsSeal;
 import the_fireplace.overlord.items.ItemSansMask;
-import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.OverlordGuiHandler;
+import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
+import the_fireplace.overlord.tools.Alliance;
 import the_fireplace.overlord.tools.Alliances;
 import the_fireplace.overlord.tools.CustomDataSerializers;
+
+import java.util.ArrayList;
 
 /**
  * @author The_Fireplace
@@ -50,6 +59,8 @@ public class Overlord {
             return Item.getItemFromBlock(Overlord.skeleton_maker);
         }
     };
+
+    public ArrayList<Alliance> pendingAlliances = new ArrayList<>();
 
     public static ItemArmor.ArmorMaterial sans = EnumHelper.addArmorMaterial("SANS", "sans_mask", 20, new int[]{0,0,0,0}, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
 
@@ -77,6 +88,20 @@ public class Overlord {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
         Alliances.load();
+    }
+
+    @Mod.EventHandler
+    public void serverStart(FMLServerStartingEvent event) {
+        MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+        ICommandManager command = server.getCommandManager();
+
+        ServerCommandManager serverCommand = (ServerCommandManager) command;
+
+        serverCommand.registerCommand(new CommandAlly());
+        serverCommand.registerCommand(new CommandAllyAccept());
+        serverCommand.registerCommand(new CommandAllyList());
+        serverCommand.registerCommand(new CommandAllyReject());
+        serverCommand.registerCommand(new CommandAllyRemove());
     }
 
     @SideOnly(Side.CLIENT)

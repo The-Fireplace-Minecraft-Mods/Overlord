@@ -20,6 +20,10 @@ public class PacketDispatcher {
     public static final void registerPackets() {
         PacketDispatcher.registerMessage(CreateSkeletonMessage.Handler.class, CreateSkeletonMessage.class, Side.SERVER);
         PacketDispatcher.registerMessage(SetMilkMessage.Handler.class, SetMilkMessage.class, Side.CLIENT);
+        PacketDispatcher.registerMessage(AllyAcceptMessage.Handler.class, AllyAcceptMessage.class, Side.CLIENT);
+        PacketDispatcher.registerMessage(AllyRejectMessage.Handler.class, AllyRejectMessage.class, Side.CLIENT);
+        PacketDispatcher.registerMessage(PendingAllianceMessage.Handler.class, PendingAllianceMessage.class, Side.CLIENT);
+        PacketDispatcher.registerMessage(TerminatedAllianceMessage.Handler.class, TerminatedAllianceMessage.class, Side.CLIENT);
     }
 
     private static final void registerMessage(Class handlerClass, Class messageClass, Side side) {

@@ -211,6 +211,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
 
                 if (itemstack != null)
                 {
+                    //TODO: Config option to disable helmets taking damage
                     if (itemstack.isItemStackDamageable())
                     {
                         itemstack.setItemDamage(itemstack.getItemDamage() + this.rand.nextInt(2));
