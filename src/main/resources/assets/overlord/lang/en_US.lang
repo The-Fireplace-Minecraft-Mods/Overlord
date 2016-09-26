@@ -1,0 +1,10 @@
+tile.skeleton_maker.name=Skeleton Maker
+item.name_plate.name=Overlord's Medal
+item.name_plate.tooltip.default=Right-Click to claim this medal!
+item.name_plate.tooltip=Owner: %s
+item.sans_mask.name=Sans Mask
+itemGroup.overlord=Overlord
+skeleton_maker.create=Create!
+skeleton_maker.warning.unclaimed=Warning: This skeleton will not be claimed.
+skeleton_maker.warning.notmine=Warning: This skeleton will belong to %s
+entity.overlord.skeleton_warrior.name=Skeleton Warrior

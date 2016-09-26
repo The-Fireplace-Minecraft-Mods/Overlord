@@ -1,7 +1,7 @@
 [
 {
-  "modid": "skeletonwars",
-  "name": "Skeleton Wars",
+  "modid": "overlord",
+  "name": "Overlord",
   "description": "Summon a Skeleton Army to do your bidding.",
   "version": "1.0.0",
   "mcversion": "1.10.2",

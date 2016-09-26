@@ -1,8 +1,0 @@
-tile.skeleton_maker.name=Skeleton Maker
-item.name_plate.name=Name Plate
-item.name_plate.tooltip.default=Right-Click to claim this name plate!
-item.name_plate.tooltip=owner: %s
-item.sans_mask.name=Sans Mask
-itemGroup.skeletonwars=Skeleton Wars
-skeleton_maker.create=Create!
-entity.skeletonwars.skeleton_warrior.name=Skeleton Warrior
