@@ -1,7 +1,7 @@
 tile.skeleton_maker.name=Skeleton Maker
-item.name_plate.name=Overlord's Medal
-item.name_plate.tooltip.default=Right-Click to claim this medal!
-item.name_plate.tooltip=Owner: %s
+item.overlords_seal.name=Overlord's Seal
+item.overlords_seal.tooltip.default=Right-Click to make this your seal!
+item.overlords_seal.tooltip=Seal of %s
 item.sans_mask.name=Sans Mask
 itemGroup.overlord=Overlord
 skeleton_maker.create=Create!

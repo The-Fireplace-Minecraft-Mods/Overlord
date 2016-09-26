@@ -8,17 +8,17 @@ import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
 /**
  * @author The_Fireplace
  */
-public class SlotNamePlate extends Slot {
+public class SlotSeal extends Slot {
     TileEntitySkeletonMaker inv;
 
-    public SlotNamePlate(TileEntitySkeletonMaker inventoryIn, int index, int xPosition,
-                         int yPosition) {
+    public SlotSeal(TileEntitySkeletonMaker inventoryIn, int index, int xPosition,
+                    int yPosition) {
         super(inventoryIn, index, xPosition, yPosition);
         inv = inventoryIn;
     }
 
     @Override
     public boolean isItemValid(ItemStack stack) {
-        return stack.getItem().equals(Overlord.name_plate);
+        return stack.getItem().equals(Overlord.overlords_seal);
     }
 }

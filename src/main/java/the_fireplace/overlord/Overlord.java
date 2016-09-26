@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.blocks.BlockSkeletonMaker;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
-import the_fireplace.overlord.items.ItemNamePlate;
+import the_fireplace.overlord.items.ItemOverlordsSeal;
 import the_fireplace.overlord.items.ItemSansMask;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.OverlordGuiHandler;
@@ -54,7 +54,7 @@ public class Overlord {
     public static ItemArmor.ArmorMaterial sans = EnumHelper.addArmorMaterial("SANS", "sans_mask", 20, new int[]{0,0,0,0}, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
 
     public static final Block skeleton_maker = new BlockSkeletonMaker();
-    public static final Item name_plate = new ItemNamePlate().setUnlocalizedName("name_plate").setCreativeTab(tabOverlord).setMaxStackSize(1);
+    public static final Item overlords_seal = new ItemOverlordsSeal().setUnlocalizedName("overlords_seal").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item sans_mask = new ItemSansMask(sans);
 
     @Mod.EventHandler
@@ -62,7 +62,7 @@ public class Overlord {
         PacketDispatcher.registerPackets();
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new OverlordGuiHandler());
         registerBlock(skeleton_maker);
-        registerItem(name_plate);
+        registerItem(overlords_seal);
         registerItem(sans_mask);
         GameRegistry.registerTileEntity(TileEntitySkeletonMaker.class, "skeleton_maker");
         if (event.getSide().isClient())
@@ -82,7 +82,7 @@ public class Overlord {
     @SideOnly(Side.CLIENT)
     public void registerItemRenders(){
         rmm(skeleton_maker);
-        rmm(name_plate);
+        rmm(overlords_seal);
         rmm(sans_mask);
     }
 

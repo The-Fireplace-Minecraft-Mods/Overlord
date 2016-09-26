@@ -18,7 +18,7 @@ import static the_fireplace.overlord.Overlord.proxy;
 /**
  * @author The_Fireplace
  */
-public class ItemNamePlate extends Item {
+public class ItemOverlordsSeal extends Item {
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer playerIn, EnumHand hand)
     {
@@ -37,9 +37,9 @@ public class ItemNamePlate extends Item {
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
         if(stack.getTagCompound() != null && stack.getTagCompound().hasKey("Owner")) {
-            tooltip.add(proxy.translateToLocal("item.name_plate.tooltip", stack.getTagCompound().getString("OwnerName")));
+            tooltip.add(proxy.translateToLocal("item.overlords_seal.tooltip", stack.getTagCompound().getString("OwnerName")));
         }else{
-            tooltip.add(proxy.translateToLocal("item.name_plate.tooltip.default"));
+            tooltip.add(proxy.translateToLocal("item.overlords_seal.tooltip.default"));
         }
     }
 }
