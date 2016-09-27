@@ -194,7 +194,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     {
         super.entityInit();
         this.dataManager.register(OWNER_UNIQUE_ID, UUID.fromString("0b1ec5ad-cb2a-43b7-995d-889320eb2e5b"));
-        this.dataManager.register(SKELETON_POWER_LEVEL, Integer.valueOf(0));
+        this.dataManager.register(SKELETON_POWER_LEVEL, Integer.valueOf(1));
         this.dataManager.register(MILK_LEVEL, Integer.valueOf(0));
         this.dataManager.register(SWINGING_ARMS, Boolean.valueOf(false));
         this.dataManager.register(ATTACK_MODE, Byte.valueOf((byte)1));
@@ -235,37 +235,42 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     @Override
     public void onLivingUpdate()
     {
-        //TODO: Drink milk
-        if (this.worldObj.isDaytime() && !this.worldObj.isRemote)
-        {
-            float f = this.getBrightness(1.0F);
-            BlockPos blockpos = this.getRidingEntity() instanceof EntityBoat ? (new BlockPos(this.posX, (double)Math.round(this.posY), this.posZ)).up() : new BlockPos(this.posX, (double)Math.round(this.posY), this.posZ);
+        if(!this.worldObj.isRemote) {
+            for(int i=0;i<this.inventory.getSizeInventory();i++){
+                if(inventory.getStackInSlot(i) != null)
+                    if(inventory.getStackInSlot(i).getItem() == Items.MILK_BUCKET){
+                        this.increaseMilkLevel();
+                        inventory.setInventorySlotContents(i, null);
+                        inventory.addItem(new ItemStack(Items.BUCKET));
+                    }
+            }
+            checkLevelUp();
 
-            if (f > 0.5F && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.worldObj.canSeeSky(blockpos))
-            {
-                boolean flag = true;
-                ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+            if (this.worldObj.isDaytime()) {
+                float f = this.getBrightness(1.0F);
+                BlockPos blockpos = this.getRidingEntity() instanceof EntityBoat ? (new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ)).up() : new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ);
 
-                if (itemstack != null)
-                {
-                    //TODO: Config option to disable helmets taking damage
-                    if (itemstack.isItemStackDamageable())
-                    {
-                        itemstack.setItemDamage(itemstack.getItemDamage() + this.rand.nextInt(2));
+                if (f > 0.5F && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.worldObj.canSeeSky(blockpos)) {
+                    boolean flag = true;
+                    ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
-                        if (itemstack.getItemDamage() >= itemstack.getMaxDamage())
-                        {
-                            this.renderBrokenItemStack(itemstack);
-                            this.setItemStackToSlot(EntityEquipmentSlot.HEAD, null);
+                    if (itemstack != null) {
+                        //TODO: Config option to disable helmets taking damage
+                        if (itemstack.isItemStackDamageable()) {
+                            itemstack.setItemDamage(itemstack.getItemDamage() + this.rand.nextInt(2));
+
+                            if (itemstack.getItemDamage() >= itemstack.getMaxDamage()) {
+                                this.renderBrokenItemStack(itemstack);
+                                this.setItemStackToSlot(EntityEquipmentSlot.HEAD, null);
+                            }
                         }
+
+                        flag = false;
                     }
 
-                    flag = false;
-                }
-
-                if (flag)
-                {
-                    this.setFire(8);
+                    if (flag) {
+                        this.setFire(8);
+                    }
                 }
             }
         }
@@ -273,6 +278,22 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         this.setSize(0.6F, 1.99F);
 
         super.onLivingUpdate();
+    }
+
+    private void increaseMilkLevel(){
+        int milk = dataManager.get(MILK_LEVEL);
+        dataManager.set(MILK_LEVEL, ++milk);
+    }
+
+    public void checkLevelUp(){
+        int level = dataManager.get(SKELETON_POWER_LEVEL);
+        int milk = dataManager.get(MILK_LEVEL);
+        if(milk >= Math.pow(2, level)){
+            milk -= Math.pow(2, level);
+            level++;
+            dataManager.set(MILK_LEVEL, milk);
+            dataManager.set(SKELETON_POWER_LEVEL, level);
+        }
     }
 
     @Override
@@ -290,6 +311,8 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         {
             this.getOwner().addChatMessage(this.getCombatTracker().getDeathMessage());
         }
+
+        //TODO: Drop inventories
     }
 
     @Override
