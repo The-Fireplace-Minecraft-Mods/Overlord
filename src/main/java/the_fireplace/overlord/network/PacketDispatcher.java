@@ -23,7 +23,7 @@ public class PacketDispatcher {
         PacketDispatcher.registerMessage(SetMilkMessage.Handler.class, SetMilkMessage.class, Side.CLIENT);
         PacketDispatcher.registerMessage(DebugSkeletonMessage.Handler.class, DebugSkeletonMessage.class, Side.SERVER);
         PacketDispatcher.registerMessage(AttackModeMessage.Handler.class, AttackModeMessage.class, Side.SERVER);
-        PacketDispatcher.registerMessage(UpdateAttackModeMessage.Handler.class, UpdateAttackModeMessage.class, Side.CLIENT);
+        PacketDispatcher.registerMessage(MovementModeMessage.Handler.class, MovementModeMessage.class, Side.SERVER);
     }
 
     private static final void registerMessage(Class handlerClass, Class messageClass, Side side) {

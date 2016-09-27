@@ -9,36 +9,33 @@ import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 /**
  * @author The_Fireplace
  */
-public class UpdateAttackModeMessage implements IMessage {
-    public int warrior;
-    public byte mode;
+public class MovementModeMessage implements IMessage {
 
-    public UpdateAttackModeMessage() {
+    public int warrior;
+
+    public MovementModeMessage() {
     }
 
-    public UpdateAttackModeMessage(int skeleton, byte mode){
-        this.warrior = skeleton;
-        this.mode=mode;
+    public MovementModeMessage(EntitySkeletonWarrior skeleton){
+        this.warrior = skeleton.hashCode();
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         warrior = buf.readInt();
-        mode = buf.readByte();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(warrior);
-        buf.writeByte(mode);
     }
 
-    public static class Handler extends AbstractClientMessageHandler<UpdateAttackModeMessage> {
+    public static class Handler extends AbstractServerMessageHandler<MovementModeMessage> {
         @Override
-        public IMessage handleClientMessage(EntityPlayer player, UpdateAttackModeMessage message, MessageContext ctx) {
+        public IMessage handleServerMessage(EntityPlayer player, MovementModeMessage message, MessageContext ctx) {
             if(player.worldObj.getEntityByID(message.warrior) != null){
                 if(player.worldObj.getEntityByID(message.warrior) instanceof EntitySkeletonWarrior){
-                    ((EntitySkeletonWarrior) player.worldObj.getEntityByID(message.warrior)).setAttackMode(message.mode);
+                    ((EntitySkeletonWarrior) player.worldObj.getEntityByID(message.warrior)).cycleMovementMode();
                 }else{
                     System.out.println("Error: Entity is not a Skeleton Warrior. It is "+player.worldObj.getEntityByID(message.warrior).toString());
                 }

@@ -13,6 +13,7 @@ import the_fireplace.overlord.container.ContainerSkeleton;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.AttackModeMessage;
+import the_fireplace.overlord.network.packets.MovementModeMessage;
 
 /**
  * @author The_Fireplace
@@ -23,7 +24,8 @@ public class GuiSkeleton extends GuiContainer {
 
     private GuiButton attackMode;
     private byte attackModeTimer;
-    private GuiButton position;
+    private GuiButton movementMode;
+    private byte movementModeTimer;
 
     public GuiSkeleton(InventoryPlayer inventorySlotsIn, EntitySkeletonWarrior warrior) {
         super(new ContainerSkeleton(inventorySlotsIn, warrior));
@@ -46,7 +48,9 @@ public class GuiSkeleton extends GuiContainer {
         guiTop = (height - ySize) / 2;
         this.buttonList.clear();
         this.buttonList.add(attackMode = new GuiButton(0, guiLeft+47, guiTop+43, 60, 20, "You should not see this"));
+        this.buttonList.add(movementMode = new GuiButton(1, guiLeft+47, guiTop+63, 60, 20, "You should not see this"));
         setAttackModeText();
+        setMovementModeText();
         super.initGui();
     }
 
@@ -57,6 +61,10 @@ public class GuiSkeleton extends GuiContainer {
                 PacketDispatcher.sendToServer(new AttackModeMessage(entity));
                 setAttackModeText();
                 scheduleAttackModeTextUpdate();
+            }else if(button.id == 1){
+                PacketDispatcher.sendToServer(new MovementModeMessage(entity));
+                setMovementModeText();
+                scheduleMovementModeTextUpdate();
             }
         }
     }
@@ -79,6 +87,12 @@ public class GuiSkeleton extends GuiContainer {
         if(attackModeTimer == 1){
             setAttackModeText();
         }
+        if(movementModeTimer > 0){
+            movementModeTimer--;
+        }
+        if(movementModeTimer == 1){
+            setMovementModeText();
+        }
         super.updateScreen();
     }
 
@@ -97,7 +111,26 @@ public class GuiSkeleton extends GuiContainer {
         }
     }
 
+    public void setMovementModeText(){
+        byte b=entity.getMovementMode();
+        switch(b){
+            case 0:
+                movementMode.displayString=I18n.format("skeleton.mode.stationed");
+                break;
+            case 2:
+                movementMode.displayString=I18n.format("skeleton.mode.base");
+                break;
+            case 1:
+            default:
+                movementMode.displayString=I18n.format("skeleton.mode.follower");
+        }
+    }
+
     public void scheduleAttackModeTextUpdate(){
         attackModeTimer = 5;
+    }
+
+    public void scheduleMovementModeTextUpdate(){
+        movementModeTimer = 5;
     }
 }

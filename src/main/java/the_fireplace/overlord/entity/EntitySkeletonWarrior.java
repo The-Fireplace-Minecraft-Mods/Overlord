@@ -40,6 +40,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.entity.ai.EntityAIFollowMaster;
 import the_fireplace.overlord.entity.ai.EntityAINearestNonTeamTarget;
+import the_fireplace.overlord.entity.ai.EntityAIWanderBase;
 import the_fireplace.overlord.entity.ai.EntityAIWarriorBow;
 import the_fireplace.overlord.tools.CustomDataSerializers;
 
@@ -57,6 +58,8 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BOOLEAN);
     /**The attack mode. 0 is passive, 1 is defensive, 2 is aggressive*/
     private static final DataParameter<Byte> ATTACK_MODE = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BYTE);
+    /**The movement mode. 0 is stationed, 1 is follower, 2 is base*/
+    private static final DataParameter<Byte> MOVEMENT_MODE = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BYTE);
     private static final DataParameter<Integer> MILK_LEVEL = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
     private EntityAIWarriorBow aiArrowAttack = null;
     private EntityAIAttackMelee aiAttackOnCollide = null;
@@ -89,17 +92,31 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     @Override
     protected void initEntityAI()
     {
-        this.tasks.taskEntries.clear();//Clear first so you can call this when the AI Modes change
+        this.tasks.taskEntries.clear();//Clear first so this can be called when the AI Modes change
         this.tasks.addTask(1, new EntityAISwimming(this));
-        this.tasks.addTask(2, new EntityAIRestrictSun(this));
-        this.tasks.addTask(3, new EntityAIFleeSun(this, 1.0D));
-        this.tasks.addTask(4, new EntityAIOpenDoor(this, false));
-        this.tasks.addTask(6, new EntityAIFollowMaster(this, 1.0D, 10.0F, 2.0F));
-        this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(8, new EntityAILookIdle(this));
+        addMovementTasks();
         addAttackTasks();
         addTargetTasks();
+    }
+
+    public void addMovementTasks(){
+        switch(dataManager.get(MOVEMENT_MODE)) {
+            case 1:
+                this.tasks.addTask(4, new EntityAIOpenDoor(this, false));
+                this.tasks.addTask(6, new EntityAIFollowMaster(this, 1.0D, 10.0F, 2.0F));
+            case 0:
+                this.setHomePosAndDistance(new BlockPos(this.posX, this.posY, this.posZ), -1);
+                break;
+            case 2:
+            default:
+                this.setHomePosAndDistance(new BlockPos(this.posX, this.posY, this.posZ), 20);
+                this.tasks.addTask(2, new EntityAIRestrictSun(this));
+                this.tasks.addTask(3, new EntityAIFleeSun(this, 1.0D));
+                this.tasks.addTask(4, new EntityAIOpenDoor(this, false));
+                this.tasks.addTask(7, new EntityAIWanderBase(this, 1.0D));
+        }
     }
 
     public void addAttackTasks(){
@@ -181,6 +198,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         this.dataManager.register(MILK_LEVEL, Integer.valueOf(0));
         this.dataManager.register(SWINGING_ARMS, Boolean.valueOf(false));
         this.dataManager.register(ATTACK_MODE, Byte.valueOf((byte)1));
+        this.dataManager.register(MOVEMENT_MODE, Byte.valueOf((byte)1));
     }
 
     @Override
@@ -314,6 +332,10 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
             byte b = compound.getByte("AttackMode");
             this.dataManager.set(ATTACK_MODE, b);
         }
+        if(compound.hasKey("MovementMode")){
+            byte b = compound.getByte("MovementMode");
+            this.dataManager.set(MOVEMENT_MODE, b);
+        }
         NBTTagList mainInv = (NBTTagList) compound.getTag("SkeletonInventory");
         if (mainInv != null) {
             for (int i = 0; i < mainInv.tagCount(); i++) {
@@ -361,6 +383,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
             compound.setString("OwnerUUID", this.getOwnerId().toString());
         }
         compound.setByte("AttackMode", this.dataManager.get(ATTACK_MODE));
+        compound.setByte("MovementMode", this.dataManager.get(MOVEMENT_MODE));
 
         NBTTagList mainInv = new NBTTagList();
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
@@ -619,13 +642,16 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         if(b < 2){
             byte b1 = ++b;
             dataManager.set(ATTACK_MODE, b1);
+            initEntityAI();
         }else{
             dataManager.set(ATTACK_MODE, (byte)0);
+            initEntityAI();
         }
     }
 
     public void setAttackMode(byte b){
         dataManager.set(ATTACK_MODE, b);
+        initEntityAI();
     }
 
     /**
@@ -634,5 +660,30 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
      */
     public byte getAttackMode(){
         return dataManager.get(ATTACK_MODE);
+    }
+
+    public void cycleMovementMode(){
+        byte b = getMovementMode();
+        if(b < 2){
+            byte b1 = ++b;
+            dataManager.set(MOVEMENT_MODE, b1);
+            initEntityAI();
+        }else{
+            dataManager.set(MOVEMENT_MODE, (byte)0);
+            initEntityAI();
+        }
+    }
+
+    public void setMovementMode(byte b){
+        dataManager.set(MOVEMENT_MODE, b);
+        initEntityAI();
+    }
+
+    /**
+     * Gets the movement mode of the skeleton
+     * @return 0 for stationed, 1 for follower, 2 for base
+     */
+    public byte getMovementMode(){
+        return dataManager.get(MOVEMENT_MODE);
     }
 }

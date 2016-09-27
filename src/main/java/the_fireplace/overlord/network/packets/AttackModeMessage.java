@@ -36,7 +36,6 @@ public class AttackModeMessage implements IMessage {
             if(player.worldObj.getEntityByID(message.warrior) != null){
                 if(player.worldObj.getEntityByID(message.warrior) instanceof EntitySkeletonWarrior){
                     ((EntitySkeletonWarrior) player.worldObj.getEntityByID(message.warrior)).cycleAttackMode();
-                    return new UpdateAttackModeMessage(message.warrior, ((EntitySkeletonWarrior) player.worldObj.getEntityByID(message.warrior)).getAttackMode());
                 }else{
                     System.out.println("Error: Entity is not a Skeleton Warrior. It is "+player.worldObj.getEntityByID(message.warrior).toString());
                 }
