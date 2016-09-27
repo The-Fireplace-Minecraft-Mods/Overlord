@@ -42,4 +42,11 @@ public class ItemOverlordsSeal extends Item {
             tooltip.add(proxy.translateToLocal("item.overlords_seal.tooltip.default"));
         }
     }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean hasEffect(ItemStack stack)
+    {
+        return stack.getTagCompound() != null && stack.getTagCompound().hasKey("Owner");
+    }
 }
