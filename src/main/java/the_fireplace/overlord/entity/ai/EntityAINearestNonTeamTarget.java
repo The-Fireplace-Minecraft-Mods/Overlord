@@ -81,7 +81,7 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
             {
                 Collections.sort(list, this.theNearestAttackableTargetSorter);
                 if(list.get(0) instanceof EntitySkeletonWarrior){
-                    if(((EntitySkeletonWarrior) list.get(0)).getOwnerId().equals(((EntitySkeletonWarrior)this.taskOwner).getOwnerId()))
+                    if(((EntitySkeletonWarrior)this.taskOwner).getAttackMode() < 2 || ((EntitySkeletonWarrior) list.get(0)).getOwnerId().equals(((EntitySkeletonWarrior)this.taskOwner).getOwnerId()))
                         return false;
                     if(Alliances.getInstance().isAlliedTo(((EntitySkeletonWarrior) list.get(0)).getOwnerId(), ((EntitySkeletonWarrior)this.taskOwner).getOwnerId()))
                         return false;
