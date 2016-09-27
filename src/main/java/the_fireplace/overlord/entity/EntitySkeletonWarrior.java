@@ -9,7 +9,6 @@ import net.minecraft.entity.ai.*;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityTippedArrow;
@@ -18,6 +17,7 @@ import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -55,7 +55,8 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     private static final DataParameter<UUID> OWNER_UNIQUE_ID = EntityDataManager.createKey(EntitySkeletonWarrior.class, CustomDataSerializers.UNIQUE_ID);
     private static final DataParameter<Integer> SKELETON_POWER_LEVEL = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> PASSIVE = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BOOLEAN);
+    /**The attack mode. 0 is passive, 1 is defensive, 2 is aggressive*/
+    private static final DataParameter<Byte> ATTACK_MODE = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BYTE);
     private static final DataParameter<Integer> MILK_LEVEL = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
     private final EntityAIWarriorBow aiArrowAttack = new EntityAIWarriorBow(this, 0.8D, 20, 15.0F);
     private final EntityAIAttackMelee aiAttackOnCollide = new EntityAIAttackMelee(this, 1.2D, false)
@@ -98,9 +99,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
             @Override
             public boolean isItemValidForSlot(int index, ItemStack stack)
             {
-                if(index >= 4)
-                    return true;
-                return stack != null && stack.getItem().isValidArmor(stack, EntityEquipmentSlot.values()[index], null);
+                return index >= 4 || stack != null && stack.getItem().isValidArmor(stack, EntityEquipmentSlot.values()[index], null);
             }
         };
         ((PathNavigateGround)this.getNavigator()).setBreakDoors(true);
@@ -114,7 +113,6 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIRestrictSun(this));
         this.tasks.addTask(3, new EntityAIFleeSun(this, 1.0D));
-        this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityWolf.class, 6.0F, 1.0D, 1.2D));
         this.tasks.addTask(4, new EntityAIOpenDoor(this, false));
         this.tasks.addTask(6, new EntityAIFollowMaster(this, 1.0D, 10.0F, 2.0F));
         this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
@@ -125,14 +123,25 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     }
 
     public void addAttackTasks(){
-        //this.tasks.addTask(5, this.aiAttackOnCollide);
+        if(this.getHeldItemMainhand() != null)
+            if(this.getHeldItemMainhand().getItem() instanceof ItemBow){
+               this.tasks.addTask(5, aiArrowAttack);
+                return;
+            }
+        this.tasks.addTask(5, aiAttackOnCollide);
     }
 
     public void addTargetTasks(){
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-        if(!this.dataManager.get(PASSIVE)) {
-            this.targetTasks.addTask(2, new EntityAINearestNonTeamTarget(this, EntityPlayer.class, true));
-            this.targetTasks.addTask(3, new EntityAINearestNonTeamTarget(this, EntityMob.class, true));
+        switch(dataManager.get(ATTACK_MODE)) {
+            case 2:
+                this.targetTasks.addTask(2, new EntityAINearestNonTeamTarget(this, EntityPlayer.class, true));
+            case 1:
+                this.targetTasks.addTask(3, new EntityAINearestNonTeamTarget(this, EntityMob.class, true));
+                this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+                break;
+            case 0:
+            default:
+                break;
         }
     }
 
@@ -141,6 +150,9 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(1.0D);
     }
 
     @Override
@@ -162,7 +174,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         this.dataManager.register(SKELETON_POWER_LEVEL, Integer.valueOf(0));
         this.dataManager.register(MILK_LEVEL, Integer.valueOf(0));
         this.dataManager.register(SWINGING_ARMS, Boolean.valueOf(false));
-        this.dataManager.register(PASSIVE, Boolean.valueOf(false));
+        this.dataManager.register(ATTACK_MODE, Byte.valueOf((byte)1));
     }
 
     @Override
@@ -199,6 +211,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     @Override
     public void onLivingUpdate()
     {
+        //TODO: Drink milk
         if (this.worldObj.isDaytime() && !this.worldObj.isRemote)
         {
             float f = this.getBrightness(1.0F);
@@ -291,9 +304,9 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                 var4.printStackTrace();
             }
         }
-        if(compound.hasKey("Passive")){
-            boolean b = compound.getBoolean("Passive");
-            this.dataManager.set(PASSIVE, b);
+        if(compound.hasKey("AttackMode")){
+            byte b = compound.getByte("AttackMode");
+            this.dataManager.set(ATTACK_MODE, b);
         }
         NBTTagList mainInv = (NBTTagList) compound.getTag("SkeletonInventory");
         if (mainInv != null) {
@@ -341,7 +354,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         {
             compound.setString("OwnerUUID", this.getOwnerId().toString());
         }
-        compound.setBoolean("Passive", this.dataManager.get(PASSIVE));
+        compound.setByte("AttackMode", this.dataManager.get(ATTACK_MODE));
 
         NBTTagList mainInv = new NBTTagList();
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
@@ -547,6 +560,8 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     @Nullable
     public ItemStack getHeldItemMainhand()
     {
+        if(equipInventory == null)
+            return null;
         return equipInventory.getStackInSlot(4);
     }
 
@@ -591,5 +606,23 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
 
             this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, stack);
         }
+    }
+
+    public void cycleAttackMode(){
+        byte b = getAttackMode();
+        if(b < 2){
+            byte b1 = ++b;
+            dataManager.set(ATTACK_MODE, b1);
+        }else{
+            dataManager.set(ATTACK_MODE, (byte)0);
+        }
+    }
+
+    /**
+     * Gets the attack mode of the skeleton
+     * @return 0 for passive, 1 for defensive, 2 for aggressive
+     */
+    public byte getAttackMode(){
+        return dataManager.get(ATTACK_MODE);
     }
 }

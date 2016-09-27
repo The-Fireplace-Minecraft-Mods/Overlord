@@ -79,7 +79,7 @@ public class Overlord {
         if (event.getSide().isClient())
             registerItemRenders();
         int eid=-1;
-        EntityRegistry.registerModEntity(EntitySkeletonWarrior.class, "skeleton_warrior", ++eid, instance, 32, 5, true);
+        EntityRegistry.registerModEntity(EntitySkeletonWarrior.class, "skeleton_warrior", ++eid, instance, 32, 2, false);
         proxy.registerEntityRenderers();
         MinecraftForge.EVENT_BUS.register(new CommonEvents());
         DataSerializers.registerSerializer(CustomDataSerializers.UNIQUE_ID);

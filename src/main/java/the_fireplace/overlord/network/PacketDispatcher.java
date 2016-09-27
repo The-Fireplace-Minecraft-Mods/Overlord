@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.network.packets.CreateSkeletonMessage;
+import the_fireplace.overlord.network.packets.DebugSkeletonMessage;
 import the_fireplace.overlord.network.packets.SetMilkMessage;
 
 /**
@@ -22,6 +23,7 @@ public class PacketDispatcher {
     public static final void registerPackets() {
         PacketDispatcher.registerMessage(CreateSkeletonMessage.Handler.class, CreateSkeletonMessage.class, Side.SERVER);
         PacketDispatcher.registerMessage(SetMilkMessage.Handler.class, SetMilkMessage.class, Side.CLIENT);
+        PacketDispatcher.registerMessage(DebugSkeletonMessage.Handler.class, DebugSkeletonMessage.class, Side.SERVER);
     }
 
     private static final void registerMessage(Class handlerClass, Class messageClass, Side side) {

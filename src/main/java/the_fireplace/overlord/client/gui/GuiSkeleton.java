@@ -1,8 +1,10 @@
 package the_fireplace.overlord.client.gui;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -16,6 +18,9 @@ import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 public class GuiSkeleton extends GuiContainer {
     public static final ResourceLocation texture = new ResourceLocation(Overlord.MODID, "textures/gui/skeleton.png");
     private EntitySkeletonWarrior entity;
+
+    private GuiButton attackMode;
+    private GuiButton position;
 
     public GuiSkeleton(InventoryPlayer inventorySlotsIn, EntitySkeletonWarrior warrior) {
         super(new ContainerSkeleton(inventorySlotsIn, warrior));
@@ -37,7 +42,8 @@ public class GuiSkeleton extends GuiContainer {
         guiLeft = (width - xSize) / 2;
         guiTop = (height - ySize) / 2;
         this.buttonList.clear();
-        //this.buttonList.add(createSkeleton = new GuiButton(0, guiLeft+49, guiTop+61, 60, 18, I18n.format("skeleton_maker.create")));
+        this.buttonList.add(attackMode = new GuiButton(0, guiLeft+49, guiTop+61, 60, 18, I18n.format("skeleton.mode.defensive")));
+        setAttackModeText();
         super.initGui();
     }
 
@@ -48,5 +54,20 @@ public class GuiSkeleton extends GuiContainer {
         int k = (this.width - this.xSize) / 2;
         int l = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
+    }
+
+    public void setAttackModeText(){
+        byte b=entity.getAttackMode();
+        switch(b){
+            case 0:
+                attackMode.displayString=I18n.format("skeleton.mode.passive");
+                break;
+            case 2:
+                attackMode.displayString=I18n.format("skeleton.mode.aggressive");
+                break;
+            case 1:
+            default:
+                attackMode.displayString=I18n.format("skeleton.mode.defensive");
+        }
     }
 }
