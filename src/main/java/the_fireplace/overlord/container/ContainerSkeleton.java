@@ -78,7 +78,10 @@ public class ContainerSkeleton extends Container {
 
     @Override
     public boolean canInteractWith(EntityPlayer playerIn) {
-        return entity.getOwner().equals(playerIn);
+        if(entity.getOwner() != null)
+            return entity.getOwner().equals(playerIn);
+        else
+            return false;
     }
 
     @Override
