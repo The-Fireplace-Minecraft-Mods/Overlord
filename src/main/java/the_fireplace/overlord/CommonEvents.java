@@ -9,8 +9,6 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
-import the_fireplace.overlord.network.PacketDispatcher;
-import the_fireplace.overlord.network.packets.DebugSkeletonMessage;
 
 import java.util.Random;
 
@@ -41,10 +39,5 @@ public class CommonEvents {
                 }
             }
         }
-    }
-    @SubscribeEvent
-    public void onRightClick(PlayerInteractEvent.RightClickBlock event){
-        PacketDispatcher.sendToServer(new DebugSkeletonMessage(event.getEntityLiving().getPosition()));
-        //TODO: Remove before release, this is just here because I am lazy when debugging.
     }
 }

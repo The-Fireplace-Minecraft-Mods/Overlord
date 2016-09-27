@@ -58,28 +58,8 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     /**The attack mode. 0 is passive, 1 is defensive, 2 is aggressive*/
     private static final DataParameter<Byte> ATTACK_MODE = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BYTE);
     private static final DataParameter<Integer> MILK_LEVEL = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
-    private final EntityAIWarriorBow aiArrowAttack = new EntityAIWarriorBow(this, 0.8D, 20, 15.0F);
-    private final EntityAIAttackMelee aiAttackOnCollide = new EntityAIAttackMelee(this, 1.2D, false)
-    {
-        /**
-         * Resets the task
-         */
-        @Override
-        public void resetTask()
-        {
-            super.resetTask();
-            EntitySkeletonWarrior.this.setSwingingArms(false);
-        }
-        /**
-         * Execute a one shot task or start executing a continuous task
-         */
-        @Override
-        public void startExecuting()
-        {
-            super.startExecuting();
-            EntitySkeletonWarrior.this.setSwingingArms(true);
-        }
-    };
+    private EntityAIWarriorBow aiArrowAttack = null;
+    private EntityAIAttackMelee aiAttackOnCollide = null;
 
     public final InventoryBasic inventory;
     public final InventoryBasic equipInventory;
@@ -123,6 +103,32 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     }
 
     public void addAttackTasks(){
+        if(aiAttackOnCollide == null){
+            aiAttackOnCollide = new EntityAIAttackMelee(this, 1.2D, false)
+            {
+                /**
+                 * Resets the task
+                 */
+                @Override
+                public void resetTask()
+                {
+                    super.resetTask();
+                    EntitySkeletonWarrior.this.setSwingingArms(false);
+                }
+                /**
+                 * Execute a one shot task or start executing a continuous task
+                 */
+                @Override
+                public void startExecuting()
+                {
+                    super.startExecuting();
+                    EntitySkeletonWarrior.this.setSwingingArms(true);
+                }
+            };
+        }
+        if(aiArrowAttack == null){
+            aiArrowAttack = new EntityAIWarriorBow(this, 0.8D, 20, 15.0F);
+        }
         if(this.getHeldItemMainhand() != null)
             if(this.getHeldItemMainhand().getItem() instanceof ItemBow){
                this.tasks.addTask(5, aiArrowAttack);
