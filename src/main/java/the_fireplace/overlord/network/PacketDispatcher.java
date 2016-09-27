@@ -7,9 +7,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import the_fireplace.overlord.Overlord;
-import the_fireplace.overlord.network.packets.CreateSkeletonMessage;
-import the_fireplace.overlord.network.packets.DebugSkeletonMessage;
-import the_fireplace.overlord.network.packets.SetMilkMessage;
+import the_fireplace.overlord.network.packets.*;
 
 /**
  * @author coolAlias
@@ -24,6 +22,8 @@ public class PacketDispatcher {
         PacketDispatcher.registerMessage(CreateSkeletonMessage.Handler.class, CreateSkeletonMessage.class, Side.SERVER);
         PacketDispatcher.registerMessage(SetMilkMessage.Handler.class, SetMilkMessage.class, Side.CLIENT);
         PacketDispatcher.registerMessage(DebugSkeletonMessage.Handler.class, DebugSkeletonMessage.class, Side.SERVER);
+        PacketDispatcher.registerMessage(AttackModeMessage.Handler.class, AttackModeMessage.class, Side.SERVER);
+        PacketDispatcher.registerMessage(UpdateAttackModeMessage.Handler.class, UpdateAttackModeMessage.class, Side.CLIENT);
     }
 
     private static final void registerMessage(Class handlerClass, Class messageClass, Side side) {

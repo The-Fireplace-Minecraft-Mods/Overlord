@@ -624,6 +624,10 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         }
     }
 
+    public void setAttackMode(byte b){
+        dataManager.set(ATTACK_MODE, b);
+    }
+
     /**
      * Gets the attack mode of the skeleton
      * @return 0 for passive, 1 for defensive, 2 for aggressive

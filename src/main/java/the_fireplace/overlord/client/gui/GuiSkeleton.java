@@ -11,6 +11,8 @@ import org.lwjgl.opengl.GL11;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.container.ContainerSkeleton;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
+import the_fireplace.overlord.network.PacketDispatcher;
+import the_fireplace.overlord.network.packets.AttackModeMessage;
 
 /**
  * @author The_Fireplace
@@ -20,6 +22,7 @@ public class GuiSkeleton extends GuiContainer {
     private EntitySkeletonWarrior entity;
 
     private GuiButton attackMode;
+    private byte attackModeTimer;
     private GuiButton position;
 
     public GuiSkeleton(InventoryPlayer inventorySlotsIn, EntitySkeletonWarrior warrior) {
@@ -42,9 +45,20 @@ public class GuiSkeleton extends GuiContainer {
         guiLeft = (width - xSize) / 2;
         guiTop = (height - ySize) / 2;
         this.buttonList.clear();
-        this.buttonList.add(attackMode = new GuiButton(0, guiLeft+49, guiTop+61, 60, 18, I18n.format("skeleton.mode.defensive")));
+        this.buttonList.add(attackMode = new GuiButton(0, guiLeft+47, guiTop+43, 60, 20, "You should not see this"));
         setAttackModeText();
         super.initGui();
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button) {
+        if (button.enabled) {
+            if(button.id == 0){
+                PacketDispatcher.sendToServer(new AttackModeMessage(entity));
+                setAttackModeText();
+                scheduleAttackModeTextUpdate();
+            }
+        }
     }
 
     @Override
@@ -54,6 +68,18 @@ public class GuiSkeleton extends GuiContainer {
         int k = (this.width - this.xSize) / 2;
         int l = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
+    }
+
+    @Override
+    public void updateScreen()
+    {
+        if(attackModeTimer > 0){
+            attackModeTimer--;
+        }
+        if(attackModeTimer == 1){
+            setAttackModeText();
+        }
+        super.updateScreen();
     }
 
     public void setAttackModeText(){
@@ -69,5 +95,9 @@ public class GuiSkeleton extends GuiContainer {
             default:
                 attackMode.displayString=I18n.format("skeleton.mode.defensive");
         }
+    }
+
+    public void scheduleAttackModeTextUpdate(){
+        attackModeTimer = 5;
     }
 }
