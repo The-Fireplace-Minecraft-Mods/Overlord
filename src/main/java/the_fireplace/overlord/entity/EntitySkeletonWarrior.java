@@ -7,6 +7,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.item.EntityBoat;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -308,7 +309,20 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
             this.getOwner().addChatMessage(this.getCombatTracker().getDeathMessage());
         }
 
-        //TODO: Drop inventories
+        if(!this.worldObj.isRemote){
+            for(int i=0;i<inventory.getSizeInventory();i++){
+                if(inventory.getStackInSlot(i) != null){
+                    EntityItem entityitem = new EntityItem(worldObj, posX, posY, posZ, inventory.getStackInSlot(i));
+                    worldObj.spawnEntityInWorld(entityitem);
+                }
+            }
+            for(int i=0;i<equipInventory.getSizeInventory();i++){
+                if(equipInventory.getStackInSlot(i) != null){
+                    EntityItem entityitem = new EntityItem(worldObj, posX, posY, posZ, equipInventory.getStackInSlot(i));
+                    worldObj.spawnEntityInWorld(entityitem);
+                }
+            }
+        }
     }
 
     @Override
