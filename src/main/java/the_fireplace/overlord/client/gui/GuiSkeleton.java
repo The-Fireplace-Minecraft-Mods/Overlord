@@ -47,8 +47,8 @@ public class GuiSkeleton extends GuiContainer {
         guiLeft = (width - xSize) / 2;
         guiTop = (height - ySize) / 2;
         this.buttonList.clear();
-        this.buttonList.add(attackMode = new GuiButton(0, guiLeft+47, guiTop+43, 60, 20, "You should not see this"));
-        this.buttonList.add(movementMode = new GuiButton(1, guiLeft+47, guiTop+63, 60, 20, "You should not see this"));
+        this.buttonList.add(attackMode = new GuiButton(0, guiLeft+47, guiTop+43, 66, 20, "You should not see this"));
+        this.buttonList.add(movementMode = new GuiButton(1, guiLeft+47, guiTop+63, 66, 20, "You should not see this"));
         setAttackModeText();
         setMovementModeText();
         super.initGui();
