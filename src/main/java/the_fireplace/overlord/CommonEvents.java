@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 
@@ -38,6 +39,12 @@ public class CommonEvents {
                     }
                 }
             }
+        }
+    }
+    @SubscribeEvent
+    public void configCahnged(ConfigChangedEvent.OnConfigChangedEvent event){
+        if(event.getModID().equals(Overlord.MODID)){
+            Overlord.syncConfig();
         }
     }
 }

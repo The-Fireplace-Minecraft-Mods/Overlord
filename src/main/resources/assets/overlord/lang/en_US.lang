@@ -37,3 +37,6 @@ overlord.notallied=You are not allied to %s.
 
 overlord.allylist=Your allies:
 overlord.nofriends=You have no allies.
+
+cfg.helmet_damage=Enable Helmet Damage in Sunlight
+cfg.helmet_damage.tooltip=Enables helmets worn by Skeleton Warriors taking damage and eventually breaking in the sunlight

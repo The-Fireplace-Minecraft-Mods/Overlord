@@ -13,6 +13,8 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -27,6 +29,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.blocks.BlockSkeletonMaker;
 import the_fireplace.overlord.command.*;
+import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.items.ItemOverlordsSeal;
 import the_fireplace.overlord.items.ItemSansMask;
@@ -42,13 +45,16 @@ import java.util.ArrayList;
 /**
  * @author The_Fireplace
  */
-@Mod(modid= Overlord.MODID, name= Overlord.MODNAME)
+@Mod(modid= Overlord.MODID, name= Overlord.MODNAME, guiFactory = "the_fireplace.overlord.client.gui.OverlordConfigGuiFactory")
 public class Overlord {
     public static final String MODNAME = "Overlord";
     public static final String MODID = "overlord";
 
     @Mod.Instance(MODID)
     public static Overlord instance;
+
+    public static Configuration config;
+    public static Property HELMETDAMAGE_PROPERTY;
 
     @SidedProxy(clientSide = "the_fireplace."+MODID+".client.ClientProxy", serverSide = "the_fireplace."+MODID+".CommonProxy")
     public static CommonProxy proxy;
@@ -68,10 +74,20 @@ public class Overlord {
     public static final Item overlords_seal = new ItemOverlordsSeal().setUnlocalizedName("overlords_seal").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item sans_mask = new ItemSansMask(sans);
 
+    public static void syncConfig() {
+        ConfigValues.HELMETDAMAGE = HELMETDAMAGE_PROPERTY.getBoolean();
+        if (config.hasChanged())
+            config.save();
+    }
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
         PacketDispatcher.registerPackets();
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new OverlordGuiHandler());
+        config = new Configuration(event.getSuggestedConfigurationFile());
+        config.load();
+        HELMETDAMAGE_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.HELMETDAMAGE_NAME, ConfigValues.HELMETDAMAGE_DEFAULT, proxy.translateToLocal(ConfigValues.HELMETDAMAGE_NAME + ".tooltip"));
+        syncConfig();
         registerBlock(skeleton_maker);
         registerItem(overlords_seal);
         registerItem(sans_mask);

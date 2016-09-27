@@ -38,6 +38,7 @@ import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.Overlord;
+import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.ai.EntityAIFollowMaster;
 import the_fireplace.overlord.entity.ai.EntityAINearestNonTeamTarget;
 import the_fireplace.overlord.entity.ai.EntityAIWanderBase;
@@ -123,18 +124,13 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         if(aiAttackOnCollide == null){
             aiAttackOnCollide = new EntityAIAttackMelee(this, 1.2D, false)
             {
-                /**
-                 * Resets the task
-                 */
                 @Override
                 public void resetTask()
                 {
                     super.resetTask();
                     EntitySkeletonWarrior.this.setSwingingArms(false);
                 }
-                /**
-                 * Execute a one shot task or start executing a continuous task
-                 */
+
                 @Override
                 public void startExecuting()
                 {
@@ -255,21 +251,21 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                     ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
                     if (itemstack != null) {
-                        //TODO: Config option to disable helmets taking damage
-                        if (itemstack.isItemStackDamageable()) {
-                            itemstack.setItemDamage(itemstack.getItemDamage() + this.rand.nextInt(2));
+                        if(ConfigValues.HELMETDAMAGE)
+                            if (itemstack.isItemStackDamageable()) {
+                                itemstack.setItemDamage(itemstack.getItemDamage() + this.rand.nextInt(2));
 
-                            if (itemstack.getItemDamage() >= itemstack.getMaxDamage()) {
-                                this.renderBrokenItemStack(itemstack);
-                                this.setItemStackToSlot(EntityEquipmentSlot.HEAD, null);
+                                if (itemstack.getItemDamage() >= itemstack.getMaxDamage()) {
+                                    this.renderBrokenItemStack(itemstack);
+                                    this.setItemStackToSlot(EntityEquipmentSlot.HEAD, null);
+                                }
                             }
-                        }
 
                         flag = false;
                     }
 
                     if (flag) {
-                        this.setFire(8);
+                        this.setFire(4);
                     }
                 }
             }
