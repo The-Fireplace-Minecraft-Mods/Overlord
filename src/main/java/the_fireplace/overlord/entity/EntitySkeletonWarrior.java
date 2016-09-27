@@ -266,7 +266,25 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                     }
 
                     if (flag) {
-                        this.setFire(4);
+                        this.setFire(6);
+                    }
+                }
+            }
+
+            for (EntityItem entityitem : this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D)))
+            {
+                if (!entityitem.isDead && entityitem.getEntityItem() != null && !entityitem.cannotPickup())
+                {
+                    ItemStack stack = equipInventory.addItem(entityitem.getEntityItem());
+                    if(stack != null) {
+                        ItemStack stack2 = inventory.addItem(stack);
+                        if(stack2 != null){
+                            entityitem.getEntityItem().stackSize = stack2.stackSize;
+                        }else{
+                            entityitem.setDead();
+                        }
+                    }else{
+                        entityitem.setDead();
                     }
                 }
             }
