@@ -12,14 +12,17 @@ import java.util.UUID;
 public class CustomDataSerializers {
     public static final DataSerializer<UUID> UNIQUE_ID = new DataSerializer<UUID>()
     {
+        @Override
         public void write(PacketBuffer buf, UUID value)
         {
             buf.writeUuid(value);
         }
+        @Override
         public UUID read(PacketBuffer buf)
         {
             return buf.readUuid();
         }
+        @Override
         public DataParameter<UUID> createKey(int id)
         {
             return new DataParameter(id, this);
