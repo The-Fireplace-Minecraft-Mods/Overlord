@@ -5,6 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
+import the_fireplace.overlord.client.gui.GuiRing;
 import the_fireplace.overlord.client.gui.GuiSkeleton;
 import the_fireplace.overlord.client.gui.GuiSkeletonMaker;
 import the_fireplace.overlord.container.ContainerSkeleton;
@@ -26,6 +27,8 @@ public class OverlordGuiHandler implements IGuiHandler {
                 } else {
                     return null;
                 }
+            case 1:
+                return null;
             default:
                 if(world.getEntityByID(ID) != null){
                     if(world.getEntityByID(ID) instanceof EntitySkeletonWarrior){
@@ -46,6 +49,8 @@ public class OverlordGuiHandler implements IGuiHandler {
                 } else {
                     return null;
                 }
+            case 1:
+                return new GuiRing();
             default:
                 if(world.getEntityByID(ID) != null){
                     if(world.getEntityByID(ID) instanceof EntitySkeletonWarrior){

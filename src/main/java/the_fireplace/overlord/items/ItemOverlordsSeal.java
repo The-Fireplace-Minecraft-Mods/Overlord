@@ -8,8 +8,10 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import the_fireplace.overlord.Overlord;
 
 import java.util.List;
 
@@ -28,8 +30,14 @@ public class ItemOverlordsSeal extends Item {
             stack.getTagCompound().setString("Owner", playerIn.getUniqueID().toString());
             stack.getTagCompound().setString("OwnerName", playerIn.getDisplayNameString());
             return new ActionResult(EnumActionResult.SUCCESS, stack);
+        }else{
+            if(stack.getTagCompound().getString("Owner").equals(playerIn.getUniqueID().toString())){
+                FMLNetworkHandler.openGui(playerIn, Overlord.instance, 1, worldIn, (int)playerIn.posX, (int)playerIn.posY, (int)playerIn.posZ);
+                return new ActionResult(EnumActionResult.SUCCESS, stack);
+            }else{
+                return new ActionResult(EnumActionResult.FAIL, stack);
+            }
         }
-        return new ActionResult(EnumActionResult.PASS, stack);
     }
 
     @Override
