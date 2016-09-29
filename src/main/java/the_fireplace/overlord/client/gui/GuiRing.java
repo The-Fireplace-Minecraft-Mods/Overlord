@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import the_fireplace.overlord.Overlord;
@@ -33,12 +34,12 @@ public class GuiRing extends GuiScreen {
         guiLeft = (width - xSize) / 2;
         guiTop = (height - ySize) / 2;
         this.buttonList.clear();
-        this.buttonList.add(new GuiButton(2, guiLeft+5, guiTop+20, 75, 20, "skeleton.mode.aggressive"));
-        this.buttonList.add(new GuiButton(1, guiLeft+5, guiTop+44, 75, 20, "skeleton.mode.defensive"));
-        this.buttonList.add(new GuiButton(0, guiLeft+5, guiTop+70, 75, 20, "skeleton.mode.passive"));
-        this.buttonList.add(new GuiButton(3, guiLeft+84, guiTop+20, 75, 20, "skeleton.mode.stationed"));
-        this.buttonList.add(new GuiButton(4, guiLeft+84, guiTop+44, 75, 20, "skeleton.mode.follower"));
-        this.buttonList.add(new GuiButton(5, guiLeft+84, guiTop+70, 75, 20, "skeleton.mode.base"));
+        this.buttonList.add(new GuiButton(2, guiLeft+5, guiTop+20, 75, 20, I18n.format("skeleton.mode.aggressive")));
+        this.buttonList.add(new GuiButton(1, guiLeft+5, guiTop+44, 75, 20, I18n.format("skeleton.mode.defensive")));
+        this.buttonList.add(new GuiButton(0, guiLeft+5, guiTop+70, 75, 20, I18n.format("skeleton.mode.passive")));
+        this.buttonList.add(new GuiButton(3, guiLeft+84, guiTop+20, 75, 20, I18n.format("skeleton.mode.stationed")));
+        this.buttonList.add(new GuiButton(4, guiLeft+84, guiTop+44, 75, 20, I18n.format("skeleton.mode.follower")));
+        this.buttonList.add(new GuiButton(5, guiLeft+84, guiTop+70, 75, 20, I18n.format("skeleton.mode.base")));
         super.initGui();
     }
 
@@ -50,6 +51,7 @@ public class GuiRing extends GuiScreen {
         int k = (this.width - this.xSize) / 2;
         int l = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
+        super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
     @Override
@@ -57,5 +59,10 @@ public class GuiRing extends GuiScreen {
         if (button.enabled) {
             PacketDispatcher.sendToServer(new UpdateArmyMessage(button.id));
         }
+    }
+
+    @Override
+    public boolean doesGuiPauseGame(){
+        return false;
     }
 }
