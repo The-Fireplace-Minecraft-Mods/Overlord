@@ -173,6 +173,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
         this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(1.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(16.0D);
     }
 
     @Override
@@ -220,7 +221,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     protected void playStepSound(BlockPos pos, Block blockIn)
     {
         SoundEvent soundevent = SoundEvents.ENTITY_SKELETON_STEP;
-        this.playSound(soundevent, 0.15F, 1.0F);
+        this.playSound(soundevent, (float)(0.15F*Math.sqrt(dataManager.get(SKELETON_POWER_LEVEL))), 1.0F);
     }
 
     @Override
@@ -308,6 +309,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
             level++;
             dataManager.set(MILK_LEVEL, milk);
             dataManager.set(SKELETON_POWER_LEVEL, level);
+            updateEntityAttributes();
         }
     }
 
@@ -424,6 +426,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     {
         super.writeEntityToNBT(compound);
         compound.setInteger("SkeletonPowerLevel", this.dataManager.get(SKELETON_POWER_LEVEL));
+        updateEntityAttributes();
         compound.setInteger("SkeletonMilk", this.dataManager.get(MILK_LEVEL));
         if (this.getOwnerId() == null)
         {
@@ -736,5 +739,13 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
      */
     public byte getMovementMode(){
         return dataManager.get(MOVEMENT_MODE);
+    }
+
+    public void updateEntityAttributes(){
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(16.0D+(4*Math.sqrt(dataManager.get(SKELETON_POWER_LEVEL))));
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23D+(Math.sqrt(dataManager.get(SKELETON_POWER_LEVEL))/24));
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D+dataManager.get(SKELETON_POWER_LEVEL));
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D+(Math.sqrt(dataManager.get(SKELETON_POWER_LEVEL))/2));
+        this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(1.0D+(Math.sqrt(dataManager.get(SKELETON_POWER_LEVEL))/4));
     }
 }
