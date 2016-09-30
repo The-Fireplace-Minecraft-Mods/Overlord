@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "overlord:items/name_plate"
+        "layer0": "overlord:items/overlords_seal"
     }
 }
