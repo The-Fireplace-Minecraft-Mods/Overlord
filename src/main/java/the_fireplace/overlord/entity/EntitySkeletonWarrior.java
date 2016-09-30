@@ -99,7 +99,8 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(8, new EntityAILookIdle(this));
         addMovementTasks();
-        addAttackTasks();
+        if(this.dataManager.get(ATTACK_MODE) != 0)
+            addAttackTasks();
         addTargetTasks();
     }
 
