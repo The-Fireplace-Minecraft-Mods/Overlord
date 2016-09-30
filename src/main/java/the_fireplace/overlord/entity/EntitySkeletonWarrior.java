@@ -246,7 +246,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     }
 
     @Override
-    public void onLivingUpdate()
+    public void onLivingUpdate()//TODO: Figure out why skeletons become completely unresponsive when holding items -- I believe something in the achievement code is causing it.
     {
         if(!this.worldObj.isRemote) {
             for(int i=0;i<this.inventory.getSizeInventory();i++){

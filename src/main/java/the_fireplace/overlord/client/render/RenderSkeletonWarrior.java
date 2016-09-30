@@ -18,6 +18,7 @@ public class RenderSkeletonWarrior extends RenderBiped<EntitySkeletonWarrior>
 {
     private static final ResourceLocation SKELETON_TEXTURES = new ResourceLocation("textures/entity/skeleton/skeleton.png");
 
+    //TODO: Figure out why normal skeletons render from further away than Skeleton Warriors
     public RenderSkeletonWarrior(RenderManager renderManagerIn)
     {
         super(renderManagerIn, new ModelSkeletonWarrior(), 0.5F);

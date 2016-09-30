@@ -14,7 +14,7 @@ import the_fireplace.overlord.network.packets.UpdateArmyMessage;
 /**
  * @author The_Fireplace
  */
-public class GuiRing extends GuiScreen {
+public class GuiRing extends GuiScreen {//TODO: Add text saying "Attack Modes" and "Movement Modes", and maybe something saying that this affects all of your loaded skeletons.
     public static final ResourceLocation texture = new ResourceLocation(Overlord.MODID, "textures/gui/ring.png");
     protected int xSize = 175;
     protected int ySize = 95;

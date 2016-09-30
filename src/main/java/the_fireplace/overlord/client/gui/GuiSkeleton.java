@@ -18,7 +18,7 @@ import the_fireplace.overlord.network.packets.MovementModeMessage;
 /**
  * @author The_Fireplace
  */
-public class GuiSkeleton extends GuiContainer {
+public class GuiSkeleton extends GuiContainer {//TODO: Add health and milk bars, both styled like the player XP bar.
     public static final ResourceLocation texture = new ResourceLocation(Overlord.MODID, "textures/gui/skeleton.png");
     private EntitySkeletonWarrior entity;
 
