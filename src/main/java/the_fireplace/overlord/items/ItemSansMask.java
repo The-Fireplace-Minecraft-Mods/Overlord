@@ -2,9 +2,12 @@ package the_fireplace.overlord.items;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.Overlord;
@@ -27,5 +30,13 @@ public class ItemSansMask extends ItemArmor {
     @Override
     public CreativeTabs getCreativeTab(){
         return null;
+    }
+
+    @Override
+    public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack){
+        if(!world.isRemote)
+        if(player instanceof EntityPlayerMP)
+            if(((EntityPlayerMP) player).getStatFile().canUnlockAchievement(Overlord.heya))
+                player.addStat(Overlord.heya);
     }
 }

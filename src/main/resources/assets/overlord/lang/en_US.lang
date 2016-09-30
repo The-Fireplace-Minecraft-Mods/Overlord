@@ -40,3 +40,42 @@ overlord.nofriends=You have no allies.
 
 cfg.helmet_damage=Enable Helmet Damage in Sunlight
 cfg.helmet_damage.tooltip=Enables helmets worn by Skeleton Warriors taking damage and eventually breaking in the sunlight
+
+achievement.firstskeleton=You and what army?
+achievement.firstskeleton.desc=Summon a Skeleton Warrior
+
+achievement.secondskeleton=Minions
+achievement.secondskeleton.desc=Summon another Skeleton Warrior
+
+achievement.firstmilk=Good for your bones
+achievement.firstmilk.desc=Give a Skeleton Warrior a Milk Bucket
+
+achievement.firstlevel=With These Upgrades...
+achievement.firstlevel.desc=Level up a Skeleton Warrior
+
+achievement.armedskeleton=Armed and Dangerous
+achievement.armedskeleton.desc=Give a Skeleton Warrior a weapon
+
+achievement.sally=Sally
+achievement.sally.desc=Give a Skeleton Warrior full Leather Armor
+
+achievement.crusader=Crusader
+achievement.crusader.desc=Dress a Skeleton Warrior as a Crusader(Full chainmail, white shield with red cross)
+
+achievement.milk256=Just One Byte!
+achievement.milk256.desc=Have a Skeleton Warrior that has consumed 256 buckets of milk
+
+achievement.milk9001=It's Over 9000!
+achievement.milk9001.desc=Have a Skeleton Warrior that has consumed over 9000 buckets of milk
+
+achievement.alliance=Better with Friends
+achievement.alliance.desc=Form an alliance with another player
+
+achievement.breakalliance=Dealbreaker
+achievement.breakalliance.desc=Disband an alliance with another player
+
+achievement.interference=Not me, you idiots!
+achievement.interference.desc=Get in the way of your own Skeleton Warrior's arrow
+
+achievement.sans=Heya
+achievement.sans.desc=Wear a Sans Mask

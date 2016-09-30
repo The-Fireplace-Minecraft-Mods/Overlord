@@ -5,12 +5,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 
 /**
@@ -50,19 +49,7 @@ public class DebugSkeletonMessage implements IMessage {
                 skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(Items.CHAINMAIL_LEGGINGS));
                 skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(Items.CHAINMAIL_BOOTS));
                 skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
-                ItemStack shieldStack = new ItemStack(Items.SHIELD);
-                NBTTagCompound tagCompound = new NBTTagCompound();
-                NBTTagCompound bet = shieldStack.getSubCompound("BlockEntityTag", true);
-                bet.setInteger("Base", 15);
-                NBTTagList nbttaglist = new NBTTagList();
-                NBTTagCompound nbttagcompound = new NBTTagCompound();
-                nbttagcompound.setString("Pattern", "sc");
-                nbttagcompound.setInteger("Color", 1);
-                nbttaglist.appendTag(nbttagcompound);
-                bet.setTag("Patterns", nbttaglist);
-                tagCompound.setTag("BlockEntityTag", bet);
-                shieldStack.setTagCompound(tagCompound);
-                skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, shieldStack);
+                skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, Overlord.shieldStack());
 
                 player.worldObj.spawnEntityInWorld(skeletonWarrior);
             });

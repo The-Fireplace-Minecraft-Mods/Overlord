@@ -19,6 +19,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemBow;
+import net.minecraft.item.ItemShield;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -89,6 +90,19 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         };
         ((PathNavigateGround)this.getNavigator()).setBreakDoors(true);
         this.setCanPickUpLoot(true);
+        if(getOwner() != null){
+            if(getOwner() instanceof EntityPlayerMP)
+                if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.firstSkeleton)) {
+                    ((EntityPlayer) getOwner()).addStat(Overlord.firstSkeleton);
+                    return;
+                }
+        }
+        if(getOwner() != null){
+            if(getOwner() instanceof EntityPlayerMP)
+                if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.secondSkeleton)) {
+                    ((EntityPlayer) getOwner()).addStat(Overlord.secondSkeleton);
+                }
+        }
     }
 
     @Override
@@ -290,6 +304,39 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                     }
                 }
             }
+            //Equipment Achievements
+            if(getHeldItemMainhand() != null){
+                if(getOwner() != null){
+                    if(getOwner() instanceof EntityPlayerMP)
+                        if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.armedSkeleton)) {
+                            ((EntityPlayer) getOwner()).addStat(Overlord.armedSkeleton);
+                            return;
+                        }
+                }
+            }
+            if(getItemStackFromSlot(EntityEquipmentSlot.HEAD) != null && getItemStackFromSlot(EntityEquipmentSlot.CHEST) != null && getItemStackFromSlot(EntityEquipmentSlot.LEGS) != null && getItemStackFromSlot(EntityEquipmentSlot.FEET) != null){
+                if(getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == Items.LEATHER_HELMET && getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem() == Items.LEATHER_CHESTPLATE && getItemStackFromSlot(EntityEquipmentSlot.LEGS).getItem() == Items.LEATHER_LEGGINGS && getItemStackFromSlot(EntityEquipmentSlot.FEET).getItem() == Items.LEATHER_BOOTS){
+                    if(getOwner() != null){
+                        if(getOwner() instanceof EntityPlayerMP)
+                            if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.sally)) {
+                                ((EntityPlayer) getOwner()).addStat(Overlord.sally);
+                                return;
+                            }
+                    }
+                }
+                if(getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == Items.CHAINMAIL_HELMET && getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem() == Items.CHAINMAIL_CHESTPLATE && getItemStackFromSlot(EntityEquipmentSlot.LEGS).getItem() == Items.CHAINMAIL_LEGGINGS && getItemStackFromSlot(EntityEquipmentSlot.FEET).getItem() == Items.CHAINMAIL_BOOTS){
+                    if(getHeldItemOffhand() != null)
+                        if(getHeldItemOffhand().getTagCompound() != null && getHeldItemOffhand().getItem() instanceof ItemShield)
+                            if(getHeldItemOffhand().getTagCompound().equals(Overlord.shieldStack().getTagCompound()))
+                    if(getOwner() != null){
+                        if(getOwner() instanceof EntityPlayerMP)
+                            if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.crusader)) {
+                                ((EntityPlayer) getOwner()).addStat(Overlord.crusader);
+                                return;
+                            }
+                    }
+                }
+            }
         }
 
         this.setSize(0.6F, 1.99F);
@@ -300,6 +347,28 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     private void increaseMilkLevel(){
         int milk = dataManager.get(MILK_LEVEL);
         dataManager.set(MILK_LEVEL, ++milk);
+        if(getOwner() != null){
+            if(getOwner() instanceof EntityPlayerMP)
+                if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.firstMilk)) {
+                    ((EntityPlayer) getOwner()).addStat(Overlord.firstMilk);
+                    return;
+                }
+        }
+        if((dataManager.get(SKELETON_POWER_LEVEL) == 8 && dataManager.get(MILK_LEVEL) >= 2) || dataManager.get(SKELETON_POWER_LEVEL) > 8)
+        if(getOwner() != null){
+            if(getOwner() instanceof EntityPlayerMP)
+                if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.milk256)) {
+                    ((EntityPlayer) getOwner()).addStat(Overlord.milk256);
+                    return;
+                }
+        }
+        if((dataManager.get(SKELETON_POWER_LEVEL) == 12 && dataManager.get(MILK_LEVEL) >= 811) || dataManager.get(SKELETON_POWER_LEVEL) > 12)
+        if(getOwner() != null){
+            if(getOwner() instanceof EntityPlayerMP)
+                if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.milk9001)) {
+                    ((EntityPlayer) getOwner()).addStat(Overlord.milk9001);
+                }
+        }
     }
 
     public void checkLevelUp(){
@@ -311,6 +380,12 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
             dataManager.set(MILK_LEVEL, milk);
             dataManager.set(SKELETON_POWER_LEVEL, level);
             updateEntityAttributes();
+            if(getOwner() != null){
+                if(getOwner() instanceof EntityPlayerMP)
+                    if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.firstLevel)) {
+                        ((EntityPlayer) getOwner()).addStat(Overlord.firstLevel);
+                    }
+            }
         }
     }
 

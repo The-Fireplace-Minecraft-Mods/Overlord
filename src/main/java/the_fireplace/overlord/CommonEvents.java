@@ -1,11 +1,13 @@
 package the_fireplace.overlord;
 
 import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -45,6 +47,20 @@ public class CommonEvents {
     public void configCahnged(ConfigChangedEvent.OnConfigChangedEvent event){
         if(event.getModID().equals(Overlord.MODID)){
             Overlord.syncConfig();
+        }
+    }
+    @SubscribeEvent
+    public void livingHurt(LivingHurtEvent event){
+        if(!event.getEntity().worldObj.isRemote)
+        if(event.getSource().isProjectile()){
+            if(event.getEntityLiving() instanceof EntityPlayerMP){
+                if(event.getSource().getEntity() instanceof EntitySkeletonWarrior){
+                    if(((EntitySkeletonWarrior) event.getSource().getEntity()).getOwnerId().equals(event.getEntityLiving().getUniqueID())){
+                        if(((EntityPlayerMP) event.getEntityLiving()).getStatFile().canUnlockAchievement(Overlord.nmyi))
+                            ((EntityPlayerMP) event.getEntityLiving()).addStat(Overlord.nmyi);
+                    }
+                }
+            }
         }
     }
 }

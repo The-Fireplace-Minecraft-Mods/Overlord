@@ -5,13 +5,20 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.stats.Achievement;
+import net.minecraft.stats.AchievementList;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -104,6 +111,7 @@ public class Overlord {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
         Alliances.load();
+        addAchievements();
     }
 
     @Mod.EventHandler
@@ -152,5 +160,57 @@ public class Overlord {
 
     public void registerItemBlock(ItemBlock itemBlock){
         GameRegistry.register(itemBlock.setRegistryName(itemBlock.block.getUnlocalizedName().substring(5)));
+    }
+
+    public static ItemStack shieldStack(){
+        ItemStack shieldStack = new ItemStack(Items.SHIELD);
+        NBTTagCompound tagCompound = new NBTTagCompound();
+        NBTTagCompound bet = shieldStack.getSubCompound("BlockEntityTag", true);
+        bet.setInteger("Base", 15);
+        NBTTagList nbttaglist = new NBTTagList();
+        NBTTagCompound nbttagcompound = new NBTTagCompound();
+        nbttagcompound.setString("Pattern", "sc");
+        nbttagcompound.setInteger("Color", 1);
+        nbttaglist.appendTag(nbttagcompound);
+        bet.setTag("Patterns", nbttaglist);
+        tagCompound.setTag("BlockEntityTag", bet);
+        shieldStack.setTagCompound(tagCompound);
+        return shieldStack;
+    }
+
+    public static Achievement firstSkeleton = new Achievement("firstskeleton", "firstskeleton", 0, 0, Items.SKULL, AchievementList.BUILD_PICKAXE);
+    public static Achievement secondSkeleton = new Achievement("secondskeleton", "secondskeleton", 0, 2, Items.SKULL, firstSkeleton);
+    public static Achievement firstMilk = new Achievement("firstmilk", "firstmilk", 2, 0, Items.MILK_BUCKET, firstSkeleton);
+    public static Achievement firstLevel = new Achievement("firstlevel", "firstlevel", 0, -2, Items.BONE, firstSkeleton);
+    public static Achievement armedSkeleton = new Achievement("armedskeleton", "armedskeleton", -2, 1, Items.WOODEN_SWORD, firstSkeleton);
+    public static Achievement sally = new Achievement("sally", "sally", -2, -1, Items.LEATHER_CHESTPLATE, firstSkeleton);
+    public static Achievement crusader = new Achievement("crusader", "crusader", -3, 0, shieldStack(), firstSkeleton);
+    public static Achievement milk256 = new Achievement("milk256", "milk256", 4, 0, Items.MILK_BUCKET, firstMilk);
+    public static Achievement milk9001 = new Achievement("milk9001", "milk9001", 6, 0, Items.MILK_BUCKET, milk256);
+
+    public static Achievement nmyi = new Achievement("interference", "interference", 2, 2, Items.ARROW, AchievementList.BUILD_WORK_BENCH);
+
+    public static Achievement alliance = new Achievement("alliance", "alliance", 2, -2, Items.SHIELD, AchievementList.OPEN_INVENTORY);
+    public static Achievement breakalliance = new Achievement("breakalliance", "breakalliance", 4, -2, Items.IRON_AXE, alliance);
+
+    public static Achievement heya = new Achievement("sans", "sans", 4, 4, sans_mask, AchievementList.OPEN_INVENTORY);
+
+    private static void addAchievements(){
+        firstSkeleton.registerStat();
+        secondSkeleton.registerStat();
+        firstLevel.registerStat();
+        firstMilk.registerStat();
+        armedSkeleton.registerStat();
+        sally.registerStat();
+        crusader.registerStat();
+        milk256.registerStat();
+        milk9001.registerStat();
+        nmyi.registerStat();
+        alliance.registerStat();
+        breakalliance.registerStat();
+        heya.registerStat();
+        heya.setSpecial();
+        AchievementPage.registerAchievementPage(new AchievementPage(MODNAME,
+                firstSkeleton, secondSkeleton, firstLevel, firstMilk, armedSkeleton, sally, crusader, milk256, milk9001, nmyi, alliance, breakalliance, heya));
     }
 }

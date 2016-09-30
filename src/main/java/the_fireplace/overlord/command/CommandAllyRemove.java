@@ -5,8 +5,10 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentTranslation;
+import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.tools.Alliance;
 import the_fireplace.overlord.tools.Alliances;
 
@@ -40,6 +42,9 @@ public class CommandAllyRemove extends CommandBase {
                                 break;
                             }
                         }
+                        if(sender instanceof EntityPlayerMP)
+                            if(((EntityPlayerMP) sender).getStatFile().canUnlockAchievement(Overlord.breakalliance))
+                                ((EntityPlayer)sender).addStat(Overlord.breakalliance);
                         player.addChatMessage(new TextComponentTranslation("overlord.allytermination", ((EntityPlayer) sender).getDisplayNameString()));
                         sender.addChatMessage(new TextComponentTranslation("overlord.allyterminated", player.getDisplayNameString()));
                     } else {
