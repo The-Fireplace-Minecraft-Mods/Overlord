@@ -246,7 +246,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     }
 
     @Override
-    public void onLivingUpdate()//TODO: Figure out why skeletons become completely unresponsive when holding items -- I believe something in the achievement code is causing it.
+    public void onLivingUpdate()
     {
         if(!this.worldObj.isRemote) {
             for(int i=0;i<this.inventory.getSizeInventory();i++){
@@ -310,7 +310,6 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                     if(getOwner() instanceof EntityPlayerMP)
                         if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.armedSkeleton)) {
                             ((EntityPlayer) getOwner()).addStat(Overlord.armedSkeleton);
-                            return;
                         }
                 }
             }
@@ -320,7 +319,6 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                         if(getOwner() instanceof EntityPlayerMP)
                             if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.sally)) {
                                 ((EntityPlayer) getOwner()).addStat(Overlord.sally);
-                                return;
                             }
                     }
                 }
@@ -332,7 +330,6 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                         if(getOwner() instanceof EntityPlayerMP)
                             if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.crusader)) {
                                 ((EntityPlayer) getOwner()).addStat(Overlord.crusader);
-                                return;
                             }
                     }
                 }
