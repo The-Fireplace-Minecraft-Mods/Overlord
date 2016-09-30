@@ -37,6 +37,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.blocks.BlockSkeletonMaker;
 import the_fireplace.overlord.command.*;
 import the_fireplace.overlord.config.ConfigValues;
+import the_fireplace.overlord.crafting.Recipes;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.items.ItemOverlordsSeal;
 import the_fireplace.overlord.items.ItemSansMask;
@@ -112,6 +113,7 @@ public class Overlord {
     public void init(FMLInitializationEvent event){
         Alliances.load();
         addAchievements();
+        Recipes.addRecipes();
     }
 
     @Mod.EventHandler
