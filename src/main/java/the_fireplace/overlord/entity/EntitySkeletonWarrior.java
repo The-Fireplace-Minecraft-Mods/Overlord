@@ -161,9 +161,10 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         if(this.getHeldItemMainhand() != null)
             if(this.getHeldItemMainhand().getItem() instanceof ItemBow){
                this.tasks.addTask(5, aiArrowAttack);
-                return;
+               return;
             }
-        this.tasks.addTask(5, aiAttackOnCollide);
+        if(this.dataManager.get(MOVEMENT_MODE) > 0)
+            this.tasks.addTask(5, aiAttackOnCollide);
     }
 
     public void addTargetTasks(){
