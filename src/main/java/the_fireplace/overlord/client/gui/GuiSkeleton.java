@@ -20,7 +20,7 @@ import java.awt.*;
 /**
  * @author The_Fireplace
  */
-public class GuiSkeleton extends GuiContainer {//TODO: Add health and milk bars, both styled like the player XP bar.
+public class GuiSkeleton extends GuiContainer {
     public static final ResourceLocation texture = new ResourceLocation(Overlord.MODID, "textures/gui/skeleton.png");
     private EntitySkeletonWarrior entity;
 
