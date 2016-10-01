@@ -12,6 +12,7 @@ import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.UpdateArmyMessage;
 
 import java.awt.*;
+import java.io.IOException;
 
 /**
  * @author The_Fireplace
@@ -69,5 +70,13 @@ public class GuiRing extends GuiScreen {
     @Override
     public boolean doesGuiPauseGame(){
         return false;
+    }
+
+    @Override
+    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+        if (keyCode == 1 || this.mc.gameSettings.keyBindInventory.isActiveAndMatches(keyCode)) {
+            this.mc.thePlayer.closeScreen();
+        }
+        super.keyTyped(typedChar, keyCode);
     }
 }

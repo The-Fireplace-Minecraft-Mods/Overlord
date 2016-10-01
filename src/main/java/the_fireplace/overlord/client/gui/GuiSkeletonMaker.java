@@ -15,6 +15,7 @@ import the_fireplace.overlord.network.packets.CreateSkeletonMessage;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
 
+import java.awt.*;
 import java.util.UUID;
 
 /**
@@ -64,6 +65,11 @@ public class GuiSkeletonMaker extends GuiContainer {
             int j = te.getMilk();
             this.drawTexturedModalRect(guiLeft + 121, guiTop + (j == 1 ? 56 : 33), 176, j == 1 ? 23 : 0, 28, j == 1 ? 23 : 46);
         }
+    }
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
+        this.drawCenteredString(fontRendererObj, getWarning(), xSize/2, -10, Color.PINK.getRGB());
     }
 
     @Override
