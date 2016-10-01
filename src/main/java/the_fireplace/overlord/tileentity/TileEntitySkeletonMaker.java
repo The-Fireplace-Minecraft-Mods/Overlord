@@ -240,7 +240,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, II
     public boolean canInsertItem(int index, ItemStack stack, EnumFacing direction) {
         if (stack != null) {
             if (index >= 1 && index < 5 || index >= 6 && index < 12) {
-                if(this.isItemValidForSlot(index, stack))//TODO make sure this works right
+                if(this.isItemValidForSlot(index, stack))
                     return true;
             }
         }
