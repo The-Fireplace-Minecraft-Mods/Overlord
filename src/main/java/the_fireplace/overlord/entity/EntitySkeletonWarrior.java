@@ -822,4 +822,12 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D+(Math.sqrt(dataManager.get(SKELETON_POWER_LEVEL))/2));
         this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(1.0D+(Math.sqrt(dataManager.get(SKELETON_POWER_LEVEL))/4));
     }
+
+    public int getMilkLevel(){
+        return dataManager.get(MILK_LEVEL);
+    }
+
+    public int getLevel(){
+        return dataManager.get(SKELETON_POWER_LEVEL);
+    }
 }

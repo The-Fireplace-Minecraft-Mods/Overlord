@@ -15,6 +15,8 @@ import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.AttackModeMessage;
 import the_fireplace.overlord.network.packets.MovementModeMessage;
 
+import java.awt.*;
+
 /**
  * @author The_Fireplace
  */
@@ -76,6 +78,15 @@ public class GuiSkeleton extends GuiContainer {//TODO: Add health and milk bars,
         int k = (this.width - this.xSize) / 2;
         int l = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(guiLeft+47, guiTop+8, 0, 166, (int)(entity.getHealth()/entity.getMaxHealth()*90), 5);
+        this.drawTexturedModalRect(guiLeft+47, guiTop+18, 0, 171, (int)(entity.getMilkLevel()/Math.pow(2, entity.getLevel())*90), 5);
+    }
+
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        this.drawCenteredString(fontRendererObj, entity.getHealth()+"/"+entity.getMaxHealth(), 91, 4, Color.RED.getRGB());
+        this.drawCenteredString(fontRendererObj, String.valueOf(entity.getLevel()), 91, 20, Color.GREEN.getRGB());
     }
 
     @Override
