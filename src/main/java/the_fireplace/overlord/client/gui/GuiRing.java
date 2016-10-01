@@ -11,13 +11,15 @@ import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.UpdateArmyMessage;
 
+import java.awt.*;
+
 /**
  * @author The_Fireplace
  */
-public class GuiRing extends GuiScreen {//TODO: Add text saying "Attack Modes" and "Movement Modes", and maybe something saying that this affects all of your loaded skeletons.
+public class GuiRing extends GuiScreen {
     public static final ResourceLocation texture = new ResourceLocation(Overlord.MODID, "textures/gui/ring.png");
-    protected int xSize = 175;
-    protected int ySize = 95;
+    protected int xSize = 176;
+    protected int ySize = 96;
     protected int guiLeft;
     protected int guiTop;
 
@@ -34,12 +36,12 @@ public class GuiRing extends GuiScreen {//TODO: Add text saying "Attack Modes" a
         guiLeft = (width - xSize) / 2;
         guiTop = (height - ySize) / 2;
         this.buttonList.clear();
-        this.buttonList.add(new GuiButton(2, guiLeft+5, guiTop+20, 75, 20, I18n.format("skeleton.mode.aggressive")));
-        this.buttonList.add(new GuiButton(1, guiLeft+5, guiTop+44, 75, 20, I18n.format("skeleton.mode.defensive")));
-        this.buttonList.add(new GuiButton(0, guiLeft+5, guiTop+70, 75, 20, I18n.format("skeleton.mode.passive")));
-        this.buttonList.add(new GuiButton(3, guiLeft+84, guiTop+20, 75, 20, I18n.format("skeleton.mode.stationed")));
-        this.buttonList.add(new GuiButton(4, guiLeft+84, guiTop+44, 75, 20, I18n.format("skeleton.mode.follower")));
-        this.buttonList.add(new GuiButton(5, guiLeft+84, guiTop+70, 75, 20, I18n.format("skeleton.mode.base")));
+        this.buttonList.add(new GuiButton(2, guiLeft+5, guiTop+22, 81, 20, I18n.format("skeleton.mode.aggressive")));
+        this.buttonList.add(new GuiButton(1, guiLeft+5, guiTop+46, 81, 20, I18n.format("skeleton.mode.defensive")));
+        this.buttonList.add(new GuiButton(0, guiLeft+5, guiTop+70, 81, 20, I18n.format("skeleton.mode.passive")));
+        this.buttonList.add(new GuiButton(3, guiLeft+90, guiTop+22, 81, 20, I18n.format("skeleton.mode.stationed")));
+        this.buttonList.add(new GuiButton(4, guiLeft+90, guiTop+46, 81, 20, I18n.format("skeleton.mode.follower")));
+        this.buttonList.add(new GuiButton(5, guiLeft+90, guiTop+70, 81, 20, I18n.format("skeleton.mode.base")));
         super.initGui();
     }
 
@@ -51,6 +53,9 @@ public class GuiRing extends GuiScreen {//TODO: Add text saying "Attack Modes" a
         int k = (this.width - this.xSize) / 2;
         int l = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
+        this.drawCenteredString(fontRendererObj, I18n.format("overlord.attack_modes"), guiLeft+45, guiTop+12, -1);
+        this.drawCenteredString(fontRendererObj, I18n.format("overlord.movement_modes"), guiLeft+130, guiTop+12, -1);
+        this.drawCenteredString(fontRendererObj, I18n.format("overlords_seal.warning"), guiLeft+(xSize/2), guiTop-10, Color.PINK.getRGB());
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 

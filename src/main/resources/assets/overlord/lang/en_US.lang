@@ -9,13 +9,17 @@ skeleton_maker.warning.unclaimed=Warning: This skeleton will not be claimed.
 skeleton_maker.warning.notmine=Warning: This skeleton will belong to %s
 entity.overlord.skeleton_warrior.name=Skeleton Warrior
 
+overlord.attack_modes=Attack Modes:
 skeleton.mode.aggressive=Aggressive
 skeleton.mode.defensive=Defensive
 skeleton.mode.passive=Passive
 
+overlord.movement_modes=Movement Modes:
 skeleton.mode.stationed=Stationed
 skeleton.mode.follower=Follower
 skeleton.mode.base=Wander Area
+
+overlords_seal.warning=This applies to all of your loaded skeletons.
 
 overlord.requestsent=You have requested an alliance with %s.
 overlord.allyrequest=New ally request from %s! Type /allyaccept to accept or /allyreject to deny.
