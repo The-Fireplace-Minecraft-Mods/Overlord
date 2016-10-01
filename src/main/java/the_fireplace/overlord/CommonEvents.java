@@ -1,5 +1,6 @@
 package the_fireplace.overlord;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
@@ -21,11 +22,11 @@ import java.util.Random;
 public class CommonEvents {
     @SubscribeEvent
     public void rightClickEntity(PlayerInteractEvent.EntityInteract event){
-        if(event.getTarget() instanceof EntitySkeleton)
-            if(((EntitySkeleton) event.getTarget()).getHealth() < ((EntitySkeleton) event.getTarget()).getMaxHealth())
+        if(event.getTarget() instanceof EntitySkeleton || event.getTarget() instanceof EntitySkeletonWarrior)
+            if(((EntityLivingBase) event.getTarget()).getHealth() < ((EntityLivingBase) event.getTarget()).getMaxHealth())
                 if(event.getItemStack() != null)
                     if(event.getItemStack().getItem() == Items.MILK_BUCKET){
-                        ((EntitySkeleton) event.getTarget()).heal(1);
+                        ((EntityLivingBase) event.getTarget()).heal(1);
                         event.getEntityPlayer().setItemStackToSlot(event.getHand() == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, new ItemStack(Items.BUCKET));
                     }
     }

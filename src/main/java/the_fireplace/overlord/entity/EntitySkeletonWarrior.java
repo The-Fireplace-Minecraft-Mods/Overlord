@@ -335,8 +335,6 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                     }
                 }
             }
-
-            //TODO: Add a way to heal your skeletons
         }
 
         this.setSize(0.6F, 1.99F);
