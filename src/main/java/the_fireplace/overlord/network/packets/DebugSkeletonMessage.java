@@ -49,7 +49,7 @@ public class DebugSkeletonMessage implements IMessage {
                 skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(Items.CHAINMAIL_LEGGINGS));
                 skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(Items.CHAINMAIL_BOOTS));
                 skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
-                skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, Overlord.shieldStack());
+                skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, Overlord.crusaderShield());
 
                 player.worldObj.spawnEntityInWorld(skeletonWarrior);
             });

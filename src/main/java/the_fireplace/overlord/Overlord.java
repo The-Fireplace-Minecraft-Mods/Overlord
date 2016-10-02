@@ -152,19 +152,11 @@ public class Overlord {
         GameRegistry.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
     }
 
-    public void registerBlockNoItem(Block block) {
-        GameRegistry.register(block.setRegistryName(block.getUnlocalizedName().substring(5)));
-    }
-
     public void registerItem(Item item) {
         GameRegistry.register(item.setRegistryName(item.getUnlocalizedName().substring(5)));
     }
 
-    public void registerItemBlock(ItemBlock itemBlock){
-        GameRegistry.register(itemBlock.setRegistryName(itemBlock.block.getUnlocalizedName().substring(5)));
-    }
-
-    public static ItemStack shieldStack(){
+    public static ItemStack crusaderShield(){
         ItemStack shieldStack = new ItemStack(Items.SHIELD);
         NBTTagCompound tagCompound = new NBTTagCompound();
         NBTTagCompound bet = shieldStack.getSubCompound("BlockEntityTag", true);
@@ -186,7 +178,7 @@ public class Overlord {
     public static Achievement firstLevel = new Achievement("firstlevel", "firstlevel", 0, -2, Items.BONE, firstSkeleton);
     public static Achievement armedSkeleton = new Achievement("armedskeleton", "armedskeleton", -2, 1, Items.WOODEN_SWORD, firstSkeleton);
     public static Achievement sally = new Achievement("sally", "sally", -2, -1, Items.LEATHER_CHESTPLATE, firstSkeleton);
-    public static Achievement crusader = new Achievement("crusader", "crusader", -3, 0, shieldStack(), firstSkeleton);
+    public static Achievement crusader = new Achievement("crusader", "crusader", -3, 0, crusaderShield(), firstSkeleton);
     public static Achievement milk256 = new Achievement("milk256", "milk256", 4, 0, Items.MILK_BUCKET, firstMilk);
     public static Achievement milk9001 = new Achievement("milk9001", "milk9001", 6, 0, Items.MILK_BUCKET, milk256);
 

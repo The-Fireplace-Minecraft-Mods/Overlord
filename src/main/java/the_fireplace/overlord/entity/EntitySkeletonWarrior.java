@@ -326,7 +326,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                 if(getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == Items.CHAINMAIL_HELMET && getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem() == Items.CHAINMAIL_CHESTPLATE && getItemStackFromSlot(EntityEquipmentSlot.LEGS).getItem() == Items.CHAINMAIL_LEGGINGS && getItemStackFromSlot(EntityEquipmentSlot.FEET).getItem() == Items.CHAINMAIL_BOOTS){
                     if(getHeldItemOffhand() != null)
                         if(getHeldItemOffhand().getTagCompound() != null && getHeldItemOffhand().getItem() instanceof ItemShield)
-                            if(getHeldItemOffhand().getTagCompound().equals(Overlord.shieldStack().getTagCompound()))
+                            if(getHeldItemOffhand().getTagCompound().equals(Overlord.crusaderShield().getTagCompound()))
                     if(getOwner() != null){
                         if(getOwner() instanceof EntityPlayerMP)
                             if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.crusader)) {
