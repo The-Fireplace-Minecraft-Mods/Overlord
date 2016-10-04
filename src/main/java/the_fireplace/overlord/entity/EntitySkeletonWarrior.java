@@ -197,7 +197,8 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     {
         if(this.getOwner() != null){
             if(this.getOwner().equals(player)){
-                FMLNetworkHandler.openGui(player, Overlord.instance, hashCode(), worldObj, (int)this.posX, (int)this.posY, (int)this.posZ);
+                if(!player.isSneaking())
+                    FMLNetworkHandler.openGui(player, Overlord.instance, hashCode(), worldObj, (int)this.posX, (int)this.posY, (int)this.posZ);
             }
         }
         return super.processInteract(player, hand, stack);

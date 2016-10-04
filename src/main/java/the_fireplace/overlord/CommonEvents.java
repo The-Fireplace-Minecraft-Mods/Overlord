@@ -22,7 +22,7 @@ import java.util.Random;
 public class CommonEvents {
     @SubscribeEvent
     public void rightClickEntity(PlayerInteractEvent.EntityInteract event){
-        if(event.getTarget() instanceof EntitySkeleton || event.getTarget() instanceof EntitySkeletonWarrior)
+        if(event.getTarget() instanceof EntitySkeleton || (event.getTarget() instanceof EntitySkeletonWarrior && event.getEntityPlayer().isSneaking()))
             if(((EntityLivingBase) event.getTarget()).getHealth() < ((EntityLivingBase) event.getTarget()).getMaxHealth())
                 if(event.getItemStack() != null)
                     if(event.getItemStack().getItem() == Items.MILK_BUCKET){
