@@ -205,6 +205,6 @@ public class Overlord {
         heya.registerStat();
         heya.setSpecial();
         AchievementPage.registerAchievementPage(new AchievementPage(MODNAME,
-                firstSkeleton, secondSkeleton, firstLevel, firstMilk, armedSkeleton, sally, crusader, milk256, milk9001, nmyi, alliance, breakalliance));
+                firstSkeleton, secondSkeleton, firstLevel, firstMilk, armedSkeleton, sally, crusader, milk256, milk9001, nmyi, alliance, breakalliance, heya));
     }
 }
