@@ -28,8 +28,8 @@ public class RenderSkeletonWarrior extends RenderBiped<EntitySkeletonWarrior>
             @Override
             protected void initArmor()
             {
-                this.modelLeggings = new ModelSkeletonWarrior(0.5F, true, false, false);
-                this.modelArmor = new ModelSkeletonWarrior(1.0F, true, false, false);
+                this.modelLeggings = new ModelSkeletonWarrior(0.5F, true, false, false, 1);
+                this.modelArmor = new ModelSkeletonWarrior(1.0F, true, false, false, 1);
             }
         });
         this.addLayer(new LayerSkinsuit(this));

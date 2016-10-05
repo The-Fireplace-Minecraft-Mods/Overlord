@@ -1,6 +1,7 @@
 package the_fireplace.overlord.client.render;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -26,7 +27,7 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
     public LayerSkinsuit(RenderLivingBase<?> renderer)
     {
         this.renderer = renderer;
-        this.model = new ModelSkeletonWarrior(0.25F, true, true, false);
+        this.model = new ModelSkeletonWarrior(0.25F, true, true, false, 2);
     }
 
     @Override
@@ -44,12 +45,14 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
                         DynamicTexture texture = new DynamicTexture(ImageIO.read(new File(cachedir.getCanonicalPath(), skeleton.getSkinsuitName()+".png")));
                         this.renderer.bindTexture(this.renderer.getRenderManager().renderEngine.getDynamicTextureLocation(Overlord.MODID, texture));
                     }catch(Exception e2){
-                        this.renderer.bindTexture(new ResourceLocation(Overlord.MODID, "textures/skinsuit/default.png"));
+                        this.renderer.bindTexture(new ResourceLocation("textures/entity/steve.png"));
                         e2.printStackTrace();
                     }
                 }
             }else
-                this.renderer.bindTexture(new ResourceLocation(Overlord.MODID, "textures/skinsuit/default.png"));
+                this.renderer.bindTexture(new ResourceLocation("textures/entity/steve.png"));
+            GlStateManager.enableBlend();
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 0.5F);
             model.render(skeleton, limbSwing, limbSwingAmount, partialTicks, netHeadYaw, headPitch, scale);
         }
     }

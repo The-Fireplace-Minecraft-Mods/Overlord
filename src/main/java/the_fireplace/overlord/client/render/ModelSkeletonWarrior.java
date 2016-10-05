@@ -36,17 +36,17 @@ public class ModelSkeletonWarrior extends ModelBiped
     public boolean skinsuit;
     public ModelSkeletonWarrior()
     {
-        this(0.0F, false, false, false);
+        this(0.0F, false, false, false, 1);
     }
 
-    public ModelSkeletonWarrior(float modelSize, boolean norender, boolean hasSkinsuit, boolean smallarms)
+    public ModelSkeletonWarrior(float modelSize, boolean notmain, boolean hasSkinsuit, boolean smallarms, int texScale)
     {
-        super(modelSize, 0.0F, 64, 32);
+        super(modelSize, 0.0F, 64, 32*texScale);
 
         this.smallSkinsuitArms = smallarms;
         this.skinsuit = hasSkinsuit;
 
-        if (!norender)
+        if (!notmain)
         {
             this.bipedRightArm = new ModelRenderer(this, 40, 16);
             this.bipedRightArm.addBox(-1.0F, -2.0F, -1.0F, 2, 12, 2, modelSize);
@@ -171,11 +171,6 @@ public class ModelSkeletonWarrior extends ModelBiped
         GlStateManager.popMatrix();
     }
 
-    /**
-     * Sets the model's various rotation angles. For bipeds, par1 and par2 are used for animating the movement of arms
-     * and legs, where par1 represents the time(so that arms and legs swing back and forth) and par2 represents how
-     * "far" arms and legs can swing at most.
-     */
     @Override
     public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)
     {
