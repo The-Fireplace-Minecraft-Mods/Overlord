@@ -81,6 +81,7 @@ public class Overlord {
     public static final Block skeleton_maker = new BlockSkeletonMaker();
     public static final Item overlords_seal = new ItemOverlordsSeal().setUnlocalizedName("overlords_seal").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item sans_mask = new ItemSansMask(sans);
+    public static final Item skinsuit = new Item().setUnlocalizedName("skinsuit").setCreativeTab(tabOverlord).setMaxStackSize(1);
 
     public static void syncConfig() {
         ConfigValues.HELMETDAMAGE = HELMETDAMAGE_PROPERTY.getBoolean();
@@ -99,6 +100,7 @@ public class Overlord {
         registerBlock(skeleton_maker);
         registerItem(overlords_seal);
         registerItem(sans_mask);
+        registerItem(skinsuit);
         GameRegistry.registerTileEntity(TileEntitySkeletonMaker.class, "skeleton_maker");
         if (event.getSide().isClient())
             registerItemRenders();
@@ -135,6 +137,7 @@ public class Overlord {
         rmm(skeleton_maker);
         rmm(overlords_seal);
         rmm(sans_mask);
+        rmm(skinsuit);
     }
 
     @SideOnly(Side.CLIENT)

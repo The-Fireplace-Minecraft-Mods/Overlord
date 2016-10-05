@@ -28,23 +28,12 @@ public class RenderSkeletonWarrior extends RenderBiped<EntitySkeletonWarrior>
             @Override
             protected void initArmor()
             {
-                this.modelLeggings = new ModelSkeletonWarrior(0.5F, true);
-                this.modelArmor = new ModelSkeletonWarrior(1.0F, true);
+                this.modelLeggings = new ModelSkeletonWarrior(0.5F, true, false, false);
+                this.modelArmor = new ModelSkeletonWarrior(1.0F, true, false, false);
             }
         });
-        //this.addLayer(new LayerSkeletonType(this));
+        this.addLayer(new LayerSkinsuit(this));
     }
-
-    /**
-     * Allows the render to do state modifications necessary before the model is rendered.
-     */
-    /*protected void preRenderCallback(EntitySkeletonWarrior entitylivingbaseIn, float partialTickTime)
-    {
-        if (entitylivingbaseIn.func_189771_df() == SkeletonType.WITHER)
-        {
-            GlStateManager.scale(1.2F, 1.2F, 1.2F);
-        }
-    }*/
 
     @Override
     public void transformHeldFull3DItemLayer()

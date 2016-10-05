@@ -64,6 +64,8 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     /**The movement mode. 0 is stationed, 1 is follower, 2 is base*/
     private static final DataParameter<Byte> MOVEMENT_MODE = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BYTE);
     private static final DataParameter<Integer> MILK_LEVEL = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
+    private static final DataParameter<String> SKINSUIT_NAME = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.STRING);
+    private static final DataParameter<Boolean> HAS_SKINSUIT = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BOOLEAN);
     private EntityAIWarriorBow aiArrowAttack = null;
     private EntityAIAttackMelee aiAttackOnCollide = null;
 
@@ -200,6 +202,19 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                 if(!player.isSneaking()) {
                     FMLNetworkHandler.openGui(player, Overlord.instance, hashCode(), worldObj, (int) this.posX, (int) this.posY, (int) this.posZ);
                     return true;
+                }else{
+                    if(stack != null){
+                        if(stack.getItem() == Overlord.skinsuit && !this.hasSkinsuit()){
+                            this.dataManager.set(HAS_SKINSUIT, Boolean.valueOf(true));
+                            if(stack.hasDisplayName()) {
+                                this.dataManager.set(SKINSUIT_NAME, String.valueOf(stack.getDisplayName()));
+                                System.out.println(stack.getDisplayName());
+                            }else
+                                this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
+                        }else if(stack.getItem() == Items.SHEARS && this.hasSkinsuit()){
+                            //TODO: Drop skinsuit
+                        }
+                    }
                 }
             }
         }
@@ -216,6 +231,8 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         this.dataManager.register(SWINGING_ARMS, Boolean.valueOf(false));
         this.dataManager.register(ATTACK_MODE, Byte.valueOf((byte)1));
         this.dataManager.register(MOVEMENT_MODE, Byte.valueOf((byte)1));
+        this.dataManager.register(HAS_SKINSUIT, Boolean.valueOf(false));
+        this.dataManager.register(SKINSUIT_NAME, String.valueOf(""));
     }
 
     @Override
@@ -437,6 +454,14 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
             int i = compound.getInteger("SkeletonMilk");
             this.dataManager.set(MILK_LEVEL, i);
         }
+        if(compound.hasKey("SkinsuitName")){
+            String s = compound.getString("SkinsuitName");
+            this.dataManager.set(SKINSUIT_NAME, s);
+        }
+        if(compound.hasKey("HasSkinsuit")){
+            boolean b = compound.getBoolean("HasSkinsuit");
+            this.dataManager.set(HAS_SKINSUIT, b);
+        }
         String s;
         if (compound.hasKey("OwnerUUID", 8))
         {
@@ -505,6 +530,8 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         compound.setInteger("SkeletonPowerLevel", this.dataManager.get(SKELETON_POWER_LEVEL));
         updateEntityAttributes();
         compound.setInteger("SkeletonMilk", this.dataManager.get(MILK_LEVEL));
+        compound.setBoolean("HasSkinsuit", this.dataManager.get(HAS_SKINSUIT));
+        compound.setString("SkinsuitName", this.dataManager.get(SKINSUIT_NAME));
         if (this.getOwnerId() == null)
         {
             compound.setString("OwnerUUID", "0b1ec5ad-cb2a-43b7-995d-889320eb2e5b");
@@ -832,5 +859,13 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
 
     public int getLevel(){
         return dataManager.get(SKELETON_POWER_LEVEL);
+    }
+
+    public boolean hasSkinsuit(){
+        return this.dataManager.get(HAS_SKINSUIT);
+    }
+
+    public String getSkinsuitName(){
+        return this.dataManager.get(SKINSUIT_NAME);
     }
 }
