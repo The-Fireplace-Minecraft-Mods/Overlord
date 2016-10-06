@@ -27,7 +27,7 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
     public LayerSkinsuit(RenderLivingBase<?> renderer)
     {
         this.renderer = renderer;
-        this.model = new ModelSkeletonWarrior(0.25F, true, true, false, 2);
+        this.model = new ModelSkeletonWarrior(0.25F, true, true, 2);
     }
 
     @Override

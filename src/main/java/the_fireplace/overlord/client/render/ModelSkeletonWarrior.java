@@ -36,14 +36,14 @@ public class ModelSkeletonWarrior extends ModelBiped
     public boolean skinsuit;
     public ModelSkeletonWarrior()
     {
-        this(0.0F, false, false, false, 1);
+        this(0.0F, false, false, 1);
     }
 
-    public ModelSkeletonWarrior(float modelSize, boolean notmain, boolean hasSkinsuit, boolean smallarms, int texScale)
+    public ModelSkeletonWarrior(float modelSize, boolean notmain, boolean hasSkinsuit, int texScale)
     {
         super(modelSize, 0.0F, 64, 32*texScale);
 
-        this.smallSkinsuitArms = smallarms;
+        this.smallSkinsuitArms = false;
         this.skinsuit = hasSkinsuit;
 
         if (!notmain)
