@@ -167,7 +167,21 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return true;
+        return (index == 0 && stack.getItem() == Overlord.overlords_seal) || (index > 0 && index < 4 && stack.getItem() == Items.BONE) || (index == 4 && stack.getItem() == Items.MILK_BUCKET) || (index > 5 && index < 10 && stack.getItem().isValidArmor(stack, getSlotEquipmentType(index), null));
+    }
+
+    private EntityEquipmentSlot getSlotEquipmentType(int index){
+        if(index == 6)
+            return EntityEquipmentSlot.FEET;
+        if(index == 7)
+            return EntityEquipmentSlot.LEGS;
+        if(index == 8)
+            return EntityEquipmentSlot.CHEST;
+        if(index == 9)
+            return EntityEquipmentSlot.HEAD;
+        if(index == 10)
+            return EntityEquipmentSlot.MAINHAND;
+        return EntityEquipmentSlot.OFFHAND;
     }
 
     @Override
