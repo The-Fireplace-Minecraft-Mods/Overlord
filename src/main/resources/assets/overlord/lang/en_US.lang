@@ -3,6 +3,7 @@ item.overlords_seal.name=Overlord's Seal
 item.overlords_seal.tooltip.default=Right-Click to make this your seal!
 item.overlords_seal.tooltip=Seal of %s
 item.sans_mask.name=Sans Mask
+item.skinsuit.name=Skinsuit
 itemGroup.overlord=Overlord
 skeleton_maker.create=Create!
 skeleton_maker.warning.unclaimed=Warning: This skeleton will not be claimed.
@@ -44,6 +45,12 @@ overlord.nofriends=You have no allies.
 
 cfg.helmet_damage=Enable Helmet Damage in Sunlight
 cfg.helmet_damage.tooltip=Enables helmets worn by Skeleton Warriors taking damage and eventually breaking in the sunlight
+
+cfg.ghostly_skins=Ghostly Skinsuits
+cfg.ghostly_skins.tooltip=Skinsuits are semi transparent
+
+cfg.skinsuitnametags=Skinsuits Name Skeleton Warriors
+cfg.skinsuitnametags.tooltip=Do named Skinsuits name Skeleton Warriors after the skin?
 
 achievement.firstskeleton=You and what army?
 achievement.firstskeleton.desc=Summon a Skeleton Warrior

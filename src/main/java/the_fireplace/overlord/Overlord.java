@@ -63,6 +63,8 @@ public class Overlord {
 
     public static Configuration config;
     public static Property HELMETDAMAGE_PROPERTY;
+    public static Property GHOSTLYSKINS_PROPERTY;
+    public static Property SKINSUITNAMETAGS_PROPERTY;
 
     @SidedProxy(clientSide = "the_fireplace."+MODID+".client.ClientProxy", serverSide = "the_fireplace."+MODID+".CommonProxy")
     public static CommonProxy proxy;
@@ -85,6 +87,8 @@ public class Overlord {
 
     public static void syncConfig() {
         ConfigValues.HELMETDAMAGE = HELMETDAMAGE_PROPERTY.getBoolean();
+        ConfigValues.GHOSTLYSKINS = GHOSTLYSKINS_PROPERTY.getBoolean();
+        ConfigValues.SKINSUITNAMETAGS = SKINSUITNAMETAGS_PROPERTY.getBoolean();
         if (config.hasChanged())
             config.save();
     }
@@ -96,17 +100,17 @@ public class Overlord {
         config = new Configuration(event.getSuggestedConfigurationFile());
         config.load();
         HELMETDAMAGE_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.HELMETDAMAGE_NAME, ConfigValues.HELMETDAMAGE_DEFAULT, proxy.translateToLocal(ConfigValues.HELMETDAMAGE_NAME + ".tooltip"));
+        GHOSTLYSKINS_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.GHOSTLYSKINS_NAME, ConfigValues.GHOSTLYSKINS_DEFAULT, proxy.translateToLocal(ConfigValues.GHOSTLYSKINS_NAME + ".tooltip"));
+        SKINSUITNAMETAGS_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.SKINSUITNAMETAGS_NAME, ConfigValues.SKINSUITNAMETAGS_DEFAULT, proxy.translateToLocal(ConfigValues.SKINSUITNAMETAGS_NAME + ".tooltip"));
         syncConfig();
         registerBlock(skeleton_maker);
         registerItem(overlords_seal);
         registerItem(sans_mask);
         registerItem(skinsuit);
         GameRegistry.registerTileEntity(TileEntitySkeletonMaker.class, "skeleton_maker");
-        if (event.getSide().isClient())
-            registerItemRenders();
         int eid=-1;
         EntityRegistry.registerModEntity(EntitySkeletonWarrior.class, "skeleton_warrior", ++eid, instance, 32, 2, false);
-        proxy.registerEntityRenderers();
+        proxy.registerClient();
         MinecraftForge.EVENT_BUS.register(new CommonEvents());
         DataSerializers.registerSerializer(CustomDataSerializers.UNIQUE_ID);
     }

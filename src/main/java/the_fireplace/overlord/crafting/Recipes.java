@@ -4,6 +4,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 import the_fireplace.overlord.Overlord;
 
 /**
@@ -12,13 +13,19 @@ import the_fireplace.overlord.Overlord;
 public class Recipes {
     public static ItemStack skeleton_maker = new ItemStack(Overlord.skeleton_maker);
     public static ItemStack overlords_seal = new ItemStack(Overlord.overlords_seal);
+    public static ItemStack skinsuit = new ItemStack(Overlord.skinsuit);
 
     public static void addRecipes(){
         addRecipe(skeleton_maker, "bgb", "ihi", 'b', Items.BUCKET, 'g', "blockGlass", 'i', "ingotIron", 'h', Items.GLASS_BOTTLE);
         addRecipe(overlords_seal, "nin", "i i", "nin", 'n', "nuggetGold", 'i', "ingotIron");
+        addShapelessRecipe(skinsuit, Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, Items.LEATHER_LEGGINGS, Items.LEATHER_BOOTS, Items.ROTTEN_FLESH, Items.ROTTEN_FLESH, "dyeGreen", "dyeBlue", "dyeRed");
     }
 
     public static void addRecipe(ItemStack output, Object... input){
         GameRegistry.addRecipe(new ShapedOreRecipe(output, input));
+    }
+
+    public static void addShapelessRecipe(ItemStack output, Object... input){
+        GameRegistry.addRecipe(new ShapelessOreRecipe(output, input));
     }
 }

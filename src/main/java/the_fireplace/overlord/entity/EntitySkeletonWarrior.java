@@ -105,6 +105,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                     ((EntityPlayer) getOwner()).addStat(Overlord.secondSkeleton);
                 }
         }
+        enablePersistence();
     }
 
     @Override
@@ -203,16 +204,27 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                     FMLNetworkHandler.openGui(player, Overlord.instance, hashCode(), worldObj, (int) this.posX, (int) this.posY, (int) this.posZ);
                     return true;
                 }else{
+                    if(!worldObj.isRemote)
                     if(stack != null){
                         if(stack.getItem() == Overlord.skinsuit && !this.hasSkinsuit()){
                             this.dataManager.set(HAS_SKINSUIT, Boolean.valueOf(true));
                             if(stack.hasDisplayName()) {
                                 this.dataManager.set(SKINSUIT_NAME, String.valueOf(stack.getDisplayName()));
-                                System.out.println(stack.getDisplayName());
+                                if(ConfigValues.SKINSUITNAMETAGS && !this.hasCustomName())
+                                    setCustomNameTag(stack.getDisplayName());
                             }else
                                 this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
                         }else if(stack.getItem() == Items.SHEARS && this.hasSkinsuit()){
-                            //TODO: Drop skinsuit
+                            if(!player.isCreative()) {
+                                stack.damageItem(1, player);
+                                entityDropItem(new ItemStack(Overlord.skinsuit).setStackDisplayName(getSkinsuitName()), 0.1F);
+                            }
+                            if(ConfigValues.SKINSUITNAMETAGS && this.hasCustomName()){
+                                if(this.getCustomNameTag().equals(getSkinsuitName()))
+                                    this.setCustomNameTag("");
+                            }
+                            this.dataManager.set(HAS_SKINSUIT, Boolean.valueOf(false));
+                            this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
                         }
                     }
                 }
