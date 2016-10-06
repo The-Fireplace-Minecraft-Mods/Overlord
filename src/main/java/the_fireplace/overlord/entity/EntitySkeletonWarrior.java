@@ -527,6 +527,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         } else {
             System.out.println("List was null when reading Skeleton Warrior's Equipment");
         }
+        initEntityAI();
     }
 
     @Override
