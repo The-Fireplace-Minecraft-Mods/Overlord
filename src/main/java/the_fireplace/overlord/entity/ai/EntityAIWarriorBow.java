@@ -109,7 +109,7 @@ public class EntityAIWarriorBow extends EntityAIBase
             {
                 --this.seeTime;
             }
-
+            if(entity.getMovementMode() > 0)
             if (d0 <= (double)this.maxAttackDistance && this.seeTime >= 20)
             {
                 this.entity.getNavigator().clearPathEntity();
@@ -120,7 +120,7 @@ public class EntityAIWarriorBow extends EntityAIBase
                 this.entity.getNavigator().tryMoveToEntityLiving(entitylivingbase, this.moveSpeedAmp);
                 this.strafingTime = -1;
             }
-
+            if(entity.getMovementMode() > 0)
             if (this.strafingTime >= 20)
             {
                 if ((double)this.entity.getRNG().nextFloat() < 0.3D)
@@ -135,9 +135,9 @@ public class EntityAIWarriorBow extends EntityAIBase
 
                 this.strafingTime = 0;
             }
-
             if (this.strafingTime > -1)
             {
+                if(entity.getMovementMode() > 0)
                 if (d0 > (double)(this.maxAttackDistance * 0.75F))
                 {
                     this.strafingBackwards = false;
@@ -147,7 +147,8 @@ public class EntityAIWarriorBow extends EntityAIBase
                     this.strafingBackwards = true;
                 }
 
-                this.entity.getMoveHelper().strafe(this.strafingBackwards ? -0.5F : 0.5F, this.strafingClockwise ? 0.5F : -0.5F);
+                if(entity.getMovementMode() > 0)
+                    this.entity.getMoveHelper().strafe(this.strafingBackwards ? -0.5F : 0.5F, this.strafingClockwise ? 0.5F : -0.5F);
                 this.entity.faceEntity(entitylivingbase, 30.0F, 30.0F);
             }
             else
