@@ -3,15 +3,20 @@ package the_fireplace.overlord.tileentity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.network.PacketDispatcher;
@@ -22,7 +27,7 @@ import java.util.UUID;
 /**
  * @author The_Fireplace
  */
-public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IInventory {
+public class TileEntitySkeletonMaker extends TileEntity implements ITickable, ISidedInventory {
     private ItemStack[] inventory;
     public static final String PROP_NAME = "TileEntitySkeletonMaker";
     byte milk = 0;
@@ -225,10 +230,10 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, II
         this.milk = compound.getByte("Milk");
     }
 
-    /*@Override
+    @Override
     public int[] getSlotsForFace(EnumFacing side) {
         if (side == EnumFacing.EAST || side == EnumFacing.WEST || side == EnumFacing.NORTH || side == EnumFacing.SOUTH || side == EnumFacing.UP) {
-            return new int[]{1, 2, 3, 4, 6, 7, 8, 9, 10, 11};
+            return new int[]{1, 2, 3, 4, 6, 7, 8, 9};
         }
         if (side == EnumFacing.DOWN) {
             return new int[]{5};
@@ -239,7 +244,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, II
     @Override
     public boolean canInsertItem(int index, ItemStack stack, EnumFacing direction) {
         if (stack != null) {
-            if (index >= 1 && index < 5 || index >= 6 && index < 12) {
+            if (index >= 1 && index < 5 || index >= 6 && index < 10) {
                 if(this.isItemValidForSlot(index, stack))
                     return true;
             }
@@ -271,7 +276,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, II
             else
                 return (T) handlerSide;
         return super.getCapability(capability, facing);
-    }*/
+    }
 
     public byte getMilk(){
         return milk;
