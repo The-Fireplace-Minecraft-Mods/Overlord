@@ -23,6 +23,7 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
     public static final File cachedir = new File(Minecraft.getMinecraft().mcDataDir, "cachedImages/skins/");
     private final RenderLivingBase<?> renderer;
     private ModelSkeletonWarrior model;
+    private boolean nospam = false;
 
     public LayerSkinsuit(RenderLivingBase<?> renderer)
     {
@@ -46,7 +47,9 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
                         this.renderer.bindTexture(this.renderer.getRenderManager().renderEngine.getDynamicTextureLocation(Overlord.MODID, texture));
                     }catch(Exception e2){
                         this.renderer.bindTexture(new ResourceLocation("textures/entity/steve.png"));
-                        e2.printStackTrace();
+                        if(!nospam)
+                            e2.printStackTrace();
+                        nospam = true;
                     }
                 }
             }else
