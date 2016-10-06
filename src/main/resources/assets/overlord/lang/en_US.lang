@@ -52,6 +52,9 @@ cfg.ghostly_skins.tooltip=Skinsuits are semi transparent
 cfg.skinsuitnametags=Skinsuits Name Skeleton Warriors
 cfg.skinsuitnametags.tooltip=Do named Skinsuits name Skeleton Warriors after the skin?
 
+cfg.huntcreepers=Hunt Creepers
+cfg.huntcreepers.tooltip=Do Skeleton Warriors go after Creepers?
+
 achievement.firstskeleton=You and what army?
 achievement.firstskeleton.desc=Summon a Skeleton Warrior
 

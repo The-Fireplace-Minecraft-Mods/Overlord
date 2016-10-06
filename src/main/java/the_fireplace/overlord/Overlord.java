@@ -65,6 +65,7 @@ public class Overlord {
     public static Property HELMETDAMAGE_PROPERTY;
     public static Property GHOSTLYSKINS_PROPERTY;
     public static Property SKINSUITNAMETAGS_PROPERTY;
+    public static Property HUNTCREEPERS_PROPERTY;
 
     @SidedProxy(clientSide = "the_fireplace."+MODID+".client.ClientProxy", serverSide = "the_fireplace."+MODID+".CommonProxy")
     public static CommonProxy proxy;
@@ -89,6 +90,7 @@ public class Overlord {
         ConfigValues.HELMETDAMAGE = HELMETDAMAGE_PROPERTY.getBoolean();
         ConfigValues.GHOSTLYSKINS = GHOSTLYSKINS_PROPERTY.getBoolean();
         ConfigValues.SKINSUITNAMETAGS = SKINSUITNAMETAGS_PROPERTY.getBoolean();
+        ConfigValues.HUNTCREEPERS = HUNTCREEPERS_PROPERTY.getBoolean();
         if (config.hasChanged())
             config.save();
     }
@@ -102,6 +104,7 @@ public class Overlord {
         HELMETDAMAGE_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.HELMETDAMAGE_NAME, ConfigValues.HELMETDAMAGE_DEFAULT, proxy.translateToLocal(ConfigValues.HELMETDAMAGE_NAME + ".tooltip"));
         GHOSTLYSKINS_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.GHOSTLYSKINS_NAME, ConfigValues.GHOSTLYSKINS_DEFAULT, proxy.translateToLocal(ConfigValues.GHOSTLYSKINS_NAME + ".tooltip"));
         SKINSUITNAMETAGS_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.SKINSUITNAMETAGS_NAME, ConfigValues.SKINSUITNAMETAGS_DEFAULT, proxy.translateToLocal(ConfigValues.SKINSUITNAMETAGS_NAME + ".tooltip"));
+        HUNTCREEPERS_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.HUNTCREEPERS_NAME, ConfigValues.HUNTCREEPERS_DEFAULT, proxy.translateToLocal(ConfigValues.HUNTCREEPERS_NAME + ".tooltip"));
         syncConfig();
         registerBlock(skeleton_maker);
         registerItem(overlords_seal);

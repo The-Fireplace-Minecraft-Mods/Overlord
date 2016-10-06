@@ -15,4 +15,8 @@ public class ConfigValues {
     public static final boolean SKINSUITNAMETAGS_DEFAULT = true;
     public static boolean SKINSUITNAMETAGS;
     public static final String SKINSUITNAMETAGS_NAME = "cfg.skinsuitnametags";
+
+    public static final boolean HUNTCREEPERS_DEFAULT = false;
+    public static boolean HUNTCREEPERS;
+    public static final String HUNTCREEPERS_NAME = "cfg.huntcreepers";
 }

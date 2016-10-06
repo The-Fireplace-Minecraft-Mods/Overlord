@@ -7,11 +7,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITarget;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.tools.Alliances;
 
@@ -86,6 +88,8 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
                     if(Alliances.getInstance().isAlliedTo(((EntitySkeletonWarrior) list.get(0)).getOwnerId(), ((EntitySkeletonWarrior)this.taskOwner).getOwnerId()))
                         return false;
                 }
+                if(!ConfigValues.HUNTCREEPERS && list.get(0) instanceof EntityCreeper)
+                    return false;
                 this.targetEntity = list.get(0);
                 return true;
             }
@@ -146,6 +150,10 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
                 if(!b1)
                     b1 = Alliances.getInstance().isAlliedTo(((EntitySkeletonWarrior) p_compare_2_).getOwnerId(), theEntity.getUniqueID());
             }
+            if(!ConfigValues.HUNTCREEPERS && p_compare_1_ instanceof EntityCreeper)
+                b0 = true;
+            if(!ConfigValues.HUNTCREEPERS && p_compare_2_ instanceof EntityCreeper)
+                b1 = true;
             if (!b0 && !b1) {
                 return d0 < d1 ? -1 : (d0 > d1 ? 1 : 0);
             } else if (b0 && !b1){
