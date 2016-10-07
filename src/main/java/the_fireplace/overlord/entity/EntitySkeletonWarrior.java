@@ -214,6 +214,8 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                                     setCustomNameTag(stack.getDisplayName());
                             }else
                                 this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
+                            if(!player.isCreative())
+                                stack.stackSize--;
                         }else if(stack.getItem() == Items.SHEARS && this.hasSkinsuit()){
                             if(!player.isCreative()) {
                                 stack.damageItem(1, player);
