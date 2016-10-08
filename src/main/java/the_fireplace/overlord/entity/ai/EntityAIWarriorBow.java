@@ -2,7 +2,6 @@ package the_fireplace.overlord.entity.ai;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemBow;
 import net.minecraft.util.EnumHand;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
@@ -47,7 +46,7 @@ public class EntityAIWarriorBow extends EntityAIBase
 
     protected boolean isBowInMainhand()
     {
-        return this.entity.getHeldItemMainhand() != null && this.entity.getHeldItemMainhand().getItem() == Items.BOW;
+        return this.entity.getHeldItemMainhand() != null && this.entity.getHeldItemMainhand().getItem() instanceof ItemBow;
     }
 
     /**
