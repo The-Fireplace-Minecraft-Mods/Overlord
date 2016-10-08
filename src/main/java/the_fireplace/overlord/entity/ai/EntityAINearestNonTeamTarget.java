@@ -1,6 +1,5 @@
 package the_fireplace.overlord.entity.ai;
 
-import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import net.minecraft.entity.Entity;
@@ -21,15 +20,17 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author The_Fireplace
  */
+@SuppressWarnings("Guava")
 public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends EntityAITarget
 {
     protected final Class<T> targetClass;
     private final int targetChance;
-    protected final EntityAINearestNonTeamTarget.Sorter theNearestAttackableTargetSorter;
+    protected final Sorter theNearestAttackableTargetSorter;
     protected final Predicate<? super T > targetEntitySelector;
     protected T targetEntity;
 
@@ -43,21 +44,14 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
         this(creature, classTarget, 10, checkSight, onlyNearby, null);
     }
 
-    public EntityAINearestNonTeamTarget(EntityCreature creature, Class<T> classTarget, int chance, boolean checkSight, boolean onlyNearby, @Nullable final Predicate <? super T > targetSelector)
+    public EntityAINearestNonTeamTarget(EntityCreature creature, Class<T> classTarget, int chance, boolean checkSight, boolean onlyNearby, @Nullable final java.util.function.Predicate<? super T> targetSelector)
     {
         super(creature, checkSight, onlyNearby);
         this.targetClass = classTarget;
         this.targetChance = chance;
-        this.theNearestAttackableTargetSorter = new EntityAINearestNonTeamTarget.Sorter(creature);
+        this.theNearestAttackableTargetSorter = new Sorter(creature);
         this.setMutexBits(1);
-        this.targetEntitySelector = new Predicate<T>()
-        {
-            @Override
-            public boolean apply(@Nullable T p_apply_1_)
-            {
-                return p_apply_1_ != null && (!(targetSelector != null && !targetSelector.apply(p_apply_1_)) && (EntitySelectors.NOT_SPECTATING.apply(p_apply_1_) && EntityAINearestNonTeamTarget.this.isSuitableTarget(p_apply_1_, false)));
-            }
-        };
+        this.targetEntitySelector = (Predicate<T>) p_apply_1_ -> p_apply_1_ != null && (!(targetSelector != null && !targetSelector.test(p_apply_1_)) && (EntitySelectors.NOT_SPECTATING.apply(p_apply_1_) && EntityAINearestNonTeamTarget.this.isSuitableTarget(p_apply_1_, false)));
     }
 
     /**
@@ -96,12 +90,10 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
         }
         else
         {
-            this.targetEntity = (T)getNearestAttackablePlayer(this.taskOwner.worldObj, this.taskOwner.posX, this.taskOwner.posY + (double)this.taskOwner.getEyeHeight(), this.taskOwner.posZ, this.getTargetDistance(), this.getTargetDistance(), new Function<EntityPlayer, Double>()
-            {
+            this.targetEntity = (T)getNearestAttackablePlayer(this.taskOwner.worldObj, this.taskOwner.posX, this.taskOwner.posY + (double)this.taskOwner.getEyeHeight(), this.taskOwner.posZ, this.getTargetDistance(), this.getTargetDistance(), new Function<EntityPlayer, Double>() {
                 @Override
                 @Nullable
-                public Double apply(@Nullable EntityPlayer p_apply_1_)
-                {
+                public Double apply(@Nullable EntityPlayer p_apply_1_) {
                     return Double.valueOf(1.0D);
                 }
             }, (Predicate<EntityPlayer>)this.targetEntitySelector);

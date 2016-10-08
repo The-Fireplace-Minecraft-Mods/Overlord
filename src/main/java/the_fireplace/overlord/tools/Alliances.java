@@ -21,7 +21,7 @@ public class Alliances implements Serializable {
     }
 
     private Alliances(){
-        this.alliances = new ArrayList<Alliance>();
+        this.alliances = new ArrayList<>();
         instance = this;
     }
 
@@ -49,8 +49,8 @@ public class Alliances implements Serializable {
     }
 
     public void addAlliance(Alliance alliance) {
-        for (int i = 0; i < alliances.size(); i++) {
-            if (alliances.get(i).equals(alliance))
+        for (Alliance alliance1 : alliances) {
+            if (alliance1.equals(alliance))
                 return;
         }
         alliances.add(alliance);
@@ -76,6 +76,7 @@ public class Alliances implements Serializable {
     private static void readFromFile() {
         File f = new File(saveDir, dataFileName);
         if (f.exists()) {
+            //noinspection TryWithIdenticalCatches
             try {
                 ObjectInputStream stream = new ObjectInputStream(new FileInputStream(f));
                 instance = (Alliances) stream.readObject();

@@ -33,15 +33,13 @@ public class UpdateArmyMessage implements IMessage {
     public static class Handler extends AbstractServerMessageHandler<UpdateArmyMessage> {
         @Override
         public IMessage handleServerMessage(EntityPlayer player, UpdateArmyMessage message, MessageContext ctx) {
-            for(EntitySkeletonWarrior skeleton:player.worldObj.getEntities(EntitySkeletonWarrior.class, x -> true)){
-                if(skeleton.getOwnerId().equals(player.getUniqueID())){
-                    if(message.buttonId < 3){
-                        skeleton.setAttackMode((byte)message.buttonId);
-                    }else{
-                        skeleton.setMovementMode((byte)(message.buttonId-3));
-                    }
+            player.worldObj.getEntities(EntitySkeletonWarrior.class, x -> true).stream().filter(skeleton -> skeleton.getOwnerId().equals(player.getUniqueID())).forEach(skeleton -> {
+                if (message.buttonId < 3) {
+                    skeleton.setAttackMode((byte) message.buttonId);
+                } else {
+                    skeleton.setMovementMode((byte) (message.buttonId - 3));
                 }
-            }
+            });
             return null;
         }
     }

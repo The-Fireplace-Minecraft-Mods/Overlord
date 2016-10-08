@@ -153,12 +153,12 @@ public class Overlord {
 
     @SideOnly(Side.CLIENT)
     private void rmm(Block b) {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(b), 0, new ModelResourceLocation(MODID + ":" + b.getUnlocalizedName().substring(5), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(b), 0, new ModelResourceLocation(MODID + ':' + b.getUnlocalizedName().substring(5), "inventory"));
     }
 
     @SideOnly(Side.CLIENT)
     private void rmm(Item i) {
-        ModelLoader.setCustomModelResourceLocation(i, 0, new ModelResourceLocation(MODID + ":" + i.getUnlocalizedName().substring(5), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(i, 0, new ModelResourceLocation(MODID + ':' + i.getUnlocalizedName().substring(5), "inventory"));
     }
 
     public void registerBlock(Block block) {

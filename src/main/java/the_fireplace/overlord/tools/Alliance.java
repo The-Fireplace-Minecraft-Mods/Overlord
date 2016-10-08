@@ -24,6 +24,6 @@ public class Alliance implements Serializable {
     }
 
     @Override public String toString() {
-        return Alliance.class.getName() + "@" + Integer.toHexString(this.hashCode()) + " [" + this.obj1.toString() + ", " + this.obj2.toString() + "]";
+        return Alliance.class.getName() + '@' + Integer.toHexString(this.hashCode()) + " [" + this.obj1.toString() + ", " + this.obj2.toString() + ']';
     }
 }

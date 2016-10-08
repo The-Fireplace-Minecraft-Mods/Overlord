@@ -38,7 +38,7 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
         if(skeleton.hasSkinsuit()){
             this.model.setModelAttributes(this.renderer.getMainModel());
             this.model.setLivingAnimations(skeleton, limbSwing, limbSwingAmount, partialTicks);
-            if(!skeleton.getSkinsuitName().equals("")) {
+            if(!skeleton.getSkinsuitName().isEmpty()) {
                 try {
                     if(!cachedir.exists())
                         if(!cachedir.mkdirs())
@@ -150,7 +150,7 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
         arm_bottom = opat.filter(arm_bottom, null);
 
         BufferedImage leg_front = new BufferedImage(12, 12, BufferedImage.TYPE_INT_ARGB);
-        leg_front.getGraphics().drawImage(inputSkin, 0, 0, 12, 12, 0, 20, 0+12, (20) + (12), null);
+        leg_front.getGraphics().drawImage(inputSkin, 0, 0, 12, 12, 0, 20, 12, (20) + (12), null);
         leg_front = op.filter(leg_front, null);
 
         BufferedImage leg_back = new BufferedImage(4, 12, BufferedImage.TYPE_INT_ARGB);

@@ -87,12 +87,10 @@ public class GuiSkeletonMaker extends GuiContainer {
         }
     }
 
-    private boolean isButtonEnabled(){
-        if(te.getStackInSlot(1) == null || te.getStackInSlot(2) == null || te.getStackInSlot(3) == null)
+    private boolean isButtonEnabled() {
+        if (te.getStackInSlot(1) == null || te.getStackInSlot(2) == null || te.getStackInSlot(3) == null)
             return false;
-        if(te.getMilk() < 2)
-            return false;
-        return !(te.getStackInSlot(1).stackSize < 64 || te.getStackInSlot(2).stackSize < 64 || te.getStackInSlot(3).stackSize < 64);
+        return te.getMilk() >= 2 && !(te.getStackInSlot(1).stackSize < 64 || te.getStackInSlot(2).stackSize < 64 || te.getStackInSlot(3).stackSize < 64);
     }
 
     private String getWarning(){
@@ -102,7 +100,7 @@ public class GuiSkeletonMaker extends GuiContainer {
             if(te.getStackInSlot(0).getTagCompound() == null){
                 return I18n.format("skeleton_maker.warning.unclaimed");
             }else{
-                if(te.getStackInSlot(0).getTagCompound().getString("Owner").equals("")){
+                if(te.getStackInSlot(0).getTagCompound().getString("Owner").isEmpty()){
                     return I18n.format("skeleton_maker.warning.unclaimed");
                 }else{
                     if(te.getWorld().getPlayerEntityByUUID(UUID.fromString(te.getStackInSlot(0).getTagCompound().getString("Owner"))).equals(playerUsing)){

@@ -28,6 +28,7 @@ public class PacketDispatcher {
     }
 
     private static final void registerMessage(Class handlerClass, Class messageClass, Side side) {
+        //noinspection unchecked
         PacketDispatcher.dispatcher.registerMessage(handlerClass, messageClass, packetId++, side);
     }
 

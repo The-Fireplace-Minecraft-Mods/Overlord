@@ -25,6 +25,7 @@ public class CustomDataSerializers {
         @Override
         public DataParameter<UUID> createKey(int id)
         {
+            //noinspection unchecked
             return new DataParameter(id, this);
         }
     };

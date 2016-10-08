@@ -26,6 +26,6 @@ public class StringPair implements Serializable {
     }
 
     @Override public String toString() {
-        return StringPair.class.getName() + "@" + Integer.toHexString(this.hashCode()) + " [" + this.player_uuid + ", " + this.player_name + "]";
+        return StringPair.class.getName() + '@' + Integer.toHexString(this.hashCode()) + " [" + this.player_uuid + ", " + this.player_name + ']';
     }
 }

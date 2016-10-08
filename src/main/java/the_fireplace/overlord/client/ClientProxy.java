@@ -19,6 +19,7 @@ import java.io.File;
 public class ClientProxy extends CommonProxy {
     @Override
     public String translateToLocal(String u, String... args){
+        //noinspection ConfusingArgumentToVarargsMethod
         return I18n.format(u, args);
     }
 

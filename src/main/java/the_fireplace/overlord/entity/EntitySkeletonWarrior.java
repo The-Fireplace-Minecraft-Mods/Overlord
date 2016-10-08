@@ -170,9 +170,12 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     public void addTargetTasks(){
         switch(dataManager.get(ATTACK_MODE)) {
             case 2:
+                //noinspection unchecked
                 this.targetTasks.addTask(2, new EntityAINearestNonTeamTarget(this, EntityPlayer.class, true));
             case 1:
+                //noinspection unchecked
                 this.targetTasks.addTask(3, new EntityAINearestNonTeamTarget(this, EntityMob.class, true));
+                //noinspection unchecked
                 this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntitySlime.class, true));
                 this.targetTasks.addTask(1, new EntityAIHurtByNonAllied(this, true));
                 break;
@@ -286,6 +289,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         return EnumCreatureAttribute.UNDEAD;
     }
 
+    ItemStack bucket = new ItemStack(Items.BUCKET);
     @Override
     public void onLivingUpdate()
     {
@@ -295,7 +299,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                     if(inventory.getStackInSlot(i).getItem() == Items.MILK_BUCKET){
                         this.increaseMilkLevel();
                         inventory.setInventorySlotContents(i, null);
-                        inventory.addItem(new ItemStack(Items.BUCKET));
+                        inventory.addItem(bucket);
                     }
             }
             checkLevelUp();
@@ -329,19 +333,15 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                 }
             }
 
-            for (EntityItem entityitem : this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D)))
-            {
-                if (!entityitem.isDead && entityitem.getEntityItem() != null && !entityitem.cannotPickup())
-                {
-                    ItemStack stack2 = inventory.addItem(entityitem.getEntityItem());
-                    playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
-                    if(stack2 != null){
-                        entityitem.getEntityItem().stackSize = stack2.stackSize;
-                    }else{
-                        entityitem.setDead();
-                    }
+            this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D)).stream().filter(entityitem -> !entityitem.isDead && entityitem.getEntityItem() != null && !entityitem.cannotPickup()).forEach(entityitem -> {
+                ItemStack stack2 = inventory.addItem(entityitem.getEntityItem());
+                playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                if (stack2 != null) {
+                    entityitem.getEntityItem().stackSize = stack2.stackSize;
+                } else {
+                    entityitem.setDead();
                 }
-            }
+            });
             //Swap bow for sword
             if(getHeldItemMainhand() != null){
                 if(getHeldItemMainhand().getItem() instanceof ItemBow)
