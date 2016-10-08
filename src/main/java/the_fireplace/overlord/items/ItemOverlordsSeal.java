@@ -32,7 +32,7 @@ public class ItemOverlordsSeal extends Item {
             return new ActionResult(EnumActionResult.SUCCESS, stack);
         }else{
             if(stack.getTagCompound().getString("Owner").equals(playerIn.getUniqueID().toString())){
-                FMLNetworkHandler.openGui(playerIn, Overlord.instance, 1, worldIn, (int)playerIn.posX, (int)playerIn.posY, (int)playerIn.posZ);
+                FMLNetworkHandler.openGui(playerIn, Overlord.instance, -1, worldIn, (int)playerIn.posX, (int)playerIn.posY, (int)playerIn.posZ);
                 return new ActionResult(EnumActionResult.SUCCESS, stack);
             }else{
                 return new ActionResult(EnumActionResult.FAIL, stack);

@@ -27,7 +27,7 @@ public class OverlordGuiHandler implements IGuiHandler {
                 } else {
                     return null;
                 }
-            case 1:
+            case -1:
                 return null;
             default:
                 if(world.getEntityByID(ID) != null){
@@ -49,7 +49,7 @@ public class OverlordGuiHandler implements IGuiHandler {
                 } else {
                     return null;
                 }
-            case 1:
+            case -1:
                 return new GuiRing();
             default:
                 if(world.getEntityByID(ID) != null){
