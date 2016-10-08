@@ -448,12 +448,14 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
             for(int i=0;i<inventory.getSizeInventory();i++){
                 if(inventory.getStackInSlot(i) != null){
                     EntityItem entityitem = new EntityItem(worldObj, posX, posY, posZ, inventory.getStackInSlot(i));
+                    entityitem.setPickupDelay(40);
                     worldObj.spawnEntityInWorld(entityitem);
                 }
             }
             for(int i=0;i<equipInventory.getSizeInventory();i++){
                 if(equipInventory.getStackInSlot(i) != null){
                     EntityItem entityitem = new EntityItem(worldObj, posX, posY, posZ, equipInventory.getStackInSlot(i));
+                    entityitem.setPickupDelay(40);
                     worldObj.spawnEntityInWorld(entityitem);
                 }
             }
