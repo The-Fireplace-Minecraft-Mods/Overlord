@@ -63,11 +63,11 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
                 this.renderer.bindTexture(STEVE);
             if(ConfigValues.GHOSTLYSKINS) {
                 GlStateManager.enableBlend();
-                GlStateManager.color(1.0F, 1.0F, 1.0F, 0.5F);
+                GlStateManager.color(1.0F, 1.0F, 1.0F, 0.6F);
             }
             model.render(skeleton, limbSwing, limbSwingAmount, partialTicks, netHeadYaw, headPitch, scale);
             if(ConfigValues.GHOSTLYSKINS) {
-                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                GlStateManager.resetColor();
                 GlStateManager.disableBlend();
             }
     }
