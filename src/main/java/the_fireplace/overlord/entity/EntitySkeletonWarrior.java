@@ -10,6 +10,7 @@ import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityTippedArrow;
@@ -176,6 +177,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                 this.targetTasks.addTask(2, new EntityAINearestNonTeamTarget(this, EntityPlayer.class, true));
             case 1:
                 this.targetTasks.addTask(3, new EntityAINearestNonTeamTarget(this, EntityMob.class, true));
+                this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntitySlime.class, true));
                 this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
                 break;
             case 0:
