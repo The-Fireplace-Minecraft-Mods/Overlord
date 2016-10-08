@@ -228,7 +228,9 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                             if(stack.getTagCompound() != null){
                                 this.readFromNBT(stack.getTagCompound());
                             }else{
-                                stack.setTagCompound(this.writeToNBT(new NBTTagCompound()));
+                                NBTTagCompound compound = new NBTTagCompound();
+                                this.writeEntityToNBT(compound);
+                                stack.setTagCompound(compound);
                             }
                         }
                     }

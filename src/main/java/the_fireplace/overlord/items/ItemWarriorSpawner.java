@@ -2,7 +2,6 @@ package the_fireplace.overlord.items;
 
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,7 +18,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 
 import javax.annotation.Nullable;
-import java.util.UUID;
 
 /**
  * @author The_Fireplace
@@ -48,7 +46,14 @@ public class ItemWarriorSpawner extends Item {
                 offsetY = 0.5D;
             }
 
-            EntitySkeletonWarrior entity = spawnCreature(worldIn, (double)pos.getX() + 0.5D, (double)pos.getY() + offsetY, (double)pos.getZ() + 0.5D);
+            EntitySkeletonWarrior entity = new EntitySkeletonWarrior(worldIn);
+
+            entity.setLocationAndAngles(pos.getX(), pos.getY() + offsetY, pos.getZ(), MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
+            entity.rotationYawHead = entity.rotationYaw;
+            entity.renderYawOffset = entity.rotationYaw;
+            entity.onInitialSpawn(worldIn.getDifficultyForLocation(new BlockPos(entity)), null);
+            worldIn.spawnEntityInWorld(entity);
+            entity.playLivingSound();
 
             if (entity != null)
             {
@@ -59,7 +64,7 @@ public class ItemWarriorSpawner extends Item {
 
                 applyItemEntityDataToEntity(worldIn, playerIn, stack, entity);
 
-                entity.setLocationAndAngles((double)pos.getX() + 0.5D, (double)pos.getY() + offsetY, (double)pos.getZ() + 0.5D, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
+                entity.setLocationAndAngles(pos.getX(), pos.getY() + offsetY, pos.getZ(), MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
 
                 if (!playerIn.capabilities.isCreativeMode)
                 {
@@ -71,10 +76,7 @@ public class ItemWarriorSpawner extends Item {
         }
     }
 
-    /**
-     * Applies the data in the EntityTag tag of the given ItemStack to the given Entity.
-     */
-    public static void applyItemEntityDataToEntity(World entityWorld, @Nullable EntityPlayer player, ItemStack stack, @Nullable Entity targetEntity)
+    public static void applyItemEntityDataToEntity(World entityWorld, @Nullable EntityPlayer player, ItemStack stack, @Nullable EntitySkeletonWarrior targetEntity)
     {
         MinecraftServer minecraftserver = entityWorld.getMinecraftServer();
 
@@ -89,27 +91,9 @@ public class ItemWarriorSpawner extends Item {
                     return;
                 }
 
-                NBTTagCompound nbttagcompound1 = targetEntity.writeToNBT(new NBTTagCompound());
-                UUID uuid = targetEntity.getUniqueID();
-                nbttagcompound1.merge(nbttagcompound);
-                targetEntity.setUniqueId(uuid);
-                targetEntity.readFromNBT(nbttagcompound1);
+                targetEntity.readFromNBT(nbttagcompound);
             }
         }
-    }
-
-    public static EntitySkeletonWarrior spawnCreature(World worldIn, double x, double y, double z)
-    {
-        EntitySkeletonWarrior entity = new EntitySkeletonWarrior(worldIn);
-
-        entity.setLocationAndAngles(x, y, z, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
-        entity.rotationYawHead = entity.rotationYaw;
-        entity.renderYawOffset = entity.rotationYaw;
-        entity.onInitialSpawn(worldIn.getDifficultyForLocation(new BlockPos(entity)), null);
-        worldIn.spawnEntityInWorld(entity);
-        entity.playLivingSound();
-
-        return entity;
     }
 
     @Override
