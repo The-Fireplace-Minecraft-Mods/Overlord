@@ -85,7 +85,7 @@ public class GuiSkeleton extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        this.drawCenteredString(fontRendererObj, entity.getHealth()+"/"+entity.getMaxHealth(), 91, 4, Color.RED.getRGB());
+        this.drawCenteredString(fontRendererObj, Math.round(entity.getHealth())+"/"+Math.round(entity.getMaxHealth()), 91, 4, Color.RED.getRGB());
         this.drawCenteredString(fontRendererObj, String.valueOf(entity.getLevel()), 91, 20, Color.GREEN.getRGB());
     }
 
