@@ -40,10 +40,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.config.ConfigValues;
-import the_fireplace.overlord.entity.ai.EntityAIFollowMaster;
-import the_fireplace.overlord.entity.ai.EntityAINearestNonTeamTarget;
-import the_fireplace.overlord.entity.ai.EntityAIWanderBase;
-import the_fireplace.overlord.entity.ai.EntityAIWarriorBow;
+import the_fireplace.overlord.entity.ai.*;
 import the_fireplace.overlord.tools.CustomDataSerializers;
 
 import javax.annotation.Nullable;
@@ -158,12 +155,12 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
             };
         }
         if(aiArrowAttack == null){
-            aiArrowAttack = new EntityAIWarriorBow(this, 0.8D, 20, 15.0F);
+            aiArrowAttack = new EntityAIWarriorBow(this, 0.8D, 20, 30.0F);
         }
         if(this.getHeldItemMainhand() != null)
             if(this.getHeldItemMainhand().getItem() instanceof ItemBow){
-               this.tasks.addTask(5, aiArrowAttack);
-               return;
+                this.tasks.addTask(5, aiArrowAttack);
+                return;
             }
         if(this.dataManager.get(MOVEMENT_MODE) > 0)
             this.tasks.addTask(5, aiAttackOnCollide);
@@ -176,7 +173,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
             case 1:
                 this.targetTasks.addTask(3, new EntityAINearestNonTeamTarget(this, EntityMob.class, true));
                 this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntitySlime.class, true));
-                this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+                this.targetTasks.addTask(1, new EntityAIHurtByNonAllied(this, true));
                 break;
             case 0:
             default:
@@ -743,6 +740,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         {
             this.playEquipSound(stack);
             this.equipInventory.setInventorySlotContents(4, stack);
+            initEntityAI();
         }
         else if (slotIn == EntityEquipmentSlot.OFFHAND)
         {
