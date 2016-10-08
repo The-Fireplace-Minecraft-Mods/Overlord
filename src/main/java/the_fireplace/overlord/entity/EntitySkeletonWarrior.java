@@ -19,9 +19,7 @@ import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.InventoryBasic;
-import net.minecraft.item.ItemBow;
-import net.minecraft.item.ItemShield;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.datasync.DataParameter;
@@ -336,6 +334,20 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                         entityitem.setDead();
                     }
                 }
+            }
+            //Swap bow for sword
+            if(getHeldItemMainhand() != null){
+                if(getHeldItemMainhand().getItem() instanceof ItemBow)
+                    if((getHeldItemOffhand() != null && !(getHeldItemOffhand().getItem() instanceof ItemArrow)) || getHeldItemOffhand() == null){
+                        for(int i=0;i<inventory.getSizeInventory();i++){
+                            if(inventory.getStackInSlot(i) != null && inventory.getStackInSlot(i).getItem() instanceof ItemSword){
+                                ItemStack clone = inventory.getStackInSlot(i).copy();
+                                inventory.setInventorySlotContents(i, getHeldItemMainhand());
+                                setHeldItem(EnumHand.MAIN_HAND, clone);
+                                break;
+                            }
+                        }
+                    }
             }
             //Equipment Achievements
             if(getHeldItemMainhand() != null){
