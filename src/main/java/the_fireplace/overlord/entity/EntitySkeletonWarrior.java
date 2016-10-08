@@ -334,6 +334,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                 if (!entityitem.isDead && entityitem.getEntityItem() != null && !entityitem.cannotPickup())
                 {
                     ItemStack stack2 = inventory.addItem(entityitem.getEntityItem());
+                    playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
                     if(stack2 != null){
                         entityitem.getEntityItem().stackSize = stack2.stackSize;
                     }else{
