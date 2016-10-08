@@ -224,6 +224,12 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                             }
                             this.dataManager.set(HAS_SKINSUIT, Boolean.valueOf(false));
                             this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
+                        }else if(stack.getItem() == Overlord.warrior_spawner){
+                            if(stack.getTagCompound() != null){
+                                this.readFromNBT(stack.getTagCompound());
+                            }else{
+                                stack.setTagCompound(this.writeToNBT(new NBTTagCompound()));
+                            }
                         }
                     }
                 }

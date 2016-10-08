@@ -41,6 +41,7 @@ import the_fireplace.overlord.crafting.Recipes;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.items.ItemOverlordsSeal;
 import the_fireplace.overlord.items.ItemSansMask;
+import the_fireplace.overlord.items.ItemWarriorSpawner;
 import the_fireplace.overlord.network.OverlordGuiHandler;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
@@ -85,6 +86,7 @@ public class Overlord {
     public static final Item overlords_seal = new ItemOverlordsSeal().setUnlocalizedName("overlords_seal").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item sans_mask = new ItemSansMask(sans);
     public static final Item skinsuit = new Item().setUnlocalizedName("skinsuit").setCreativeTab(tabOverlord).setMaxStackSize(1);
+    public static final Item warrior_spawner = new ItemWarriorSpawner().setUnlocalizedName("warrior_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
 
     public static void syncConfig() {
         ConfigValues.HELMETDAMAGE = HELMETDAMAGE_PROPERTY.getBoolean();
@@ -110,6 +112,7 @@ public class Overlord {
         registerItem(overlords_seal);
         registerItem(sans_mask);
         registerItem(skinsuit);
+        registerItem(warrior_spawner);
         GameRegistry.registerTileEntity(TileEntitySkeletonMaker.class, "skeleton_maker");
         int eid=-1;
         EntityRegistry.registerModEntity(EntitySkeletonWarrior.class, "skeleton_warrior", ++eid, instance, 32, 2, false);
@@ -145,6 +148,7 @@ public class Overlord {
         rmm(overlords_seal);
         rmm(sans_mask);
         rmm(skinsuit);
+        rmm(warrior_spawner);
     }
 
     @SideOnly(Side.CLIENT)
