@@ -167,15 +167,13 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
             this.tasks.addTask(5, aiAttackOnCollide);
     }
 
+    @SuppressWarnings("unchecked")
     public void addTargetTasks(){
         switch(dataManager.get(ATTACK_MODE)) {
             case 2:
-                //noinspection unchecked
                 this.targetTasks.addTask(2, new EntityAINearestNonTeamTarget(this, EntityPlayer.class, true));
             case 1:
-                //noinspection unchecked
                 this.targetTasks.addTask(3, new EntityAINearestNonTeamTarget(this, EntityMob.class, true));
-                //noinspection unchecked
                 this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntitySlime.class, true));
                 this.targetTasks.addTask(1, new EntityAIHurtByNonAllied(this, true));
                 break;
@@ -298,7 +296,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                 if(inventory.getStackInSlot(i) != null)
                     if(inventory.getStackInSlot(i).getItem() == Items.MILK_BUCKET){
                         this.increaseMilkLevel();
-                        inventory.setInventorySlotContents(i, null);
+                        inventory.getStackInSlot(i).stackSize--;
                         inventory.addItem(bucket);
                     }
             }
