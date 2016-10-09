@@ -27,7 +27,13 @@ public class CommonEvents {
                 if(event.getItemStack() != null)
                     if(event.getItemStack().getItem() == Items.MILK_BUCKET){
                         ((EntityLivingBase) event.getTarget()).heal(1);
-                        event.getEntityPlayer().setItemStackToSlot(event.getHand() == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, new ItemStack(Items.BUCKET));
+                        if(!event.getEntityPlayer().isCreative()) {
+                            if(event.getItemStack().stackSize > 1)
+                                event.getItemStack().stackSize--;
+                            else
+                                event.getEntityPlayer().setItemStackToSlot(event.getHand() == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, null);
+                            event.getEntityPlayer().inventory.addItemStackToInventory(new ItemStack(Items.BUCKET));
+                        }
                     }
     }
     @SubscribeEvent
