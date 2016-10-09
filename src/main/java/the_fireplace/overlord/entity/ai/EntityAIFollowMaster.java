@@ -105,7 +105,7 @@ public class EntityAIFollowMaster extends EntityAIBase
     private boolean isEmptyBlock(BlockPos pos)
     {
         IBlockState iblockstate = this.theWorld.getBlockState(pos);
-        return iblockstate.getMaterial() == Material.AIR || !iblockstate.isFullCube();
+        return iblockstate.getMaterial() == Material.AIR/* || !iblockstate.isFullCube()*/;
     }
 
     /**
