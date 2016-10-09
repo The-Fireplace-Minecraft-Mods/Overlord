@@ -44,10 +44,16 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
             if(getStackInSlot(5) != null && getStackInSlot(5).getItem() == Items.BUCKET && getStackInSlot(5).stackSize < getStackInSlot(5).getMaxStackSize()) {
                 setMilk((byte) (getMilk() + 1));
                 getStackInSlot(5).stackSize++;
-                getStackInSlot(4).stackSize--;
+                if(getStackInSlot(4).stackSize > 1)
+                    getStackInSlot(4).stackSize--;
+                else
+                    setInventorySlotContents(4, null);
             }else if(getStackInSlot(5) == null){
                 setMilk((byte) (getMilk() + 1));
-                getStackInSlot(4).stackSize--;
+                if(getStackInSlot(4).stackSize > 1)
+                    getStackInSlot(4).stackSize--;
+                else
+                    setInventorySlotContents(4, null);
                 setInventorySlotContents(5, new ItemStack(Items.BUCKET));
             }
         }

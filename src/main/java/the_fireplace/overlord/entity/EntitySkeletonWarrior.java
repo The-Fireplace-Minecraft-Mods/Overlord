@@ -296,7 +296,10 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                 if(inventory.getStackInSlot(i) != null)
                     if(inventory.getStackInSlot(i).getItem() == Items.MILK_BUCKET){
                         this.increaseMilkLevel();
-                        inventory.getStackInSlot(i).stackSize--;
+                        if(inventory.getStackInSlot(i).stackSize > 1)
+                            inventory.getStackInSlot(i).stackSize--;
+                        else
+                            inventory.setInventorySlotContents(i, null);
                         inventory.addItem(bucket);
                     }
             }
