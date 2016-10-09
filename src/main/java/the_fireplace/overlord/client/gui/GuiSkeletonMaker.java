@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -23,6 +24,8 @@ import java.util.UUID;
  */
 public class GuiSkeletonMaker extends GuiContainer {
     public static final ResourceLocation texture = new ResourceLocation(Overlord.MODID, "textures/gui/skeleton_maker.png");
+    public static final ResourceLocation overlords_seal_texture = new ResourceLocation(Overlord.MODID, "textures/items/overlords_seal.png");
+    public static final ResourceLocation milk_texture = new ResourceLocation("textures/items/bucket_milk.png");
     private TileEntitySkeletonMaker te;
     private EntityPlayer playerUsing;
 
@@ -70,6 +73,22 @@ public class GuiSkeletonMaker extends GuiContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
         this.drawCenteredString(fontRendererObj, getWarning(), xSize/2, -10, Color.PINK.getRGB());
+        if(te.getStackInSlot(0) == null){
+            GlStateManager.enableBlend();
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 0.25F);
+            Minecraft.getMinecraft().getTextureManager().bindTexture(overlords_seal_texture);
+            drawModalRectWithCustomSizedTexture(96, 6, 0, 0, 16, 16, 16, 16);
+            GlStateManager.resetColor();
+            GlStateManager.disableBlend();
+        }
+        if(te.getStackInSlot(4) == null){
+            GlStateManager.enableBlend();
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 0.25F);
+            Minecraft.getMinecraft().getTextureManager().bindTexture(milk_texture);
+            drawModalRectWithCustomSizedTexture(154, 34, 0, 0, 16, 16, 16, 16);
+            GlStateManager.resetColor();
+            GlStateManager.disableBlend();
+        }
     }
 
     @Override
