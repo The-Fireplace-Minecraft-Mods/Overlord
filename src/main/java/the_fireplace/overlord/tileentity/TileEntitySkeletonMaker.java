@@ -67,7 +67,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
             }
         }
         EntitySkeletonWarrior skeletonWarrior = new EntitySkeletonWarrior(worldObj, owner);
-        skeletonWarrior.setLocationAndAngles(pos.getX(), pos.getY()+1, pos.getZ(), 1, 0);
+        skeletonWarrior.setLocationAndAngles(pos.getX()+0.5, pos.getY()+1, pos.getZ()+0.5, 1, 0);
         skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.HEAD, getStackInSlot(9));
         skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.CHEST, getStackInSlot(8));
         skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.LEGS, getStackInSlot(7));
