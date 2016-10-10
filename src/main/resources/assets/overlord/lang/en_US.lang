@@ -9,6 +9,7 @@ itemGroup.overlord=Overlord
 skeleton_maker.create=Create!
 skeleton_maker.warning.unclaimed=Warning: This skeleton will not be claimed.
 skeleton_maker.warning.notmine=Warning: This skeleton will belong to %s
+skeleton_maker.warning.suffocation=Warning: Your Skeleton Maker has blocks right above it. The spawned Skeleton Warrior may suffocate.
 entity.overlord.skeleton_warrior.name=Skeleton Warrior
 
 overlord.attack_modes=Attack Modes:
@@ -56,6 +57,9 @@ cfg.skinsuitnametags.tooltip=Do named Skinsuits name Skeleton Warriors after the
 cfg.huntcreepers=Hunt Creepers
 cfg.huntcreepers.tooltip=Do Skeleton Warriors go after Creepers?
 
+cfg.suffocationwarning=Warrior Suffocation Warning
+cfg.suffocationwarning.tooltip=Warn players in the Skeleton Maker GUI if the Skeleton Warrior spawned may suffocate?
+
 achievement.firstskeleton=You and what army?
 achievement.firstskeleton.desc=Summon a Skeleton Warrior
 
@@ -93,4 +97,4 @@ achievement.interference=Not me, you idiots!
 achievement.interference.desc=Get in the way of your own Skeleton Warrior's arrow
 
 achievement.sans=Heya
-achievement.sans.desc=
+achievement.sans.desc=Look like a spooky friend...

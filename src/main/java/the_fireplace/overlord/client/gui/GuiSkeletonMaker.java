@@ -1,5 +1,6 @@
 package the_fireplace.overlord.client.gui;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
@@ -11,6 +12,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import the_fireplace.overlord.Overlord;
+import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.container.ContainerSkeletonMaker;
 import the_fireplace.overlord.network.packets.CreateSkeletonMessage;
 import the_fireplace.overlord.network.PacketDispatcher;
@@ -89,6 +91,9 @@ public class GuiSkeletonMaker extends GuiContainer {
             GlStateManager.resetColor();
             GlStateManager.disableBlend();
         }
+        if(ConfigValues.SUFFOCATIONWARNING)
+        if(te.getWorld().getBlockState(te.getPos().up(2)).getMaterial() != Material.AIR)
+            this.drawCenteredString(fontRendererObj, I18n.format("skeleton_maker.warning.suffocation"), xSize/2, -20, Color.PINK.getRGB());
     }
 
     @Override

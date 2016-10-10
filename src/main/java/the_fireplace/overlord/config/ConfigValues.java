@@ -19,4 +19,8 @@ public class ConfigValues {
     public static final boolean HUNTCREEPERS_DEFAULT = false;
     public static boolean HUNTCREEPERS;
     public static final String HUNTCREEPERS_NAME = "cfg.huntcreepers";
+
+    public static final boolean SUFFOCATIONWARNING_DEFAULT = true;
+    public static boolean SUFFOCATIONWARNING;
+    public static final String SUFFOCATIONWARNING_NAME = "cfg.suffocationwarning";
 }
