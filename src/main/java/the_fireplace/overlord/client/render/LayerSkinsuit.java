@@ -1,5 +1,6 @@
 package the_fireplace.overlord.client.render;
 
+import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -16,6 +17,7 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
+import java.util.HashMap;
 
 /**
  * @author The_Fireplace
@@ -26,6 +28,7 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
     private ModelSkeletonWarrior model;
     private boolean nospam = false;
     public static final ResourceLocation STEVE = new ResourceLocation("textures/entity/steve.png");
+    public static HashMap<String, BufferedImage> skins = Maps.newHashMap();
 
     public LayerSkinsuit(RenderLivingBase<?> renderer)
     {
@@ -47,7 +50,13 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
                     if(!skinFile.exists())
                         if(!cacheSkin(skeleton.getSkinsuitName()))
                             throw new Exception();
-                    BufferedImage img = ImageIO.read(skinFile);
+                    BufferedImage img;
+                    if(skins.get(skeleton.getSkinsuitName()) != null)
+                        img = skins.get(skeleton.getSkinsuitName());
+                    else{
+                        img = ImageIO.read(skinFile);
+                        skins.put(skeleton.getSkinsuitName(), img);
+                    }
                     if(((img.getRGB(54,21)>>24) & 0xff) == 0)
                         model.smallSkinsuitArms = true;
                     DynamicTexture texture = new DynamicTexture(img);
