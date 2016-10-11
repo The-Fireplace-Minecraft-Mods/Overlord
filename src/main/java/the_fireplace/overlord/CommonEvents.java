@@ -2,18 +2,22 @@ package the_fireplace.overlord;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -67,6 +71,17 @@ public class CommonEvents {
                             ((EntityPlayerMP) event.getEntityLiving()).addStat(Overlord.nmyi);
                     }
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void sleepEvent(PlayerSleepInBedEvent event){
+        if(!event.getEntityPlayer().worldObj.isDaytime()){
+            List<EntitySkeletonWarrior> list = event.getEntityPlayer().worldObj.getEntitiesWithinAABB(EntitySkeletonWarrior.class, new AxisAlignedBB((double)event.getPos().getX() - 8.0D, (double)event.getPos().getY() - 5.0D, (double)event.getPos().getZ() - 8.0D, (double)event.getPos().getX() + 8.0D, (double)event.getPos().getY() + 5.0D, (double)event.getPos().getZ() + 8.0D));
+
+            if(!list.isEmpty()) {
+                event.setResult(EntityPlayer.SleepResult.OK);
             }
         }
     }
