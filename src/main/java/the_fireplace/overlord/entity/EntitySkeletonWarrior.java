@@ -117,7 +117,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         if(this.dataManager.get(ATTACK_MODE) != 0)
             addAttackTasks();
         addTargetTasks();
-        this.playSound(getAmbientSound(), getSoundVolume()*1.5F, getSoundPitch()*1.5F);
+        this.playSound(getAmbientSound(), getSoundVolume()*2.0F, getSoundPitch()*1.5F);
     }
 
     public void addMovementTasks(){
