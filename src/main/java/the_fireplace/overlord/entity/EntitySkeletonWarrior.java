@@ -108,6 +108,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     protected void initEntityAI()
     {
         this.tasks.taskEntries.clear();//Clear first so this can be called when the AI Modes change
+        this.getNavigator().clearPathEntity();
         this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(8, new EntityAILookIdle(this));
