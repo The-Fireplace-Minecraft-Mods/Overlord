@@ -153,6 +153,12 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                     super.startExecuting();
                     EntitySkeletonWarrior.this.setSwingingArms(true);
                 }
+
+                @Override
+                public void updateTask(){
+                    if(continueExecuting())
+                        super.updateTask();
+                }
             };
         }
         if(aiArrowAttack == null){
