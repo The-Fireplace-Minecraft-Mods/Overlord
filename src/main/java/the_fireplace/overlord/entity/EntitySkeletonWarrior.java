@@ -354,10 +354,24 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                     entityitem.setDead();
                 }
             });
-            //Swap bow for sword
+            //Bow stuffs
             if(getHeldItemMainhand() != null){
                 if(getHeldItemMainhand().getItem() instanceof ItemBow)
                     if((getHeldItemOffhand() != null && !(getHeldItemOffhand().getItem() instanceof ItemArrow)) || getHeldItemOffhand() == null){
+                        boolean swapWeapon=true;
+                        for(int i=0;i<inventory.getSizeInventory();i++){
+                            if(inventory.getStackInSlot(i) != null && inventory.getStackInSlot(i).getItem() instanceof ItemArrow){
+                                ItemStack offhand = null;
+                                if(getHeldItemOffhand() != null)
+                                    offhand=getHeldItemOffhand().copy();
+                                ItemStack arrows = inventory.getStackInSlot(i).copy();
+                                setHeldItem(EnumHand.OFF_HAND, arrows);
+                                inventory.setInventorySlotContents(i, offhand);
+                                swapWeapon=false;
+                                break;
+                            }
+                        }
+                        if(swapWeapon)
                         for(int i=0;i<inventory.getSizeInventory();i++){
                             if(inventory.getStackInSlot(i) != null && inventory.getStackInSlot(i).getItem() instanceof ItemSword){
                                 ItemStack clone = inventory.getStackInSlot(i).copy();
@@ -711,6 +725,10 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
 
     public void attackEntityWithRangedAttack(EntityLivingBase target, float p_82196_2_)
     {
+        ItemStack itemstack = this.getHeldItemOffhand();
+        if(itemstack == null || !(itemstack.getItem() instanceof ItemArrow))
+            return;
+
         EntityTippedArrow entitytippedarrow = new EntityTippedArrow(this.worldObj, this);
         double d0 = target.posX - this.posX;
         double d1 = target.getEntityBoundingBox().minY + (double)(target.height / 3.0F) - entitytippedarrow.posY;
@@ -740,15 +758,17 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
             entitytippedarrow.setFire(100);
         }
 
-        ItemStack itemstack = this.getHeldItem(EnumHand.OFF_HAND);
-
-        if (itemstack != null && itemstack.getItem() == Items.TIPPED_ARROW)
+        if (itemstack.getItem() == Items.TIPPED_ARROW)
         {
             entitytippedarrow.setPotionEffect(itemstack);
         }
 
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
         this.worldObj.spawnEntityInWorld(entitytippedarrow);
+        if(itemstack.stackSize > 1)
+            itemstack.stackSize--;
+        else
+            setHeldItem(EnumHand.OFF_HAND, null);
     }
 
     @Override
