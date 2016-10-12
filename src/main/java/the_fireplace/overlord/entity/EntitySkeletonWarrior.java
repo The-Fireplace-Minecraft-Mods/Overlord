@@ -765,6 +765,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
 
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
         this.worldObj.spawnEntityInWorld(entitytippedarrow);
+        if(EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.INFINITY, this) <= 0)
         if(itemstack.stackSize > 1)
             itemstack.stackSize--;
         else
