@@ -33,10 +33,10 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
     private ItemStack[] inventory;
     public static final String PROP_NAME = "TileEntitySkeletonMaker";
     byte milk = 0;
-    public static final int[] clearslots = new int[]{1,2,3,6,7,8,9,10,11};
+    public static final int[] clearslots = new int[]{1,2,3,6,7,8,9,10,11,12};
 
     public TileEntitySkeletonMaker() {
-        inventory = new ItemStack[12];
+        inventory = new ItemStack[13];
     }
 
     @Override
@@ -78,6 +78,8 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
         skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, getStackInSlot(11));
 
         worldObj.spawnEntityInWorld(skeletonWarrior);
+        if(getStackInSlot(12) != null)
+            skeletonWarrior.applySkinsuit(getStackInSlot(12));
         setMilk((byte)0);
         for(int i:clearslots){
             setInventorySlotContents(i, null);
@@ -255,7 +257,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
     @Override
     public int[] getSlotsForFace(EnumFacing side) {
         if (side == EnumFacing.EAST || side == EnumFacing.WEST || side == EnumFacing.NORTH || side == EnumFacing.SOUTH || side == EnumFacing.UP) {
-            return new int[]{1, 2, 3, 4, 6, 7, 8, 9};
+            return new int[]{1, 2, 3, 4, 6, 7, 8, 9, 12};
         }
         if (side == EnumFacing.DOWN) {
             return new int[]{5};
@@ -266,7 +268,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
     @Override
     public boolean canInsertItem(int index, ItemStack stack, EnumFacing direction) {
         if (stack != null) {
-            if (index >= 1 && index < 5 || index >= 6 && index < 10) {
+            if (index >= 1 && index < 5 || index >= 6 && index < 10 || index == 12) {
                 if(this.isItemValidForSlot(index, stack))
                     return true;
             }

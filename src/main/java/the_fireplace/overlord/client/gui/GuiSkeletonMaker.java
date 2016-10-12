@@ -28,6 +28,7 @@ public class GuiSkeletonMaker extends GuiContainer {
     public static final ResourceLocation texture = new ResourceLocation(Overlord.MODID, "textures/gui/skeleton_maker.png");
     public static final ResourceLocation overlords_seal_texture = new ResourceLocation(Overlord.MODID, "textures/items/overlords_seal.png");
     public static final ResourceLocation milk_texture = new ResourceLocation("textures/items/bucket_milk.png");
+    public static final ResourceLocation skinsuit_texture = new ResourceLocation(Overlord.MODID, "textures/items/skinsuit.png");
     private TileEntitySkeletonMaker te;
     private EntityPlayer playerUsing;
 
@@ -88,6 +89,14 @@ public class GuiSkeletonMaker extends GuiContainer {
             GlStateManager.color(1.0F, 1.0F, 1.0F, 0.25F);
             Minecraft.getMinecraft().getTextureManager().bindTexture(milk_texture);
             drawModalRectWithCustomSizedTexture(154, 34, 0, 0, 16, 16, 16, 16);
+            GlStateManager.resetColor();
+            GlStateManager.disableBlend();
+        }
+        if(te.getStackInSlot(12) == null){
+            GlStateManager.enableBlend();
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 0.25F);
+            Minecraft.getMinecraft().getTextureManager().bindTexture(skinsuit_texture);
+            drawModalRectWithCustomSizedTexture(6, 6, 0, 0, 16, 16, 16, 16);
             GlStateManager.resetColor();
             GlStateManager.disableBlend();
         }

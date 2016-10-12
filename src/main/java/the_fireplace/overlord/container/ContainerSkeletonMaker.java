@@ -76,6 +76,8 @@ public class ContainerSkeletonMaker extends Container {
                 return "minecraft:items/empty_armor_slot_shield";
             }
         });//tile entity ID 11
+
+        this.addSlotToContainer(new SlotSkinsuit(entity, 12, 6, 6));//tile entity ID 12
     }
 
     @Override

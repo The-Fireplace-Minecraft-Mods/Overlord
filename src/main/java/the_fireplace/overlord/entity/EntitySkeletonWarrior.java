@@ -220,13 +220,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                     if(!worldObj.isRemote)
                     if(stack != null){
                         if(stack.getItem() == Overlord.skinsuit && !this.hasSkinsuit()){
-                            this.dataManager.set(HAS_SKINSUIT, Boolean.valueOf(true));
-                            if(stack.hasDisplayName()) {
-                                this.dataManager.set(SKINSUIT_NAME, String.valueOf(stack.getDisplayName()));
-                                if(ConfigValues.SKINSUITNAMETAGS && !this.hasCustomName())
-                                    setCustomNameTag(stack.getDisplayName());
-                            }else
-                                this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
+                            applySkinsuit(stack);
                             if(!player.isCreative())
                                 stack.stackSize--;
                         }else if(stack.getItem() == Items.SHEARS && this.hasSkinsuit()){
@@ -254,6 +248,16 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
             }
         }
         return super.processInteract(player, hand, stack);
+    }
+
+    public void applySkinsuit(ItemStack stack){
+        this.dataManager.set(HAS_SKINSUIT, Boolean.valueOf(true));
+        if(stack.hasDisplayName()) {
+            this.dataManager.set(SKINSUIT_NAME, String.valueOf(stack.getDisplayName()));
+            if(ConfigValues.SKINSUITNAMETAGS && !this.hasCustomName())
+                setCustomNameTag(stack.getDisplayName());
+        }else
+            this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
     }
 
     @Override
