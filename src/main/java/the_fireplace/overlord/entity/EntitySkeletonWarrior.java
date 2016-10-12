@@ -13,6 +13,7 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
@@ -251,6 +252,14 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
             }
         }
         return super.processInteract(player, hand, stack);
+    }
+
+    @Override
+    public boolean attackEntityAsMob(Entity entityIn)
+    {
+        if(getHeldItemMainhand() != null)
+            getHeldItemMainhand().damageItem(1, this);
+        return super.attackEntityAsMob(entityIn);
     }
 
     @Override
@@ -763,13 +772,18 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
             entitytippedarrow.setPotionEffect(itemstack);
         }
 
+        if(EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.INFINITY, this) <= 0) {
+            if (itemstack.stackSize > 1)
+                itemstack.stackSize--;
+            else
+                setHeldItem(EnumHand.OFF_HAND, null);
+            entitytippedarrow.pickupStatus = EntityArrow.PickupStatus.ALLOWED;
+        }
+
+        if(getHeldItemMainhand() != null)
+            getHeldItemMainhand().damageItem(1, this);
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
         this.worldObj.spawnEntityInWorld(entitytippedarrow);
-        if(EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.INFINITY, this) <= 0)
-        if(itemstack.stackSize > 1)
-            itemstack.stackSize--;
-        else
-            setHeldItem(EnumHand.OFF_HAND, null);
     }
 
     @Override
