@@ -157,6 +157,10 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
 
                 @Override
                 public void updateTask(){
+                    if(this.attacker.getHeldItemMainhand() != null && this.attacker.getHeldItemOffhand() != null && this.attacker.getHeldItemMainhand().getItem() instanceof ItemBow && this.attacker.getHeldItemOffhand().getItem() instanceof ItemArrow) {
+                        ((EntitySkeletonWarrior) this.attacker).initEntityAI();
+                        return;
+                    }
                     if(continueExecuting())
                         super.updateTask();
                 }
