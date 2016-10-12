@@ -191,6 +191,8 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                 break;
             case 0:
             default:
+                this.setAttackTarget(null);
+                this.setRevengeTarget(null);
                 break;
         }
     }
