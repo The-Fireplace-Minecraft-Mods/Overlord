@@ -578,6 +578,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
         compound.setInteger("SkeletonMilk", this.dataManager.get(MILK_LEVEL));
         compound.setBoolean("HasSkinsuit", this.dataManager.get(HAS_SKINSUIT));
         compound.setString("SkinsuitName", this.dataManager.get(SKINSUIT_NAME));
+        compound.setBoolean("IsMinimapHostile", this.dataManager.get(ATTACK_MODE) == 2);
         if (this.getOwnerId() == null)
         {
             compound.setString("OwnerUUID", "0b1ec5ad-cb2a-43b7-995d-889320eb2e5b");
