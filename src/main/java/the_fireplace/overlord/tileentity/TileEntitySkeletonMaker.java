@@ -2,6 +2,7 @@ package the_fireplace.overlord.tileentity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -12,6 +13,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -305,7 +307,9 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
     public void setMilk(byte milk){
         this.milk = milk;
         markDirty();
-        if(!worldObj.isRemote)
+        if(!worldObj.isRemote) {
             PacketDispatcher.sendToAll(new SetMilkMessage(pos, milk));//TODO: Find a more efficient way than sending it to everyone
+            worldObj.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        }
     }
 }
