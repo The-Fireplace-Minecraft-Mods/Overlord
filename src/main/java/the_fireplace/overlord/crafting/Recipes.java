@@ -14,11 +14,13 @@ public class Recipes {
     public static ItemStack skeleton_maker = new ItemStack(Overlord.skeleton_maker);
     public static ItemStack overlords_seal = new ItemStack(Overlord.overlords_seal);
     public static ItemStack skinsuit = new ItemStack(Overlord.skinsuit);
+    public static ItemStack squad_editor = new ItemStack(Overlord.squad_editor);
 
     public static void addRecipes(){
         addRecipe(skeleton_maker, "bgb", "ihi", 'b', Items.BUCKET, 'g', "blockGlass", 'i', "ingotIron", 'h', Items.GLASS_BOTTLE);
         addRecipe(overlords_seal, "nin", "i i", "nin", 'n', "nuggetGold", 'i', "ingotIron");
         addShapelessRecipe(skinsuit, Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, Items.LEATHER_LEGGINGS, Items.LEATHER_BOOTS, Items.ROTTEN_FLESH, Items.ROTTEN_FLESH, "dyeGreen", "dyeBlue", "dyeRed");
+        addShapelessRecipe(squad_editor, Items.BOOK, "dyeBlack", "bone");
     }
 
     public static void addRecipe(ItemStack output, Object... input){
