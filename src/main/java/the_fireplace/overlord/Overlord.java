@@ -48,6 +48,7 @@ import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
 import the_fireplace.overlord.tools.Alliance;
 import the_fireplace.overlord.tools.Alliances;
 import the_fireplace.overlord.tools.CustomDataSerializers;
+import the_fireplace.overlord.tools.Enemies;
 
 import java.util.ArrayList;
 
@@ -127,6 +128,7 @@ public class Overlord {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
         Alliances.load();
+        Enemies.load();
         addAchievements();
         Recipes.addRecipes();
     }
@@ -143,6 +145,9 @@ public class Overlord {
         serverCommand.registerCommand(new CommandAllyList());
         serverCommand.registerCommand(new CommandAllyReject());
         serverCommand.registerCommand(new CommandAllyRemove());
+        serverCommand.registerCommand(new CommandEnemy());
+        serverCommand.registerCommand(new CommandEnemyList());
+        serverCommand.registerCommand(new CommandEnemyRemove());
     }
 
     @SideOnly(Side.CLIENT)

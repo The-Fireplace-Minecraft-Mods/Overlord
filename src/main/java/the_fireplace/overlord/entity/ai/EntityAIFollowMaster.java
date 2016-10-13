@@ -64,7 +64,7 @@ public class EntityAIFollowMaster extends EntityAIBase
         {
             return false;
         }
-        else
+        else//check if the pet has an attack target. If it does, don't execute.
         {
             this.theOwner = entitylivingbase;
             return true;
@@ -76,7 +76,7 @@ public class EntityAIFollowMaster extends EntityAIBase
      */
     @Override
     public boolean continueExecuting()
-    {
+    {//check if the pet has an attack target. If it does, don't execute.
         return !this.petPathfinder.noPath() && this.thePet.getDistanceSqToEntity(this.theOwner) > (double)(this.maxDist * this.maxDist);
     }
 

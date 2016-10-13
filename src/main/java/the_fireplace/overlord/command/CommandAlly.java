@@ -10,6 +10,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.tools.Alliance;
 import the_fireplace.overlord.tools.Alliances;
+import the_fireplace.overlord.tools.Enemies;
 import the_fireplace.overlord.tools.StringPair;
 
 /**
@@ -32,20 +33,24 @@ public class CommandAlly extends CommandBase {
             if(args.length == 1){
                 EntityPlayer player = server.getEntityWorld().getPlayerEntityByName(args[0]);
                 if(player != null){
-                    if(!Overlord.instance.pendingAlliances.contains(new Alliance(new StringPair(((EntityPlayer) sender).getUniqueID().toString(), ((EntityPlayer) sender).getDisplayNameString()), new StringPair(player.getUniqueID().toString(), player.getDisplayNameString())))) {
-                        if(!Overlord.instance.pendingAlliances.contains(new Alliance(new StringPair(player.getUniqueID().toString(), player.getDisplayNameString()), new StringPair(((EntityPlayer) sender).getUniqueID().toString(), ((EntityPlayer) sender).getDisplayNameString())))) {
-                            if(!Alliances.getInstance().isAlliedTo(((EntityPlayer) sender).getUniqueID(), player.getUniqueID())) {
-                                Overlord.instance.pendingAlliances.add(new Alliance(new StringPair(((EntityPlayer) sender).getUniqueID().toString(), ((EntityPlayer) sender).getDisplayNameString()), new StringPair(player.getUniqueID().toString(), player.getDisplayNameString())));
-                                player.addChatMessage(new TextComponentTranslation("overlord.allyrequest", ((EntityPlayer) sender).getDisplayNameString()));
-                                sender.addChatMessage(new TextComponentTranslation("overlord.requestsent", player.getDisplayNameString()));
-                            }else{
-                                sender.addChatMessage(new TextComponentTranslation("overlord.alreadyallied", player.getDisplayNameString()));
+                    if(!Enemies.getInstance().isEnemiesWith(((EntityPlayer) sender).getUniqueID(), player.getUniqueID())) {
+                        if (!Overlord.instance.pendingAlliances.contains(new Alliance(new StringPair(((EntityPlayer) sender).getUniqueID().toString(), ((EntityPlayer) sender).getDisplayNameString()), new StringPair(player.getUniqueID().toString(), player.getDisplayNameString())))) {
+                            if (!Overlord.instance.pendingAlliances.contains(new Alliance(new StringPair(player.getUniqueID().toString(), player.getDisplayNameString()), new StringPair(((EntityPlayer) sender).getUniqueID().toString(), ((EntityPlayer) sender).getDisplayNameString())))) {
+                                if (!Alliances.getInstance().isAlliedTo(((EntityPlayer) sender).getUniqueID(), player.getUniqueID())) {
+                                    Overlord.instance.pendingAlliances.add(new Alliance(new StringPair(((EntityPlayer) sender).getUniqueID().toString(), ((EntityPlayer) sender).getDisplayNameString()), new StringPair(player.getUniqueID().toString(), player.getDisplayNameString())));
+                                    player.addChatMessage(new TextComponentTranslation("overlord.allyrequest", ((EntityPlayer) sender).getDisplayNameString()));
+                                    sender.addChatMessage(new TextComponentTranslation("overlord.requestsent", player.getDisplayNameString()));
+                                } else {
+                                    sender.addChatMessage(new TextComponentTranslation("overlord.alreadyallied", player.getDisplayNameString()));
+                                }
+                            } else {
+                                sender.addChatMessage(new TextComponentTranslation("overlord.alreadyrequested.other", player.getDisplayNameString()));
                             }
-                        }else{
-                            sender.addChatMessage(new TextComponentTranslation("overlord.alreadyrequested.other", player.getDisplayNameString()));
+                        } else {
+                            sender.addChatMessage(new TextComponentTranslation("overlord.alreadyrequested", player.getDisplayNameString()));
                         }
                     }else{
-                        sender.addChatMessage(new TextComponentTranslation("overlord.alreadyrequested", player.getDisplayNameString()));
+                        sender.addChatMessage(new TextComponentTranslation("overlord.enemieswith", player.getDisplayNameString()));
                     }
                 }else{
                     sender.addChatMessage(new TextComponentTranslation("commands.generic.player.notFound"));

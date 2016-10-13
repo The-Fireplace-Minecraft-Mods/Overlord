@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.tools.Alliances;
+import the_fireplace.overlord.tools.Enemies;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -77,7 +78,7 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
             {
                 Collections.sort(list, this.theNearestAttackableTargetSorter);
                 if(list.get(0) instanceof EntitySkeletonWarrior){
-                    if(((EntitySkeletonWarrior)this.taskOwner).getAttackMode() < 2 || ((EntitySkeletonWarrior) list.get(0)).getOwnerId().equals(((EntitySkeletonWarrior)this.taskOwner).getOwnerId()))
+                    if((((EntitySkeletonWarrior)this.taskOwner).getAttackMode() < 2 && !Enemies.getInstance().isEnemiesWith(((EntitySkeletonWarrior) list.get(0)).getOwnerId(), ((EntitySkeletonWarrior)taskOwner).getOwnerId())) || ((EntitySkeletonWarrior) list.get(0)).getOwnerId().equals(((EntitySkeletonWarrior)this.taskOwner).getOwnerId()))
                         return false;
                     if(Alliances.getInstance().isAlliedTo(((EntitySkeletonWarrior) list.get(0)).getOwnerId(), ((EntitySkeletonWarrior)this.taskOwner).getOwnerId()))
                         return false;
@@ -169,6 +170,8 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
             EntityPlayer entityplayer1 = worldObj.playerEntities.get(i);
             if(entityplayer1.getUniqueID() == ((EntitySkeletonWarrior)this.taskOwner).getOwnerId() || Alliances.getInstance().isAlliedTo(entityplayer1.getUniqueID(), ((EntitySkeletonWarrior)this.taskOwner).getOwnerId()))
                 continue;//Skip the owner
+            if(((EntitySkeletonWarrior)taskOwner).getAttackMode() < 2 && !Enemies.getInstance().isEnemiesWith(((EntitySkeletonWarrior)taskOwner).getOwnerId(), entityplayer1.getUniqueID()))
+                continue;
 
             if (!entityplayer1.capabilities.disableDamage && entityplayer1.isEntityAlive() && !entityplayer1.isSpectator() && (p_184150_12_ == null || p_184150_12_.apply(entityplayer1)))
             {

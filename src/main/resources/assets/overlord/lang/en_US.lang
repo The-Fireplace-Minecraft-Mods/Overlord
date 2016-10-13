@@ -29,6 +29,7 @@ overlord.allyrequest=New ally request from %s! Type /allyaccept to accept or /al
 overlord.alreadyrequested=You have already requested an alliance with %s.
 overlord.alreadyrequested.other=They have already requested an alliance with you. Type /allyaccept to accept.
 overlord.alreadyallied=You are already allies with %s.
+overlord.enemieswith=You and %s are enemies!
 
 overlord.nothingpending=You have no pending alliance requests.
 
@@ -44,6 +45,19 @@ overlord.notallied=You are not allied to %s.
 
 overlord.allylist=Your allies:
 overlord.nofriends=You have no allies.
+
+overlord.madeenemy=You have made %s your enemy.
+overlord.enemied=%s has made you their enemy.
+overlord.noenemyallied=You cannot enemy %s, they are currently your ally.
+overlord.allytriedenemy=%s tried to make you their enemy, but you are currently allied.
+overlord.alreadyenemies=%s is already your enemy!
+
+overlord.enemyterminated=You no longer consider %s an enemy.
+overlord.enemytermination=%s no longer considers you an enemy.
+overlord.notenemied=You do not consider %s to be an enemy.
+
+overlord.enemylist=Your enemies:
+overlord.noenemies=You have no enemies.
 
 cfg.helmet_damage=Enable Helmet Damage in Sunlight
 cfg.helmet_damage.tooltip=Enables helmets worn by Skeleton Warriors taking damage and eventually breaking in the sunlight

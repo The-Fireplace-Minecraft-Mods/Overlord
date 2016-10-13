@@ -73,10 +73,10 @@ public class Alliances implements Serializable {
         readFromFile();
     }
 
+    @SuppressWarnings("TryWithIdenticalCatches")
     private static void readFromFile() {
         File f = new File(saveDir, dataFileName);
         if (f.exists()) {
-            //noinspection TryWithIdenticalCatches
             try {
                 ObjectInputStream stream = new ObjectInputStream(new FileInputStream(f));
                 instance = (Alliances) stream.readObject();

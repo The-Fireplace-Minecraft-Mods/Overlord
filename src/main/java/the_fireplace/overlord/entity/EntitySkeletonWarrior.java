@@ -183,11 +183,11 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     public void addTargetTasks(){
         switch(dataManager.get(ATTACK_MODE)) {
             case 2:
-                this.targetTasks.addTask(2, new EntityAINearestNonTeamTarget(this, EntityPlayer.class, true));
             case 1:
+                this.targetTasks.addTask(1, new EntityAIHurtByNonAllied(this, true));
+                this.targetTasks.addTask(2, new EntityAINearestNonTeamTarget(this, EntityPlayer.class, true));
                 this.targetTasks.addTask(3, new EntityAINearestNonTeamTarget(this, EntityMob.class, true));
                 this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntitySlime.class, true));
-                this.targetTasks.addTask(1, new EntityAIHurtByNonAllied(this, true));
                 break;
             case 0:
             default:

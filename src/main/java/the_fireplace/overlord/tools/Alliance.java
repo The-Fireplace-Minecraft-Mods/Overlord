@@ -3,7 +3,7 @@ package the_fireplace.overlord.tools;
 import java.io.Serializable;
 
 /**
- * Serializable two-member Alliances
+ * Serializable two-member Player Pairs. Class named Alliance because that was the initial purpose, and renaming would break existing ones.
  * @author The_Fireplace
  */
 public class Alliance implements Serializable {
