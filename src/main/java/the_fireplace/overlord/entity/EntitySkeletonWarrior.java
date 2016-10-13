@@ -1048,4 +1048,10 @@ public class EntitySkeletonWarrior extends EntityCreature implements IEntityOwna
         else
             return super.getBlockPathWeight(pos);
     }
+
+    @Override
+    protected boolean canDespawn()
+    {
+        return false;
+    }
 }
