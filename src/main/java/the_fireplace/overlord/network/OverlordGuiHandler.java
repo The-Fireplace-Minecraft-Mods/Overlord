@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 import the_fireplace.overlord.client.gui.GuiRing;
 import the_fireplace.overlord.client.gui.GuiSkeleton;
 import the_fireplace.overlord.client.gui.GuiSkeletonMaker;
+import the_fireplace.overlord.client.gui.GuiSquadEditor;
 import the_fireplace.overlord.container.ContainerSkeleton;
 import the_fireplace.overlord.container.ContainerSkeletonMaker;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
@@ -28,6 +29,7 @@ public class OverlordGuiHandler implements IGuiHandler {
                     return null;
                 }
             case -1:
+            case -2:
                 return null;
             default:
                 if(world.getEntityByID(ID) != null){
@@ -51,6 +53,8 @@ public class OverlordGuiHandler implements IGuiHandler {
                 }
             case -1:
                 return new GuiRing();
+            case -2:
+                return new GuiSquadEditor(player.getUniqueID().toString());
             default:
                 if(world.getEntityByID(ID) != null){
                     if(world.getEntityByID(ID) instanceof EntitySkeletonWarrior){

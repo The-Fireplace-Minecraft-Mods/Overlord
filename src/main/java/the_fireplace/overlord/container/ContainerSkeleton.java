@@ -60,7 +60,7 @@ public class ContainerSkeleton extends Container {
 
         this.addSlotToContainer(new Slot(armorInv, 4, 8, 26));//Entity Equipment ID 4
 
-        this.addSlotToContainer(new Slot(armorInv, 5, 48, 26){//Entity Equipment ID 5
+        this.addSlotToContainer(new Slot(armorInv, 5, 8, 44){//Entity Equipment ID 5
             @Override
             @SideOnly(Side.CLIENT)
             public String getSlotTexture()

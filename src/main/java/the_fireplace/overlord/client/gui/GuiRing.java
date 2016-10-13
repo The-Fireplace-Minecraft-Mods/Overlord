@@ -13,6 +13,7 @@ import the_fireplace.overlord.network.packets.UpdateArmyMessage;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * @author The_Fireplace
@@ -23,10 +24,13 @@ public class GuiRing extends GuiScreen {
     protected int ySize = 96;
     protected int guiLeft;
     protected int guiTop;
+    private int squadIndex = -1;
+    private ArrayList<String> squads;
 
-    public GuiRing(){
+    public GuiRing(ArrayList<String> squads){
         guiLeft = (width - xSize) / 2;
         guiTop = (height - ySize) / 2;
+        this.squads = squads;
     }
 
     @Override
@@ -43,6 +47,8 @@ public class GuiRing extends GuiScreen {
         this.buttonList.add(new GuiButton(3, guiLeft+90, guiTop+22, 81, 20, I18n.format("skeleton.mode.stationed")));
         this.buttonList.add(new GuiButton(4, guiLeft+90, guiTop+46, 81, 20, I18n.format("skeleton.mode.follower")));
         this.buttonList.add(new GuiButton(5, guiLeft+90, guiTop+70, 81, 20, I18n.format("skeleton.mode.base")));
+        this.buttonList.add(new GuiButton(6, guiLeft+2, guiTop+2, 20, 20, "<-"));
+        this.buttonList.add(new GuiButton(7, guiLeft+xSize-22, guiTop+2, 20, 20, "->"));
         super.initGui();
     }
 
@@ -57,13 +63,25 @@ public class GuiRing extends GuiScreen {
         this.drawCenteredString(fontRendererObj, I18n.format("overlord.attack_modes"), guiLeft+45, guiTop+12, -1);
         this.drawCenteredString(fontRendererObj, I18n.format("overlord.movement_modes"), guiLeft+130, guiTop+12, -1);
         this.drawCenteredString(fontRendererObj, I18n.format("overlords_seal.warning"), guiLeft+(xSize/2), guiTop-10, Color.PINK.getRGB());
+        this.drawCenteredString(fontRendererObj, squadIndex != -1 ? squads.get(squadIndex) : I18n.format("overlord.all_squads"), guiLeft + xSize/2, guiTop+10, -1);
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
     @Override
     protected void actionPerformed(GuiButton button) {
-        if (button.enabled) {
+        if(button.enabled)
+        if (button.id < 6) {
             PacketDispatcher.sendToServer(new UpdateArmyMessage(button.id));
+        }else if(button.id == 6){
+            if(squadIndex < 0)
+                squadIndex = squads.size() - 1;
+            else
+                squadIndex--;
+        }else if(button.id == 7){
+            if(squadIndex >= squads.size() - 1)
+                squadIndex = -1;
+            else
+                squadIndex++;
         }
     }
 

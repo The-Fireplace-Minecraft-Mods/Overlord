@@ -44,6 +44,7 @@ import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.ai.*;
 import the_fireplace.overlord.tools.CustomDataSerializers;
+import the_fireplace.overlord.tools.Squads;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -64,6 +65,7 @@ public class EntitySkeletonWarrior extends EntityCreature implements IEntityOwna
     private static final DataParameter<Integer> MILK_LEVEL = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
     private static final DataParameter<String> SKINSUIT_NAME = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.STRING);
     private static final DataParameter<Boolean> HAS_SKINSUIT = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<String> SQUAD = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.STRING);
     private EntityAIWarriorBow aiArrowAttack = null;
     private EntityAIAttackMelee aiAttackOnCollide = null;
 
@@ -548,6 +550,11 @@ public class EntitySkeletonWarrior extends EntityCreature implements IEntityOwna
             boolean b = compound.getBoolean("HasSkinsuit");
             this.dataManager.set(HAS_SKINSUIT, b);
         }
+        if(compound.hasKey("Squad")){
+            String s = compound.getString("Squad");
+            this.dataManager.set(SQUAD, s);
+            onSquadUpdate();
+        }
         String s;
         if (compound.hasKey("OwnerUUID", 8))
         {
@@ -620,6 +627,7 @@ public class EntitySkeletonWarrior extends EntityCreature implements IEntityOwna
         compound.setBoolean("HasSkinsuit", this.dataManager.get(HAS_SKINSUIT));
         compound.setString("SkinsuitName", this.dataManager.get(SKINSUIT_NAME));
         compound.setBoolean("IsMinimapHostile", this.dataManager.get(ATTACK_MODE) == 2);
+        compound.setString("Squad", this.dataManager.get(SQUAD));
         if (this.getOwnerId() == null)
         {
             compound.setString("OwnerUUID", "0b1ec5ad-cb2a-43b7-995d-889320eb2e5b");
@@ -968,6 +976,20 @@ public class EntitySkeletonWarrior extends EntityCreature implements IEntityOwna
 
     public String getSkinsuitName(){
         return this.dataManager.get(SKINSUIT_NAME);
+    }
+
+    public String getSquad(){
+        return this.dataManager.get(SQUAD);
+    }
+
+    public void setSquad(String s){
+        this.dataManager.set(SQUAD, s);
+    }
+
+    public void onSquadUpdate(){
+        if(!getSquad().isEmpty())
+            if(!Squads.getInstance().getSquadsFor(getOwnerId()).contains(getSquad()))
+                setSquad("");
     }
 
     @Override

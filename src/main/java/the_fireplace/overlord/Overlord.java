@@ -41,14 +41,12 @@ import the_fireplace.overlord.crafting.Recipes;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.items.ItemOverlordsSeal;
 import the_fireplace.overlord.items.ItemSansMask;
+import the_fireplace.overlord.items.ItemSquadEditor;
 import the_fireplace.overlord.items.ItemWarriorSpawner;
 import the_fireplace.overlord.network.OverlordGuiHandler;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
-import the_fireplace.overlord.tools.Alliance;
-import the_fireplace.overlord.tools.Alliances;
-import the_fireplace.overlord.tools.CustomDataSerializers;
-import the_fireplace.overlord.tools.Enemies;
+import the_fireplace.overlord.tools.*;
 
 import java.util.ArrayList;
 
@@ -86,6 +84,7 @@ public class Overlord {
 
     public static final Block skeleton_maker = new BlockSkeletonMaker();
     public static final Item overlords_seal = new ItemOverlordsSeal().setUnlocalizedName("overlords_seal").setCreativeTab(tabOverlord).setMaxStackSize(1);
+    public static final Item squad_editor = new ItemSquadEditor().setUnlocalizedName("squad_editor").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item sans_mask = new ItemSansMask(sans);
     public static final Item skinsuit = new Item().setUnlocalizedName("skinsuit").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item warrior_spawner = new ItemWarriorSpawner().setUnlocalizedName("warrior_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
@@ -114,6 +113,7 @@ public class Overlord {
         syncConfig();
         registerBlock(skeleton_maker);
         registerItem(overlords_seal);
+        registerItem(squad_editor);
         registerItem(sans_mask);
         registerItem(skinsuit);
         registerItem(warrior_spawner);
@@ -129,6 +129,7 @@ public class Overlord {
     public void init(FMLInitializationEvent event){
         Alliances.load();
         Enemies.load();
+        Squads.load();
         addAchievements();
         Recipes.addRecipes();
     }
@@ -154,6 +155,7 @@ public class Overlord {
     public void registerItemRenders(){
         rmm(skeleton_maker);
         rmm(overlords_seal);
+        rmm(squad_editor);
         rmm(sans_mask);
         rmm(skinsuit);
         rmm(warrior_spawner);

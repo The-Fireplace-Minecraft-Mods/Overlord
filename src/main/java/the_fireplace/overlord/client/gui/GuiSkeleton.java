@@ -16,6 +16,7 @@ import the_fireplace.overlord.network.packets.AttackModeMessage;
 import the_fireplace.overlord.network.packets.MovementModeMessage;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * @author The_Fireplace
@@ -28,8 +29,10 @@ public class GuiSkeleton extends GuiContainer {
     private byte attackModeTimer;
     private GuiButton movementMode;
     private byte movementModeTimer;
+    private ArrayList<String> squads;
+    private int squadIndex;
 
-    public GuiSkeleton(InventoryPlayer inventorySlotsIn, EntitySkeletonWarrior warrior) {
+    public GuiSkeleton(InventoryPlayer inventorySlotsIn, EntitySkeletonWarrior warrior, ArrayList<String> squads) {
         super(new ContainerSkeleton(inventorySlotsIn, warrior));
         this.entity=warrior;
         xSize = 175;
@@ -39,6 +42,8 @@ public class GuiSkeleton extends GuiContainer {
         height = res.getScaledHeight();
         guiLeft = (width - xSize) / 2;
         guiTop = (height - ySize) / 2;
+        this.squads = squads;
+        squadIndex = squads.indexOf(warrior.getSquad());
     }
 
     @Override
@@ -51,6 +56,8 @@ public class GuiSkeleton extends GuiContainer {
         this.buttonList.clear();
         this.buttonList.add(attackMode = new GuiButton(0, guiLeft+47, guiTop+43, 66, 20, "You should not see this"));
         this.buttonList.add(movementMode = new GuiButton(1, guiLeft+47, guiTop+63, 66, 20, "You should not see this"));
+        this.buttonList.add(new GuiButton(2, guiLeft+45, guiTop+25, 20, 20, "<-"));
+        this.buttonList.add(new GuiButton(3, guiLeft+94, guiTop+25, 20, 20, "->"));
         setAttackModeText();
         setMovementModeText();
         super.initGui();
@@ -67,7 +74,19 @@ public class GuiSkeleton extends GuiContainer {
                 PacketDispatcher.sendToServer(new MovementModeMessage(entity));
                 setMovementModeText();
                 scheduleMovementModeTextUpdate();
+            }else if(button.id == 2){
+                if(squadIndex < 0)
+                    squadIndex = squads.size() - 1;
+                else
+                    squadIndex--;
+            }else if(button.id == 3){
+                if(squadIndex >= squads.size() - 1)
+                    squadIndex = -1;
+                else
+                    squadIndex++;
             }
+            if(squadIndex > -1)
+                entity.setSquad(squads.get(squadIndex));
         }
     }
 
@@ -87,6 +106,7 @@ public class GuiSkeleton extends GuiContainer {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         this.drawCenteredString(fontRendererObj, Math.round(entity.getHealth())+"/"+Math.round(entity.getMaxHealth()), 91, 4, Color.RED.getRGB());
         this.drawCenteredString(fontRendererObj, String.valueOf(entity.getLevel()), 91, 20, Color.GREEN.getRGB());
+        this.drawCenteredString(fontRendererObj, squadIndex != -1 ? squads.get(squadIndex) : I18n.format("overlord.no_squad"), guiLeft+70, guiTop+35, -1);
     }
 
     @Override

@@ -25,10 +25,11 @@ public class PacketDispatcher {
         PacketDispatcher.registerMessage(AttackModeMessage.Handler.class, AttackModeMessage.class, Side.SERVER);
         PacketDispatcher.registerMessage(MovementModeMessage.Handler.class, MovementModeMessage.class, Side.SERVER);
         PacketDispatcher.registerMessage(UpdateArmyMessage.Handler.class, UpdateArmyMessage.class, Side.SERVER);
+        PacketDispatcher.registerMessage(UpdateSquadsMessage.Handler.class, UpdateSquadsMessage.class, Side.SERVER);
     }
 
+    @SuppressWarnings("unchecked")
     private static final void registerMessage(Class handlerClass, Class messageClass, Side side) {
-        //noinspection unchecked
         PacketDispatcher.dispatcher.registerMessage(handlerClass, messageClass, packetId++, side);
     }
 

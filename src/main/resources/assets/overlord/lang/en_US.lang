@@ -2,6 +2,7 @@ tile.skeleton_maker.name=Skeleton Maker
 item.overlords_seal.name=Overlord's Seal
 item.overlords_seal.tooltip.default=Right-Click to make this your seal!
 item.overlords_seal.tooltip=Seal of %s
+item.squad_editor.name=Squad Editor
 item.sans_mask.name=Sans Mask
 item.skinsuit.name=Skinsuit
 item.warrior_spawner.name=Skeleton Warrior Placer
@@ -59,6 +60,10 @@ overlord.notenemied=You do not consider %s to be an enemy.
 overlord.enemylist=Your enemies:
 overlord.noenemies=You have no enemies.
 
+overlord.all_squads=All Squads
+overlord.no_squad=No Squad
+overlord.squad_editor=Squad Editor
+
 cfg.helmet_damage=Enable Helmet Damage in Sunlight
 cfg.helmet_damage.tooltip=Enables helmets worn by Skeleton Warriors taking damage and eventually breaking in the sunlight
 
@@ -112,3 +117,5 @@ achievement.interference.desc=Get in the way of your own Skeleton Warrior's arro
 
 achievement.sans=Heya
 achievement.sans.desc=Look like a spooky friend...
+
+gui.save=Save

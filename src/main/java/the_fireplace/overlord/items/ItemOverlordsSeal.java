@@ -21,6 +21,7 @@ import static the_fireplace.overlord.Overlord.proxy;
  * @author The_Fireplace
  */
 public class ItemOverlordsSeal extends Item {
+    @SuppressWarnings("unchecked")
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer playerIn, EnumHand hand)
     {
@@ -29,15 +30,12 @@ public class ItemOverlordsSeal extends Item {
         if (!stack.getTagCompound().hasKey("Owner")) {
             stack.getTagCompound().setString("Owner", playerIn.getUniqueID().toString());
             stack.getTagCompound().setString("OwnerName", playerIn.getDisplayNameString());
-            //noinspection unchecked
             return new ActionResult(EnumActionResult.SUCCESS, stack);
         }else{
             if(stack.getTagCompound().getString("Owner").equals(playerIn.getUniqueID().toString())){
                 FMLNetworkHandler.openGui(playerIn, Overlord.instance, -1, worldIn, (int)playerIn.posX, (int)playerIn.posY, (int)playerIn.posZ);
-                //noinspection unchecked
                 return new ActionResult(EnumActionResult.SUCCESS, stack);
             }else{
-                //noinspection unchecked
                 return new ActionResult(EnumActionResult.FAIL, stack);
             }
         }
