@@ -361,6 +361,14 @@ public class EntitySkeletonWarrior extends EntityCreature implements IEntityOwna
                     if(stack2.stackSize != entityitem.getEntityItem().stackSize)
                         playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
                     entityitem.getEntityItem().stackSize = stack2.stackSize;
+                    if(stack2.getItem() == Items.MILK_BUCKET){
+                        for(int i=0;i<inventory.getSizeInventory();i++){
+                            if(inventory.getStackInSlot(i) != null && inventory.getStackInSlot(i).getItem() == Items.BUCKET) {
+                                entityDropItem(inventory.getStackInSlot(i), 0.1F);
+                                inventory.setInventorySlotContents(i, null);
+                            }
+                        }
+                    }
                 } else {
                     entityitem.setDead();
                     playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
