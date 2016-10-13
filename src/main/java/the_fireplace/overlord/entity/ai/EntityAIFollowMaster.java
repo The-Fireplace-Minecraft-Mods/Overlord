@@ -64,8 +64,10 @@ public class EntityAIFollowMaster extends EntityAIBase
         {
             return false;
         }
-        else//check if the pet has an attack target. If it does, don't execute.
-        {
+        else if(thePet.getAttackTarget() != null){
+            return false;
+        }
+        else {
             this.theOwner = entitylivingbase;
             return true;
         }
@@ -76,8 +78,8 @@ public class EntityAIFollowMaster extends EntityAIBase
      */
     @Override
     public boolean continueExecuting()
-    {//check if the pet has an attack target. If it does, don't execute.
-        return !this.petPathfinder.noPath() && this.thePet.getDistanceSqToEntity(this.theOwner) > (double)(this.maxDist * this.maxDist);
+    {
+        return !this.petPathfinder.noPath() && thePet.getAttackTarget() == null && this.thePet.getDistanceSqToEntity(this.theOwner) > (double)(this.maxDist * this.maxDist);
     }
 
     /**
