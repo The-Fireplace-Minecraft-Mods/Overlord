@@ -31,6 +31,7 @@ import net.minecraft.scoreboard.Team;
 import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -51,7 +52,7 @@ import java.util.UUID;
 /**
  * @author The_Fireplace
  */
-public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
+public class EntitySkeletonWarrior extends EntityCreature implements IEntityOwnable {
 
     private static final DataParameter<UUID> OWNER_UNIQUE_ID = EntityDataManager.createKey(EntitySkeletonWarrior.class, CustomDataSerializers.UNIQUE_ID);
     private static final DataParameter<Integer> SKELETON_POWER_LEVEL = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
@@ -186,6 +187,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
             case 1:
                 this.targetTasks.addTask(1, new EntityAIHurtByNonAllied(this, true));
                 this.targetTasks.addTask(2, new EntityAINearestNonTeamTarget(this, EntityPlayer.class, true));
+                this.targetTasks.addTask(2, new EntityAINearestNonTeamTarget(this, EntitySkeletonWarrior.class, true));
                 this.targetTasks.addTask(3, new EntityAINearestNonTeamTarget(this, EntityMob.class, true));
                 this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntitySlime.class, true));
                 break;
@@ -201,6 +203,7 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
@@ -258,14 +261,6 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
                 setCustomNameTag(stack.getDisplayName());
         }else
             this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
-    }
-
-    @Override
-    public boolean attackEntityAsMob(Entity entityIn)
-    {
-        if(getHeldItemMainhand() != null)
-            getHeldItemMainhand().damageItem(1, this);
-        return super.attackEntityAsMob(entityIn);
     }
 
     @Override
@@ -431,6 +426,13 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
 
         this.setSize(0.6F, 1.99F);
 
+        this.updateArmSwingProgress();
+        float f = this.getBrightness(1.0F);
+
+        if (f > 0.5F && !this.hasSkinsuit())
+        {
+            this.entityAge += 1;
+        }
         super.onLivingUpdate();
     }
 
@@ -956,5 +958,94 @@ public class EntitySkeletonWarrior extends EntityMob implements IEntityOwnable {
 
     public String getSkinsuitName(){
         return this.dataManager.get(SKINSUIT_NAME);
+    }
+
+    @Override
+    public SoundCategory getSoundCategory()
+    {
+        return SoundCategory.NEUTRAL;
+    }
+
+    @Override
+    protected SoundEvent getSwimSound()
+    {
+        return SoundEvents.ENTITY_HOSTILE_SWIM;
+    }
+
+    @Override
+    protected SoundEvent getSplashSound()
+    {
+        return SoundEvents.ENTITY_HOSTILE_SPLASH;
+    }
+
+    @Override
+    protected SoundEvent getFallSound(int heightIn)
+    {
+        return heightIn > 4 ? SoundEvents.ENTITY_HOSTILE_BIG_FALL : SoundEvents.ENTITY_HOSTILE_SMALL_FALL;
+    }
+
+    @Override
+    public boolean attackEntityAsMob(Entity entityIn)
+    {
+        if(getHeldItemMainhand() != null)
+            getHeldItemMainhand().damageItem(1, this);
+        float f = (float)this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
+        int i = 0;
+
+        if (entityIn instanceof EntityLivingBase)
+        {
+            f += EnchantmentHelper.getModifierForCreature(this.getHeldItemMainhand(), ((EntityLivingBase)entityIn).getCreatureAttribute());
+            i += EnchantmentHelper.getKnockbackModifier(this);
+        }
+
+        boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), f);
+
+        if (flag)
+        {
+            if (i > 0 && entityIn instanceof EntityLivingBase)
+            {
+                ((EntityLivingBase)entityIn).knockBack(this, (float)i * 0.5F, (double)MathHelper.sin(this.rotationYaw * 0.017453292F), (double)(-MathHelper.cos(this.rotationYaw * 0.017453292F)));
+                this.motionX *= 0.6D;
+                this.motionZ *= 0.6D;
+            }
+
+            int j = EnchantmentHelper.getFireAspectModifier(this);
+
+            if (j > 0)
+            {
+                entityIn.setFire(j * 4);
+            }
+
+            if (entityIn instanceof EntityPlayer)
+            {
+                EntityPlayer entityplayer = (EntityPlayer)entityIn;
+                ItemStack itemstack = this.getHeldItemMainhand();
+                ItemStack itemstack1 = entityplayer.isHandActive() ? entityplayer.getActiveItemStack() : null;
+
+                if (itemstack != null && itemstack1 != null && itemstack.getItem() instanceof ItemAxe && itemstack1.getItem() == Items.SHIELD)
+                {
+                    float f1 = 0.25F + (float)EnchantmentHelper.getEfficiencyModifier(this) * 0.05F;
+
+                    if (this.rand.nextFloat() < f1)
+                    {
+                        entityplayer.getCooldownTracker().setCooldown(Items.SHIELD, 100);
+                        this.worldObj.setEntityState(entityplayer, (byte)30);
+                    }
+                }
+            }
+
+            this.applyEnchantments(this, entityIn);
+        }
+
+        return flag;
+    }
+
+    @Override
+    public float getBlockPathWeight(BlockPos pos)
+    {
+        if(!this.hasSkinsuit())
+            return 0.5F - this.worldObj.getLightBrightness(pos);
+        else
+            return super.getBlockPathWeight(pos);
     }
 }
