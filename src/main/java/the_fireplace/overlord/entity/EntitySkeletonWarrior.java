@@ -357,11 +357,13 @@ public class EntitySkeletonWarrior extends EntityCreature implements IEntityOwna
 
             this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D)).stream().filter(entityitem -> !entityitem.isDead && entityitem.getEntityItem() != null && !entityitem.cannotPickup()).forEach(entityitem -> {
                 ItemStack stack2 = inventory.addItem(entityitem.getEntityItem());
-                playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
                 if (stack2 != null) {
+                    if(stack2.stackSize != entityitem.getEntityItem().stackSize)
+                        playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
                     entityitem.getEntityItem().stackSize = stack2.stackSize;
                 } else {
                     entityitem.setDead();
+                    playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
                 }
             });
             //Bow stuffs
