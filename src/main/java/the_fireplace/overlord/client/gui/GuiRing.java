@@ -60,8 +60,6 @@ public class GuiRing extends GuiScreen {
         int k = (this.width - this.xSize) / 2;
         int l = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
-        this.drawCenteredString(fontRendererObj, I18n.format("overlord.attack_modes"), guiLeft+45, guiTop+12, -1);
-        this.drawCenteredString(fontRendererObj, I18n.format("overlord.movement_modes"), guiLeft+130, guiTop+12, -1);
         this.drawCenteredString(fontRendererObj, I18n.format("overlords_seal.warning"), guiLeft+(xSize/2), guiTop-10, Color.PINK.getRGB());
         this.drawCenteredString(fontRendererObj, squadIndex != -1 ? squads.get(squadIndex) : I18n.format("overlord.all_squads"), guiLeft + xSize/2, guiTop+10, -1);
         super.drawScreen(mouseX, mouseY, partialTicks);
@@ -71,7 +69,10 @@ public class GuiRing extends GuiScreen {
     protected void actionPerformed(GuiButton button) {
         if(button.enabled)
         if (button.id < 6) {
-            PacketDispatcher.sendToServer(new UpdateArmyMessage(button.id));
+            if(squadIndex >= 0)
+                PacketDispatcher.sendToServer(new UpdateArmyMessage(squads.get(squadIndex), button.id));
+            else
+                PacketDispatcher.sendToServer(new UpdateArmyMessage(button.id));
         }else if(button.id == 6){
             if(squadIndex < 0)
                 squadIndex = squads.size() - 1;

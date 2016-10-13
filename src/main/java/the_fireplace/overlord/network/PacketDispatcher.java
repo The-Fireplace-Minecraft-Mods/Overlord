@@ -26,6 +26,7 @@ public class PacketDispatcher {
         PacketDispatcher.registerMessage(MovementModeMessage.Handler.class, MovementModeMessage.class, Side.SERVER);
         PacketDispatcher.registerMessage(UpdateArmyMessage.Handler.class, UpdateArmyMessage.class, Side.SERVER);
         PacketDispatcher.registerMessage(UpdateSquadsMessage.Handler.class, UpdateSquadsMessage.class, Side.SERVER);
+        PacketDispatcher.registerMessage(SetSquadMessage.Handler.class, SetSquadMessage.class, Side.SERVER);
     }
 
     @SuppressWarnings("unchecked")

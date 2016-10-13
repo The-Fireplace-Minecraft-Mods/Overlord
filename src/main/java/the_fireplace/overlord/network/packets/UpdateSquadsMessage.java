@@ -5,7 +5,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.tools.Squads;
 
 import java.util.ArrayList;
@@ -44,10 +43,6 @@ public class UpdateSquadsMessage implements IMessage {
         @Override
         public IMessage handleServerMessage(EntityPlayer player, UpdateSquadsMessage message, MessageContext ctx) {
             Squads.getInstance().setPlayerSquadNames(player.getUniqueID(), message.names);
-            for(EntitySkeletonWarrior entity:player.worldObj.getEntities(EntitySkeletonWarrior.class, x -> true)){
-                if(entity.getOwnerId().equals(player.getUniqueID()))
-                    entity.onSquadUpdate();
-            }
             return null;
         }
     }

@@ -13,12 +13,10 @@ skeleton_maker.warning.notmine=Warning: This skeleton will belong to %s
 skeleton_maker.warning.suffocation=Warning: Your Skeleton Maker has blocks right above it. The spawned Skeleton Warrior may suffocate.
 entity.overlord.skeleton_warrior.name=Skeleton Warrior
 
-overlord.attack_modes=Attack Modes:
 skeleton.mode.aggressive=Aggressive
 skeleton.mode.defensive=Defensive
 skeleton.mode.passive=Passive
 
-overlord.movement_modes=Movement Modes:
 skeleton.mode.stationed=Stationed
 skeleton.mode.follower=Follower
 skeleton.mode.base=Wander Area

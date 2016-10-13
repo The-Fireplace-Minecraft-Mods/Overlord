@@ -44,7 +44,6 @@ import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.ai.*;
 import the_fireplace.overlord.tools.CustomDataSerializers;
-import the_fireplace.overlord.tools.Squads;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -108,19 +107,24 @@ public class EntitySkeletonWarrior extends EntityCreature implements IEntityOwna
         enablePersistence();
     }
 
+    private boolean isUpdatingAI = false;
     @Override
     protected void initEntityAI()
     {
-        this.tasks.taskEntries.clear();//Clear first so this can be called when the AI Modes change
-        this.getNavigator().clearPathEntity();
-        this.tasks.addTask(1, new EntityAISwimming(this));
-        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-        this.tasks.addTask(8, new EntityAILookIdle(this));
-        addMovementTasks();
-        if(this.dataManager.get(ATTACK_MODE) != 0)
-            addAttackTasks();
-        addTargetTasks();
-        this.playSound(getAmbientSound(), getSoundVolume()*2.0F, getSoundPitch()*1.5F);
+        if(!isUpdatingAI) {
+            isUpdatingAI = true;
+            this.tasks.taskEntries.clear();//Clear first so this can be called when the AI Modes change
+            this.getNavigator().clearPathEntity();
+            this.tasks.addTask(1, new EntityAISwimming(this));
+            this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+            this.tasks.addTask(8, new EntityAILookIdle(this));
+            addMovementTasks();
+            if (this.dataManager.get(ATTACK_MODE) != 0)
+                addAttackTasks();
+            addTargetTasks();
+            this.playSound(getAmbientSound(), getSoundVolume() * 2.0F, getSoundPitch() * 1.5F);
+            isUpdatingAI = false;
+        }
     }
 
     public void addMovementTasks(){
@@ -277,6 +281,7 @@ public class EntitySkeletonWarrior extends EntityCreature implements IEntityOwna
         this.dataManager.register(MOVEMENT_MODE, Byte.valueOf((byte)1));
         this.dataManager.register(HAS_SKINSUIT, Boolean.valueOf(false));
         this.dataManager.register(SKINSUIT_NAME, String.valueOf(""));
+        this.dataManager.register(SQUAD, String.valueOf(""));
     }
 
     @Override
@@ -552,8 +557,7 @@ public class EntitySkeletonWarrior extends EntityCreature implements IEntityOwna
         }
         if(compound.hasKey("Squad")){
             String s = compound.getString("Squad");
-            this.dataManager.set(SQUAD, s);
-            onSquadUpdate();
+            setSquad(s);
         }
         String s;
         if (compound.hasKey("OwnerUUID", 8))
@@ -627,7 +631,7 @@ public class EntitySkeletonWarrior extends EntityCreature implements IEntityOwna
         compound.setBoolean("HasSkinsuit", this.dataManager.get(HAS_SKINSUIT));
         compound.setString("SkinsuitName", this.dataManager.get(SKINSUIT_NAME));
         compound.setBoolean("IsMinimapHostile", this.dataManager.get(ATTACK_MODE) == 2);
-        compound.setString("Squad", this.dataManager.get(SQUAD));
+        compound.setString("Squad", getSquad());
         if (this.getOwnerId() == null)
         {
             compound.setString("OwnerUUID", "0b1ec5ad-cb2a-43b7-995d-889320eb2e5b");
@@ -983,13 +987,7 @@ public class EntitySkeletonWarrior extends EntityCreature implements IEntityOwna
     }
 
     public void setSquad(String s){
-        this.dataManager.set(SQUAD, s);
-    }
-
-    public void onSquadUpdate(){
-        if(!getSquad().isEmpty())
-            if(!Squads.getInstance().getSquadsFor(getOwnerId()).contains(getSquad()))
-                setSquad("");
+        this.dataManager.set(SQUAD, String.valueOf(s));
     }
 
     @Override

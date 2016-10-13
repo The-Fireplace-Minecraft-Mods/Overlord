@@ -14,6 +14,7 @@ import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.AttackModeMessage;
 import the_fireplace.overlord.network.packets.MovementModeMessage;
+import the_fireplace.overlord.network.packets.SetSquadMessage;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -56,8 +57,8 @@ public class GuiSkeleton extends GuiContainer {
         this.buttonList.clear();
         this.buttonList.add(attackMode = new GuiButton(0, guiLeft+47, guiTop+43, 66, 20, "You should not see this"));
         this.buttonList.add(movementMode = new GuiButton(1, guiLeft+47, guiTop+63, 66, 20, "You should not see this"));
-        this.buttonList.add(new GuiButton(2, guiLeft+45, guiTop+25, 20, 20, "<-"));
-        this.buttonList.add(new GuiButton(3, guiLeft+94, guiTop+25, 20, 20, "->"));
+        this.buttonList.add(new GuiButton(2, guiLeft+25, guiTop+23, 20, 20, "<-"));
+        this.buttonList.add(new GuiButton(3, guiLeft+94, guiTop+23, 20, 20, "->"));
         setAttackModeText();
         setMovementModeText();
         super.initGui();
@@ -86,7 +87,9 @@ public class GuiSkeleton extends GuiContainer {
                     squadIndex++;
             }
             if(squadIndex > -1)
-                entity.setSquad(squads.get(squadIndex));
+                PacketDispatcher.sendToServer(new SetSquadMessage(entity, squads.get(squadIndex)));
+            else
+                PacketDispatcher.sendToServer(new SetSquadMessage(entity, ""));
         }
     }
 
@@ -104,9 +107,9 @@ public class GuiSkeleton extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        this.drawCenteredString(fontRendererObj, Math.round(entity.getHealth())+"/"+Math.round(entity.getMaxHealth()), 91, 4, Color.RED.getRGB());
-        this.drawCenteredString(fontRendererObj, String.valueOf(entity.getLevel()), 91, 20, Color.GREEN.getRGB());
-        this.drawCenteredString(fontRendererObj, squadIndex != -1 ? squads.get(squadIndex) : I18n.format("overlord.no_squad"), guiLeft+70, guiTop+35, -1);
+        this.drawCenteredString(fontRendererObj, Math.round(entity.getHealth())+"/"+Math.round(entity.getMaxHealth()), 90, 4, Color.RED.getRGB());
+        this.drawCenteredString(fontRendererObj, String.valueOf(entity.getLevel()), 90, 20, Color.GREEN.getRGB());
+        this.drawCenteredString(fontRendererObj, squadIndex != -1 ? squads.get(squadIndex) : I18n.format("overlord.no_squad"), 70, 30, -1);
     }
 
     @Override

@@ -13,6 +13,7 @@ import the_fireplace.overlord.container.ContainerSkeleton;
 import the_fireplace.overlord.container.ContainerSkeletonMaker;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
+import the_fireplace.overlord.tools.Squads;
 
 /**
  * @author The_Fireplace
@@ -52,13 +53,13 @@ public class OverlordGuiHandler implements IGuiHandler {
                     return null;
                 }
             case -1:
-                return new GuiRing();
+                return new GuiRing(Squads.getInstance().getSquadsFor(player.getUniqueID()));
             case -2:
                 return new GuiSquadEditor(player.getUniqueID().toString());
             default:
                 if(world.getEntityByID(ID) != null){
                     if(world.getEntityByID(ID) instanceof EntitySkeletonWarrior){
-                        return new GuiSkeleton(player.inventory, (EntitySkeletonWarrior)world.getEntityByID(ID));
+                        return new GuiSkeleton(player.inventory, (EntitySkeletonWarrior)world.getEntityByID(ID), Squads.getInstance().getSquadsFor(player.getUniqueID()));
                     }
                 }
                 return null;

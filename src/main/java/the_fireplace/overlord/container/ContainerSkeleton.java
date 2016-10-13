@@ -36,7 +36,7 @@ public class ContainerSkeleton extends Container {
         for (int x = 0; x < 4; ++x)
         {
             final EntityEquipmentSlot entityequipmentslot = EQUIPMENT_SLOTS[x];
-            this.addSlotToContainer(new Slot(armorInv, (3 - x), 28, 8 + x * 18)//Entity Equipment IDs 0 to 3
+            this.addSlotToContainer(new Slot(armorInv, (3 - x), 8, 8 + x * 18)//Entity Equipment IDs 0 to 3
             {
                 @Override
                 public int getSlotStackLimit()
@@ -58,9 +58,9 @@ public class ContainerSkeleton extends Container {
             });
         }
 
-        this.addSlotToContainer(new Slot(armorInv, 4, 8, 26));//Entity Equipment ID 4
+        this.addSlotToContainer(new Slot(armorInv, 4, 28, 44));//Entity Equipment ID 4
 
-        this.addSlotToContainer(new Slot(armorInv, 5, 8, 44){//Entity Equipment ID 5
+        this.addSlotToContainer(new Slot(armorInv, 5, 28, 62){//Entity Equipment ID 5
             @Override
             @SideOnly(Side.CLIENT)
             public String getSlotTexture()
