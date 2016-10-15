@@ -13,7 +13,7 @@ import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import the_fireplace.overlord.config.ConfigValues;
-import the_fireplace.overlord.entity.EntitySkeletonWarrior;
+import the_fireplace.overlord.entity.EntityArmyMember;
 import the_fireplace.overlord.tools.Alliances;
 import the_fireplace.overlord.tools.Enemies;
 
@@ -77,10 +77,10 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
             else
             {
                 Collections.sort(list, this.theNearestAttackableTargetSorter);
-                if(list.get(0) instanceof EntitySkeletonWarrior){
-                    if((((EntitySkeletonWarrior)this.taskOwner).getAttackMode() < 2 && !Enemies.getInstance().isEnemiesWith(((EntitySkeletonWarrior) list.get(0)).getOwnerId(), ((EntitySkeletonWarrior)taskOwner).getOwnerId())) || ((EntitySkeletonWarrior) list.get(0)).getOwnerId().equals(((EntitySkeletonWarrior)this.taskOwner).getOwnerId()))
+                if(list.get(0) instanceof EntityArmyMember){
+                    if((((EntityArmyMember)this.taskOwner).getAttackMode() < 2 && !Enemies.getInstance().isEnemiesWith(((EntityArmyMember) list.get(0)).getOwnerId(), ((EntityArmyMember)taskOwner).getOwnerId())) || ((EntityArmyMember) list.get(0)).getOwnerId().equals(((EntityArmyMember)this.taskOwner).getOwnerId()))
                         return false;
-                    if(Alliances.getInstance().isAlliedTo(((EntitySkeletonWarrior) list.get(0)).getOwnerId(), ((EntitySkeletonWarrior)this.taskOwner).getOwnerId()))
+                    if(Alliances.getInstance().isAlliedTo(((EntityArmyMember) list.get(0)).getOwnerId(), ((EntityArmyMember)this.taskOwner).getOwnerId()))
                         return false;
                 }
                 if(!ConfigValues.HUNTCREEPERS && list.get(0) instanceof EntityCreeper)
@@ -133,15 +133,15 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
             double d1 = this.theEntity.getDistanceSqToEntity(p_compare_2_);
             boolean b0 = false;
             boolean b1 = false;
-            if(p_compare_1_ instanceof EntitySkeletonWarrior){
-                b0 = ((EntitySkeletonWarrior) p_compare_1_).getOwnerId().equals(theEntity.getUniqueID());
+            if(p_compare_1_ instanceof EntityArmyMember){
+                b0 = ((EntityArmyMember) p_compare_1_).getOwnerId().equals(theEntity.getUniqueID());
                 if(!b0)
-                    b0 = Alliances.getInstance().isAlliedTo(((EntitySkeletonWarrior) p_compare_1_).getOwnerId(), theEntity.getUniqueID());
+                    b0 = Alliances.getInstance().isAlliedTo(((EntityArmyMember) p_compare_1_).getOwnerId(), theEntity.getUniqueID());
             }
-            if(p_compare_2_ instanceof EntitySkeletonWarrior){
-                b1 = ((EntitySkeletonWarrior) p_compare_2_).getOwnerId().equals(theEntity.getUniqueID());
+            if(p_compare_2_ instanceof EntityArmyMember){
+                b1 = ((EntityArmyMember) p_compare_2_).getOwnerId().equals(theEntity.getUniqueID());
                 if(!b1)
-                    b1 = Alliances.getInstance().isAlliedTo(((EntitySkeletonWarrior) p_compare_2_).getOwnerId(), theEntity.getUniqueID());
+                    b1 = Alliances.getInstance().isAlliedTo(((EntityArmyMember) p_compare_2_).getOwnerId(), theEntity.getUniqueID());
             }
             if(!ConfigValues.HUNTCREEPERS && p_compare_1_ instanceof EntityCreeper)
                 b0 = true;
@@ -168,9 +168,9 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
         for (int i = 0; i < worldObj.playerEntities.size(); ++i)
         {
             EntityPlayer entityplayer1 = worldObj.playerEntities.get(i);
-            if(entityplayer1.getUniqueID() == ((EntitySkeletonWarrior)this.taskOwner).getOwnerId() || Alliances.getInstance().isAlliedTo(entityplayer1.getUniqueID(), ((EntitySkeletonWarrior)this.taskOwner).getOwnerId()))
+            if(entityplayer1.getUniqueID() == ((EntityArmyMember)this.taskOwner).getOwnerId() || Alliances.getInstance().isAlliedTo(entityplayer1.getUniqueID(), ((EntityArmyMember)this.taskOwner).getOwnerId()))
                 continue;//Skip the owner
-            if(((EntitySkeletonWarrior)taskOwner).getAttackMode() < 2 && !Enemies.getInstance().isEnemiesWith(((EntitySkeletonWarrior)taskOwner).getOwnerId(), entityplayer1.getUniqueID()))
+            if(((EntityArmyMember)taskOwner).getAttackMode() < 2 && !Enemies.getInstance().isEnemiesWith(((EntityArmyMember)taskOwner).getOwnerId(), entityplayer1.getUniqueID()))
                 continue;
 
             if (!entityplayer1.capabilities.disableDamage && entityplayer1.isEntityAlive() && !entityplayer1.isSpectator() && (p_184150_12_ == null || p_184150_12_.apply(entityplayer1)))
