@@ -29,6 +29,7 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
     private boolean nospam = false;
     public static final ResourceLocation STEVE = new ResourceLocation("textures/entity/steve.png");
     public static HashMap<String, BufferedImage> skins = Maps.newHashMap();
+    public static HashMap<BufferedImage, DynamicTexture> skintextures = Maps.newHashMap();
 
     public LayerSkinsuit(RenderLivingBase<?> renderer)
     {
@@ -59,7 +60,13 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
                     }
                     if(((img.getRGB(54,21)>>24) & 0xff) == 0)
                         model.smallSkinsuitArms = true;
-                    DynamicTexture texture = new DynamicTexture(img);
+                    DynamicTexture texture;
+                    if(skintextures.get(img) != null)
+                        texture = skintextures.get(img);
+                    else{
+                        texture = new DynamicTexture(img);
+                        skintextures.put(img, texture);
+                    }
                     this.renderer.bindTexture(this.renderer.getRenderManager().renderEngine.getDynamicTextureLocation(Overlord.MODID, texture));
                 }catch(Exception e){
                         this.renderer.bindTexture(STEVE);
