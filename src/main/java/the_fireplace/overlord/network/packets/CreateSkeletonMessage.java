@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
+import the_fireplace.overlord.tileentity.ISkeletonMaker;
 
 /**
  * @author The_Fireplace
@@ -36,8 +36,8 @@ public class CreateSkeletonMessage implements IMessage {
     public static class Handler extends AbstractServerMessageHandler<CreateSkeletonMessage> {
         @Override
         public IMessage handleServerMessage(EntityPlayer player, CreateSkeletonMessage message, MessageContext ctx) {
-            if(player.worldObj.getTileEntity(message.pos) instanceof TileEntitySkeletonMaker){
-                ((TileEntitySkeletonMaker) player.worldObj.getTileEntity(message.pos)).spawnSkeleton();
+            if(player.worldObj.getTileEntity(message.pos) instanceof ISkeletonMaker){
+                ((ISkeletonMaker) player.worldObj.getTileEntity(message.pos)).spawnSkeleton();
             }
             return null;
         }

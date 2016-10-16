@@ -1,18 +1,18 @@
 package the_fireplace.overlord.container;
 
 import net.minecraft.init.Items;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
 
 /**
  * @author The_Fireplace
  */
 public class SlotBone extends Slot {
-    TileEntitySkeletonMaker inv;
+    IInventory inv;
 
-    public SlotBone(TileEntitySkeletonMaker inventoryIn, int index, int xPosition,
-                         int yPosition) {
+    public SlotBone(IInventory inventoryIn, int index, int xPosition,
+                    int yPosition) {
         super(inventoryIn, index, xPosition, yPosition);
         inv = inventoryIn;
     }

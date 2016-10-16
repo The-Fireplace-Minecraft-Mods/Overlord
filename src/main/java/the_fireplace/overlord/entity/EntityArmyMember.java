@@ -156,6 +156,13 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
     }
 
     @Override
+    public void onLivingUpdate()
+    {
+        updateArmSwingProgress();
+        super.onLivingUpdate();
+    }
+
+    @Override
     protected void entityInit()
     {
         super.entityInit();

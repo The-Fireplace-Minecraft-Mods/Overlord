@@ -342,7 +342,6 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
 
         this.setSize(0.6F, 1.99F);
 
-        this.updateArmSwingProgress();
         float f = this.getBrightness(1.0F);
 
         if (f > 0.5F && !this.hasSkinsuit())

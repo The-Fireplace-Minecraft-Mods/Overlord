@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import the_fireplace.overlord.entity.EntitySkeletonWarrior;
+import the_fireplace.overlord.entity.EntityArmyMember;
 
 /**
  * @author The_Fireplace
@@ -18,7 +18,7 @@ public class SetSquadMessage implements IMessage {
     public SetSquadMessage() {
     }
 
-    public SetSquadMessage(EntitySkeletonWarrior skeleton, String squad){
+    public SetSquadMessage(EntityArmyMember skeleton, String squad){
         this.warrior = skeleton.hashCode();
         this.squad = squad;
     }
@@ -39,13 +39,13 @@ public class SetSquadMessage implements IMessage {
         @Override
         public IMessage handleServerMessage(EntityPlayer player, SetSquadMessage message, MessageContext ctx) {
             if(player.worldObj.getEntityByID(message.warrior) != null){
-                if(player.worldObj.getEntityByID(message.warrior) instanceof EntitySkeletonWarrior){
-                    ((EntitySkeletonWarrior) player.worldObj.getEntityByID(message.warrior)).setSquad(message.squad);
+                if(player.worldObj.getEntityByID(message.warrior) instanceof EntityArmyMember){
+                    ((EntityArmyMember) player.worldObj.getEntityByID(message.warrior)).setSquad(message.squad);
                 }else{
-                    System.out.println("Error: Entity is not a Skeleton Warrior. It is "+player.worldObj.getEntityByID(message.warrior).toString());
+                    System.out.println("Error: Entity is not an Army Member. It is "+player.worldObj.getEntityByID(message.warrior).toString());
                 }
             }else{
-                System.out.println("Error 404: Skeleton Warrior not found: "+message.warrior);
+                System.out.println("Error 404: Army Member not found: "+message.warrior);
             }
             return null;
         }

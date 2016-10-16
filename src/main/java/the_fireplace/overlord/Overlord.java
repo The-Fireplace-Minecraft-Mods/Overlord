@@ -35,10 +35,12 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import the_fireplace.overlord.blocks.BlockBabySkeletonMaker;
 import the_fireplace.overlord.blocks.BlockSkeletonMaker;
 import the_fireplace.overlord.command.*;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.crafting.Recipes;
+import the_fireplace.overlord.entity.EntityBabySkeleton;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.items.ItemOverlordsSeal;
 import the_fireplace.overlord.items.ItemSansMask;
@@ -46,6 +48,7 @@ import the_fireplace.overlord.items.ItemSquadEditor;
 import the_fireplace.overlord.items.ItemWarriorSpawner;
 import the_fireplace.overlord.network.OverlordGuiHandler;
 import the_fireplace.overlord.network.PacketDispatcher;
+import the_fireplace.overlord.tileentity.TileEntityBabySkeletonMaker;
 import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
 import the_fireplace.overlord.tools.*;
 
@@ -84,6 +87,7 @@ public class Overlord {
     public static ItemArmor.ArmorMaterial sans = EnumHelper.addArmorMaterial("SANS", "sans_mask", 20, new int[]{0,0,0,0}, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
 
     public static final Block skeleton_maker = new BlockSkeletonMaker();
+    public static final Block baby_skeleton_maker = new BlockBabySkeletonMaker();
     public static final Item overlords_seal = new ItemOverlordsSeal().setUnlocalizedName("overlords_seal").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item squad_editor = new ItemSquadEditor().setUnlocalizedName("squad_editor").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item sans_mask = new ItemSansMask(sans);
@@ -113,6 +117,7 @@ public class Overlord {
         SUFFOCATIONWARNING_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.SUFFOCATIONWARNING_NAME, ConfigValues.SUFFOCATIONWARNING_DEFAULT, proxy.translateToLocal(ConfigValues.SUFFOCATIONWARNING_NAME + ".tooltip"));
         syncConfig();
         registerBlock(skeleton_maker);
+        registerBlock(baby_skeleton_maker);
         registerItem(overlords_seal);
         registerItem(squad_editor);
         registerItem(sans_mask);
@@ -120,8 +125,10 @@ public class Overlord {
         registerItem(warrior_spawner);
         OreDictionary.registerOre("book", squad_editor);
         GameRegistry.registerTileEntity(TileEntitySkeletonMaker.class, "skeleton_maker");
+        GameRegistry.registerTileEntity(TileEntityBabySkeletonMaker.class, "baby_skeleton_maker");
         int eid=-1;
         EntityRegistry.registerModEntity(EntitySkeletonWarrior.class, "skeleton_warrior", ++eid, instance, 128, 2, false);
+        EntityRegistry.registerModEntity(EntityBabySkeleton.class, "skeleton_baby", ++eid, instance, 64, 2, false);
         proxy.registerClient();
         MinecraftForge.EVENT_BUS.register(new CommonEvents());
         DataSerializers.registerSerializer(CustomDataSerializers.UNIQUE_ID);
@@ -156,6 +163,7 @@ public class Overlord {
     @SideOnly(Side.CLIENT)
     public void registerItemRenders(){
         rmm(skeleton_maker);
+        rmm(baby_skeleton_maker);
         rmm(overlords_seal);
         rmm(squad_editor);
         rmm(sans_mask);

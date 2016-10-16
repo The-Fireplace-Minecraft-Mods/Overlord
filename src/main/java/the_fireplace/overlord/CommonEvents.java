@@ -12,6 +12,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import the_fireplace.overlord.entity.EntityBabySkeleton;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 
 import java.util.Random;
@@ -22,7 +23,7 @@ import java.util.Random;
 public class CommonEvents {
     @SubscribeEvent
     public void rightClickEntity(PlayerInteractEvent.EntityInteract event){
-        if(event.getTarget() instanceof EntitySkeleton || (event.getTarget() instanceof EntitySkeletonWarrior && event.getEntityPlayer().isSneaking()))
+        if(event.getTarget() instanceof EntitySkeleton || ((event.getTarget() instanceof EntitySkeletonWarrior || event.getTarget() instanceof EntityBabySkeleton) && event.getEntityPlayer().isSneaking()))
             if(((EntityLivingBase) event.getTarget()).getHealth() < ((EntityLivingBase) event.getTarget()).getMaxHealth())
                 if(event.getItemStack() != null)
                     if(event.getItemStack().getItem() == Items.MILK_BUCKET){
@@ -39,7 +40,7 @@ public class CommonEvents {
     @SubscribeEvent
     public void entityTick(LivingEvent.LivingUpdateEvent event){
         if(!event.getEntityLiving().worldObj.isRemote){
-            if(event.getEntityLiving() instanceof EntitySkeleton || event.getEntityLiving() instanceof EntitySkeletonWarrior){
+            if(event.getEntityLiving() instanceof EntitySkeleton || event.getEntityLiving() instanceof EntitySkeletonWarrior || event.getEntityLiving() instanceof EntityBabySkeleton){
                 if(event.getEntityLiving().ticksExisted < 5){
                     if(event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.HEAD) == null){
                         Random random = new Random();

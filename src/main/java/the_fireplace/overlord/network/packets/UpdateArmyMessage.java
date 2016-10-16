@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import the_fireplace.overlord.entity.EntitySkeletonWarrior;
+import the_fireplace.overlord.entity.EntityArmyMember;
 
 /**
  * @author The_Fireplace
@@ -42,7 +42,7 @@ public class UpdateArmyMessage implements IMessage {
     public static class Handler extends AbstractServerMessageHandler<UpdateArmyMessage> {
         @Override
         public IMessage handleServerMessage(EntityPlayer player, UpdateArmyMessage message, MessageContext ctx) {
-            player.worldObj.getEntities(EntitySkeletonWarrior.class, x -> true).stream().filter(skeleton -> skeleton.getOwnerId().equals(player.getUniqueID())).forEach(skeleton -> {
+            player.worldObj.getEntities(EntityArmyMember.class, x -> true).stream().filter(skeleton -> skeleton.getOwnerId().equals(player.getUniqueID())).forEach(skeleton -> {
                 if(message.squad.isEmpty() || skeleton.getSquad().equals(message.squad))
                 if (message.buttonId < 3) {
                     skeleton.setAttackMode((byte) message.buttonId);

@@ -7,29 +7,29 @@ import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import the_fireplace.overlord.entity.EntitySkeletonWarrior;
+import the_fireplace.overlord.entity.EntityBabySkeleton;
 
 /**
  * @author The_Fireplace
  */
 @SideOnly(Side.CLIENT)
-public class RenderSkeletonWarrior extends RenderBiped<EntitySkeletonWarrior>
+public class RenderBabySkeleton extends RenderBiped<EntityBabySkeleton>
 {
     private static final ResourceLocation SKELETON_TEXTURES = new ResourceLocation("textures/entity/skeleton/skeleton.png");
 
-    public RenderSkeletonWarrior(RenderManager renderManagerIn)
+    public RenderBabySkeleton(RenderManager renderManagerIn)
     {
-        super(renderManagerIn, new ModelSkeletonWarrior(), 0.5F);
+        super(renderManagerIn, new ModelBabySkeleton(), 0.5F);
         this.addLayer(new LayerBipedArmor(this)
         {
             @Override
             protected void initArmor()
             {
-                this.modelLeggings = new ModelSkeletonWarrior(0.5F, true, false, 1);
-                this.modelArmor = new ModelSkeletonWarrior(1.0F, true, false, 1);
+                this.modelLeggings = new ModelBabySkeleton(0.5F, true, false, 1);
+                this.modelArmor = new ModelBabySkeleton(1.0F, true, false, 1);
             }
         });
-        this.addLayer(new LayerSkinsuit(this));
+        this.addLayer(new LayerBabySkinsuit(this));
     }
 
     @Override
@@ -42,7 +42,7 @@ public class RenderSkeletonWarrior extends RenderBiped<EntitySkeletonWarrior>
      * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
      */
     @Override
-    protected ResourceLocation getEntityTexture(EntitySkeletonWarrior entity)
+    protected ResourceLocation getEntityTexture(EntityBabySkeleton entity)
     {
         return SKELETON_TEXTURES;
     }
