@@ -66,13 +66,13 @@ public class ContainerBabySkeleton extends Container {
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int i) {
-        Slot slot = getSlot(i);
+    public ItemStack transferStackInSlot(EntityPlayer player, int index) {
+        Slot slot = getSlot(index);
         if (slot != null && slot.getHasStack()) {
             ItemStack is = slot.getStack();
             ItemStack result = is.copy();
 
-            if (i >= 36) {
+            if (index >= 36) {
                 if (!mergeItemStack(is, 0, 36, false)) {
                     return null;
                 }

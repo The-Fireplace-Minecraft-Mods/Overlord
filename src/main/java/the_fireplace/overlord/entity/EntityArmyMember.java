@@ -37,6 +37,7 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
+ * The base Army Member class. All entities that you want to be part of the army should extend this.
  * @author The_Fireplace
  */
 public abstract class EntityArmyMember extends EntityCreature implements IEntityOwnable {
@@ -83,6 +84,9 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
         }
     }
 
+    /**
+     * Register your movement tasks here.
+     */
     public void addMovementTasks(){
         switch(dataManager.get(MOVEMENT_MODE)) {
             case 1:
@@ -101,6 +105,9 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
         }
     }
 
+    /**
+     * Register attack tasks here
+     */
     public void addAttackTasks(){
         if(aiAttackOnCollide == null){
             aiAttackOnCollide = new EntityAIAttackMelee(this, 1.2D, false)
@@ -131,6 +138,9 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
     }
 
     @SuppressWarnings("unchecked")
+    /**
+     * Register targeting tasks here
+     */
     public void addTargetTasks(){
         switch(dataManager.get(ATTACK_MODE)) {
             case 2:
