@@ -5,6 +5,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentTranslation;
 import the_fireplace.overlord.Overlord;
@@ -45,6 +46,9 @@ public class CommandEnemy extends CommandBase {
                                     Overlord.instance.pendingAlliances.remove(alliance);
                                 }
                             }
+                            if(sender instanceof EntityPlayerMP)
+                                if(((EntityPlayerMP) sender).getStatFile().canUnlockAchievement(Overlord.warmonger))
+                                    ((EntityPlayer)sender).addStat(Overlord.warmonger);
                         }else{
                             player.addChatMessage(new TextComponentTranslation("overlord.allytriedenemy", ((EntityPlayer) sender).getDisplayNameString()));
                             sender.addChatMessage(new TextComponentTranslation("overlord.noenemyallied", player.getDisplayNameString()));

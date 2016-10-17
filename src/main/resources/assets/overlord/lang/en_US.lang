@@ -95,7 +95,7 @@ achievement.armedskeleton=Armed and Dangerous
 achievement.armedskeleton.desc=Give an Army Skeleton a weapon
 
 achievement.sally=Sally
-achievement.sally.desc=Give an Army Skeleton full Leather Armor
+achievement.sally.desc=Put a Skinsuit on an Army Skeleton
 
 achievement.crusader=Crusader
 achievement.crusader.desc=Dress a Skeleton Warrior as a Crusader(Full chainmail, white shield with red cross)
@@ -112,8 +112,17 @@ achievement.alliance.desc=Form an alliance with another player
 achievement.breakalliance=Dealbreaker
 achievement.breakalliance.desc=Disband an alliance with another player
 
+achievement.warmonger=Warmonger
+achievement.warmonger.desc=Mark another player as your enemy
+
+achievement.forgiver=Forgiver
+achievement.forgiver.desc=Stop considering a player your enemy
+
 achievement.interference=Not me, you idiots!
 achievement.interference.desc=Get in the way of your own Skeleton Warrior's arrow
+
+achievement.wardog=Doggo Does A War
+achievement.wardog.desc=Have a pet Wolf kill a member of an army
 
 achievement.sans=Heya
 achievement.sans.desc=Look like a spooky friend...

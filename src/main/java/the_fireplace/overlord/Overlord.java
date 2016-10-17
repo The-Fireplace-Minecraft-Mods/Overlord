@@ -220,7 +220,7 @@ public class Overlord {
     public static Achievement firstMilk = new Achievement("firstmilk", "firstmilk", 2, 0, Items.MILK_BUCKET, firstSkeleton);
     public static Achievement firstLevel = new Achievement("firstlevel", "firstlevel", 0, -2, Items.BONE, firstSkeleton);
     public static Achievement armedSkeleton = new Achievement("armedskeleton", "armedskeleton", -2, 1, Items.WOODEN_SWORD, firstSkeleton);
-    public static Achievement sally = new Achievement("sally", "sally", -2, -1, Items.LEATHER_CHESTPLATE, firstSkeleton);
+    public static Achievement sally = new Achievement("sally", "sally", -2, -1, skinsuit, firstSkeleton);
     public static Achievement crusader = new Achievement("crusader", "crusader", -3, 0, crusaderShield(), firstSkeleton);
     public static Achievement milk256 = new Achievement("milk256", "milk256", 4, 0, Items.MILK_BUCKET, firstMilk);
     public static Achievement milk9001 = new Achievement("milk9001", "milk9001", 6, 0, Items.MILK_BUCKET, milk256);
@@ -229,6 +229,11 @@ public class Overlord {
 
     public static Achievement alliance = new Achievement("alliance", "alliance", 2, -2, Items.SHIELD, AchievementList.OPEN_INVENTORY);
     public static Achievement breakalliance = new Achievement("breakalliance", "breakalliance", 4, -2, Items.IRON_AXE, alliance);
+
+    public static Achievement warmonger = new Achievement("warmonger", "warmonger", 2, -3, Items.IRON_SWORD, AchievementList.OPEN_INVENTORY);
+    public static Achievement forgiver = new Achievement("forgiver", "forgiver", 4, -3, Items.CAKE, warmonger);
+
+    public static Achievement wardog = new Achievement("wardog", "wardog", -3, 2, Items.COOKED_BEEF, AchievementList.OPEN_INVENTORY);
 
     public static Achievement heya = new Achievement("sans", "sans", 4, 4, sans_mask, AchievementList.OPEN_INVENTORY);
 
@@ -245,9 +250,12 @@ public class Overlord {
         nmyi.registerStat();
         alliance.registerStat();
         breakalliance.registerStat();
+        warmonger.registerStat();
+        forgiver.registerStat();
+        wardog.registerStat();
         heya.registerStat();
         heya.setSpecial();
         AchievementPage.registerAchievementPage(new AchievementPage(MODNAME,
-                firstSkeleton, secondSkeleton, firstLevel, firstMilk, armedSkeleton, sally, crusader, milk256, milk9001, nmyi, alliance, breakalliance, heya));
+                firstSkeleton, secondSkeleton, firstLevel, firstMilk, armedSkeleton, sally, crusader, milk256, milk9001, nmyi, alliance, breakalliance, warmonger, forgiver, wardog, heya));
     }
 }

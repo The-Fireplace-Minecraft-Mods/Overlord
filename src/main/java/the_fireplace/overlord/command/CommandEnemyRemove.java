@@ -5,8 +5,10 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentTranslation;
+import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.tools.Alliance;
 import the_fireplace.overlord.tools.Enemies;
 
@@ -39,6 +41,9 @@ public class CommandEnemyRemove extends CommandBase {
                         }
                         player.addChatMessage(new TextComponentTranslation("overlord.enemytermination", ((EntityPlayer) sender).getDisplayNameString()));
                         sender.addChatMessage(new TextComponentTranslation("overlord.enemyterminated", player.getDisplayNameString()));
+                        if(sender instanceof EntityPlayerMP)
+                            if(((EntityPlayerMP) sender).getStatFile().canUnlockAchievement(Overlord.forgiver))
+                                ((EntityPlayer)sender).addStat(Overlord.forgiver);
                     } else {
                         sender.addChatMessage(new TextComponentTranslation("overlord.notenemied", player.getDisplayNameString()));
                     }

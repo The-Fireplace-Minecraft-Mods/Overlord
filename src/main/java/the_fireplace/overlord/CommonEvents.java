@@ -2,16 +2,20 @@ package the_fireplace.overlord;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.passive.EntityWolf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import the_fireplace.overlord.entity.EntityArmyMember;
 import the_fireplace.overlord.entity.EntityBabySkeleton;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 
@@ -66,6 +70,22 @@ public class CommonEvents {
                     if(((EntitySkeletonWarrior) event.getSource().getEntity()).getOwnerId().equals(event.getEntityLiving().getUniqueID())){
                         if(((EntityPlayerMP) event.getEntityLiving()).getStatFile().canUnlockAchievement(Overlord.nmyi))
                             ((EntityPlayerMP) event.getEntityLiving()).addStat(Overlord.nmyi);
+                    }
+                }
+            }
+        }
+    }
+    @SubscribeEvent
+    public void livingDeath(LivingDeathEvent event){
+        if(!event.getEntityLiving().worldObj.isRemote){
+            if(event.getSource().getEntity() instanceof EntityWolf && event.getEntityLiving() instanceof EntityArmyMember){
+                if(((EntityWolf) event.getSource().getEntity()).getOwnerId() != null){
+                    EntityPlayer wolfOwner = ((EntityArmyMember) event.getEntityLiving()).worldObj.getPlayerEntityByUUID(((EntityWolf) event.getSource().getEntity()).getOwnerId());
+                    if(wolfOwner != null){
+                        if(wolfOwner instanceof EntityPlayerMP)
+                            if(((EntityPlayerMP) wolfOwner).getStatFile().canUnlockAchievement(Overlord.wardog)) {
+                                wolfOwner.addStat(Overlord.wardog);
+                            }
                     }
                 }
             }
