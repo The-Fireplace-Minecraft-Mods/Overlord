@@ -1,4 +1,4 @@
-package the_fireplace.overlord.crafting;
+package the_fireplace.overlord.registry;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -10,7 +10,7 @@ import the_fireplace.overlord.Overlord;
 /**
  * @author The_Fireplace
  */
-public class Recipes {
+public class CraftingRecipes {
     public static ItemStack skeleton_maker = new ItemStack(Overlord.skeleton_maker);
     public static ItemStack baby_skeleton_maker = new ItemStack(Overlord.baby_skeleton_maker);
     public static ItemStack overlords_seal = new ItemStack(Overlord.overlords_seal);

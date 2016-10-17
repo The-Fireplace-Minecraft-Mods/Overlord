@@ -98,7 +98,7 @@ public class GuiBabySkeletonMaker extends GuiContainer {
             GlStateManager.disableBlend();
         }
         if(ConfigValues.SUFFOCATIONWARNING)
-        if(te.getWorld().getBlockState(te.getPos().up(2)).getMaterial() != Material.AIR)
+        if(te.getWorld().getBlockState(te.getPos().up()).getMaterial() != Material.AIR)
             this.drawCenteredString(fontRendererObj, I18n.format("skeleton_maker.warning.suffocation"), xSize/2, -20, Color.PINK.getRGB());
     }
 
@@ -120,7 +120,7 @@ public class GuiBabySkeletonMaker extends GuiContainer {
     private boolean isButtonEnabled() {
         if (te.getStackInSlot(1) == null || te.getStackInSlot(2) == null)
             return false;
-        return te.getStackInSlot(2).getItem() == Items.MILK_BUCKET && !(te.getStackInSlot(1).stackSize < 16);
+        return te.getStackInSlot(2).getItem() == Items.MILK_BUCKET && te.getStackInSlot(1).stackSize >= 16;
     }
 
     private String getWarning(){

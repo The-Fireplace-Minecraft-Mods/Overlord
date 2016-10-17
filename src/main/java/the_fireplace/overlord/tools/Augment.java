@@ -1,0 +1,13 @@
+package the_fireplace.overlord.tools;
+
+import net.minecraft.entity.Entity;
+import the_fireplace.overlord.entity.EntityArmyMember;
+
+/**
+ * @author The_Fireplace
+ */
+public abstract class Augment {
+    public abstract void onEntityTick(EntityArmyMember entity);
+
+    public abstract void onStrike(EntityArmyMember attacker, Entity entityAttacked);
+}

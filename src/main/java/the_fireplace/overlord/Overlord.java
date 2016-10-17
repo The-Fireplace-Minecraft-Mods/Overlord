@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
@@ -35,11 +36,11 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import the_fireplace.overlord.augments.*;
 import the_fireplace.overlord.blocks.BlockBabySkeletonMaker;
 import the_fireplace.overlord.blocks.BlockSkeletonMaker;
 import the_fireplace.overlord.command.*;
 import the_fireplace.overlord.config.ConfigValues;
-import the_fireplace.overlord.crafting.Recipes;
 import the_fireplace.overlord.entity.EntityBabySkeleton;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.items.ItemOverlordsSeal;
@@ -48,6 +49,8 @@ import the_fireplace.overlord.items.ItemSquadEditor;
 import the_fireplace.overlord.items.ItemWarriorSpawner;
 import the_fireplace.overlord.network.OverlordGuiHandler;
 import the_fireplace.overlord.network.PacketDispatcher;
+import the_fireplace.overlord.registry.AugmentRegistry;
+import the_fireplace.overlord.registry.CraftingRecipes;
 import the_fireplace.overlord.tileentity.TileEntityBabySkeletonMaker;
 import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
 import the_fireplace.overlord.tools.*;
@@ -140,7 +143,13 @@ public class Overlord {
         Enemies.load();
         Squads.load();
         addAchievements();
-        Recipes.addRecipes();
+        CraftingRecipes.addRecipes();
+        AugmentRegistry.registerAugment(new ItemStack(Items.GOLDEN_APPLE), new AugmentSlowRegen());
+        AugmentRegistry.registerAugment(new ItemStack(Items.GOLDEN_APPLE, 1, 1), new AugmentFastRegen());
+        AugmentRegistry.registerAugment(new ItemStack(Items.IRON_INGOT), new AugmentIron());
+        AugmentRegistry.registerAugment(new ItemStack(Blocks.OBSIDIAN), new AugmentObsidian());
+        AugmentRegistry.registerAugment(new ItemStack(Blocks.ANVIL), new AugmentAnvil());
+        AugmentRegistry.registerAugment(new ItemStack(Blocks.SKULL, 1, 1), new AugmentWither());
     }
 
     @Mod.EventHandler

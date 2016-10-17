@@ -121,9 +121,9 @@ public class GuiSkeletonMaker extends GuiContainer {
     }
 
     private boolean isButtonEnabled() {
-        if (te.getStackInSlot(1) == null || te.getStackInSlot(2) == null || te.getStackInSlot(3) == null)
+        if (te.getStackInSlot(1) == null)
             return false;
-        return te.getMilk() >= 2 && !(te.getStackInSlot(1).stackSize < 64 || te.getStackInSlot(2).stackSize < 64 || te.getStackInSlot(3).stackSize < 64);
+        return te.getMilk() >= 2 && te.getStackInSlot(1).stackSize >= 32;
     }
 
     private String getWarning(){

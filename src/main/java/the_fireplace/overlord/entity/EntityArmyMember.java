@@ -31,6 +31,7 @@ import the_fireplace.overlord.entity.ai.EntityAIFollowMaster;
 import the_fireplace.overlord.entity.ai.EntityAIHurtByNonAllied;
 import the_fireplace.overlord.entity.ai.EntityAINearestNonTeamTarget;
 import the_fireplace.overlord.entity.ai.EntityAIWanderBase;
+import the_fireplace.overlord.tools.Augment;
 import the_fireplace.overlord.tools.CustomDataSerializers;
 
 import javax.annotation.Nullable;
@@ -169,6 +170,8 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
     public void onLivingUpdate()
     {
         updateArmSwingProgress();
+        if(getAugment() != null)
+            getAugment().onEntityTick(this);
         super.onLivingUpdate();
     }
 
@@ -410,6 +413,10 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
         this.dataManager.set(SQUAD, String.valueOf(s));
     }
 
+    public Augment getAugment(){
+        return null;
+    }
+
     @Override
     public SoundCategory getSoundCategory()
     {
@@ -449,7 +456,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 
         if (flag)
         {
-            if (i > 0 && entityIn instanceof EntityLivingBase)
+            if (i > 0)
             {
                 ((EntityLivingBase)entityIn).knockBack(this, (float)i * 0.5F, (double) MathHelper.sin(this.rotationYaw * 0.017453292F), (double)(-MathHelper.cos(this.rotationYaw * 0.017453292F)));
                 this.motionX *= 0.6D;
@@ -482,6 +489,9 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
             }
 
             this.applyEnchantments(this, entityIn);
+
+            if(this.getAugment() != null)
+                this.getAugment().onStrike(this, entityIn);
         }
 
         return flag;

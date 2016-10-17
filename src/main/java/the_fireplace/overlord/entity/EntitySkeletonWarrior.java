@@ -37,6 +37,8 @@ import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.ai.EntityAIWarriorBow;
+import the_fireplace.overlord.registry.AugmentRegistry;
+import the_fireplace.overlord.tools.Augment;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -63,11 +65,11 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     public EntitySkeletonWarrior(World world, @Nullable UUID owner){
         super(world, owner);
         this.inventory = new InventoryBasic("Items", false, 9);
-        this.equipInventory = new InventoryBasic("Equipment", false, 6){
+        this.equipInventory = new InventoryBasic("Equipment", false, 7){
             @Override
             public boolean isItemValidForSlot(int index, ItemStack stack)
             {
-                return index >= 4 || stack != null && stack.getItem().isValidArmor(stack, EntityEquipmentSlot.values()[index], null);
+                return (index >= 4 && index < 6) || (index == 6 && AugmentRegistry.getAugment(stack) != null) || stack != null && stack.getItem().isValidArmor(stack, EntityEquipmentSlot.values()[index], null);
             }
         };
         this.setCanPickUpLoot(true);
@@ -206,6 +208,13 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     {
         SoundEvent soundevent = SoundEvents.ENTITY_SKELETON_STEP;
         this.playSound(soundevent, (float)(0.15F*Math.sqrt(dataManager.get(SKELETON_POWER_LEVEL))), 1.0F);
+    }
+
+    @Override
+    public Augment getAugment(){
+        if(equipInventory == null)
+            return null;
+        return AugmentRegistry.getAugment(equipInventory.getStackInSlot(6));
     }
 
     @Override

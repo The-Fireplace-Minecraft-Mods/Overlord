@@ -69,6 +69,14 @@ public class ContainerSkeleton extends Container {
             }
         });
 
+        this.addSlotToContainer(new SlotAugment(armorInv, 152, 5, 44){
+            @Override
+            public int getSlotStackLimit()
+            {
+                return 1;
+            }
+        });//Entity Equipment ID 6
+
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 this.addSlotToContainer(new Slot(entityInv, x + y * 3, 116 + x * 18, 25 + y * 18));//Entity Inventory 0 to 8
