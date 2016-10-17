@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import the_fireplace.overlord.tools.Augment;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -12,16 +13,29 @@ import java.util.HashMap;
  */
 public abstract class AugmentRegistry {
     private static HashMap<ItemStack, Augment> augments = Maps.newHashMap();
+    private static ArrayList<String> registeredIDs = new ArrayList<>();
 
     public static boolean registerAugment(ItemStack item, Augment augment){
-        if(item == null || augment == null)
+        if(item == null || augment == null) {
+            System.out.println("Neither argument of registerAugment can be null!");
             return false;
-        item.stackSize=1;
-        if(!augments.containsKey(item)) {
-            augments.put(item, augment);
-            return true;
+        }
+        if(augment.augmentId() == null || augment.augmentId().isEmpty()) {
+            System.out.println("Augment "+augment.getClass()+" has no ID, skipping...");
+            return false;
+        }
+        if(!registeredIDs.contains(augment.augmentId())) {
+            item.stackSize=1;
+            if (!augments.containsKey(item)) {
+                augments.put(item, augment);
+                registeredIDs.add(augment.augmentId());
+                return true;
+            } else {
+                System.out.println("Augment already exists for " + item.getItem());
+                return false;
+            }
         }else{
-            System.out.println("Augment already exists for "+item.getItem());
+            System.out.println("Augment already exists for ID "+augment.augmentId()+", skipping "+augment.getClass()+"...");
             return false;
         }
     }

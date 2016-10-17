@@ -11,6 +11,11 @@ import the_fireplace.overlord.tools.Augment;
  */
 public class AugmentIron extends Augment {
     @Override
+    public String augmentId() {
+        return "iron";
+    }
+
+    @Override
     public void onEntityTick(EntityArmyMember entity) {
         if(entity.getActivePotionEffect(MobEffects.RESISTANCE) == null)
             entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 120));

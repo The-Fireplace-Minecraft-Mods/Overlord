@@ -19,4 +19,9 @@ public class AugmentSlowRegen extends Augment {
             entity.heal(1.0F);
         }
     }
+
+    @Override
+    public String augmentId() {
+        return "slow_regen";
+    }
 }

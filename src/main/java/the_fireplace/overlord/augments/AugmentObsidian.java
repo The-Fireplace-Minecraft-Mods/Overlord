@@ -11,6 +11,11 @@ import the_fireplace.overlord.tools.Augment;
  */
 public class AugmentObsidian extends Augment {
     @Override
+    public String augmentId() {
+        return "obsidian";
+    }
+
+    @Override
     public void onStrike(EntityArmyMember attacker, Entity entityAttacked) {
 
     }

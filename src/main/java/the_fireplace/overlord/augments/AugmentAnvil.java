@@ -20,6 +20,11 @@ public class AugmentAnvil extends Augment {
     }
 
     @Override
+    public String augmentId() {
+        return "iron_anvil";
+    }
+
+    @Override
     public void onEntityTick(EntityArmyMember entity) {
         if(entity.motionY < 0){
             entity.motionY *= 1.5;

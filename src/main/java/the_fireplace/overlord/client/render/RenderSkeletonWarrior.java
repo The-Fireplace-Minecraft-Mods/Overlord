@@ -15,7 +15,8 @@ import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 @SideOnly(Side.CLIENT)
 public class RenderSkeletonWarrior extends RenderBiped<EntitySkeletonWarrior>
 {
-    private static final ResourceLocation SKELETON_TEXTURES = new ResourceLocation("textures/entity/skeleton/skeleton.png");
+    public static final ResourceLocation SKELETON_TEXTURES = new ResourceLocation("textures/entity/skeleton/skeleton.png");
+    public static final ResourceLocation WITHER_SKELETON_TEXTURES = new ResourceLocation("textures/entity/skeleton/wither_skeleton.png");
 
     public RenderSkeletonWarrior(RenderManager renderManagerIn)
     {
@@ -38,12 +39,12 @@ public class RenderSkeletonWarrior extends RenderBiped<EntitySkeletonWarrior>
         GlStateManager.translate(0.09375F, 0.1875F, 0.0F);
     }
 
-    /**
-     * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
-     */
     @Override
     protected ResourceLocation getEntityTexture(EntitySkeletonWarrior entity)
     {
+        if(entity.getAugment() != null)
+            if(entity.getAugment().augmentId().equals("wither"))
+                return WITHER_SKELETON_TEXTURES;
         return SKELETON_TEXTURES;
     }
 }

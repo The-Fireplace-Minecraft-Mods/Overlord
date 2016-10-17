@@ -14,6 +14,11 @@ public class AugmentFastRegen extends Augment {
     }
 
     @Override
+    public String augmentId() {
+        return "fast_regen";
+    }
+
+    @Override
     public void onEntityTick(EntityArmyMember entity) {
         if(entity.getHealth() < entity.getMaxHealth() && entity.ticksExisted % 100 == 0){
             entity.heal(1.0F);
