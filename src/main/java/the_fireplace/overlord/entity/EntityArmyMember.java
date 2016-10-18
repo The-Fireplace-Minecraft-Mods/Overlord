@@ -27,6 +27,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -39,6 +40,8 @@ import the_fireplace.overlord.tools.Enemies;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
+
+import static the_fireplace.overlord.Overlord.proxy;
 
 /**
  * The base Army Member class. All entities that you want to be part of the army should extend this.
@@ -197,7 +200,13 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
         super.onDeath(cause);
         if (!this.worldObj.isRemote && this.worldObj.getGameRules().getBoolean("showDeathMessages") && this.getOwner() instanceof EntityPlayerMP)
         {
-            this.getOwner().addChatMessage(this.getCombatTracker().getDeathMessage());
+            String name = "";
+            if(hasCustomName()) {
+                name += getCustomNameTag();
+                name += " (" + proxy.translateToLocal("entity." + EntityList.getEntityString(this) + ".name") + ')';
+            }else
+                name += proxy.translateToLocal("entity." + EntityList.getEntityString(this) + ".name");
+            this.getOwner().addChatMessage(new TextComponentTranslation("overlord.armydeath", name, cause.damageType));
         }
     }
 

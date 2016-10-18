@@ -64,6 +64,8 @@ overlord.all_squads=All Squads
 overlord.no_squad=No Squad
 overlord.squad_editor=Squad Editor
 
+overlord.armydeath=Your %s died because of %s.
+
 cfg.helmet_damage=Enable Helmet Damage in Sunlight
 cfg.helmet_damage.tooltip=Enables helmets worn by Army Skeletons taking damage and eventually breaking in the sunlight
 

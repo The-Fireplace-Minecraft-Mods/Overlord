@@ -36,7 +36,8 @@ public class RequestAugmentMessage implements IMessage {
             String augmentID = "";
             if(player.worldObj.getEntityByID(message.warrior) != null){
                 if(player.worldObj.getEntityByID(message.warrior) instanceof EntityArmyMember){
-                    augmentID = ((EntityArmyMember) player.worldObj.getEntityByID(message.warrior)).getAugment().augmentId();
+                    if(((EntityArmyMember) player.worldObj.getEntityByID(message.warrior)).getAugment() != null)
+                        augmentID = ((EntityArmyMember) player.worldObj.getEntityByID(message.warrior)).getAugment().augmentId();
                 }else{
                     System.out.println("Error: Entity is not an army member. It is "+player.worldObj.getEntityByID(message.warrior).toString());
                 }

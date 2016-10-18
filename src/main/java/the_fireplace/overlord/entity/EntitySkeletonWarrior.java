@@ -41,6 +41,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.ai.EntityAIWarriorBow;
+import the_fireplace.overlord.network.PacketDispatcher;
+import the_fireplace.overlord.network.packets.RequestAugmentMessage;
 import the_fireplace.overlord.registry.AugmentRegistry;
 import the_fireplace.overlord.tools.Augment;
 
@@ -66,18 +68,34 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     public boolean cachedClientAugment = false;
     public Augment clientAugment = null;
 
+    public EntitySkeletonWarrior instance;
+
     public EntitySkeletonWarrior(World world){
         this(world, null);
     }
 
     public EntitySkeletonWarrior(World world, @Nullable UUID owner){
         super(world, owner);
+        instance = this;
         this.inventory = new InventoryBasic("Items", false, 9);
         this.equipInventory = new InventoryBasic("Equipment", false, 7){
             @Override
             public boolean isItemValidForSlot(int index, ItemStack stack)
             {
                 return (index >= 4 && index < 6) || (index == 6 && AugmentRegistry.getAugment(stack) != null) || stack != null && stack.getItem().isValidArmor(stack, EntityEquipmentSlot.values()[index], null);
+            }
+            @Override
+            public void setInventorySlotContents(int index, ItemStack stack){
+                super.setInventorySlotContents(index, stack);
+                if(world.isRemote && index == 6)
+                    PacketDispatcher.sendToServer(new RequestAugmentMessage(instance));
+            }
+            @Override
+            public ItemStack removeStackFromSlot(int index)
+            {
+                if(world.isRemote && index == 6)
+                    PacketDispatcher.sendToServer(new RequestAugmentMessage(instance));
+                return super.removeStackFromSlot(index);
             }
         };
         this.setCanPickUpLoot(true);
