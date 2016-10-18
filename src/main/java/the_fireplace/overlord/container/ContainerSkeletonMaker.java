@@ -35,7 +35,7 @@ public class ContainerSkeletonMaker extends Container {
 
         this.addSlotToContainer(new SlotBone(entity, 1, 118, 6));//tile entity ID 1
 
-        this.addSlotToContainer(new SlotOutput(entity, 2, 118 + 18, 6));//tile entity ID 2//TODO: Add a use for this slot
+        this.addSlotToContainer(new SlotBone(entity, 2, 118 + 18, 6));//tile entity ID 2
 
         this.addSlotToContainer(new SlotAugment(entity, 3, 118 + 2 * 18, 6));//tile entity ID 3
 

@@ -20,6 +20,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import the_fireplace.overlord.Overlord;
+import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.SetMilkMessage;
@@ -97,10 +98,23 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
             setInventorySlotContents(i, null);
         }
         if(getStackInSlot(1) != null){
-            if(getStackInSlot(1).stackSize <= 32)
+            if(getStackInSlot(1).stackSize == ConfigValues.BONEREQ_WARRIOR)
                 setInventorySlotContents(1, null);
+            else if(getStackInSlot(1).stackSize < ConfigValues.BONEREQ_WARRIOR) {
+                setInventorySlotContents(1, null);
+                if(getStackInSlot(2) != null)
+                if (getStackInSlot(2).stackSize <= ConfigValues.BONEREQ_WARRIOR)
+                    setInventorySlotContents(2, null);
+                else
+                    getStackInSlot(2).stackSize -= ConfigValues.BONEREQ_WARRIOR;
+            }else
+                getStackInSlot(1).stackSize -= ConfigValues.BONEREQ_WARRIOR;
+        }else{
+            if(getStackInSlot(2) != null)
+            if(getStackInSlot(2).stackSize <= ConfigValues.BONEREQ_WARRIOR)
+                setInventorySlotContents(2, null);
             else
-                getStackInSlot(1).stackSize -= 32;
+                getStackInSlot(2).stackSize -= ConfigValues.BONEREQ_WARRIOR;
         }
     }
 
@@ -195,7 +209,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return (index == 0 && stack.getItem() == Overlord.overlords_seal) || (index == 1 && stack.getItem() == Items.BONE) || (index == 3 && AugmentRegistry.getAugment(stack) != null) || (index == 4 && stack.getItem() == Items.MILK_BUCKET) || (index > 5 && index < 10 && stack.getItem().isValidArmor(stack, getSlotEquipmentType(index), null) || (index == 12 && stack.getItem() == Overlord.skinsuit));
+        return (index == 0 && stack.getItem() == Overlord.overlords_seal) || ((index == 1 || index == 2) && stack.getItem() == Items.BONE) || (index == 3 && AugmentRegistry.getAugment(stack) != null) || (index == 4 && stack.getItem() == Items.MILK_BUCKET) || (index > 5 && index < 10 && stack.getItem().isValidArmor(stack, getSlotEquipmentType(index), null) || (index == 12 && stack.getItem() == Overlord.skinsuit));
     }
 
     private EntityEquipmentSlot getSlotEquipmentType(int index){
@@ -275,10 +289,10 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
     @Override
     public int[] getSlotsForFace(EnumFacing side) {
         if (side == EnumFacing.EAST || side == EnumFacing.WEST || side == EnumFacing.NORTH || side == EnumFacing.SOUTH || side == EnumFacing.UP) {
-            return new int[]{1, 3, 4, 6, 7, 8, 9, 12};
+            return new int[]{1, 2, 3, 4, 6, 7, 8, 9, 12};
         }
         if (side == EnumFacing.DOWN) {
-            return new int[]{2, 5};
+            return new int[]{5};
         }
         return null;
     }
@@ -286,7 +300,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
     @Override
     public boolean canInsertItem(int index, ItemStack stack, EnumFacing direction) {
         if (stack != null) {
-            if (index == 1 || (index > 2 &&  index < 5) || index >= 6 && index < 10 || index == 12) {
+            if (index >= 1 &&  index < 5 || index >= 6 && index < 10 || index == 12) {
                 if(this.isItemValidForSlot(index, stack))
                     return true;
             }
@@ -297,7 +311,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
     @Override
     public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
         if (stack != null)
-            if (index == 5 || index == 2)
+            if (index == 5)
                 return true;
         return false;
     }

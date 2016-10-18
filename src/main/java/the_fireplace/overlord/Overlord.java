@@ -24,6 +24,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.client.config.GuiConfigEntries;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -74,6 +75,8 @@ public class Overlord {
     public static Property SKINSUITNAMETAGS_PROPERTY;
     public static Property HUNTCREEPERS_PROPERTY;
     public static Property SUFFOCATIONWARNING_PROPERTY;
+    public static Property BONEREQ_WARRIOR_PROPERTY;
+    public static Property BONEREQ_BABY_PROPERTY;
 
     @SidedProxy(clientSide = "the_fireplace."+MODID+".client.ClientProxy", serverSide = "the_fireplace."+MODID+".CommonProxy")
     public static CommonProxy proxy;
@@ -103,6 +106,8 @@ public class Overlord {
         ConfigValues.SKINSUITNAMETAGS = SKINSUITNAMETAGS_PROPERTY.getBoolean();
         ConfigValues.HUNTCREEPERS = HUNTCREEPERS_PROPERTY.getBoolean();
         ConfigValues.SUFFOCATIONWARNING = SUFFOCATIONWARNING_PROPERTY.getBoolean();
+        ConfigValues.BONEREQ_WARRIOR = BONEREQ_WARRIOR_PROPERTY.getInt();
+        ConfigValues.BONEREQ_BABY = BONEREQ_BABY_PROPERTY.getInt();
         if (config.hasChanged())
             config.save();
     }
@@ -118,6 +123,16 @@ public class Overlord {
         SKINSUITNAMETAGS_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.SKINSUITNAMETAGS_NAME, ConfigValues.SKINSUITNAMETAGS_DEFAULT, proxy.translateToLocal(ConfigValues.SKINSUITNAMETAGS_NAME + ".tooltip"));
         HUNTCREEPERS_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.HUNTCREEPERS_NAME, ConfigValues.HUNTCREEPERS_DEFAULT, proxy.translateToLocal(ConfigValues.HUNTCREEPERS_NAME + ".tooltip"));
         SUFFOCATIONWARNING_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.SUFFOCATIONWARNING_NAME, ConfigValues.SUFFOCATIONWARNING_DEFAULT, proxy.translateToLocal(ConfigValues.SUFFOCATIONWARNING_NAME + ".tooltip"));
+        BONEREQ_WARRIOR_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.BONEREQ_WARRIOR_NAME, ConfigValues.BONEREQ_WARRIOR_DEFAULT, proxy.translateToLocal(ConfigValues.BONEREQ_WARRIOR_NAME + ".tooltip"));
+        BONEREQ_BABY_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.BONEREQ_BABY_NAME, ConfigValues.BONEREQ_BABY_DEFAULT, proxy.translateToLocal(ConfigValues.BONEREQ_BABY_NAME + ".tooltip"));
+        BONEREQ_WARRIOR_PROPERTY.setMinValue(2);
+        BONEREQ_BABY_PROPERTY.setMinValue(1);
+        BONEREQ_WARRIOR_PROPERTY.setMaxValue(128);
+        BONEREQ_BABY_PROPERTY.setMaxValue(64);
+        if(event.getSide().isClient()){
+            BONEREQ_WARRIOR_PROPERTY.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
+            BONEREQ_BABY_PROPERTY.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
+        }
         syncConfig();
         registerBlock(skeleton_maker);
         registerBlock(baby_skeleton_maker);

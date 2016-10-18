@@ -17,6 +17,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import the_fireplace.overlord.Overlord;
+import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.EntityBabySkeleton;
 
 import java.util.UUID;
@@ -64,10 +65,10 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
             setInventorySlotContents(3, new ItemStack(Items.BUCKET));
         }
         if(getStackInSlot(1) != null){
-            if(getStackInSlot(1).stackSize <= 16)
+            if(getStackInSlot(1).stackSize <= ConfigValues.BONEREQ_BABY)
                 setInventorySlotContents(1, null);
             else
-                getStackInSlot(1).stackSize -= 16;
+                getStackInSlot(1).stackSize -= ConfigValues.BONEREQ_BABY;
         }
     }
 

@@ -79,6 +79,12 @@ cfg.huntcreepers.tooltip=Do Army Skeletons go after Creepers?
 cfg.suffocationwarning=Warrior Suffocation Warning
 cfg.suffocationwarning.tooltip=Warn players in the Skeleton Maker GUI if the Skeleton spawned may suffocate?
 
+cfg.bonereq_warrior=Skeleton Warrior Bone Requirement
+cfg.bonereq_warrior.tooltip=How many bones does it take to make a Skeleton Warrior?
+
+cfg.bonereq_baby=Baby Skeleton Bone Requirement
+cfg.bonereq_baby.tooltip=How many bones does it take to make a Baby Skeleton?
+
 achievement.firstskeleton=You and what army?
 achievement.firstskeleton.desc=Summon a Skeleton
 
