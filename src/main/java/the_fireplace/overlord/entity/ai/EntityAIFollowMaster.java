@@ -107,7 +107,7 @@ public class EntityAIFollowMaster extends EntityAIBase
     private boolean isEmptyBlock(BlockPos pos)
     {
         IBlockState iblockstate = this.theWorld.getBlockState(pos);
-        return iblockstate.getMaterial() == Material.AIR/* || !iblockstate.isFullCube()*/;
+        return iblockstate.getMaterial() == Material.AIR;
     }
 
     /**
@@ -124,7 +124,7 @@ public class EntityAIFollowMaster extends EntityAIBase
 
                 if (!this.petPathfinder.tryMoveToEntityLiving(this.theOwner, this.followSpeed))
                 {
-                    if (!this.thePet.getLeashed())
+                    if (!this.thePet.getLeashed() && thePet.fallDistance <= 0)
                     {
                         if (this.thePet.getDistanceSqToEntity(this.theOwner) >= 144.0D)
                         {
