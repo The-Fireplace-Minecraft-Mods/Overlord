@@ -164,7 +164,7 @@ public class Overlord {
         AugmentRegistry.registerAugment(new ItemStack(Items.IRON_INGOT), new AugmentIron());
         AugmentRegistry.registerAugment(new ItemStack(Blocks.OBSIDIAN), new AugmentObsidian());
         AugmentRegistry.registerAugment(new ItemStack(Blocks.ANVIL), new AugmentAnvil());
-        AugmentRegistry.registerAugment(new ItemStack(Blocks.SKULL, 1, 1), new AugmentWither());
+        AugmentRegistry.registerAugment(new ItemStack(Items.SKULL, 1, 1), new AugmentWither());
     }
 
     @Mod.EventHandler
