@@ -396,6 +396,8 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
             dataManager.set(MILK_LEVEL, milk);
             dataManager.set(SKELETON_POWER_LEVEL, level);
             updateEntityAttributes();
+            if(getHealth() < getMaxHealth())
+                heal(getMaxHealth()-getHealth());
             if(getOwner() != null){
                 if(getOwner() instanceof EntityPlayerMP)
                     if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.firstLevel)) {
