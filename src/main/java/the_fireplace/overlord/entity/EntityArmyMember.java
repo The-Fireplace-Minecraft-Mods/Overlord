@@ -5,8 +5,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.monster.EntitySlime;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -157,8 +156,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
                 this.targetTasks.addTask(1, new EntityAIHurtByNonAllied(this, true));
                 this.targetTasks.addTask(2, new EntityAINearestNonTeamTarget(this, EntityPlayer.class, true));
                 this.targetTasks.addTask(2, new EntityAINearestNonTeamTarget(this, EntityArmyMember.class, true));
-                this.targetTasks.addTask(3, new EntityAINearestNonTeamTarget(this, EntityMob.class, true));
-                this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntitySlime.class, true));
+                this.targetTasks.addTask(3, new EntityAINearestNonTeamTarget(this, IMob.class, true));
                 break;
             case 0:
             default:

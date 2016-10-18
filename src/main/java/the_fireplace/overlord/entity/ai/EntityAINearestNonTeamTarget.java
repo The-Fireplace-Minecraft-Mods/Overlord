@@ -2,6 +2,8 @@ package the_fireplace.overlord.entity.ai;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,9 +20,7 @@ import the_fireplace.overlord.tools.Alliances;
 import the_fireplace.overlord.tools.Enemies;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -68,7 +68,7 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
         }
         else if (this.targetClass != EntityPlayer.class && this.targetClass != EntityPlayerMP.class)
         {
-            List<T> list = this.taskOwner.worldObj.getEntitiesWithinAABB(this.targetClass, this.getTargetableArea(this.getTargetDistance()), this.targetEntitySelector);
+            List<T> list = getEntitiesWithinAABB(this.taskOwner.worldObj, this.targetClass, this.getTargetableArea(this.getTargetDistance()), this.targetEntitySelector);
 
             if (list.isEmpty())
             {
@@ -203,5 +203,23 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
         }
 
         return entityplayer;
+    }
+
+    /**
+     * Returns a list of all entities within the given bounding box that match the class or interface provided
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> getEntitiesWithinAABB(World world, Class<T> clazz, AxisAlignedBB aabb, Predicate<? super T> predicate) {
+        List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, aabb);
+        List<T> found = Lists.newArrayList();
+        Iterator<Entity> iterator = entities.iterator();
+        while (iterator.hasNext()) {
+            Entity e = iterator.next();
+            if (clazz.isAssignableFrom(e.getClass())) {
+                found.add((T) e);
+            }
+        }
+        found = new ArrayList<T>(Collections2.filter(found, predicate));
+        return found;
     }
 }
