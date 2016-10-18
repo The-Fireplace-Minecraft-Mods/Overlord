@@ -101,7 +101,7 @@ public class GuiSkeleton extends GuiContainer {
         int l = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
         this.drawTexturedModalRect(guiLeft+47, guiTop+8, 0, 166, (int)(entity.getHealth()/entity.getMaxHealth()*90), 5);
-        this.drawTexturedModalRect(guiLeft+47, guiTop+18, 0, 171, (int)(entity.getMilkLevel()/Math.pow(2, entity.getLevel())*90), 5);
+        this.drawTexturedModalRect(guiLeft+47, guiTop+18, 0, 171, (int)(entity.getXP()/Math.pow(2, entity.getLevel())*90), 5);
     }
 
 

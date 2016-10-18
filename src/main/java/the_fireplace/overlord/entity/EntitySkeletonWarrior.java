@@ -50,7 +50,8 @@ import java.util.UUID;
 public class EntitySkeletonWarrior extends EntityArmyMember {
 
     private static final DataParameter<Integer> SKELETON_POWER_LEVEL = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> MILK_LEVEL = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> TOTAL_MILK_LEVEL = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> XP = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
     private static final DataParameter<String> SKINSUIT_NAME = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.STRING);
     private static final DataParameter<Boolean> HAS_SKINSUIT = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BOOLEAN);
     private EntityAIWarriorBow aiArrowAttack = null;
@@ -198,9 +199,10 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     {
         super.entityInit();
         this.dataManager.register(SKELETON_POWER_LEVEL, Integer.valueOf(1));
-        this.dataManager.register(MILK_LEVEL, Integer.valueOf(0));
+        this.dataManager.register(TOTAL_MILK_LEVEL, Integer.valueOf(0));
         this.dataManager.register(HAS_SKINSUIT, Boolean.valueOf(false));
         this.dataManager.register(SKINSUIT_NAME, String.valueOf(""));
+        this.dataManager.register(XP, Integer.valueOf(0));
     }
 
     @Override
@@ -231,7 +233,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
             for(int i=0;i<this.inventory.getSizeInventory();i++){
                 if(inventory.getStackInSlot(i) != null)
                     if(inventory.getStackInSlot(i).getItem() == Items.MILK_BUCKET){
-                        this.increaseMilkLevel();
+                        this.increaseMilkLevel(true);
                         if(inventory.getStackInSlot(i).stackSize > 1)
                             inventory.getStackInSlot(i).stackSize--;
                         else
@@ -360,9 +362,13 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
         super.onLivingUpdate();
     }
 
-    private void increaseMilkLevel(){
-        int milk = dataManager.get(MILK_LEVEL);
-        dataManager.set(MILK_LEVEL, ++milk);
+    public void increaseMilkLevel(boolean addXp){
+        int milk = getTotalMilkConsumed();
+        dataManager.set(TOTAL_MILK_LEVEL, ++milk);
+        if(addXp) {
+            int xp = getXP();
+            dataManager.set(XP, ++xp);
+        }
         if(getOwner() != null){
             if(getOwner() instanceof EntityPlayerMP)
                 if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.firstMilk)) {
@@ -370,7 +376,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                     return;
                 }
         }
-        if((dataManager.get(SKELETON_POWER_LEVEL) == 8 && dataManager.get(MILK_LEVEL) >= 2) || dataManager.get(SKELETON_POWER_LEVEL) > 8)
+        if(getTotalMilkConsumed() >= 256)
         if(getOwner() != null){
             if(getOwner() instanceof EntityPlayerMP)
                 if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.milk256)) {
@@ -378,7 +384,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                     return;
                 }
         }
-        if((dataManager.get(SKELETON_POWER_LEVEL) == 12 && dataManager.get(MILK_LEVEL) >= 811) || dataManager.get(SKELETON_POWER_LEVEL) > 12)
+        if(getTotalMilkConsumed() > 9000)
         if(getOwner() != null){
             if(getOwner() instanceof EntityPlayerMP)
                 if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.milk9001)) {
@@ -389,11 +395,11 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
 
     public void checkLevelUp(){
         int level = dataManager.get(SKELETON_POWER_LEVEL);
-        int milk = dataManager.get(MILK_LEVEL);
-        if(milk >= Math.pow(2, level)){
-            milk -= Math.pow(2, level);
+        int xp = getXP();
+        if(xp >= Math.pow(2, level)){
+            xp -= Math.pow(2, level);
             level++;
-            dataManager.set(MILK_LEVEL, milk);
+            dataManager.set(XP, xp);
             dataManager.set(SKELETON_POWER_LEVEL, level);
             updateEntityAttributes();
             if(getHealth() < getMaxHealth())
@@ -446,11 +452,23 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
             int i = compound.getInteger("SkeletonPowerLevel");
             this.dataManager.set(SKELETON_POWER_LEVEL, i);
         }
-        if (compound.hasKey("SkeletonMilk"))
+        if (compound.hasKey("TotalMilkLevel"))
         {
+            int i = compound.getInteger("TotalMilkLevel");
+            this.dataManager.set(TOTAL_MILK_LEVEL, i);
+        } else if (compound.hasKey("SkeletonMilk")) {
             int i = compound.getInteger("SkeletonMilk");
-            this.dataManager.set(MILK_LEVEL, i);
+            this.dataManager.set(XP, i);
+            for(int j=1;j<=this.dataManager.get(SKELETON_POWER_LEVEL);j++)
+                i += Math.pow(2, j);
+            this.dataManager.set(TOTAL_MILK_LEVEL, i);
         }
+
+        if(compound.hasKey("XP")){
+            int i = compound.getInteger("XP");
+            this.dataManager.set(XP, i);
+        }
+
         if(compound.hasKey("SkinsuitName")){
             String s = compound.getString("SkinsuitName");
             this.dataManager.set(SKINSUIT_NAME, s);
@@ -491,9 +509,10 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
         super.writeEntityToNBT(compound);
         compound.setInteger("SkeletonPowerLevel", this.dataManager.get(SKELETON_POWER_LEVEL));
         updateEntityAttributes();
-        compound.setInteger("SkeletonMilk", this.dataManager.get(MILK_LEVEL));
+        compound.setInteger("TotalMilkLevel", this.dataManager.get(TOTAL_MILK_LEVEL));
         compound.setBoolean("HasSkinsuit", this.dataManager.get(HAS_SKINSUIT));
         compound.setString("SkinsuitName", this.dataManager.get(SKINSUIT_NAME));
+        compound.setInteger("XP", this.dataManager.get(XP));
 
         NBTTagList mainInv = new NBTTagList();
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
@@ -690,8 +709,12 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
         this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(1.0D+(Math.sqrt(dataManager.get(SKELETON_POWER_LEVEL))/4));
     }
 
-    public int getMilkLevel(){
-        return dataManager.get(MILK_LEVEL);
+    public int getTotalMilkConsumed(){
+        return dataManager.get(TOTAL_MILK_LEVEL);
+    }
+
+    public int getXP(){
+        return dataManager.get(XP);
     }
 
     public int getLevel(){

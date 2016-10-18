@@ -39,6 +39,8 @@ public class CommonEvents {
                                 event.getEntityPlayer().setItemStackToSlot(event.getHand() == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, null);
                             event.getEntityPlayer().inventory.addItemStackToInventory(new ItemStack(Items.BUCKET));
                         }
+                        if(event.getTarget() instanceof EntitySkeletonWarrior)
+                            ((EntitySkeletonWarrior) event.getTarget()).increaseMilkLevel(false);
                     }
     }
     @SubscribeEvent
@@ -48,7 +50,7 @@ public class CommonEvents {
                 if(event.getEntityLiving().ticksExisted < 5){
                     if(event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.HEAD) == null){
                         Random random = new Random();
-                        if(random.nextInt(1000) == 0)
+                        if(random.nextInt(1200) == 0)
                             event.getEntityLiving().setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(Overlord.sans_mask));
                     }
                 }
