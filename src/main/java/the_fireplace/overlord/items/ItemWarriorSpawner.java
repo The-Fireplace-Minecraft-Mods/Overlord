@@ -48,7 +48,7 @@ public class ItemWarriorSpawner extends Item {
 
             EntitySkeletonWarrior entity = new EntitySkeletonWarrior(worldIn);
 
-            entity.setLocationAndAngles(pos.getX(), pos.getY() + offsetY, pos.getZ(), MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
+            entity.setLocationAndAngles(pos.getX()+0.5D, pos.getY() + offsetY, pos.getZ()+0.5D, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
             entity.rotationYawHead = entity.rotationYaw;
             entity.renderYawOffset = entity.rotationYaw;
             entity.onInitialSpawn(worldIn.getDifficultyForLocation(new BlockPos(entity)), null);
@@ -64,7 +64,7 @@ public class ItemWarriorSpawner extends Item {
 
                 applyItemEntityDataToEntity(worldIn, playerIn, stack, entity);
 
-                entity.setLocationAndAngles(pos.getX(), pos.getY() + offsetY, pos.getZ(), MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
+                entity.setLocationAndAngles(pos.getX()+0.5D, pos.getY() + offsetY, pos.getZ()+0.5D, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
 
                 if (!playerIn.capabilities.isCreativeMode)
                 {
