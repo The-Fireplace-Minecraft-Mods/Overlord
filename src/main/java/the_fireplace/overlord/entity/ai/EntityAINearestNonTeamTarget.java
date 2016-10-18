@@ -77,13 +77,7 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
             else
             {
                 Collections.sort(list, this.theNearestAttackableTargetSorter);
-                if(list.get(0) instanceof EntityArmyMember){
-                    if((((EntityArmyMember)this.taskOwner).getAttackMode() < 2 && !Enemies.getInstance().isEnemiesWith(((EntityArmyMember) list.get(0)).getOwnerId(), ((EntityArmyMember)taskOwner).getOwnerId())) || ((EntityArmyMember) list.get(0)).getOwnerId().equals(((EntityArmyMember)this.taskOwner).getOwnerId()))
-                        return false;
-                    if(Alliances.getInstance().isAlliedTo(((EntityArmyMember) list.get(0)).getOwnerId(), ((EntityArmyMember)this.taskOwner).getOwnerId()))
-                        return false;
-                }
-                if(!ConfigValues.HUNTCREEPERS && list.get(0) instanceof EntityCreeper)
+                if(!((EntityArmyMember)this.taskOwner).shouldAttackEntity(list.get(0), ((EntityArmyMember)this.taskOwner).getOwner()))
                     return false;
                 this.targetEntity = list.get(0);
                 return true;

@@ -4,8 +4,11 @@ import com.sun.istack.internal.NotNull;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySlime;
+import net.minecraft.entity.passive.EntityHorse;
+import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
@@ -27,12 +30,12 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import the_fireplace.overlord.entity.ai.EntityAIFollowMaster;
-import the_fireplace.overlord.entity.ai.EntityAIHurtByNonAllied;
-import the_fireplace.overlord.entity.ai.EntityAINearestNonTeamTarget;
-import the_fireplace.overlord.entity.ai.EntityAIWanderBase;
+import the_fireplace.overlord.config.ConfigValues;
+import the_fireplace.overlord.entity.ai.*;
+import the_fireplace.overlord.tools.Alliances;
 import the_fireplace.overlord.tools.Augment;
 import the_fireplace.overlord.tools.CustomDataSerializers;
+import the_fireplace.overlord.tools.Enemies;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -145,7 +148,9 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
     public void addTargetTasks(){
         switch(dataManager.get(ATTACK_MODE)) {
             case 2:
+                this.targetTasks.addTask(2, new EntityAIMasterHurtTarget(this));
             case 1:
+                this.targetTasks.addTask(1, new EntityAIMasterHurtByTarget(this));
                 this.targetTasks.addTask(1, new EntityAIHurtByNonAllied(this, true));
                 this.targetTasks.addTask(2, new EntityAINearestNonTeamTarget(this, EntityPlayer.class, true));
                 this.targetTasks.addTask(2, new EntityAINearestNonTeamTarget(this, EntityArmyMember.class, true));
@@ -501,5 +506,35 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
     protected boolean canDespawn()
     {
         return false;
+    }
+
+    public boolean shouldAttackEntity(EntityLivingBase target, EntityLivingBase owner)
+    {
+        if (!(!ConfigValues.HUNTCREEPERS && target instanceof EntityCreeper)/* && !(target instanceof EntityGhast)*/)
+        {
+            if (target instanceof EntityWolf)
+            {
+                EntityWolf entitywolf = (EntityWolf)target;
+
+                if (entitywolf.isTamed() && entitywolf.getOwner() == owner)
+                {
+                    return false;
+                }else if(Alliances.getInstance().isAlliedTo(((EntityWolf) target).getOwnerId(), getOwnerId()))
+                    return false;
+            }
+
+            if(target instanceof EntityArmyMember){
+                if((getAttackMode() < 2 && !Enemies.getInstance().isEnemiesWith(((EntityArmyMember) target).getOwnerId(), getOwnerId())) || ((EntityArmyMember) target).getOwnerId().equals(getOwnerId()))
+                    return false;
+                if(Alliances.getInstance().isAlliedTo(((EntityArmyMember) target).getOwnerId(), getOwnerId()))
+                    return false;
+            }
+
+            return target instanceof EntityPlayer && owner instanceof EntityPlayer && !((EntityPlayer)owner).canAttackPlayer((EntityPlayer)target) ? false : !(target instanceof EntityHorse) || !((EntityHorse)target).isTame();
+        }
+        else
+        {
+            return false;
+        }
     }
 }
