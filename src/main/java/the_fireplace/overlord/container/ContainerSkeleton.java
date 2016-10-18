@@ -69,7 +69,7 @@ public class ContainerSkeleton extends Container {
             }
         });
 
-        this.addSlotToContainer(new SlotAugment(armorInv, 152, 5, 44){
+        this.addSlotToContainer(new SlotAugment(armorInv, 6, 152, 5){
             @Override
             public int getSlotStackLimit()
             {
