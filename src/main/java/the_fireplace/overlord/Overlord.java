@@ -44,10 +44,7 @@ import the_fireplace.overlord.command.*;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.EntityBabySkeleton;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
-import the_fireplace.overlord.items.ItemOverlordsSeal;
-import the_fireplace.overlord.items.ItemSansMask;
-import the_fireplace.overlord.items.ItemSquadEditor;
-import the_fireplace.overlord.items.ItemWarriorSpawner;
+import the_fireplace.overlord.items.*;
 import the_fireplace.overlord.network.OverlordGuiHandler;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.registry.AugmentRegistry;
@@ -99,6 +96,7 @@ public class Overlord {
     public static final Item sans_mask = new ItemSansMask(sans);
     public static final Item skinsuit = new Item().setUnlocalizedName("skinsuit").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item warrior_spawner = new ItemWarriorSpawner().setUnlocalizedName("warrior_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
+    public static final Item baby_spawner = new ItemBabySpawner().setUnlocalizedName("baby_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
 
     public static void syncConfig() {
         ConfigValues.HELMETDAMAGE = HELMETDAMAGE_PROPERTY.getBoolean();
@@ -141,6 +139,7 @@ public class Overlord {
         registerItem(sans_mask);
         registerItem(skinsuit);
         registerItem(warrior_spawner);
+        registerItem(baby_spawner);
         OreDictionary.registerOre("book", squad_editor);
         GameRegistry.registerTileEntity(TileEntitySkeletonMaker.class, "skeleton_maker");
         GameRegistry.registerTileEntity(TileEntityBabySkeletonMaker.class, "baby_skeleton_maker");
@@ -193,6 +192,7 @@ public class Overlord {
         rmm(sans_mask);
         rmm(skinsuit);
         rmm(warrior_spawner);
+        rmm(baby_spawner);
     }
 
     @SideOnly(Side.CLIENT)
