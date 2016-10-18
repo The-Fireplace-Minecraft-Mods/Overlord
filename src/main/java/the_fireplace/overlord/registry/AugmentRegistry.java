@@ -1,6 +1,7 @@
 package the_fireplace.overlord.registry;
 
 import com.google.common.collect.Maps;
+import com.sun.istack.internal.NotNull;
 import net.minecraft.item.ItemStack;
 import the_fireplace.overlord.tools.Augment;
 
@@ -15,7 +16,7 @@ public abstract class AugmentRegistry {
     private static HashMap<ItemStack, Augment> augments = Maps.newHashMap();
     private static ArrayList<String> registeredIDs = new ArrayList<>();
 
-    public static boolean registerAugment(ItemStack item, Augment augment){
+    public static boolean registerAugment(@NotNull ItemStack item, @NotNull Augment augment){
         if(item == null || augment == null) {
             System.out.println("Neither argument of registerAugment can be null!");
             return false;
