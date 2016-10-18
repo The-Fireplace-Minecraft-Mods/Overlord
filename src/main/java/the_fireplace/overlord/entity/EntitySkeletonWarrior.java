@@ -34,6 +34,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.ai.EntityAIWarriorBow;
@@ -58,6 +60,9 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
 
     public final InventoryBasic inventory;
     public final InventoryBasic equipInventory;
+
+    public boolean cachedClientAugment = false;
+    public Augment clientAugment = null;
 
     public EntitySkeletonWarrior(World world){
         this(world, null);
@@ -216,6 +221,8 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     public Augment getAugment(){
         if(equipInventory == null)
             return null;
+        if(AugmentRegistry.getAugment(equipInventory.getStackInSlot(6)) == null && worldObj.isRemote)
+            return clientAugment;
         return AugmentRegistry.getAugment(equipInventory.getStackInSlot(6));
     }
 
@@ -663,6 +670,17 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     public ItemStack getHeldItemOffhand()
     {
         return equipInventory.getStackInSlot(5);
+    }
+
+    @Override
+    public boolean isPlayer(){
+        return true;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void setAugment(String augment){
+        clientAugment = AugmentRegistry.getAugment(augment);
+        cachedClientAugment = true;
     }
 
     @Override
