@@ -2,6 +2,7 @@ package the_fireplace.overlord.entity;
 
 import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -10,6 +11,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -298,6 +300,59 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                     playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
                 }
             });
+
+            for(EntityXPOrb xp:worldObj.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox().expand(8, 5, 8))){
+                if (!xp.func_189652_ae())
+                {
+                    xp.motionY -= 0.029999999329447746D;
+                }
+
+                if (xp.worldObj.getBlockState(new BlockPos(this)).getMaterial() == Material.LAVA)
+                {
+                    xp.motionY = 0.20000000298023224D;
+                    xp.motionX = (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
+                    xp.motionZ = (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
+                    xp.playSound(SoundEvents.ENTITY_GENERIC_BURN, 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
+                }
+
+                this.pushOutOfBlocks(this.posX, (this.getEntityBoundingBox().minY + this.getEntityBoundingBox().maxY) / 2.0D, this.posZ);
+                double d1 = (this.posX - xp.posX) / 8.0D;
+                double d2 = (this.posY + (double)this.getEyeHeight() / 2.0D - xp.posY) / 8.0D;
+                double d3 = (this.posZ - xp.posZ) / 8.0D;
+                double d4 = Math.sqrt(d1 * d1 + d2 * d2 + d3 * d3);
+                double d5 = 1.0D - d4;
+
+                if (d5 > 0.0D)
+                {
+                    d5 = d5 * d5;
+                    xp.motionX += d1 / d4 * d5 * 0.1D;
+                    xp.motionY += d2 / d4 * d5 * 0.1D;
+                    xp.motionZ += d3 / d4 * d5 * 0.1D;
+                }
+
+                xp.moveEntity(xp.motionX, xp.motionY, xp.motionZ);
+                float f = 0.98F;
+
+                if (this.onGround)
+                {
+                    f = xp.worldObj.getBlockState(new BlockPos(MathHelper.floor_double(xp.posX), MathHelper.floor_double(xp.getEntityBoundingBox().minY) - 1, MathHelper.floor_double(xp.posZ))).getBlock().slipperiness * 0.98F;
+                }
+
+                xp.motionX *= (double)f;
+                xp.motionY *= 0.9800000190734863D;
+                xp.motionZ *= (double)f;
+
+                if (xp.onGround)
+                {
+                    xp.motionY *= -0.8999999761581421D;
+                }
+            }
+            for(EntityXPOrb xp:worldObj.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox())){
+                if(xp.delayBeforeCanPickup <= 0){
+                    this.addXP(xp.getXpValue());
+                    xp.setDead();
+                }
+            }
             //Bow stuffs
             if(getHeldItemMainhand() != null){
                 if(getHeldItemMainhand().getItem() instanceof ItemBow)
@@ -367,6 +422,11 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
             this.entityAge += 1;
         }
         super.onLivingUpdate();
+    }
+
+    public void addXP(int amount){
+        int xp = amount + dataManager.get(XP);
+        dataManager.set(XP, Integer.valueOf(xp));
     }
 
     public void increaseMilkLevel(boolean addXp){
