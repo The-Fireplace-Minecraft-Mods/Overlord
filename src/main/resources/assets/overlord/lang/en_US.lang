@@ -1,4 +1,5 @@
-tile.skeleton_maker.name=Skeleton Maker
+tile.skeleton_maker.name=Skeleton Warrior Maker
+tile.baby_skeleton_maker.name=Baby Skeleton Maker
 item.overlords_seal.name=Overlord's Seal
 item.overlords_seal.tooltip.default=Right-Click to make this your seal!
 item.overlords_seal.tooltip=Seal of %s
@@ -6,12 +7,14 @@ item.squad_editor.name=Squad Editor
 item.sans_mask.name=Sans Mask
 item.skinsuit.name=Skinsuit
 item.warrior_spawner.name=Skeleton Warrior Placer
+item.baby_spawner.name=Baby Skeleton Placer
 itemGroup.overlord=Overlord
 skeleton_maker.create=Create!
 skeleton_maker.warning.unclaimed=Warning: This skeleton will not be claimed.
 skeleton_maker.warning.notmine=Warning: This skeleton will belong to %s
-skeleton_maker.warning.suffocation=Warning: Your Skeleton Maker has blocks right above it. The spawned Skeleton Warrior may suffocate.
+skeleton_maker.warning.suffocation=Warning: Your Skeleton Maker has blocks right above it. The spawned Skeleton may suffocate.
 entity.overlord.skeleton_warrior.name=Skeleton Warrior
+entity.overlord.skeleton_baby.name=Baby Skeleton
 
 skeleton.mode.aggressive=Aggressive
 skeleton.mode.defensive=Defensive
@@ -62,26 +65,34 @@ overlord.all_squads=All Squads
 overlord.no_squad=No Squad
 overlord.squad_editor=Squad Editor
 
+overlord.armydeath=Your %s died because of %s.
+
 cfg.helmet_damage=Enable Helmet Damage in Sunlight
-cfg.helmet_damage.tooltip=Enables helmets worn by Skeleton Warriors taking damage and eventually breaking in the sunlight
+cfg.helmet_damage.tooltip=Enables helmets worn by Army Skeletons taking damage and eventually breaking in the sunlight
 
 cfg.ghostly_skins=Ghostly Skinsuits
 cfg.ghostly_skins.tooltip=Skinsuits are semi transparent
 
-cfg.skinsuitnametags=Skinsuits Name Skeleton Warriors
-cfg.skinsuitnametags.tooltip=Do named Skinsuits name Skeleton Warriors after the skin?
+cfg.skinsuitnametags=Skinsuits Name Skeletons
+cfg.skinsuitnametags.tooltip=Do named Skinsuits name Skeletons after the skin?
 
 cfg.huntcreepers=Hunt Creepers
-cfg.huntcreepers.tooltip=Do Skeleton Warriors go after Creepers?
+cfg.huntcreepers.tooltip=Do Army Skeletons go after Creepers?
 
 cfg.suffocationwarning=Warrior Suffocation Warning
-cfg.suffocationwarning.tooltip=Warn players in the Skeleton Maker GUI if the Skeleton Warrior spawned may suffocate?
+cfg.suffocationwarning.tooltip=Warn players in the Skeleton Maker GUI if the Skeleton spawned may suffocate?
+
+cfg.bonereq_warrior=Skeleton Warrior Bone Requirement
+cfg.bonereq_warrior.tooltip=How many bones does it take to make a Skeleton Warrior?
+
+cfg.bonereq_baby=Baby Skeleton Bone Requirement
+cfg.bonereq_baby.tooltip=How many bones does it take to make a Baby Skeleton?
 
 achievement.firstskeleton=You and what army?
-achievement.firstskeleton.desc=Summon a Skeleton Warrior
+achievement.firstskeleton.desc=Summon a Skeleton
 
 achievement.secondskeleton=Minions
-achievement.secondskeleton.desc=Summon another Skeleton Warrior
+achievement.secondskeleton.desc=Summon another Skeleton
 
 achievement.firstmilk=Good for your bones
 achievement.firstmilk.desc=Give a Skeleton Warrior a Milk Bucket
@@ -90,10 +101,10 @@ achievement.firstlevel=With These Upgrades...
 achievement.firstlevel.desc=Level up a Skeleton Warrior
 
 achievement.armedskeleton=Armed and Dangerous
-achievement.armedskeleton.desc=Give a Skeleton Warrior a weapon
+achievement.armedskeleton.desc=Give an Army Skeleton a weapon
 
 achievement.sally=Sally
-achievement.sally.desc=Give a Skeleton Warrior full Leather Armor
+achievement.sally.desc=Put a Skinsuit on an Army Skeleton
 
 achievement.crusader=Crusader
 achievement.crusader.desc=Dress a Skeleton Warrior as a Crusader(Full chainmail, white shield with red cross)
@@ -110,8 +121,17 @@ achievement.alliance.desc=Form an alliance with another player
 achievement.breakalliance=Dealbreaker
 achievement.breakalliance.desc=Disband an alliance with another player
 
+achievement.warmonger=Warmonger
+achievement.warmonger.desc=Mark another player as your enemy
+
+achievement.forgiver=Forgiver
+achievement.forgiver.desc=Stop considering a player your enemy
+
 achievement.interference=Not me, you idiots!
 achievement.interference.desc=Get in the way of your own Skeleton Warrior's arrow
+
+achievement.wardog=Doggo Does A War
+achievement.wardog.desc=Have a pet Wolf kill a member of an army
 
 achievement.sans=Heya
 achievement.sans.desc=Look like a spooky friend...

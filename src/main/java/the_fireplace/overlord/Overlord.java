@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
@@ -23,6 +24,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.client.config.GuiConfigEntries;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -35,17 +37,19 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import the_fireplace.overlord.augments.*;
+import the_fireplace.overlord.blocks.BlockBabySkeletonMaker;
 import the_fireplace.overlord.blocks.BlockSkeletonMaker;
 import the_fireplace.overlord.command.*;
 import the_fireplace.overlord.config.ConfigValues;
-import the_fireplace.overlord.crafting.Recipes;
+import the_fireplace.overlord.entity.EntityBabySkeleton;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
-import the_fireplace.overlord.items.ItemOverlordsSeal;
-import the_fireplace.overlord.items.ItemSansMask;
-import the_fireplace.overlord.items.ItemSquadEditor;
-import the_fireplace.overlord.items.ItemWarriorSpawner;
+import the_fireplace.overlord.items.*;
 import the_fireplace.overlord.network.OverlordGuiHandler;
 import the_fireplace.overlord.network.PacketDispatcher;
+import the_fireplace.overlord.registry.AugmentRegistry;
+import the_fireplace.overlord.registry.CraftingRecipes;
+import the_fireplace.overlord.tileentity.TileEntityBabySkeletonMaker;
 import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
 import the_fireplace.overlord.tools.*;
 
@@ -68,6 +72,8 @@ public class Overlord {
     public static Property SKINSUITNAMETAGS_PROPERTY;
     public static Property HUNTCREEPERS_PROPERTY;
     public static Property SUFFOCATIONWARNING_PROPERTY;
+    public static Property BONEREQ_WARRIOR_PROPERTY;
+    public static Property BONEREQ_BABY_PROPERTY;
 
     @SidedProxy(clientSide = "the_fireplace."+MODID+".client.ClientProxy", serverSide = "the_fireplace."+MODID+".CommonProxy")
     public static CommonProxy proxy;
@@ -84,11 +90,13 @@ public class Overlord {
     public static ItemArmor.ArmorMaterial sans = EnumHelper.addArmorMaterial("SANS", "sans_mask", 20, new int[]{0,0,0,0}, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
 
     public static final Block skeleton_maker = new BlockSkeletonMaker();
+    public static final Block baby_skeleton_maker = new BlockBabySkeletonMaker();
     public static final Item overlords_seal = new ItemOverlordsSeal().setUnlocalizedName("overlords_seal").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item squad_editor = new ItemSquadEditor().setUnlocalizedName("squad_editor").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item sans_mask = new ItemSansMask(sans);
     public static final Item skinsuit = new Item().setUnlocalizedName("skinsuit").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item warrior_spawner = new ItemWarriorSpawner().setUnlocalizedName("warrior_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
+    public static final Item baby_spawner = new ItemBabySpawner().setUnlocalizedName("baby_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
 
     public static void syncConfig() {
         ConfigValues.HELMETDAMAGE = HELMETDAMAGE_PROPERTY.getBoolean();
@@ -96,6 +104,8 @@ public class Overlord {
         ConfigValues.SKINSUITNAMETAGS = SKINSUITNAMETAGS_PROPERTY.getBoolean();
         ConfigValues.HUNTCREEPERS = HUNTCREEPERS_PROPERTY.getBoolean();
         ConfigValues.SUFFOCATIONWARNING = SUFFOCATIONWARNING_PROPERTY.getBoolean();
+        ConfigValues.BONEREQ_WARRIOR = BONEREQ_WARRIOR_PROPERTY.getInt();
+        ConfigValues.BONEREQ_BABY = BONEREQ_BABY_PROPERTY.getInt();
         if (config.hasChanged())
             config.save();
     }
@@ -111,17 +121,31 @@ public class Overlord {
         SKINSUITNAMETAGS_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.SKINSUITNAMETAGS_NAME, ConfigValues.SKINSUITNAMETAGS_DEFAULT, proxy.translateToLocal(ConfigValues.SKINSUITNAMETAGS_NAME + ".tooltip"));
         HUNTCREEPERS_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.HUNTCREEPERS_NAME, ConfigValues.HUNTCREEPERS_DEFAULT, proxy.translateToLocal(ConfigValues.HUNTCREEPERS_NAME + ".tooltip"));
         SUFFOCATIONWARNING_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.SUFFOCATIONWARNING_NAME, ConfigValues.SUFFOCATIONWARNING_DEFAULT, proxy.translateToLocal(ConfigValues.SUFFOCATIONWARNING_NAME + ".tooltip"));
+        BONEREQ_WARRIOR_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.BONEREQ_WARRIOR_NAME, ConfigValues.BONEREQ_WARRIOR_DEFAULT, proxy.translateToLocal(ConfigValues.BONEREQ_WARRIOR_NAME + ".tooltip"));
+        BONEREQ_BABY_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.BONEREQ_BABY_NAME, ConfigValues.BONEREQ_BABY_DEFAULT, proxy.translateToLocal(ConfigValues.BONEREQ_BABY_NAME + ".tooltip"));
+        BONEREQ_WARRIOR_PROPERTY.setMinValue(2);
+        BONEREQ_BABY_PROPERTY.setMinValue(1);
+        BONEREQ_WARRIOR_PROPERTY.setMaxValue(128);
+        BONEREQ_BABY_PROPERTY.setMaxValue(64);
+        if(event.getSide().isClient()){
+            BONEREQ_WARRIOR_PROPERTY.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
+            BONEREQ_BABY_PROPERTY.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
+        }
         syncConfig();
         registerBlock(skeleton_maker);
+        registerBlock(baby_skeleton_maker);
         registerItem(overlords_seal);
         registerItem(squad_editor);
         registerItem(sans_mask);
         registerItem(skinsuit);
         registerItem(warrior_spawner);
+        registerItem(baby_spawner);
         OreDictionary.registerOre("book", squad_editor);
         GameRegistry.registerTileEntity(TileEntitySkeletonMaker.class, "skeleton_maker");
+        GameRegistry.registerTileEntity(TileEntityBabySkeletonMaker.class, "baby_skeleton_maker");
         int eid=-1;
         EntityRegistry.registerModEntity(EntitySkeletonWarrior.class, "skeleton_warrior", ++eid, instance, 128, 2, false);
+        EntityRegistry.registerModEntity(EntityBabySkeleton.class, "skeleton_baby", ++eid, instance, 64, 2, false);
         proxy.registerClient();
         MinecraftForge.EVENT_BUS.register(new CommonEvents());
         DataSerializers.registerSerializer(CustomDataSerializers.UNIQUE_ID);
@@ -133,7 +157,13 @@ public class Overlord {
         Enemies.load();
         Squads.load();
         addAchievements();
-        Recipes.addRecipes();
+        CraftingRecipes.addRecipes();
+        AugmentRegistry.registerAugment(new ItemStack(Items.GOLDEN_APPLE), new AugmentSlowRegen());
+        AugmentRegistry.registerAugment(new ItemStack(Items.GOLDEN_APPLE, 1, 1), new AugmentFastRegen());
+        AugmentRegistry.registerAugment(new ItemStack(Items.IRON_INGOT), new AugmentIron());
+        AugmentRegistry.registerAugment(new ItemStack(Blocks.OBSIDIAN), new AugmentObsidian());
+        AugmentRegistry.registerAugment(new ItemStack(Blocks.ANVIL), new AugmentAnvil());
+        AugmentRegistry.registerAugment(new ItemStack(Items.SKULL, 1, 1), new AugmentWither());
     }
 
     @Mod.EventHandler
@@ -156,11 +186,13 @@ public class Overlord {
     @SideOnly(Side.CLIENT)
     public void registerItemRenders(){
         rmm(skeleton_maker);
+        rmm(baby_skeleton_maker);
         rmm(overlords_seal);
         rmm(squad_editor);
         rmm(sans_mask);
         rmm(skinsuit);
         rmm(warrior_spawner);
+        rmm(baby_spawner);
     }
 
     @SideOnly(Side.CLIENT)
@@ -203,7 +235,7 @@ public class Overlord {
     public static Achievement firstMilk = new Achievement("firstmilk", "firstmilk", 2, 0, Items.MILK_BUCKET, firstSkeleton);
     public static Achievement firstLevel = new Achievement("firstlevel", "firstlevel", 0, -2, Items.BONE, firstSkeleton);
     public static Achievement armedSkeleton = new Achievement("armedskeleton", "armedskeleton", -2, 1, Items.WOODEN_SWORD, firstSkeleton);
-    public static Achievement sally = new Achievement("sally", "sally", -2, -1, Items.LEATHER_CHESTPLATE, firstSkeleton);
+    public static Achievement sally = new Achievement("sally", "sally", -2, -1, skinsuit, firstSkeleton);
     public static Achievement crusader = new Achievement("crusader", "crusader", -3, 0, crusaderShield(), firstSkeleton);
     public static Achievement milk256 = new Achievement("milk256", "milk256", 4, 0, Items.MILK_BUCKET, firstMilk);
     public static Achievement milk9001 = new Achievement("milk9001", "milk9001", 6, 0, Items.MILK_BUCKET, milk256);
@@ -212,6 +244,11 @@ public class Overlord {
 
     public static Achievement alliance = new Achievement("alliance", "alliance", 2, -2, Items.SHIELD, AchievementList.OPEN_INVENTORY);
     public static Achievement breakalliance = new Achievement("breakalliance", "breakalliance", 4, -2, Items.IRON_AXE, alliance);
+
+    public static Achievement warmonger = new Achievement("warmonger", "warmonger", 2, -3, Items.IRON_SWORD, AchievementList.OPEN_INVENTORY);
+    public static Achievement forgiver = new Achievement("forgiver", "forgiver", 4, -3, Items.CAKE, warmonger);
+
+    public static Achievement wardog = new Achievement("wardog", "wardog", -3, 2, Items.COOKED_BEEF, AchievementList.OPEN_INVENTORY);
 
     public static Achievement heya = new Achievement("sans", "sans", 4, 4, sans_mask, AchievementList.OPEN_INVENTORY);
 
@@ -228,9 +265,12 @@ public class Overlord {
         nmyi.registerStat();
         alliance.registerStat();
         breakalliance.registerStat();
+        warmonger.registerStat();
+        forgiver.registerStat();
+        wardog.registerStat();
         heya.registerStat();
         heya.setSpecial();
         AchievementPage.registerAchievementPage(new AchievementPage(MODNAME,
-                firstSkeleton, secondSkeleton, firstLevel, firstMilk, armedSkeleton, sally, crusader, milk256, milk9001, nmyi, alliance, breakalliance, heya));
+                firstSkeleton, secondSkeleton, firstLevel, firstMilk, armedSkeleton, sally, crusader, milk256, milk9001, nmyi, alliance, breakalliance, warmonger, forgiver, wardog, heya));
     }
 }

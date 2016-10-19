@@ -3,13 +3,13 @@ package the_fireplace.overlord.entity.ai;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.util.math.Vec3d;
-import the_fireplace.overlord.entity.EntitySkeletonWarrior;
+import the_fireplace.overlord.entity.EntityArmyMember;
 
 /**
  * @author The_Fireplace
  */
 public class EntityAIWanderBase extends EntityAIBase {
-    private final EntitySkeletonWarrior entity;
+    private final EntityArmyMember entity;
     private double xPosition;
     private double yPosition;
     private double zPosition;
@@ -17,12 +17,12 @@ public class EntityAIWanderBase extends EntityAIBase {
     private int executionChance;
     private boolean mustUpdate;
 
-    public EntityAIWanderBase(EntitySkeletonWarrior creatureIn, double speedIn)
+    public EntityAIWanderBase(EntityArmyMember creatureIn, double speedIn)
     {
         this(creatureIn, speedIn, 80);
     }
 
-    public EntityAIWanderBase(EntitySkeletonWarrior creatureIn, double speedIn, int chance)
+    public EntityAIWanderBase(EntityArmyMember creatureIn, double speedIn, int chance)
     {
         this.entity = creatureIn;
         this.speed = speedIn;
@@ -46,13 +46,9 @@ public class EntityAIWanderBase extends EntityAIBase {
 
         Vec3d vec3d = RandomPositionGenerator.findRandomTarget(this.entity, 10, 7);
         int attempts = 0;
-        if(vec3d != null) {
-            while (attempts < 10 && entity.getHomePosition().getDistance((int) vec3d.xCoord, (int) vec3d.yCoord, (int) vec3d.zCoord) > entity.getMaximumHomeDistance()) {
-                vec3d = RandomPositionGenerator.findRandomTarget(this.entity, 12, 8);
-                attempts++;
-            }
-        }else{
-            return false;
+        while (attempts < 10 && entity.getHomePosition().getDistance(vec3d != null ? (int)vec3d.xCoord : (int)entity.posX, vec3d != null ? (int)vec3d.yCoord : (int)entity.posY, vec3d != null ? (int)vec3d.zCoord : (int)entity.posZ) > entity.getMaximumHomeDistance()) {
+            vec3d = RandomPositionGenerator.findRandomTarget(this.entity, 12, 8);
+            attempts++;
         }
 
         if (vec3d == null || attempts >= 10)

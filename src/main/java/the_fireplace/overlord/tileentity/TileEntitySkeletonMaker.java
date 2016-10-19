@@ -20,20 +20,22 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import the_fireplace.overlord.Overlord;
+import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.SetMilkMessage;
+import the_fireplace.overlord.registry.AugmentRegistry;
 
 import java.util.UUID;
 
 /**
  * @author The_Fireplace
  */
-public class TileEntitySkeletonMaker extends TileEntity implements ITickable, ISidedInventory {
+public class TileEntitySkeletonMaker extends TileEntity implements ITickable, ISidedInventory, ISkeletonMaker {
     private ItemStack[] inventory;
     public static final String PROP_NAME = "TileEntitySkeletonMaker";
     byte milk = 0;
-    public static final int[] clearslots = new int[]{1,2,3,6,7,8,9,10,11,12};
+    public static final int[] clearslots = new int[]{6,7,8,9,10,11,12};
 
     public TileEntitySkeletonMaker() {
         inventory = new ItemStack[13];
@@ -61,6 +63,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
         }
     }
 
+    @Override
     public void spawnSkeleton(){
         UUID owner = null;
         if(getStackInSlot(0) != null){
@@ -76,6 +79,16 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
         skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.FEET, getStackInSlot(6));
         skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, getStackInSlot(10));
         skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, getStackInSlot(11));
+        if(getStackInSlot(3) != null){
+            ItemStack augment = getStackInSlot(3).copy();
+            augment.stackSize=1;
+            skeletonWarrior.equipInventory.setInventorySlotContents(6, augment);
+            if(getStackInSlot(3).stackSize > 1){
+                getStackInSlot(3).stackSize--;
+            }else{
+                setInventorySlotContents(3, null);
+            }
+        }
 
         worldObj.spawnEntityInWorld(skeletonWarrior);
         if(getStackInSlot(12) != null)
@@ -83,6 +96,25 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
         setMilk((byte)0);
         for(int i:clearslots){
             setInventorySlotContents(i, null);
+        }
+        if(getStackInSlot(1) != null){
+            if(getStackInSlot(1).stackSize == ConfigValues.BONEREQ_WARRIOR)
+                setInventorySlotContents(1, null);
+            else if(getStackInSlot(1).stackSize < ConfigValues.BONEREQ_WARRIOR) {
+                setInventorySlotContents(1, null);
+                if(getStackInSlot(2) != null)
+                if (getStackInSlot(2).stackSize <= ConfigValues.BONEREQ_WARRIOR)
+                    setInventorySlotContents(2, null);
+                else
+                    getStackInSlot(2).stackSize -= ConfigValues.BONEREQ_WARRIOR;
+            }else
+                getStackInSlot(1).stackSize -= ConfigValues.BONEREQ_WARRIOR;
+        }else{
+            if(getStackInSlot(2) != null)
+            if(getStackInSlot(2).stackSize <= ConfigValues.BONEREQ_WARRIOR)
+                setInventorySlotContents(2, null);
+            else
+                getStackInSlot(2).stackSize -= ConfigValues.BONEREQ_WARRIOR;
         }
     }
 
@@ -177,7 +209,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return (index == 0 && stack.getItem() == Overlord.overlords_seal) || (index > 0 && index < 4 && stack.getItem() == Items.BONE) || (index == 4 && stack.getItem() == Items.MILK_BUCKET) || (index > 5 && index < 10 && stack.getItem().isValidArmor(stack, getSlotEquipmentType(index), null));
+        return (index == 0 && stack.getItem() == Overlord.overlords_seal) || ((index == 1 || index == 2) && stack.getItem() == Items.BONE) || (index == 3 && AugmentRegistry.getAugment(stack) != null) || (index == 4 && stack.getItem() == Items.MILK_BUCKET) || (index > 5 && index < 10 && stack.getItem().isValidArmor(stack, getSlotEquipmentType(index), null) || (index == 12 && stack.getItem() == Overlord.skinsuit));
     }
 
     private EntityEquipmentSlot getSlotEquipmentType(int index){
@@ -268,7 +300,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
     @Override
     public boolean canInsertItem(int index, ItemStack stack, EnumFacing direction) {
         if (stack != null) {
-            if (index >= 1 && index < 5 || index >= 6 && index < 10 || index == 12) {
+            if (index >= 1 &&  index < 5 || index >= 6 && index < 10 || index == 12) {
                 if(this.isItemValidForSlot(index, stack))
                     return true;
             }

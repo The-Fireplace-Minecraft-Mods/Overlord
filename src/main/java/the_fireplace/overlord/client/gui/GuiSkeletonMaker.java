@@ -121,9 +121,15 @@ public class GuiSkeletonMaker extends GuiContainer {
     }
 
     private boolean isButtonEnabled() {
-        if (te.getStackInSlot(1) == null || te.getStackInSlot(2) == null || te.getStackInSlot(3) == null)
+        if (te.getStackInSlot(1) == null && te.getStackInSlot(2) == null)
             return false;
-        return te.getMilk() >= 2 && !(te.getStackInSlot(1).stackSize < 64 || te.getStackInSlot(2).stackSize < 64 || te.getStackInSlot(3).stackSize < 64);
+        int s1 = 0;
+        int s2 = 0;
+        if(te.getStackInSlot(1) != null)
+            s1 = te.getStackInSlot(1).stackSize;
+        if(te.getStackInSlot(2) != null)
+            s2 = te.getStackInSlot(2).stackSize;
+        return te.getMilk() >= 2 && s1+s2 >= ConfigValues.SERVER_BONEREQ_WARRIOR;
     }
 
     private String getWarning(){

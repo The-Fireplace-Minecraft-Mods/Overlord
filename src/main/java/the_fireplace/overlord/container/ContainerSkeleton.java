@@ -11,6 +11,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
+import the_fireplace.overlord.network.PacketDispatcher;
+import the_fireplace.overlord.network.packets.RequestAugmentMessage;
 
 /**
  * @author The_Fireplace
@@ -69,6 +71,14 @@ public class ContainerSkeleton extends Container {
             }
         });
 
+        this.addSlotToContainer(new SlotAugment(armorInv, 6, 152, 5){
+            @Override
+            public int getSlotStackLimit()
+            {
+                return 1;
+            }
+        });//Entity Equipment ID 6
+
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 this.addSlotToContainer(new Slot(entityInv, x + y * 3, 116 + x * 18, 25 + y * 18));//Entity Inventory 0 to 8
@@ -104,5 +114,11 @@ public class ContainerSkeleton extends Container {
             return result;
         }
         return null;
+    }
+
+    public void onContainerClosed(EntityPlayer player){
+        super.onContainerClosed(player);
+        if(entity.worldObj.isRemote)
+            PacketDispatcher.sendToServer(new RequestAugmentMessage(entity));
     }
 }

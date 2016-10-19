@@ -11,14 +11,14 @@ import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import the_fireplace.overlord.entity.EntitySkeletonWarrior;
+import the_fireplace.overlord.entity.EntityArmyMember;
 
 /**
  * @author The_Fireplace
  */
 public class EntityAIFollowMaster extends EntityAIBase
 {
-    private final EntitySkeletonWarrior thePet;
+    private final EntityArmyMember thePet;
     private EntityLivingBase theOwner;
     World theWorld;
     private final double followSpeed;
@@ -28,7 +28,7 @@ public class EntityAIFollowMaster extends EntityAIBase
     float minDist;
     private float oldWaterCost;
 
-    public EntityAIFollowMaster(EntitySkeletonWarrior thePetIn, double followSpeedIn, float minDistIn, float maxDistIn)
+    public EntityAIFollowMaster(EntityArmyMember thePetIn, double followSpeedIn, float minDistIn, float maxDistIn)
     {
         this.thePet = thePetIn;
         this.theWorld = thePetIn.worldObj;
@@ -107,7 +107,7 @@ public class EntityAIFollowMaster extends EntityAIBase
     private boolean isEmptyBlock(BlockPos pos)
     {
         IBlockState iblockstate = this.theWorld.getBlockState(pos);
-        return iblockstate.getMaterial() == Material.AIR/* || !iblockstate.isFullCube()*/;
+        return iblockstate.getMaterial() == Material.AIR;
     }
 
     /**
@@ -124,7 +124,7 @@ public class EntityAIFollowMaster extends EntityAIBase
 
                 if (!this.petPathfinder.tryMoveToEntityLiving(this.theOwner, this.followSpeed))
                 {
-                    if (!this.thePet.getLeashed())
+                    if (!this.thePet.getLeashed() && thePet.fallDistance <= 0)
                     {
                         if (this.thePet.getDistanceSqToEntity(this.theOwner) >= 144.0D)
                         {

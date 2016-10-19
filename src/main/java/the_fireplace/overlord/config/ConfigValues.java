@@ -23,4 +23,14 @@ public class ConfigValues {
     public static final boolean SUFFOCATIONWARNING_DEFAULT = true;
     public static boolean SUFFOCATIONWARNING;
     public static final String SUFFOCATIONWARNING_NAME = "cfg.suffocationwarning";
+
+    public static final int BONEREQ_WARRIOR_DEFAULT = 32;
+    public static int BONEREQ_WARRIOR;
+    public static int SERVER_BONEREQ_WARRIOR;
+    public static final String BONEREQ_WARRIOR_NAME = "cfg.bonereq_warrior";
+
+    public static final int BONEREQ_BABY_DEFAULT = 16;
+    public static int BONEREQ_BABY;
+    public static int SERVER_BONEREQ_BABY;
+    public static final String BONEREQ_BABY_NAME = "cfg.bonereq_baby";
 }

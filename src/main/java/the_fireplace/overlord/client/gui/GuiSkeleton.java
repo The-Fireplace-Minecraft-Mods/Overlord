@@ -14,6 +14,7 @@ import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.AttackModeMessage;
 import the_fireplace.overlord.network.packets.MovementModeMessage;
+import the_fireplace.overlord.network.packets.RequestAugmentMessage;
 import the_fireplace.overlord.network.packets.SetSquadMessage;
 
 import java.awt.*;
@@ -101,7 +102,7 @@ public class GuiSkeleton extends GuiContainer {
         int l = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
         this.drawTexturedModalRect(guiLeft+47, guiTop+8, 0, 166, (int)(entity.getHealth()/entity.getMaxHealth()*90), 5);
-        this.drawTexturedModalRect(guiLeft+47, guiTop+18, 0, 171, (int)(entity.getMilkLevel()/Math.pow(2, entity.getLevel())*90), 5);
+        this.drawTexturedModalRect(guiLeft+47, guiTop+18, 0, 171, (int)(entity.getXP()/Math.pow(2, entity.getLevel())*90), 5);
     }
 
 
@@ -166,5 +167,12 @@ public class GuiSkeleton extends GuiContainer {
 
     public void scheduleMovementModeTextUpdate(){
         movementModeTimer = 5;
+    }
+
+    @Override
+    public void onGuiClosed(){
+        if(entity.worldObj.isRemote)
+            PacketDispatcher.sendToServer(new RequestAugmentMessage(entity));
+        super.onGuiClosed();
     }
 }
