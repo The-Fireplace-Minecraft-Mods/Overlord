@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import the_fireplace.overlord.client.gui.*;
 import the_fireplace.overlord.config.ConfigValues;
+import the_fireplace.overlord.container.ContainerBabySkeleton;
 import the_fireplace.overlord.container.ContainerBabySkeletonMaker;
 import the_fireplace.overlord.container.ContainerSkeleton;
 import the_fireplace.overlord.container.ContainerSkeletonMaker;
@@ -47,6 +48,8 @@ public class OverlordGuiHandler implements IGuiHandler {
                 if(world.getEntityByID(ID) != null){
                     if(world.getEntityByID(ID) instanceof EntitySkeletonWarrior){
                         return new ContainerSkeleton(player.inventory, (EntitySkeletonWarrior)world.getEntityByID(ID));
+                    }else if(world.getEntityByID(ID) instanceof EntityBabySkeleton){
+                        return new ContainerBabySkeleton(player.inventory, (EntityBabySkeleton)world.getEntityByID(ID));
                     }
                 }
                 return null;
