@@ -11,6 +11,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
+import the_fireplace.overlord.network.PacketDispatcher;
+import the_fireplace.overlord.network.packets.RequestAugmentMessage;
 
 /**
  * @author The_Fireplace
@@ -112,5 +114,11 @@ public class ContainerSkeleton extends Container {
             return result;
         }
         return null;
+    }
+
+    public void onContainerClosed(EntityPlayer player){
+        super.onContainerClosed(player);
+        if(entity.worldObj.isRemote)
+            PacketDispatcher.sendToServer(new RequestAugmentMessage(entity));
     }
 }

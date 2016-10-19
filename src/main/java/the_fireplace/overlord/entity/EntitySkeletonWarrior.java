@@ -93,9 +93,18 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
             @Override
             public ItemStack removeStackFromSlot(int index)
             {
+                ItemStack stack = super.removeStackFromSlot(index);
                 if(world.isRemote && index == 6)
                     PacketDispatcher.sendToServer(new RequestAugmentMessage(instance));
-                return super.removeStackFromSlot(index);
+                return stack;
+            }
+            @Override
+            public ItemStack decrStackSize(int index, int count)
+            {
+                ItemStack stack = super.decrStackSize(index, count);
+                if(world.isRemote && index == 6)
+                    PacketDispatcher.sendToServer(new RequestAugmentMessage(instance));
+                return stack;
             }
         };
         this.setCanPickUpLoot(true);
