@@ -556,6 +556,9 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
             for(int j=1;j<=this.dataManager.get(SKELETON_POWER_LEVEL);j++)
                 i += Math.pow(2, j);
             this.dataManager.set(TOTAL_MILK_LEVEL, i);
+            int l = compound.getInteger("SkeletonPowerLevel");
+            l *= 2;
+            this.dataManager.set(SKELETON_POWER_LEVEL, l);
         }
 
         if(compound.hasKey("XP")){
@@ -808,7 +811,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
 
     public void updateEntityAttributes(){
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(16.0D+(4*Math.sqrt(dataManager.get(SKELETON_POWER_LEVEL))));
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23D+(Math.sqrt(dataManager.get(SKELETON_POWER_LEVEL))/24));
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23D+(Math.sqrt(dataManager.get(SKELETON_POWER_LEVEL))/32));
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D+dataManager.get(SKELETON_POWER_LEVEL));
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D+(Math.sqrt(dataManager.get(SKELETON_POWER_LEVEL))/2));
         this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(1.0D+(Math.sqrt(dataManager.get(SKELETON_POWER_LEVEL))/4));
