@@ -230,6 +230,7 @@ public class Overlord {
         return shieldStack;
     }
 
+    public static Achievement firstBaby = new Achievement("firstbaby", "firstbaby", 1, 1, Items.SKULL, AchievementList.BUILD_PICKAXE);
     public static Achievement firstSkeleton = new Achievement("firstskeleton", "firstskeleton", 0, 0, Items.SKULL, AchievementList.BUILD_PICKAXE);
     public static Achievement secondSkeleton = new Achievement("secondskeleton", "secondskeleton", 0, 2, Items.SKULL, firstSkeleton);
     public static Achievement firstMilk = new Achievement("firstmilk", "firstmilk", 2, 0, Items.MILK_BUCKET, firstSkeleton);
@@ -253,6 +254,7 @@ public class Overlord {
     public static Achievement heya = new Achievement("sans", "sans", 4, 4, sans_mask, AchievementList.OPEN_INVENTORY);
 
     private static void addAchievements(){
+        firstBaby.registerStat();
         firstSkeleton.registerStat();
         secondSkeleton.registerStat();
         firstLevel.registerStat();
@@ -271,6 +273,6 @@ public class Overlord {
         heya.registerStat();
         heya.setSpecial();
         AchievementPage.registerAchievementPage(new AchievementPage(MODNAME,
-                firstSkeleton, secondSkeleton, firstLevel, firstMilk, armedSkeleton, sally, crusader, milk256, milk9001, nmyi, alliance, breakalliance, warmonger, forgiver, wardog, heya));
+                firstBaby, firstSkeleton, secondSkeleton, firstLevel, firstMilk, armedSkeleton, sally, crusader, milk256, milk9001, nmyi, alliance, breakalliance, warmonger, forgiver, wardog, heya));
     }
 }

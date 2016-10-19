@@ -58,6 +58,12 @@ public class EntityBabySkeleton extends EntityArmyMember {
         };
         if(getOwner() != null){
             if(getOwner() instanceof EntityPlayerMP)
+                if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.firstBaby)) {
+                    ((EntityPlayer) getOwner()).addStat(Overlord.firstBaby);
+                }
+        }
+        if(getOwner() != null){
+            if(getOwner() instanceof EntityPlayerMP)
                 if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.firstSkeleton)) {
                     ((EntityPlayer) getOwner()).addStat(Overlord.firstSkeleton);
                     return;
