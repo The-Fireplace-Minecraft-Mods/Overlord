@@ -1,11 +1,9 @@
 package the_fireplace.overlord.client.render;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.util.ResourceLocation;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.EntityBabySkeleton;
@@ -17,18 +15,15 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 
-import static the_fireplace.overlord.client.render.LayerSkinsuit.skins;
-import static the_fireplace.overlord.client.render.LayerSkinsuit.skintextures;
+import static the_fireplace.overlord.client.render.LayerSkinsuit.*;
 
 /**
  * @author The_Fireplace
  */
 public class LayerBabySkinsuit implements LayerRenderer<EntityBabySkeleton> {
-    public static final File cachedir = new File(Minecraft.getMinecraft().mcDataDir, "cachedImages/skins/");
     private final RenderLivingBase<?> renderer;
     private ModelBabySkeleton model;
     private boolean nospam = false;
-    public static final ResourceLocation STEVE = new ResourceLocation("textures/entity/steve.png");
 
     public LayerBabySkinsuit(RenderLivingBase<?> renderer)
     {
@@ -47,32 +42,43 @@ public class LayerBabySkinsuit implements LayerRenderer<EntityBabySkeleton> {
                         if(!cachedir.mkdirs())
                             System.out.println("Skin cache directory creation failed.");
                     File skinFile = new File(cachedir, skeleton.getSkinsuitName() + ".png");
+                    boolean flag = false;
                     if(!skinFile.exists())
-                        if(!cacheSkin(skeleton.getSkinsuitName()))
-                            throw new Exception();
-                    BufferedImage img;
-                    if(skins.get(skeleton.getSkinsuitName()) != null)
-                        img = skins.get(skeleton.getSkinsuitName());
-                    else{
-                        img = ImageIO.read(skinFile);
-                        skins.put(skeleton.getSkinsuitName(), img);
-                    }
-                    if(((img.getRGB(54,21)>>24) & 0xff) == 0)
-                        model.smallSkinsuitArms = true;
-                    DynamicTexture texture;
-                    if(skintextures.get(img) != null)
-                        texture = skintextures.get(img);
-                    else{
-                        texture = new DynamicTexture(img);
-                        skintextures.put(img, texture);
-                    }
-                    this.renderer.bindTexture(this.renderer.getRenderManager().renderEngine.getDynamicTextureLocation(Overlord.MODID, texture));
-                }catch(Exception e){
-                        this.renderer.bindTexture(STEVE);
-                        if(!nospam) {
-                            e.printStackTrace();
-                            nospam = true;
+                        if(!nonexistants.contains(skinFile)) {
+                            if (!cacheSkin(skeleton.getSkinsuitName())) {
+                                nonexistants.add(skinFile);
+                                flag = true;
+                            }
+                        }else{
+                            flag = true;
                         }
+                    if(!flag) {
+                        BufferedImage img;
+                        if (skins.get(skeleton.getSkinsuitName()) != null)
+                            img = skins.get(skeleton.getSkinsuitName());
+                        else {
+                            img = ImageIO.read(skinFile);
+                            skins.put(skeleton.getSkinsuitName(), img);
+                        }
+                        if (((img.getRGB(54, 21) >> 24) & 0xff) == 0)
+                            model.smallSkinsuitArms = true;
+                        DynamicTexture texture;
+                        if (skintextures.get(img) != null)
+                            texture = skintextures.get(img);
+                        else {
+                            texture = new DynamicTexture(img);
+                            skintextures.put(img, texture);
+                        }
+                        this.renderer.bindTexture(this.renderer.getRenderManager().renderEngine.getDynamicTextureLocation(Overlord.MODID, texture));
+                    }else{
+                        this.renderer.bindTexture(STEVE);
+                    }
+                }catch(Exception e){
+                    this.renderer.bindTexture(STEVE);
+                    if(!nospam) {
+                        e.printStackTrace();
+                        nospam = true;
+                    }
                 }
             }else
                 this.renderer.bindTexture(STEVE);

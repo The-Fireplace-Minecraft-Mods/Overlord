@@ -17,11 +17,13 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * @author The_Fireplace
  */
+@SuppressWarnings("unchecked")
 public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
     public static final File cachedir = new File(Minecraft.getMinecraft().mcDataDir, "cachedImages/skins/");
     private final RenderLivingBase<?> renderer;
@@ -30,6 +32,7 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
     public static final ResourceLocation STEVE = new ResourceLocation("textures/entity/steve.png");
     public static HashMap<String, BufferedImage> skins = Maps.newHashMap();
     public static HashMap<BufferedImage, DynamicTexture> skintextures = Maps.newHashMap();
+    public static ArrayList<File> nonexistants = new ArrayList();
 
     public LayerSkinsuit(RenderLivingBase<?> renderer)
     {
@@ -48,26 +51,37 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
                         if(!cachedir.mkdirs())
                             System.out.println("Skin cache directory creation failed.");
                     File skinFile = new File(cachedir, skeleton.getSkinsuitName() + ".png");
+                    boolean flag = false;
                     if(!skinFile.exists())
-                        if(!cacheSkin(skeleton.getSkinsuitName()))
-                            throw new Exception();
-                    BufferedImage img;
-                    if(skins.get(skeleton.getSkinsuitName()) != null)
-                        img = skins.get(skeleton.getSkinsuitName());
-                    else{
-                        img = ImageIO.read(skinFile);
-                        skins.put(skeleton.getSkinsuitName(), img);
+                        if(!nonexistants.contains(skinFile)) {
+                            if (!cacheSkin(skeleton.getSkinsuitName())) {
+                                nonexistants.add(skinFile);
+                                flag = true;
+                            }
+                        }else{
+                            flag = true;
+                        }
+                    if(!flag) {
+                        BufferedImage img;
+                        if (skins.get(skeleton.getSkinsuitName()) != null)
+                            img = skins.get(skeleton.getSkinsuitName());
+                        else {
+                            img = ImageIO.read(skinFile);
+                            skins.put(skeleton.getSkinsuitName(), img);
+                        }
+                        if (((img.getRGB(54, 21) >> 24) & 0xff) == 0)
+                            model.smallSkinsuitArms = true;
+                        DynamicTexture texture;
+                        if (skintextures.get(img) != null)
+                            texture = skintextures.get(img);
+                        else {
+                            texture = new DynamicTexture(img);
+                            skintextures.put(img, texture);
+                        }
+                        this.renderer.bindTexture(this.renderer.getRenderManager().renderEngine.getDynamicTextureLocation(Overlord.MODID, texture));
+                    }else{
+                        this.renderer.bindTexture(STEVE);
                     }
-                    if(((img.getRGB(54,21)>>24) & 0xff) == 0)
-                        model.smallSkinsuitArms = true;
-                    DynamicTexture texture;
-                    if(skintextures.get(img) != null)
-                        texture = skintextures.get(img);
-                    else{
-                        texture = new DynamicTexture(img);
-                        skintextures.put(img, texture);
-                    }
-                    this.renderer.bindTexture(this.renderer.getRenderManager().renderEngine.getDynamicTextureLocation(Overlord.MODID, texture));
                 }catch(Exception e){
                         this.renderer.bindTexture(STEVE);
                         if(!nospam) {
@@ -117,6 +131,7 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
                 convertOldSkin(file);
             return true;
         }catch(Exception e){
+
             return false;
         }
     }
