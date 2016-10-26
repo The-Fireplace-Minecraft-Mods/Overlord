@@ -23,6 +23,7 @@ public class RenderSkeletonWarrior extends RenderBiped<EntitySkeletonWarrior>
     public static final ResourceLocation IRON_SKELETON_TEXTURES = new ResourceLocation(Overlord.MODID, "textures/entity/iron_skeleton.png");
     public static final ResourceLocation OBSIDIAN_SKELETON_TEXTURES = new ResourceLocation(Overlord.MODID, "textures/entity/obsidian_skeleton.png");
     public static final ResourceLocation ANVIL_SKELETON_TEXTURES = new ResourceLocation(Overlord.MODID, "textures/entity/anvil_skeleton.png");
+    public static final ResourceLocation BRAINSTONE_SKELETON_TEXTURES = new ResourceLocation(Overlord.MODID, "textures/entity/brainstone_skeleton.png");
 
     public RenderSkeletonWarrior(RenderManager renderManagerIn)
     {
@@ -60,6 +61,8 @@ public class RenderSkeletonWarrior extends RenderBiped<EntitySkeletonWarrior>
                     return ANVIL_SKELETON_TEXTURES;
                 case "obsidian":
                     return OBSIDIAN_SKELETON_TEXTURES;
+                case "pulsatingbrainstone":
+                    return BRAINSTONE_SKELETON_TEXTURES;
             }
         }
         return SKELETON_TEXTURES;
