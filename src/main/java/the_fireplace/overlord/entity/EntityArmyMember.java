@@ -96,7 +96,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
     public void addMovementTasks(){
         switch(dataManager.get(MOVEMENT_MODE)) {
             case 1:
-                this.tasks.addTask(4, new EntityAIOpenDoor(this, false));
+                this.tasks.addTask(4, new EntityAIOpenDoor(this, getAttackMode() != 2));
                 this.tasks.addTask(6, new EntityAIFollowMaster(this, 1.0D, 10.0F, 2.0F));
             case 0:
                 this.setHomePosAndDistance(new BlockPos(this.posX, this.posY, this.posZ), -1);
@@ -106,7 +106,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
                 this.setHomePosAndDistance(new BlockPos(this.posX, this.posY, this.posZ), 20);
                 this.tasks.addTask(2, new EntityAIRestrictSun(this));
                 this.tasks.addTask(3, new EntityAIFleeSun(this, 1.0D));
-                this.tasks.addTask(4, new EntityAIOpenDoor(this, false));
+                this.tasks.addTask(4, new EntityAIOpenDoor(this, getAttackMode() != 2));
                 this.tasks.addTask(7, new EntityAIWanderBase(this, 1.0D));
         }
     }
