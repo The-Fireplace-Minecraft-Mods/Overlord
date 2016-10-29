@@ -463,28 +463,15 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
             int xp = getXP();
             dataManager.set(XP, ++xp);
         }
-        if(getOwner() != null){
+        if(getOwner() != null)
             if(getOwner() instanceof EntityPlayerMP)
-                if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.firstMilk)) {
-                    ((EntityPlayer) getOwner()).addStat(Overlord.firstMilk);
-                    return;
-                }
-        }
+                ((EntityPlayer) getOwner()).addStat(Overlord.firstMilk);
         if(getTotalMilkConsumed() >= 256)
-        if(getOwner() != null){
-            if(getOwner() instanceof EntityPlayerMP)
-                if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.milk256)) {
-                    ((EntityPlayer) getOwner()).addStat(Overlord.milk256);
-                    return;
-                }
-        }
+            if(getOwner() != null)
+                ((EntityPlayer) getOwner()).addStat(Overlord.milk256);
         if(getTotalMilkConsumed() > 9000)
-        if(getOwner() != null){
-            if(getOwner() instanceof EntityPlayerMP)
-                if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.milk9001)) {
-                    ((EntityPlayer) getOwner()).addStat(Overlord.milk9001);
-                }
-        }
+            if(getOwner() != null)
+                ((EntityPlayer) getOwner()).addStat(Overlord.milk9001);
     }
 
     public void checkLevelUp(){

@@ -264,6 +264,7 @@ public class Overlord {
         crusader.registerStat();
         milk256.registerStat();
         milk9001.registerStat();
+        milk9001.setSpecial();
         nmyi.registerStat();
         alliance.registerStat();
         breakalliance.registerStat();
