@@ -1,0 +1,142 @@
+tile.skeleton_maker.name=Skelettkrieger-Schöpfer
+tile.baby_skeleton_maker.name=Babyskelett-Schöpfer
+item.overlords_seal.name=Oberherren Siegel
+item.overlords_seal.tooltip.default=Rechtsklicke, um das dein SIegel zu machen!
+item.overlords_seal.tooltip=Siegel von %s
+item.squad_editor.name=Truppen Editor
+item.sans_mask.name=Sans Maske
+item.skinsuit.name=Hautanzug
+item.warrior_spawner.name=Skelettkrieger-Platzierer
+item.baby_spawner.name=Babyskelett-Platzierer
+itemGroup.overlord=Oberherr
+skeleton_maker.create=Erschaffe!
+skeleton_maker.warning.unclaimed=Warung: Du kannst dieses Skelett nicht besitzen.
+skeleton_maker.warning.notmine=Warung: Dieses Skelett wird %s gehören.
+skeleton_maker.warning.suffocation=Warung: Dein Skelett-Schöpfer hat Blöcke über sich. Die erzeugten Skelette könnten ersticken.
+entity.overlord.skeleton_warrior.name=Skelettkrieger
+entity.overlord.skeleton_baby.name=Babyskelett
+
+skeleton.mode.aggressive=Aggressiv
+skeleton.mode.defensive=Defensiv
+skeleton.mode.passive=Passiv
+
+skeleton.mode.stationed=Stationiert
+skeleton.mode.follower=Folgen
+skeleton.mode.base=Herumlaufen
+
+overlords_seal.warning=Das betrifft alle deine geladenen Skelette.
+
+overlord.requestsent=Du hast eine Allianz mit %s angefragt.
+overlord.allyrequest=Neue Allianzanfrage von %s! Gibt /allyaccept ein, um sie anzunehmen, oder /allyreject, um sie abzulehnen.
+overlord.alreadyrequested=Du hast bereits eine Allianz mit %s angefragt.
+overlord.alreadyrequested.other=Eine Allianzanfrage wurde dir schon gesendet. Gibt /allyaccept ein, um sie anzunehmen.
+overlord.alreadyallied=Du bist bereits in einer Allianz mit %s.
+overlord.enemieswith=Du und %s sind Feinde!
+
+overlord.nothingpending=Du hast keine ausstehende Allianzanfragen.
+
+overlord.allyaccepted=Du bist jetzt in einer Allianz mit %s.
+overlord.allyaccept=%s hat deine Allianzanfrage angenommen!
+
+overlord.allyrejected=Du hast eine Allianzanfrage von %s abgelehnt.
+overlord.allyreject=%s hat deine Allianzanfrage abgelehnt.
+
+overlord.allyterminated=Du bist nicht mehr mit %s in einer Allianz.
+overlord.allytermination=%s ist nicht mehr deine Allianz.
+overlord.notallied=Du bist nicht mit %s in einer Allianz.
+
+overlord.allylist=Deine Allianzen:
+overlord.nofriends=Du hast keine Allianzen.
+
+overlord.madeenemy=Du hast dir %s zum Feind gemacht.
+overlord.enemied=%s hat dich zu seinem Feind gemacht.
+overlord.noenemyallied=Du kannst %s nicht zu deinem Feind machen, %s ist eine Allianz von dir.
+overlord.allytriedenemy=%s hat versucht sich mit dir zu verfeinden, allerdings seid ihr in einer Allianz.
+overlord.alreadyenemies=%s ist bereits dein Feind.
+
+overlord.enemyterminated=Du siehst %s nicht mehr als deinen Feind an.
+overlord.enemytermination=%s sieht dich nicht mehr als Feind an.
+overlord.notenemied=Du siehst %s nicht als einen Feind an.
+
+overlord.enemylist=Deine Feinde:
+overlord.noenemies=Du hast keine Feinde.
+
+overlord.all_squads=Alle Truppen
+overlord.no_squad=Keine Truppe
+overlord.squad_editor=Truppen Editor
+
+overlord.armydeath=Dein %s ist durch %s gestorben.
+
+cfg.helmet_damage=Helmschaden in Sonnenlicht aktivieren
+cfg.helmet_damage.tooltip=Aktieviert das Helme, die von Armeeskeletten getragen werden, bein Sonnenlicht Schaden erhalten und nach einiger Zeit kaputt gehen.
+
+cfg.ghostly_skins=Geisterhafte Hautanzüge
+cfg.ghostly_skins.tooltip=Hautanzüge sind halbtransparent
+
+cfg.skinsuitnametags=Hautanzüge benennen Skelette
+cfg.skinsuitnametags.tooltip=Werden Skelette nach benannten Hautanzügen benannt?
+
+cfg.huntcreepers=Creeper jagen
+cfg.huntcreepers.tooltip=Jagen Armeeskelette Creeper?
+
+cfg.suffocationwarning=Kiregererstickungswarnung
+cfg.suffocationwarning.tooltip=Soll der Spieler in der Skelett-Schöpfer GUI gewarnt werden, wenn erschaffene Skeltte ersticken können?
+
+cfg.bonereq_warrior=Skelettkrieger-Knochenbdearf
+cfg.bonereq_warrior.tooltip=Wie viele Knochen benötigt man, um einen Skelettkrieger zu erschaffen?
+
+cfg.bonereq_baby=BabySkelett-Knochenbdearf
+cfg.bonereq_baby.tooltip=Wie viele Knochen benötigt man, um einen BabySkelett zu erschaffen?
+
+achievement.firstbaby=Kinder machen
+achievement.firstbaby.desc=Erschaffe ein Babyskelett
+
+achievement.firstskeleton=Du und welche Armee?
+achievement.firstskeleton.desc=Erschaffe ein Skelett
+
+achievement.secondskeleton=Schergen
+achievement.secondskeleton.desc=Erschaffe ein weiteres Skelett
+
+achievement.firstmilk=Gut für deine Knochen
+achievement.firstmilk.desc=Gib ein Skelett ein Eimer Milch
+
+achievement.firstlevel=Immer diese Verbesserungen...
+achievement.firstlevel.desc=Verbessere eine Skelettkrieger
+
+achievement.armedskeleton=Bewaffnet und gefährlich
+achievement.armedskeleton.desc=Gib einem Armeeskelett eine Waffe
+
+achievement.sally=Sally
+achievement.sally.desc=Zieh einem Armee-Skelett einen Hautanzug an
+
+achievement.crusader=Kreuzritter
+achievement.crusader.desc=Zieh ein Skelettkrieger wie Kreuzritter an (Vollständige Kettenrüstung, weißer Schild mit rotem Kreuz)
+
+achievement.milk256=Nur ein Byte!
+achievement.milk256.desc=Lass ein Skelettkrieger 256 Eimer Milch trinken
+
+achievement.milk9001=Es ist über 9000!
+achievement.milk9001.desc=Lass ein Skelettkrieger über 9000 Eimer Milch trinken
+
+achievement.alliance=Besser mit Freunden
+achievement.alliance.desc=Gehe eine Allianz mit einem anderen Spieler ein
+
+achievement.breakalliance=Vertragsbrecher
+achievement.breakalliance.desc=Löse eine Allianz mit einem anderen Spieler auf
+
+achievement.warmonger=Kriegshetzer
+achievement.warmonger.desc=Markiere einen anderen
+
+achievement.forgiver=Vergebung
+achievement.forgiver.desc=Sieh einen Feind nicht mehr als solchen an
+
+achievement.interference=Nicht micht, ihr Idioten!
+achievement.interference.desc=Laufe in den Pfeil eines deiner Skelettkrieger
+
+achievement.wardog=Kriegshund
+achievement.wardog.desc=Lass einen Hauswolf ein Skelett eines anderen Spielers töten
+
+achievement.sans=Hey Ho
+achievement.sans.desc=Sieh wie einer deiner gruseligen Freunde aus...
+
+gui.save=Speichern
