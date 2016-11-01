@@ -82,7 +82,7 @@ public class ModelBabySkeleton extends ModelBiped
                 this.skinsuitLeftArm.addBox(-1.0F, -2.0F, -2.0F, 4, 12, 4, modelSize);
                 this.skinsuitLeftArm.setRotationPoint(5.0F, 2.0F, 0.0F);
                 this.skinsuitRightArm = new ModelRenderer(this, 40, 16);
-                this.skinsuitRightArm.addBox(-2.0F, -2.0F, -2.0F, 4, 12, 4, modelSize);
+                this.skinsuitRightArm.addBox(-3.0F, -2.0F, -2.0F, 4, 12, 4, modelSize);
                 this.skinsuitRightArm.setRotationPoint(-5.0F, 2.5F, 0.0F);
                 this.skinsuitLeftArmwear = new ModelRenderer(this, 48, 48);
                 this.skinsuitLeftArmwear.addBox(-1.0F, -2.0F, -2.0F, 4, 12, 4, modelSize + 0.25F);
