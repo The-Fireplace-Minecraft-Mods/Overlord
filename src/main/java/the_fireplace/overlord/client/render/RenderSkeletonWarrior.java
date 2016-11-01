@@ -28,6 +28,7 @@ public class RenderSkeletonWarrior extends RenderBiped<EntitySkeletonWarrior>
     public RenderSkeletonWarrior(RenderManager renderManagerIn)
     {
         super(renderManagerIn, new ModelSkeletonWarrior(), 0.5F);
+        this.addLayer(new LayerSkinsuit(this));
         this.addLayer(new LayerBipedArmor(this)
         {
             @Override
@@ -37,7 +38,6 @@ public class RenderSkeletonWarrior extends RenderBiped<EntitySkeletonWarrior>
                 this.modelArmor = new ModelSkeletonWarrior(1.0F, true, false, 1);
             }
         });
-        this.addLayer(new LayerSkinsuit(this));
     }
 
     @Override

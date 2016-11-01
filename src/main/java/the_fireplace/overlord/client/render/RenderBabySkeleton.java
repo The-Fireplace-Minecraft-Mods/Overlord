@@ -20,6 +20,7 @@ public class RenderBabySkeleton extends RenderBiped<EntityBabySkeleton>
     public RenderBabySkeleton(RenderManager renderManagerIn)
     {
         super(renderManagerIn, new ModelBabySkeleton(), 0.5F);
+        this.addLayer(new LayerBabySkinsuit(this));
         this.addLayer(new LayerBipedArmor(this)
         {
             @Override
@@ -29,7 +30,6 @@ public class RenderBabySkeleton extends RenderBiped<EntityBabySkeleton>
                 this.modelArmor = new ModelBabySkeleton(1.0F, true, false, 1);
             }
         });
-        this.addLayer(new LayerBabySkinsuit(this));
     }
 
     @Override
