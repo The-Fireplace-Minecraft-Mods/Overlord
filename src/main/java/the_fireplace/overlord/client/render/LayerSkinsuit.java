@@ -43,6 +43,7 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
     @Override
     public void doRenderLayer(EntitySkeletonWarrior skeleton, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         if(skeleton.hasSkinsuit()){
+            GlStateManager.enableBlendProfile(GlStateManager.Profile.PLAYER_SKIN);
             this.model.setModelAttributes(this.renderer.getMainModel());
             this.model.setLivingAnimations(skeleton, limbSwing, limbSwingAmount, partialTicks);
             if(!skeleton.getSkinsuitName().isEmpty()) {
@@ -93,13 +94,14 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
                 this.renderer.bindTexture(STEVE);
             if(ConfigValues.GHOSTLYSKINS) {
                 GlStateManager.enableBlend();
-                GlStateManager.color(1.0F, 1.0F, 1.0F, 0.8F);
+                GlStateManager.color(1.0F, 1.0F, 1.0F, 0.5F);
             }
             model.render(skeleton, limbSwing, limbSwingAmount, partialTicks, netHeadYaw, headPitch, scale);
             if(ConfigValues.GHOSTLYSKINS) {
                 GlStateManager.resetColor();
                 GlStateManager.disableBlend();
             }
+            GlStateManager.disableBlendProfile(GlStateManager.Profile.PLAYER_SKIN);
     }
     }
 
