@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -822,14 +821,6 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
 
     public String getSkinsuitName(){
         return this.dataManager.get(SKINSUIT_NAME);
-    }
-
-    @Override
-    public boolean attackEntityAsMob(Entity entityIn)
-    {
-        if(getHeldItemMainhand() != null)
-            getHeldItemMainhand().damageItem(1, this);
-        return super.attackEntityAsMob(entityIn);
     }
 
     @Override

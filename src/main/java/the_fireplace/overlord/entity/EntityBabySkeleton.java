@@ -2,7 +2,6 @@ package the_fireplace.overlord.entity;
 
 import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityBoat;
@@ -394,14 +393,6 @@ public class EntityBabySkeleton extends EntityArmyMember {
 
     public String getSkinsuitName(){
         return this.dataManager.get(SKINSUIT_NAME);
-    }
-
-    @Override
-    public boolean attackEntityAsMob(Entity entityIn)
-    {
-        if(getHeldItemMainhand() != null)
-            getHeldItemMainhand().damageItem(1, this);
-        return super.attackEntityAsMob(entityIn);
     }
 
     @Override

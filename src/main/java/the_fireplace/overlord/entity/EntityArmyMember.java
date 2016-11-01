@@ -22,6 +22,7 @@ import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -455,6 +456,8 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 
     @Override
     public boolean attackEntityAsMob(Entity entityIn){
+        if(getHeldItemMainhand() != null && getHeldItemMainhand().stackSize <= 0)
+            setHeldItem(EnumHand.MAIN_HAND, null);
         float f = (float)this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
         int i = 0;
 
@@ -502,9 +505,14 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 
             this.applyEnchantments(this, entityIn);
 
+            if(getHeldItemMainhand() != null && entityIn instanceof EntityLivingBase)
+                getHeldItemMainhand().getItem().hitEntity(getHeldItemMainhand(), (EntityLivingBase)entityIn, this);
+
             if(this.getAugment() != null)
                 this.getAugment().onStrike(this, entityIn);
         }
+        if(getHeldItemMainhand() != null && getHeldItemMainhand().stackSize <= 0)
+            setHeldItem(EnumHand.MAIN_HAND, null);
 
         return flag;
     }
