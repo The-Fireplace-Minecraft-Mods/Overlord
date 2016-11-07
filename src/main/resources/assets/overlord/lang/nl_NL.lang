@@ -1,0 +1,142 @@
+tile.skeleton_maker.name=Skelet Krijger Maker
+tile.baby_skeleton_maker.name=Baby Skelet Maker
+item.overlords_seal.name=Opperheer's Zegel
+item.overlords_seal.tooltip.default=Rechtsklik om dit jouw zegel te maken!
+item.overlords_seal.tooltip=Zegel van %s
+item.squad_editor.name=Groep Bewerker
+item.sans_mask.name=Sans Masker
+item.skinsuit.name=Huidpak
+item.warrior_spawner.name=Skelet Krijger Plaatser
+item.baby_spawner.name=Baby Skelet Plaatser
+itemGroup.overlord=Opperheer
+skeleton_maker.create=Creëer!
+skeleton_maker.warning.unclaimed=Waarschuwing: Dit skelet zal niet geclaimd worden.
+skeleton_maker.warning.notmine=Waarschuwing: Dit skelet zal aan %s toebehoren.
+skeleton_maker.warning.suffocation=Waarschuwing: Je Skelet Maker heeft blokken boven zich. Het uitgekomen skelet kan stikken.
+entity.overlord.skeleton_warrior.name=Skelet Krijger
+entity.overlord.skeleton_baby.name=Baby Skelet
+
+skeleton.mode.aggressive=Agressief
+skeleton.mode.defensive=Defensief
+skeleton.mode.passive=Passief
+
+skeleton.mode.stationed=Stilstaand
+skeleton.mode.follower=Volger
+skeleton.mode.base=Ronddwalen
+
+overlords_seal.warning=Dit geldt voor al je geladen skeletten.
+
+overlord.requestsent=Je hebt een bondgenootschap aangevraagd met %s.
+overlord.allyrequest=Nieuw bondgenoot verzoek van %s! Typ /allyaccept om te accepteren of /allyreject om te weigeren.
+overlord.alreadyrequested=Je hebt al een bondgenootschap aangevraagd met %s.
+overlord.alreadyrequested.other=Ze hebben al een bondgenootschap met jou aangevraagd. Typ /allyaccept om te accepteren.
+overlord.alreadyallied=Je bent al een bondgenoot van %s.
+overlord.enemieswith=Jij en %s zijn vijanden!
+
+overlord.nothingpending=Je hebt geen hangende bondgenootschap verzoeken.
+
+overlord.allyaccepted=Je bent nu bevriend met %s.
+overlord.allyaccept=%s heeft je verzoek geaccepteerd!
+
+overlord.allyrejected=Je hebt een verzoek van %s geweigerd.
+overlord.allyreject=%s heeft je verzoek geweigerd.
+
+overlord.allyterminated=Je bent geen bondgenoot meer van %s.
+overlord.allytermination=%s is niet langer je bondgenoot.
+overlord.notallied=Je bent geen bondgenoot van %s.
+
+overlord.allylist=Jouw bondgenoten:
+overlord.nofriends=Je hebt geen bondgenoten.
+
+overlord.madeenemy=Je hebt %s je vijand gemaakt.
+overlord.enemied=%s heeft jou tot diens vijand gemaakt.
+overlord.noenemyallied=Je kan %s geen vijand maken, die is momenteel je bondgenoot.
+overlord.allytriedenemy=%s probeerde van jou een vijand te maken, maar jullie zijn momenteel bondgenoten.
+overlord.alreadyenemies=%s is al je vijand!
+
+overlord.enemyterminated=Je ziet %s niet langer als een vijand.
+overlord.enemytermination=%s ziet jou niet langer als vijand.
+overlord.notenemied=Je ziet %s niet als vijand.
+
+overlord.enemylist=Jouw vijanden:
+overlord.noenemies=Je hebt geen vijanden.
+
+overlord.all_squads=Alle groepen
+overlord.no_squad=Geen groep
+overlord.squad_editor=Groep Bewerker
+
+overlord.armydeath=Je %s stierf vanwege %s.
+
+cfg.helmet_damage=Zet helm schade aan in Zonlicht
+cfg.helmet_damage.tooltip=Zorgt dat helmen gedragen door leger skeletten schade oplopen en uiteindelijk breken in het zonlicht
+
+cfg.ghostly_skins=Geestachtige Huidpakken
+cfg.ghostly_skins.tooltip=Huidpakken zijn halfdoorzichtig
+
+cfg.skinsuitnametags=Huidpakken benoemen Skeletten
+cfg.skinsuitnametags.tooltip=Skeletten de naam geven van de huidpakken?
+
+cfg.huntcreepers=Jaag op Creepers
+cfg.huntcreepers.tooltip=Vallen leger skeletten Creepers aan?
+
+cfg.suffocationwarning=Stikkende Krijger waarschuwing
+cfg.suffocationwarning.tooltip=Spelers in de Skelet Maker GUI waarschuwen als het skelet kan stikken wanneer het uitkomt?
+
+cfg.bonereq_warrior=Skeleton Krijger Bot Vereiste
+cfg.bonereq_warrior.tooltip=Hoeveel botten heeft men nodig om een Skelet Krijger te maken?
+
+cfg.bonereq_baby=Baby Skelet Bot Vereiste
+cfg.bonereq_baby.tooltip=Hoeveel botten heeft men nodig om een Baby Skelet te maken?
+
+achievement.firstbaby=Babies maken
+achievement.firstbaby.desc=Roep een Baby Skelet op
+
+achievement.firstskeleton=Jij en welk leger?
+achievement.firstskeleton.desc=Roep een Skelet op
+
+achievement.secondskeleton=Slaafjes
+achievement.secondskeleton.desc=Roep nog een Skelet op
+
+achievement.firstmilk=Goed voor je botten
+achievement.firstmilk.desc=Geef een Skelet Krijger een Emmer Melk
+
+achievement.firstlevel=Met deze opwaarderingen...
+achievement.firstlevel.desc=Laat een Skelet Krijger een niveau stijgen
+
+achievement.armedskeleton=Bewapend en Gevaarlijk
+achievement.armedskeleton.desc=Geef een leger skelet een wapen
+
+achievement.sally=Sally
+achievement.sally.desc=Kleed een leger skelet aan met een huidpak
+
+achievement.crusader=Kruisvaarder
+achievement.crusader.desc=Verkleed een Skelet Krijger als een Kruisvaarder (Volledig maliën harnas, wit schild met rood kruis)
+
+achievement.milk256=Maar één hapje!
+achievement.milk256.desc=Heb een Skelet Krijger die 256 emmers melk heeft geconsumeerd
+
+achievement.milk9001=Het is over 9000!
+achievement.milk9001.desc=Heb een Skelet Krijger die meer dan 9000 emmers melk heeft geconsumeerd
+
+achievement.alliance=Beter met vrienden
+achievement.alliance.desc=Vorm een bondgenootschap met een andere speler
+
+achievement.breakalliance=Dealbreker
+achievement.breakalliance.desc=Verbreek een bondgenootschap met een andere speler
+
+achievement.warmonger=Oorlogsstoker
+achievement.warmonger.desc=Markeer een andere speler als je vijand
+
+achievement.forgiver=Vergever
+achievement.forgiver.desc=Beschouw een speler niet langer als je vijand
+
+achievement.interference=Niet mij, idioten!
+achievement.interference.desc=Sta in de weg van je eigen Skelet Krijger's pijl
+
+achievement.wardog=Doggo doet een oorlog
+achievement.wardog.desc=Laat een huisdier wolf een lid van een leger vermoorden
+
+achievement.sans=Heya
+achievement.sans.desc=Lijk op een spookachtige vriend...
+
+gui.save=Opslaan
