@@ -1,6 +1,5 @@
 package the_fireplace.overlord.entity;
 
-import com.sun.istack.internal.NotNull;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
@@ -38,6 +37,7 @@ import the_fireplace.overlord.tools.Augment;
 import the_fireplace.overlord.tools.CustomDataSerializers;
 import the_fireplace.overlord.tools.Enemies;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
@@ -351,13 +351,13 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
         return dataManager.get(MOVEMENT_MODE);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public UUID getOwnerId() {
         return this.dataManager.get(OWNER_UNIQUE_ID);
     }
 
-    public void setOwnerId(@NotNull UUID ownerId)
+    public void setOwnerId(@Nonnull UUID ownerId)
     {
         this.dataManager.set(OWNER_UNIQUE_ID, ownerId);
     }
