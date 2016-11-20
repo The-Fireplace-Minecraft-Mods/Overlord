@@ -207,13 +207,9 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                                 this.dataManager.set(HAS_SKINSUIT, Boolean.valueOf(false));
                                 this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
                             } else if (stack.getItem() == Overlord.warrior_spawner) {
-                                if (stack.getTagCompound() != null) {
-                                    this.readFromNBT(stack.getTagCompound());
-                                } else {
-                                    NBTTagCompound compound = new NBTTagCompound();
-                                    this.writeEntityToNBT(compound);
-                                    stack.setTagCompound(compound);
-                                }
+                                NBTTagCompound compound = new NBTTagCompound();
+                                this.writeEntityToNBT(compound);
+                                stack.setTagCompound(compound);
                             }
                         }
                     }

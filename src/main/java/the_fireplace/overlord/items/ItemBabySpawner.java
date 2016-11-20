@@ -15,16 +15,17 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.entity.EntityBabySkeleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author The_Fireplace
  */
 public class ItemBabySpawner extends Item {
-    //TODO: Add a tooltip explaining how to use
     @Override
     @Nonnull
     public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
@@ -50,7 +51,7 @@ public class ItemBabySpawner extends Item {
                 offsetY = 0.5D;
             }
 
-            EntityBabySkeleton entity = new EntityBabySkeleton(worldIn);
+            EntityBabySkeleton entity = new EntityBabySkeleton(worldIn, playerIn.getUniqueID());
 
             entity.setLocationAndAngles(pos.getX()+0.5D, pos.getY() + offsetY, pos.getZ()+0.5D, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
             entity.rotationYawHead = entity.rotationYaw;
@@ -102,5 +103,16 @@ public class ItemBabySpawner extends Item {
     public boolean hasEffect(ItemStack stack)
     {
         return stack.getTagCompound() != null;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
+    {
+        super.addInformation(stack, playerIn, tooltip, advanced);
+        if(hasEffect(stack))
+            tooltip.add(Overlord.proxy.translateToLocal("tooltip.placeclone"));
+        else
+            tooltip.add(Overlord.proxy.translateToLocal("tooltip.copyclone"));
     }
 }

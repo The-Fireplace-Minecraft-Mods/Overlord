@@ -96,7 +96,7 @@ public class EntityBabySkeleton extends EntityArmyMember {
                 if(!player.isSneaking()) {
                     FMLNetworkHandler.openGui(player, Overlord.instance, hashCode(), world, (int) this.posX, (int) this.posY, (int) this.posZ);
                     return true;
-                }else {
+                } else {
                     if (!world.isRemote){
                         ItemStack stack = player.getHeldItem(hand);
                         if (!stack.isEmpty()) {
@@ -116,13 +116,9 @@ public class EntityBabySkeleton extends EntityArmyMember {
                                 this.dataManager.set(HAS_SKINSUIT, Boolean.valueOf(false));
                                 this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
                             } else if (stack.getItem() == Overlord.baby_spawner) {
-                                if (stack.getTagCompound() != null) {
-                                    this.readFromNBT(stack.getTagCompound());
-                                } else {
-                                    NBTTagCompound compound = new NBTTagCompound();
-                                    this.writeEntityToNBT(compound);
-                                    stack.setTagCompound(compound);
-                                }
+                                NBTTagCompound compound = new NBTTagCompound();
+                                this.writeEntityToNBT(compound);
+                                stack.setTagCompound(compound);
                             }
                         }
                     }

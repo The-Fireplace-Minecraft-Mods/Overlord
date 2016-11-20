@@ -18,6 +18,9 @@ entity.overlord.skeleton_baby.name=Baby Skeleton
 entity.skeleton_warrior.name=Skeleton Warrior
 entity.skeleton_baby.name=Baby Skeleton
 
+tooltip.placeclone=Shift+Right Click another skeleton to replace your current copy.
+tooltip.copyclone=Shift+Right Click a skeleton to copy it.
+
 skeleton.mode.aggressive=Aggressive
 skeleton.mode.defensive=Defensive
 skeleton.mode.passive=Passive
