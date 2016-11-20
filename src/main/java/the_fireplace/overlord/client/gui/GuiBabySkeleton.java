@@ -126,6 +126,8 @@ public class GuiBabySkeleton extends GuiContainer {
             setMovementModeText();
         }
         super.updateScreen();
+        if(!this.entity.isEntityAlive() || this.entity.isDead)
+            this.mc.player.closeScreen();
     }
 
     public void setAttackModeText(){
