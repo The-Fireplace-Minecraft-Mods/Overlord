@@ -5,6 +5,7 @@ import net.minecraftforge.common.DimensionManager;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author The_Fireplace
@@ -29,12 +30,12 @@ public class Enemies implements Serializable {
         return enemies;
     }
 
-    public boolean isEnemiesWith(UUID uuid1, UUID uuid2){
+    public boolean isNotEnemiesWith(UUID uuid1, UUID uuid2){
         for(Alliance playerPair: enemies){
             if((UUID.fromString(playerPair.getUser1().getUUID()).equals(uuid1) && UUID.fromString(playerPair.getUser2().getUUID()).equals(uuid2)) || (UUID.fromString(playerPair.getUser1().getUUID()).equals(uuid2) && UUID.fromString(playerPair.getUser2().getUUID()).equals(uuid1)))
-                return true;
+                return false;
         }
-        return false;
+        return true;
     }
 
     public boolean considersPlayerEnemy(UUID main, UUID other){
@@ -57,20 +58,12 @@ public class Enemies implements Serializable {
     }
 
     public ArrayList<StringPair> getMyEnemies(UUID player){
-        ArrayList<StringPair> enemies = new ArrayList<>();
-        for(Alliance playerPair: this.enemies){
-            if(UUID.fromString(playerPair.getUser1().getUUID()).equals(player))
-                enemies.add(playerPair.getUser2());
-        }
+        ArrayList<StringPair> enemies = this.enemies.stream().filter(playerPair -> UUID.fromString(playerPair.getUser1().getUUID()).equals(player)).map(Alliance::getUser2).collect(Collectors.toCollection(ArrayList::new));
         return enemies;
     }
 
     public ArrayList<StringPair> getWhoEnemied(UUID player){
-        ArrayList<StringPair> enemies = new ArrayList<>();
-        for(Alliance playerPair: this.enemies){
-            if(UUID.fromString(playerPair.getUser2().getUUID()).equals(player))
-                enemies.add(playerPair.getUser1());
-        }
+        ArrayList<StringPair> enemies = this.enemies.stream().filter(playerPair -> UUID.fromString(playerPair.getUser2().getUUID()).equals(player)).map(Alliance::getUser1).collect(Collectors.toCollection(ArrayList::new));
         return enemies;
     }
 

@@ -12,10 +12,13 @@ import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.tools.Alliance;
 import the_fireplace.overlord.tools.Enemies;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author The_Fireplace
  */
 public class CommandEnemyRemove extends CommandBase {
+    @Nonnull
     @Override
     public String getName() {
         return "enemyremove";
@@ -27,7 +30,7 @@ public class CommandEnemyRemove extends CommandBase {
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException {
         if (sender instanceof EntityPlayer) {
             if(args.length == 1){
                 EntityPlayer player = server.getEntityWorld().getPlayerEntityByName(args[0]);
@@ -56,8 +59,9 @@ public class CommandEnemyRemove extends CommandBase {
         }
     }
 
+    @Nonnull
     @Override
-    public String getUsage(ICommandSender icommandsender) {
+    public String getUsage(@Nonnull ICommandSender icommandsender) {
         return "/enemyremove <PlayerName>";
     }
 }

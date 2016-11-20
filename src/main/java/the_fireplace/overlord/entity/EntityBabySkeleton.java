@@ -315,7 +315,7 @@ public class EntityBabySkeleton extends EntityArmyMember {
     }
 
     @Override
-    public void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack)
+    public void setItemStackToSlot(EntityEquipmentSlot slotIn, @Nonnull ItemStack stack)
     {
         if (slotIn == EntityEquipmentSlot.MAINHAND)
         {

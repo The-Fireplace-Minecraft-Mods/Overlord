@@ -54,6 +54,7 @@ import the_fireplace.overlord.tileentity.TileEntityBabySkeletonMaker;
 import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
 import the_fireplace.overlord.tools.*;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 /**
@@ -80,6 +81,7 @@ public class Overlord {
     public static CommonProxy proxy;
 
     public static final CreativeTabs tabOverlord = new CreativeTabs(MODID) {
+        @Nonnull
         @Override
         public ItemStack getTabIconItem() {
             return new ItemStack(Overlord.skeleton_maker);

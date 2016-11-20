@@ -164,7 +164,7 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
             EntityPlayer entityplayer1 = worldObj.playerEntities.get(i);
             if(entityplayer1.getUniqueID() == ((EntityArmyMember)this.taskOwner).getOwnerId() || Alliances.getInstance().isAlliedTo(entityplayer1.getUniqueID(), ((EntityArmyMember)this.taskOwner).getOwnerId()))
                 continue;//Skip the owner
-            if(((EntityArmyMember)taskOwner).getAttackMode() < 2 && !Enemies.getInstance().isEnemiesWith(((EntityArmyMember)taskOwner).getOwnerId(), entityplayer1.getUniqueID()))
+            if(((EntityArmyMember)taskOwner).getAttackMode() < 2 && Enemies.getInstance().isNotEnemiesWith(((EntityArmyMember)taskOwner).getOwnerId(), entityplayer1.getUniqueID()))
                 continue;
 
             if (!entityplayer1.capabilities.disableDamage && entityplayer1.isEntityAlive() && !entityplayer1.isSpectator() && (p_184150_12_ == null || p_184150_12_.apply(entityplayer1)))
@@ -212,14 +212,12 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
     public static <T> List<T> getEntitiesWithinAABB(World world, Class<T> clazz, AxisAlignedBB aabb, Predicate<? super T> predicate) {
         List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, aabb);
         List<T> found = Lists.newArrayList();
-        Iterator<Entity> iterator = entities.iterator();
-        while (iterator.hasNext()) {
-            Entity e = iterator.next();
+        for (Entity e : entities) {
             if (clazz.isAssignableFrom(e.getClass())) {
                 found.add((T) e);
             }
         }
-        found = new ArrayList<T>(Collections2.filter(found, predicate));
+        found = new ArrayList<>(Collections2.filter(found, predicate));
         return found;
     }
 }

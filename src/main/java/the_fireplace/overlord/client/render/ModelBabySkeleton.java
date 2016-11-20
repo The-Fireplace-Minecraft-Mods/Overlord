@@ -15,6 +15,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.entity.EntityBabySkeleton;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author The_Fireplace
  */
@@ -151,7 +153,7 @@ public class ModelBabySkeleton extends ModelBiped
     }
 
     @Override
-    public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
+    public void render(@Nonnull Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {
         this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entityIn);
         GlStateManager.pushMatrix();
@@ -194,7 +196,7 @@ public class ModelBabySkeleton extends ModelBiped
     }
 
     @Override
-    public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)
+    public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, @Nonnull Entity entityIn)
     {
         super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entityIn);
         ItemStack itemstack = ((EntityLivingBase)entityIn).getHeldItemMainhand();
@@ -234,7 +236,7 @@ public class ModelBabySkeleton extends ModelBiped
     }
 
     @Override
-    public void postRenderArm(float scale, EnumHandSide side)
+    public void postRenderArm(float scale, @Nonnull EnumHandSide side)
     {
         float f = side == EnumHandSide.RIGHT ? 1.0F : -1.0F;
         ModelRenderer modelrenderer = this.getArmForSide(side);

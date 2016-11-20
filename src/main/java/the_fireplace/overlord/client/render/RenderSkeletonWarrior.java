@@ -12,6 +12,8 @@ import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.RequestAugmentMessage;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author The_Fireplace
  */
@@ -47,7 +49,7 @@ public class RenderSkeletonWarrior extends RenderBiped<EntitySkeletonWarrior>
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntitySkeletonWarrior entity)
+    protected ResourceLocation getEntityTexture(@Nonnull EntitySkeletonWarrior entity)
     {
         if(!entity.cachedClientAugment)
             PacketDispatcher.sendToServer(new RequestAugmentMessage(entity));

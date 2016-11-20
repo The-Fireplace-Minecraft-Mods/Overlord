@@ -9,12 +9,14 @@ import net.minecraft.util.text.TextComponentTranslation;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.tools.Alliance;
 
+import javax.annotation.Nonnull;
 import java.util.UUID;
 
 /**
  * @author The_Fireplace
  */
 public class CommandAllyReject extends CommandBase {
+    @Nonnull
     @Override
     public String getName() {
         return "allyreject";
@@ -26,7 +28,7 @@ public class CommandAllyReject extends CommandBase {
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException {
         if (sender instanceof EntityPlayer) {
             for(Alliance alliance:Overlord.instance.pendingAlliances){
                 if(alliance.getUser2().getUUID().equals(((EntityPlayer) sender).getUniqueID().toString())){
@@ -42,8 +44,9 @@ public class CommandAllyReject extends CommandBase {
         }
     }
 
+    @Nonnull
     @Override
-    public String getUsage(ICommandSender icommandsender) {
+    public String getUsage(@Nonnull ICommandSender icommandsender) {
         return "/allyreject";
     }
 }

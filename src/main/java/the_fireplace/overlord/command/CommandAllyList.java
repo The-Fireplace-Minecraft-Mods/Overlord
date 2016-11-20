@@ -10,10 +10,13 @@ import net.minecraft.util.text.TextComponentTranslation;
 import the_fireplace.overlord.tools.Alliances;
 import the_fireplace.overlord.tools.StringPair;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author The_Fireplace
  */
 public class CommandAllyList extends CommandBase {
+    @Nonnull
     @Override
     public String getName() {
         return "allylist";
@@ -25,7 +28,7 @@ public class CommandAllyList extends CommandBase {
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException {
         if (sender instanceof EntityPlayer) {
             if(!Alliances.getInstance().getAllies(((EntityPlayer) sender).getUniqueID()).isEmpty()) {
                 sender.sendMessage(new TextComponentTranslation("overlord.allylist"));
@@ -38,8 +41,9 @@ public class CommandAllyList extends CommandBase {
         }
     }
 
+    @Nonnull
     @Override
-    public String getUsage(ICommandSender icommandsender) {
+    public String getUsage(@Nonnull ICommandSender icommandsender) {
         return "/allylist";
     }
 }

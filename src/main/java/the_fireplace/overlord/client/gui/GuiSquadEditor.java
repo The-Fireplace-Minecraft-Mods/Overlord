@@ -10,6 +10,7 @@ import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.UpdateSquadsMessage;
 import the_fireplace.overlord.tools.Squads;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -87,11 +88,12 @@ public class GuiSquadEditor extends GuiScreen {
     }
 
     @Override
-    public void drawCenteredString(FontRenderer fontRendererIn, String text, int x, int y, int color)
+    public void drawCenteredString(FontRenderer fontRendererIn, @Nonnull String text, int x, int y, int color)
     {
         fontRendererIn.drawString(text, (x - fontRendererIn.getStringWidth(text) / 2), y, color);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button.enabled) {

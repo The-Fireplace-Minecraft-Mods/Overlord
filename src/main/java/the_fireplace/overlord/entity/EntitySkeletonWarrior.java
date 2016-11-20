@@ -380,12 +380,10 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                     xp.motionY *= -0.8999999761581421D;
                 }
             }
-            for(EntityXPOrb xp:world.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox())){
-                if(xp.delayBeforeCanPickup <= 0){
-                    this.addXP(xp.getXpValue());
-                    xp.setDead();
-                }
-            }
+            world.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox()).stream().filter(xp -> xp.delayBeforeCanPickup <= 0).forEach(xp -> {
+                this.addXP(xp.getXpValue());
+                xp.setDead();
+            });
             //Bow stuffs
             if(!getHeldItemMainhand().isEmpty()){
                 if(getHeldItemMainhand().getItem() instanceof ItemBow)
@@ -704,7 +702,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     }
 
     @Override
-    public void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack)
+    public void setItemStackToSlot(EntityEquipmentSlot slotIn, @Nonnull ItemStack stack)
     {
         if (slotIn == EntityEquipmentSlot.MAINHAND)
         {

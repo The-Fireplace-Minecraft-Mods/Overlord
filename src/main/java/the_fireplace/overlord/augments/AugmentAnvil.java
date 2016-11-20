@@ -10,22 +10,25 @@ import net.minecraft.util.math.MathHelper;
 import the_fireplace.overlord.entity.EntityArmyMember;
 import the_fireplace.overlord.tools.Augment;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author The_Fireplace
  */
 public class AugmentAnvil extends Augment {
     @Override
-    public void onStrike(EntityArmyMember attacker, Entity entityAttacked) {
+    public void onStrike(@Nonnull EntityArmyMember attacker, @Nonnull Entity entityAttacked) {
 
     }
 
+    @Nonnull
     @Override
     public String augmentId() {
         return "iron_anvil";
     }
 
     @Override
-    public void onEntityTick(EntityArmyMember entity) {
+    public void onEntityTick(@Nonnull EntityArmyMember entity) {
         if(entity.motionY < 0){
             entity.motionY *= 1.5;
         }

@@ -13,10 +13,13 @@ import the_fireplace.overlord.tools.Alliances;
 import the_fireplace.overlord.tools.Enemies;
 import the_fireplace.overlord.tools.StringPair;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author The_Fireplace
  */
 public class CommandAlly extends CommandBase {
+    @Nonnull
     @Override
     public String getName() {
         return "ally";
@@ -28,12 +31,12 @@ public class CommandAlly extends CommandBase {
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException {
         if (sender instanceof EntityPlayer) {
             if(args.length == 1){
                 EntityPlayer player = server.getEntityWorld().getPlayerEntityByName(args[0]);
                 if(player != null){
-                    if(!Enemies.getInstance().isEnemiesWith(((EntityPlayer) sender).getUniqueID(), player.getUniqueID())) {
+                    if(Enemies.getInstance().isNotEnemiesWith(((EntityPlayer) sender).getUniqueID(), player.getUniqueID())) {
                         if (!Overlord.instance.pendingAlliances.contains(new Alliance(new StringPair(((EntityPlayer) sender).getUniqueID().toString(), ((EntityPlayer) sender).getDisplayNameString()), new StringPair(player.getUniqueID().toString(), player.getDisplayNameString())))) {
                             if (!Overlord.instance.pendingAlliances.contains(new Alliance(new StringPair(player.getUniqueID().toString(), player.getDisplayNameString()), new StringPair(((EntityPlayer) sender).getUniqueID().toString(), ((EntityPlayer) sender).getDisplayNameString())))) {
                                 if (!Alliances.getInstance().isAlliedTo(((EntityPlayer) sender).getUniqueID(), player.getUniqueID())) {
@@ -61,8 +64,9 @@ public class CommandAlly extends CommandBase {
         }
     }
 
+    @Nonnull
     @Override
-    public String getUsage(ICommandSender icommandsender) {
+    public String getUsage(@Nonnull ICommandSender icommandsender) {
         return "/ally <PlayerName>";
     }
 }

@@ -13,12 +13,12 @@ import javax.annotation.Nonnull;
 @JEIPlugin
 public class OverlordJEIPlugin implements IModPlugin {
     @Override
-    public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry) {
+    public void registerItemSubtypes(@Nonnull ISubtypeRegistry subtypeRegistry) {
 
     }
 
     @Override
-    public void registerIngredients(IModIngredientRegistration registry) {
+    public void registerIngredients(@Nonnull IModIngredientRegistration registry) {
 
     }
 

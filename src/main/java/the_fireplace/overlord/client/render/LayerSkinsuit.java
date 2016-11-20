@@ -11,6 +11,7 @@ import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 
+import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -41,7 +42,7 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
     }
 
     @Override
-    public void doRenderLayer(EntitySkeletonWarrior skeleton, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void doRenderLayer(@Nonnull EntitySkeletonWarrior skeleton, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         if(skeleton.hasSkinsuit()){
             GlStateManager.enableBlendProfile(GlStateManager.Profile.PLAYER_SKIN);
             this.model.setModelAttributes(this.renderer.getMainModel());

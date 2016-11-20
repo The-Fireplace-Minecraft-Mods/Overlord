@@ -9,6 +9,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.entity.EntityBabySkeleton;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author The_Fireplace
  */
@@ -42,7 +44,7 @@ public class RenderBabySkeleton extends RenderBiped<EntityBabySkeleton>
      * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
      */
     @Override
-    protected ResourceLocation getEntityTexture(EntityBabySkeleton entity)
+    protected ResourceLocation getEntityTexture(@Nonnull EntityBabySkeleton entity)
     {
         return SKELETON_TEXTURES;
     }

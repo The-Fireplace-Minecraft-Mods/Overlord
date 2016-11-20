@@ -23,6 +23,7 @@ public class UpdateSquadsMessage implements IMessage {
         this.names=names;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void fromBytes(ByteBuf buf) {
         names = new ArrayList();

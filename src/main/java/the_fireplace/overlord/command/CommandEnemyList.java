@@ -12,6 +12,7 @@ import net.minecraft.util.text.TextFormatting;
 import the_fireplace.overlord.tools.Enemies;
 import the_fireplace.overlord.tools.StringPair;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 /**
@@ -21,6 +22,7 @@ public class CommandEnemyList extends CommandBase {
     private static final Style blue = new Style().setColor(TextFormatting.BLUE);
     private static final Style purple = new Style().setColor(TextFormatting.LIGHT_PURPLE);
     private static final Style red = new Style().setColor(TextFormatting.RED);
+    @Nonnull
     @Override
     public String getName() {
         return "enemylist";
@@ -32,7 +34,7 @@ public class CommandEnemyList extends CommandBase {
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException {
         if (sender instanceof EntityPlayer) {
             if(!Enemies.getInstance().getAllEnemies(((EntityPlayer) sender).getUniqueID()).isEmpty()) {
                 sender.sendMessage(new TextComponentTranslation("overlord.enemylist"));
@@ -52,8 +54,9 @@ public class CommandEnemyList extends CommandBase {
         }
     }
 
+    @Nonnull
     @Override
-    public String getUsage(ICommandSender icommandsender) {
+    public String getUsage(@Nonnull ICommandSender icommandsender) {
         return "/enemylist";
     }
 }

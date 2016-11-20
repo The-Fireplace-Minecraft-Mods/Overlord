@@ -19,6 +19,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.tileentity.TileEntityBabySkeletonMaker;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author The_Fireplace
  */
@@ -32,6 +34,7 @@ public class BlockBabySkeletonMaker extends BlockContainer {
         setHarvestLevel("pickaxe", 0);
     }
 
+    @Nonnull
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         return new AxisAlignedBB(0.04F, 0F, 0.04F, 0.96F, 0.65F, 0.96F);
@@ -42,19 +45,21 @@ public class BlockBabySkeletonMaker extends BlockContainer {
         return false;
     }
 
+    @Nonnull
     @Override
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
+    @Nonnull
     @Override
     public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.MODEL;
     }
 
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
+    public TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
         return new TileEntityBabySkeletonMaker();
     }
 
