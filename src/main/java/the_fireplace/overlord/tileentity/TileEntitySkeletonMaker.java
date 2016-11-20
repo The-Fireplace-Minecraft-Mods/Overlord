@@ -362,7 +362,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
         this.milk = milk;
         markDirty();
         if(!world.isRemote) {
-            PacketDispatcher.sendToAll(new SetMilkMessage(pos, milk));//TODO: Find a more efficient way than sending it to everyone
+            PacketDispatcher.sendToAllAround(new SetMilkMessage(pos, milk), world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 16);
             world.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
     }
