@@ -1,5 +1,6 @@
 package the_fireplace.overlord.tools;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraftforge.common.DimensionManager;
 
 import java.io.*;
@@ -9,6 +10,7 @@ import java.util.UUID;
 /**
  * @author The_Fireplace
  */
+@MethodsReturnNonnullByDefault
 public class Alliances implements Serializable {
     private static Alliances instance = null;
     private static final String dataFileName = "overlordalliances.dat";

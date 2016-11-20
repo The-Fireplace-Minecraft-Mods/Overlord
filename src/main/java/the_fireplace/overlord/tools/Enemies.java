@@ -1,5 +1,6 @@
 package the_fireplace.overlord.tools;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraftforge.common.DimensionManager;
 
 import java.io.*;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 /**
  * @author The_Fireplace
  */
+@MethodsReturnNonnullByDefault
 public class Enemies implements Serializable {
     private static Enemies instance = null;
     private static final String dataFileName = "overlordenemies.dat";
