@@ -12,6 +12,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.Overlord;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author The_Fireplace
  */
@@ -22,6 +24,7 @@ public class ItemSansMask extends ItemArmor {
     }
 
     @Override
+    @Nonnull
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
         return Overlord.MODID+":textures/armor/sans.png";
     }

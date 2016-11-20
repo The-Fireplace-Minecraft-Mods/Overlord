@@ -12,6 +12,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -20,6 +21,7 @@ import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.EntityBabySkeleton;
 
+import javax.annotation.Nonnull;
 import java.util.UUID;
 
 /**
@@ -27,7 +29,6 @@ import java.util.UUID;
  */
 public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInventory, ISkeletonMaker {
     private ItemStack[] inventory;
-    public static final String PROP_NAME = "TileEntityBabySkeletonMaker";
     public static final int[] clearslots = new int[]{2,4,5,6,7,8,9};
 
     public TileEntityBabySkeletonMaker() {
@@ -37,12 +38,12 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
     @Override
     public void spawnSkeleton(){
         UUID owner = null;
-        if(getStackInSlot(0) != null){
+        if(!getStackInSlot(0).isEmpty()){
             if(getStackInSlot(0).getTagCompound() != null){
                 owner = UUID.fromString(getStackInSlot(0).getTagCompound().getString("Owner"));
             }
         }
-        EntityBabySkeleton babySkeleton = new EntityBabySkeleton(worldObj, owner);
+        EntityBabySkeleton babySkeleton = new EntityBabySkeleton(world, owner);
         babySkeleton.setLocationAndAngles(pos.getX()+0.5, pos.getY()+1, pos.getZ()+0.5, 1, 0);
         babySkeleton.setItemStackToSlot(EntityEquipmentSlot.HEAD, getStackInSlot(7));
         babySkeleton.setItemStackToSlot(EntityEquipmentSlot.CHEST, getStackInSlot(6));
@@ -50,25 +51,25 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
         babySkeleton.setItemStackToSlot(EntityEquipmentSlot.FEET, getStackInSlot(4));
         babySkeleton.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, getStackInSlot(8));
 
-        worldObj.spawnEntityInWorld(babySkeleton);
-        if(getStackInSlot(9) != null)
+        world.spawnEntity(babySkeleton);
+        if(!getStackInSlot(9).isEmpty())
             babySkeleton.applySkinsuit(getStackInSlot(9));
         for(int i:clearslots){
-            setInventorySlotContents(i, null);
+            setInventorySlotContents(i, ItemStack.EMPTY);
         }
-        if(getStackInSlot(3) != null){
-            if(getStackInSlot(3).stackSize < getStackInSlot(3).getMaxStackSize())
-                getStackInSlot(3).stackSize++;
+        if(!getStackInSlot(3).isEmpty()){
+            if(getStackInSlot(3).getCount() < getStackInSlot(3).getMaxStackSize())
+                getStackInSlot(3).grow(1);
             else
                 babySkeleton.entityDropItem(new ItemStack(Items.BUCKET), 0.1F);
         }else{
             setInventorySlotContents(3, new ItemStack(Items.BUCKET));
         }
-        if(getStackInSlot(1) != null){
-            if(getStackInSlot(1).stackSize <= ConfigValues.BONEREQ_BABY)
-                setInventorySlotContents(1, null);
+        if(!getStackInSlot(1).isEmpty()){
+            if(getStackInSlot(1).getCount() <= ConfigValues.BONEREQ_BABY)
+                setInventorySlotContents(1, ItemStack.EMPTY);
             else
-                getStackInSlot(1).stackSize -= ConfigValues.BONEREQ_BABY;
+                getStackInSlot(1).shrink(ConfigValues.BONEREQ_BABY);
         }
     }
 
@@ -78,6 +79,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
     }
 
     @Override
+    @Nonnull
     public NBTTagCompound getUpdateTag(){
         return writeToNBT(new NBTTagCompound());
     }
@@ -88,6 +90,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
     }
 
     @Override
+    @Nonnull
     public String getName() {
         return Overlord.proxy.translateToLocal("tile.baby_skeleton_maker.name");
     }
@@ -98,8 +101,9 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
     }
 
     @Override
+    @Nonnull
     public ITextComponent getDisplayName() {
-        return null;
+        return new TextComponentTranslation("tile.baby_skeleton_maker.name");
     }
 
     @Override
@@ -108,16 +112,26 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
     }
 
     @Override
+    public boolean isEmpty() {
+        for(ItemStack itemStack : inventory)
+            if(!itemStack.isEmpty())
+                return false;
+        return true;
+    }
+
+    @Override
+    @Nonnull
     public ItemStack getStackInSlot(int index) {
         return inventory[index];
     }
 
     @Override
+    @Nonnull
     public ItemStack decrStackSize(int index, int count) {
         ItemStack is = getStackInSlot(index);
-        if (is != null) {
-            if (is.stackSize <= count) {
-                setInventorySlotContents(index, null);
+        if (!is.isEmpty()) {
+            if (is.getCount() <= count) {
+                setInventorySlotContents(index, ItemStack.EMPTY);
             } else {
                 is = is.splitStack(count);
                 markDirty();
@@ -127,18 +141,19 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
     }
 
     @Override
+    @Nonnull
     public ItemStack removeStackFromSlot(int index) {
         ItemStack is = getStackInSlot(index);
-        setInventorySlotContents(index, null);
+        setInventorySlotContents(index, ItemStack.EMPTY);
         return is;
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
+    public void setInventorySlotContents(int index, @Nonnull ItemStack stack) {
         inventory[index] = stack;
 
-        if (stack != null && stack.stackSize > getInventoryStackLimit()) {
-            stack.stackSize = getInventoryStackLimit();
+        if (!stack.isEmpty() && stack.getCount() > getInventoryStackLimit()) {
+            stack.setCount(getInventoryStackLimit());
         }
         markDirty();
     }
@@ -149,20 +164,20 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
     }
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
+    public boolean isUsableByPlayer(@Nonnull EntityPlayer player) {
         return player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64;
     }
 
     @Override
-    public void openInventory(EntityPlayer player) {
+    public void openInventory(@Nonnull EntityPlayer player) {
     }
 
     @Override
-    public void closeInventory(EntityPlayer player) {
+    public void closeInventory(@Nonnull EntityPlayer player) {
     }
 
     @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
+    public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack) {
         return (index == 0 && stack.getItem() == Overlord.overlords_seal) || (index == 1 && stack.getItem() == Items.BONE) || (index == 2 && stack.getItem() == Items.MILK_BUCKET) || (index > 3 && index < 8 && stack.getItem().isValidArmor(stack, getSlotEquipmentType(index), null) || (index == 9 && stack.getItem() == Overlord.skinsuit));
     }
 
@@ -202,13 +217,14 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
     }
 
     @Override
+    @Nonnull
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
 
         NBTTagList list = new NBTTagList();
         for (int i = 0; i < getSizeInventory(); i++) {
             ItemStack is = getStackInSlot(i);
-            if (is != null) {
+            if (!is.isEmpty()) {
                 NBTTagCompound item = new NBTTagCompound();
 
                 item.setByte("SlotSkeletonMaker", (byte) i);
@@ -230,7 +246,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
                 NBTTagCompound item = (NBTTagCompound) list.get(i);
                 int slot = item.getByte("SlotSkeletonMaker");
                 if (slot >= 0 && slot < getSizeInventory()) {
-                    setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
+                    setInventorySlotContents(slot, new ItemStack(item));
                 }
             }
         } else {
@@ -239,19 +255,20 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
     }
 
     @Override
-    public int[] getSlotsForFace(EnumFacing side) {
+    @Nonnull
+    public int[] getSlotsForFace(@Nonnull EnumFacing side) {
         if (side == EnumFacing.EAST || side == EnumFacing.WEST || side == EnumFacing.NORTH || side == EnumFacing.SOUTH || side == EnumFacing.UP) {
             return new int[]{1, 2, 4, 5, 6, 7, 9};
-        }
-        if (side == EnumFacing.DOWN) {
+        }else if (side == EnumFacing.DOWN) {
             return new int[]{3};
+        }else{
+            throw new IllegalArgumentException("Invalid side: " + side);
         }
-        return null;
     }
 
     @Override
-    public boolean canInsertItem(int index, ItemStack stack, EnumFacing direction) {
-        if (stack != null) {
+    public boolean canInsertItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing direction) {
+        if (!stack.isEmpty()) {
             if (index >= 1 && index < 3 || index >= 4 && index < 8 || index == 9) {
                 if(this.isItemValidForSlot(index, stack))
                     return true;
@@ -261,8 +278,8 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
     }
 
     @Override
-    public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
-        if (stack != null)
+    public boolean canExtractItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing direction) {
+        if (!stack.isEmpty())
             if (index == 3)
                 return true;
         return false;
@@ -274,7 +291,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+    public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing)
     {
         if (facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             if (facing == EnumFacing.DOWN)

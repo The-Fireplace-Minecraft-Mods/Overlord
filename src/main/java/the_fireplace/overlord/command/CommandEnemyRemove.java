@@ -17,7 +17,7 @@ import the_fireplace.overlord.tools.Enemies;
  */
 public class CommandEnemyRemove extends CommandBase {
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "enemyremove";
     }
 
@@ -39,25 +39,25 @@ public class CommandEnemyRemove extends CommandBase {
                                 break;
                             }
                         }
-                        player.addChatMessage(new TextComponentTranslation("overlord.enemytermination", ((EntityPlayer) sender).getDisplayNameString()));
-                        sender.addChatMessage(new TextComponentTranslation("overlord.enemyterminated", player.getDisplayNameString()));
+                        player.sendMessage(new TextComponentTranslation("overlord.enemytermination", ((EntityPlayer) sender).getDisplayNameString()));
+                        sender.sendMessage(new TextComponentTranslation("overlord.enemyterminated", player.getDisplayNameString()));
                         if(sender instanceof EntityPlayerMP)
                             if(((EntityPlayerMP) sender).getStatFile().canUnlockAchievement(Overlord.forgiver))
                                 ((EntityPlayer)sender).addStat(Overlord.forgiver);
                     } else {
-                        sender.addChatMessage(new TextComponentTranslation("overlord.notenemied", player.getDisplayNameString()));
+                        sender.sendMessage(new TextComponentTranslation("overlord.notenemied", player.getDisplayNameString()));
                     }
                 }else{
-                    sender.addChatMessage(new TextComponentTranslation("commands.generic.player.notFound"));
+                    sender.sendMessage(new TextComponentTranslation("commands.generic.player.notFound"));
                 }
             }else{
-                throw new WrongUsageException(getCommandUsage(sender));
+                throw new WrongUsageException(getUsage(sender));
             }
         }
     }
 
     @Override
-    public String getCommandUsage(ICommandSender icommandsender) {
+    public String getUsage(ICommandSender icommandsender) {
         return "/enemyremove <PlayerName>";
     }
 }

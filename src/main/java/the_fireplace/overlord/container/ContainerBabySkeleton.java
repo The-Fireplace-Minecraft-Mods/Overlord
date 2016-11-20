@@ -12,6 +12,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.entity.EntityBabySkeleton;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author The_Fireplace
  */
@@ -46,7 +48,7 @@ public class ContainerBabySkeleton extends Container {
                 @Override
                 public boolean isItemValid(ItemStack stack)
                 {
-                    return stack != null && stack.getItem().isValidArmor(stack, entityequipmentslot, null);
+                    return !stack.isEmpty() && stack.getItem().isValidArmor(stack, entityequipmentslot, entity);
                 }
                 @Override
                 @SideOnly(Side.CLIENT)
@@ -61,11 +63,12 @@ public class ContainerBabySkeleton extends Container {
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer playerIn) {
+    public boolean canInteractWith(@Nonnull EntityPlayer playerIn) {
         return entity.getOwner() != null && entity.getOwner().equals(playerIn);
     }
 
     @Override
+    @Nonnull
     public ItemStack transferStackInSlot(EntityPlayer player, int index) {
         Slot slot = getSlot(index);
         if (slot != null && slot.getHasStack()) {
@@ -74,19 +77,19 @@ public class ContainerBabySkeleton extends Container {
 
             if (index >= 36) {
                 if (!mergeItemStack(is, 0, 36, false)) {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             } else if (!mergeItemStack(is, 36, 36 + entity.equipInventory.getSizeInventory(), false)) {
-                return null;
+                return ItemStack.EMPTY;
             }
-            if (is.stackSize == 0) {
-                slot.putStack(null);
+            if (is.isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
-            slot.onPickupFromSlot(player, is);
+            slot.onTake(player, is);
             return result;
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 }

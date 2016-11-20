@@ -4,10 +4,12 @@ import net.minecraft.entity.Entity;
 import the_fireplace.overlord.entity.EntityArmyMember;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * @author The_Fireplace
  */
+@ParametersAreNonnullByDefault
 public abstract class Augment {
     public abstract void onEntityTick(EntityArmyMember entity);
 

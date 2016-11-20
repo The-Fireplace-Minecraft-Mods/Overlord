@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.item.EntityBoat;
@@ -15,6 +16,7 @@ import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.projectile.EntitySpectralArrow;
 import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
@@ -32,7 +34,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -45,6 +46,7 @@ import the_fireplace.overlord.network.packets.RequestAugmentMessage;
 import the_fireplace.overlord.registry.AugmentRegistry;
 import the_fireplace.overlord.tools.Augment;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.UUID;
@@ -81,7 +83,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
             @Override
             public boolean isItemValidForSlot(int index, ItemStack stack)
             {
-                return (index >= 4 && index < 6) || (index == 6 && AugmentRegistry.getAugment(stack) != null) || stack != null && stack.getItem().isValidArmor(stack, EntityEquipmentSlot.values()[index], null);
+                return (index >= 4 && index < 6) || (index == 6 && AugmentRegistry.getAugment(stack) != null) || !stack.isEmpty() && stack.getItem().isValidArmor(stack, EntityEquipmentSlot.values()[index], null);
             }
             @Override
             public void setInventorySlotContents(int index, ItemStack stack){
@@ -90,6 +92,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                     PacketDispatcher.sendToServer(new RequestAugmentMessage(instance));
             }
             @Override
+            @Nonnull
             public ItemStack removeStackFromSlot(int index)
             {
                 ItemStack stack = super.removeStackFromSlot(index);
@@ -98,6 +101,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                 return stack;
             }
             @Override
+            @Nonnull
             public ItemStack decrStackSize(int index, int count)
             {
                 ItemStack stack = super.decrStackSize(index, count);
@@ -143,7 +147,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
 
                 @Override
                 public void updateTask(){
-                    if(this.attacker.getHeldItemMainhand() != null && this.attacker.getHeldItemOffhand() != null && this.attacker.getHeldItemMainhand().getItem() instanceof ItemBow && this.attacker.getHeldItemOffhand().getItem() instanceof ItemArrow) {
+                    if(!this.attacker.getHeldItemMainhand().isEmpty() && !this.attacker.getHeldItemOffhand().isEmpty() && this.attacker.getHeldItemMainhand().getItem() instanceof ItemBow && this.attacker.getHeldItemOffhand().getItem() instanceof ItemArrow) {
                         ((EntitySkeletonWarrior) this.attacker).initEntityAI();
                         return;
                     }
@@ -155,7 +159,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
         if(aiArrowAttack == null){
             aiArrowAttack = new EntityAIWarriorBow(this, 0.8D, 20, 30.0F);
         }
-        if(this.getHeldItemMainhand() != null)
+        if(!this.getHeldItemMainhand().isEmpty())
             if(this.getHeldItemMainhand().getItem() instanceof ItemBow){
                 this.tasks.addTask(5, aiArrowAttack);
                 return;
@@ -176,48 +180,50 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack)
+    public boolean processInteract(EntityPlayer player, EnumHand hand)
     {
         if(this.getOwner() != null){
             if(this.getOwner().equals(player)){
                 if(!player.isSneaking()) {
-                    FMLNetworkHandler.openGui(player, Overlord.instance, hashCode(), worldObj, (int) this.posX, (int) this.posY, (int) this.posZ);
+                    FMLNetworkHandler.openGui(player, Overlord.instance, hashCode(), world, (int) this.posX, (int) this.posY, (int) this.posZ);
                     return true;
-                }else{
-                    if(!worldObj.isRemote)
-                    if(stack != null){
-                        if(stack.getItem() == Overlord.skinsuit && !this.hasSkinsuit()){
-                            applySkinsuit(stack);
-                            if(!player.isCreative())
-                                stack.stackSize--;
-                        }else if(stack.getItem() == Items.SHEARS && this.hasSkinsuit()){
-                            if(!player.isCreative()) {
-                                stack.damageItem(1, player);
-                                entityDropItem(new ItemStack(Overlord.skinsuit).setStackDisplayName(getSkinsuitName()), 0.1F);
-                            }
-                            if(ConfigValues.SKINSUITNAMETAGS && this.hasCustomName()){
-                                if(this.getCustomNameTag().equals(getSkinsuitName()))
-                                    this.setCustomNameTag("");
-                            }
-                            this.dataManager.set(HAS_SKINSUIT, Boolean.valueOf(false));
-                            this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
-                        }else if(stack.getItem() == Overlord.warrior_spawner){
-                            if(stack.getTagCompound() != null){
-                                this.readFromNBT(stack.getTagCompound());
-                            }else{
-                                NBTTagCompound compound = new NBTTagCompound();
-                                this.writeEntityToNBT(compound);
-                                stack.setTagCompound(compound);
+                }else {
+                    if (!world.isRemote){
+                        ItemStack stack = player.getHeldItem(hand);
+                        if (!stack.isEmpty()) {
+                            if (stack.getItem() == Overlord.skinsuit && !this.hasSkinsuit()) {
+                                applySkinsuit(stack);
+                                if (!player.isCreative())
+                                    stack.shrink(1);
+                            } else if (stack.getItem() == Items.SHEARS && this.hasSkinsuit()) {
+                                if (!player.isCreative()) {
+                                    stack.damageItem(1, player);
+                                    entityDropItem(new ItemStack(Overlord.skinsuit).setStackDisplayName(getSkinsuitName()), 0.1F);
+                                }
+                                if (ConfigValues.SKINSUITNAMETAGS && this.hasCustomName()) {
+                                    if (this.getCustomNameTag().equals(getSkinsuitName()))
+                                        this.setCustomNameTag("");
+                                }
+                                this.dataManager.set(HAS_SKINSUIT, Boolean.valueOf(false));
+                                this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
+                            } else if (stack.getItem() == Overlord.warrior_spawner) {
+                                if (stack.getTagCompound() != null) {
+                                    this.readFromNBT(stack.getTagCompound());
+                                } else {
+                                    NBTTagCompound compound = new NBTTagCompound();
+                                    this.writeEntityToNBT(compound);
+                                    stack.setTagCompound(compound);
+                                }
                             }
                         }
                     }
                 }
             }
         }
-        return super.processInteract(player, hand, stack);
+        return super.processInteract(player, hand);
     }
 
-    public void applySkinsuit(ItemStack stack){
+    public void applySkinsuit(@Nonnull ItemStack stack){
         this.dataManager.set(HAS_SKINSUIT, Boolean.valueOf(true));
         if(stack.hasDisplayName()) {
             this.dataManager.set(SKINSUIT_NAME, String.valueOf(stack.getDisplayName()));
@@ -249,12 +255,13 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     public Augment getAugment(){
         if(equipInventory == null)
             return null;
-        if(AugmentRegistry.getAugment(equipInventory.getStackInSlot(6)) == null && worldObj.isRemote)
+        if(AugmentRegistry.getAugment(equipInventory.getStackInSlot(6)) == null && world.isRemote)
             return clientAugment;
         return AugmentRegistry.getAugment(equipInventory.getStackInSlot(6));
     }
 
     @Override
+    @Nonnull
     public EnumCreatureAttribute getCreatureAttribute()
     {
         return EnumCreatureAttribute.UNDEAD;
@@ -264,37 +271,37 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     @Override
     public void onLivingUpdate()
     {
-        if(!this.worldObj.isRemote) {
+        if(!this.world.isRemote) {
             for(int i=0;i<this.inventory.getSizeInventory();i++){
-                if(inventory.getStackInSlot(i) != null)
+                if(!inventory.getStackInSlot(i).isEmpty())
                     if(inventory.getStackInSlot(i).getItem() == Items.MILK_BUCKET){
                         this.increaseMilkLevel(true);
-                        if(inventory.getStackInSlot(i).stackSize > 1)
-                            inventory.getStackInSlot(i).stackSize--;
+                        if(inventory.getStackInSlot(i).getCount() > 1)
+                            inventory.getStackInSlot(i).shrink(1);
                         else
-                            inventory.setInventorySlotContents(i, null);
+                            inventory.setInventorySlotContents(i, ItemStack.EMPTY);
                         inventory.addItem(bucket);
                     }
             }
             checkLevelUp();
 
-            if (this.worldObj.isDaytime()) {
+            if (this.world.isDaytime()) {
                 float f = this.getBrightness(1.0F);
                 BlockPos blockpos = this.getRidingEntity() instanceof EntityBoat ? (new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ)).up() : new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ);
 
                 if(!hasSkinsuit())
-                if (f > 0.5F && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.worldObj.canSeeSky(blockpos)) {
+                if (f > 0.5F && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.world.canSeeSky(blockpos)) {
                     boolean flag = true;
                     ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
-                    if (itemstack != null) {
+                    if (!itemstack.isEmpty()) {
                         if(ConfigValues.HELMETDAMAGE)
                             if (itemstack.isItemStackDamageable()) {
                                 itemstack.setItemDamage(itemstack.getItemDamage() + this.rand.nextInt(2));
 
                                 if (itemstack.getItemDamage() >= itemstack.getMaxDamage()) {
                                     this.renderBrokenItemStack(itemstack);
-                                    this.setItemStackToSlot(EntityEquipmentSlot.HEAD, null);
+                                    this.setItemStackToSlot(EntityEquipmentSlot.HEAD, ItemStack.EMPTY);
                                 }
                             }
 
@@ -307,17 +314,17 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                 }
             }
 
-            this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D)).stream().filter(entityitem -> !entityitem.isDead && entityitem.getEntityItem() != null && !entityitem.cannotPickup()).forEach(entityitem -> {
+            this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D)).stream().filter(entityitem -> !entityitem.isDead && entityitem.getEntityItem() != null && !entityitem.cannotPickup()).forEach(entityitem -> {
                 ItemStack stack2 = inventory.addItem(entityitem.getEntityItem());
-                if (stack2 != null) {
-                    if(stack2.stackSize != entityitem.getEntityItem().stackSize)
+                if (!stack2.isEmpty()) {
+                    if(stack2.getCount() != entityitem.getEntityItem().getCount())
                         playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
-                    entityitem.getEntityItem().stackSize = stack2.stackSize;
+                    entityitem.getEntityItem().setCount(stack2.getCount());
                     if(stack2.getItem() == Items.MILK_BUCKET){
                         for(int i=0;i<inventory.getSizeInventory();i++){
-                            if(inventory.getStackInSlot(i) != null && inventory.getStackInSlot(i).getItem() == Items.BUCKET) {
+                            if(!inventory.getStackInSlot(i).isEmpty() && inventory.getStackInSlot(i).getItem() == Items.BUCKET) {
                                 entityDropItem(inventory.getStackInSlot(i), 0.1F);
-                                inventory.setInventorySlotContents(i, null);
+                                inventory.setInventorySlotContents(i, ItemStack.EMPTY);
                             }
                         }
                     }
@@ -327,13 +334,13 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                 }
             });
 
-            for(EntityXPOrb xp:worldObj.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox().expand(8, 5, 8))){
-                if (!xp.func_189652_ae())
+            for(EntityXPOrb xp:world.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox().expand(8, 5, 8))){
+                if (!xp.hasNoGravity())
                 {
                     xp.motionY -= 0.029999999329447746D;
                 }
 
-                if (xp.worldObj.getBlockState(new BlockPos(this)).getMaterial() == Material.LAVA)
+                if (xp.world.getBlockState(new BlockPos(this)).getMaterial() == Material.LAVA)
                 {
                     xp.motionY = 0.20000000298023224D;
                     xp.motionX = (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
@@ -356,12 +363,12 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                     xp.motionZ += d3 / d4 * d5 * 0.1D;
                 }
 
-                xp.moveEntity(xp.motionX, xp.motionY, xp.motionZ);
+                xp.move(MoverType.SELF, xp.motionX, xp.motionY, xp.motionZ);
                 float f = 0.98F;
 
                 if (this.onGround)
                 {
-                    f = xp.worldObj.getBlockState(new BlockPos(MathHelper.floor_double(xp.posX), MathHelper.floor_double(xp.getEntityBoundingBox().minY) - 1, MathHelper.floor_double(xp.posZ))).getBlock().slipperiness * 0.98F;
+                    f = xp.world.getBlockState(new BlockPos(MathHelper.floor(xp.posX), MathHelper.floor(xp.getEntityBoundingBox().minY) - 1, MathHelper.floor(xp.posZ))).getBlock().slipperiness * 0.98F;
                 }
 
                 xp.motionX *= (double)f;
@@ -373,21 +380,21 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                     xp.motionY *= -0.8999999761581421D;
                 }
             }
-            for(EntityXPOrb xp:worldObj.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox())){
+            for(EntityXPOrb xp:world.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox())){
                 if(xp.delayBeforeCanPickup <= 0){
                     this.addXP(xp.getXpValue());
                     xp.setDead();
                 }
             }
             //Bow stuffs
-            if(getHeldItemMainhand() != null){
+            if(!getHeldItemMainhand().isEmpty()){
                 if(getHeldItemMainhand().getItem() instanceof ItemBow)
-                    if((getHeldItemOffhand() != null && !(getHeldItemOffhand().getItem() instanceof ItemArrow)) || getHeldItemOffhand() == null){
+                    if((!getHeldItemOffhand().isEmpty() && !(getHeldItemOffhand().getItem() instanceof ItemArrow)) || getHeldItemOffhand().isEmpty()){
                         boolean swapWeapon=true;
                         for(int i=0;i<inventory.getSizeInventory();i++){
-                            if(inventory.getStackInSlot(i) != null && inventory.getStackInSlot(i).getItem() instanceof ItemArrow){
-                                ItemStack offhand = null;
-                                if(getHeldItemOffhand() != null)
+                            if(!inventory.getStackInSlot(i).isEmpty() && inventory.getStackInSlot(i).getItem() instanceof ItemArrow){
+                                ItemStack offhand = ItemStack.EMPTY;
+                                if(!getHeldItemOffhand().isEmpty())
                                     offhand=getHeldItemOffhand().copy();
                                 ItemStack arrows = inventory.getStackInSlot(i).copy();
                                 setHeldItem(EnumHand.OFF_HAND, arrows);
@@ -398,7 +405,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                         }
                         if(swapWeapon)
                         for(int i=0;i<inventory.getSizeInventory();i++){
-                            if(inventory.getStackInSlot(i) != null && inventory.getStackInSlot(i).getItem() instanceof ItemSword){
+                            if(!inventory.getStackInSlot(i).isEmpty() && inventory.getStackInSlot(i).getItem() instanceof ItemSword){
                                 ItemStack clone = inventory.getStackInSlot(i).copy();
                                 inventory.setInventorySlotContents(i, getHeldItemMainhand());
                                 setHeldItem(EnumHand.MAIN_HAND, clone);
@@ -408,7 +415,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                     }
             }
             //Equipment Achievements
-            if(getHeldItemMainhand() != null){
+            if(!getHeldItemMainhand().isEmpty()){
                 if(getOwner() != null){
                     if(getOwner() instanceof EntityPlayerMP)
                         if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.armedSkeleton)) {
@@ -424,9 +431,9 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                         }
                 }
             }
-            if(getItemStackFromSlot(EntityEquipmentSlot.HEAD) != null && getItemStackFromSlot(EntityEquipmentSlot.CHEST) != null && getItemStackFromSlot(EntityEquipmentSlot.LEGS) != null && getItemStackFromSlot(EntityEquipmentSlot.FEET) != null){
+            if(!getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty() && !getItemStackFromSlot(EntityEquipmentSlot.CHEST).isEmpty() && !getItemStackFromSlot(EntityEquipmentSlot.LEGS).isEmpty() && !getItemStackFromSlot(EntityEquipmentSlot.FEET).isEmpty()){
                 if(getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == Items.CHAINMAIL_HELMET && getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem() == Items.CHAINMAIL_CHESTPLATE && getItemStackFromSlot(EntityEquipmentSlot.LEGS).getItem() == Items.CHAINMAIL_LEGGINGS && getItemStackFromSlot(EntityEquipmentSlot.FEET).getItem() == Items.CHAINMAIL_BOOTS){
-                    if(getHeldItemOffhand() != null)
+                    if(!getHeldItemOffhand().isEmpty())
                         if(getHeldItemOffhand().getTagCompound() != null && getHeldItemOffhand().getItem() instanceof ItemShield)
                             if(getHeldItemOffhand().getTagCompound().equals(Overlord.crusaderShield().getTagCompound()))
                     if(getOwner() != null){
@@ -494,7 +501,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     }
 
     @Override
-    public void onDeath(DamageSource cause)
+    public void onDeath(@Nonnull DamageSource cause)
     {
         super.onDeath(cause);
 
@@ -504,19 +511,19 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
             this.entityDropItem(new ItemStack(Items.SKULL), 0.0F);
         }
 
-        if(!this.worldObj.isRemote){
+        if(!this.world.isRemote){
             for(int i=0;i<inventory.getSizeInventory();i++){
-                if(inventory.getStackInSlot(i) != null){
-                    EntityItem entityitem = new EntityItem(worldObj, posX, posY, posZ, inventory.getStackInSlot(i));
-                    entityitem.setPickupDelay(40);
-                    worldObj.spawnEntityInWorld(entityitem);
+                if(!inventory.getStackInSlot(i).isEmpty()){
+                    EntityItem entityitem = new EntityItem(world, posX, posY, posZ, inventory.getStackInSlot(i));
+                    entityitem.setDefaultPickupDelay();
+                    world.spawnEntity(entityitem);
                 }
             }
             for(int i=0;i<equipInventory.getSizeInventory();i++){
-                if(equipInventory.getStackInSlot(i) != null){
-                    EntityItem entityitem = new EntityItem(worldObj, posX, posY, posZ, equipInventory.getStackInSlot(i));
-                    entityitem.setPickupDelay(40);
-                    worldObj.spawnEntityInWorld(entityitem);
+                if(!equipInventory.getStackInSlot(i).isEmpty()){
+                    EntityItem entityitem = new EntityItem(world, posX, posY, posZ, equipInventory.getStackInSlot(i));
+                    entityitem.setDefaultPickupDelay();
+                    world.spawnEntity(entityitem);
                 }
             }
         }
@@ -566,7 +573,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                 NBTTagCompound item = (NBTTagCompound) mainInv.get(i);
                 int slot = item.getByte("SlotSkeletonInventory");
                 if (slot >= 0 && slot < inventory.getSizeInventory()) {
-                    inventory.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
+                    inventory.setInventorySlotContents(slot, new ItemStack(item));
                 }
             }
         } else {
@@ -578,7 +585,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                 NBTTagCompound item = (NBTTagCompound) armorInv.get(i);
                 int slot = item.getByte("SlotSkeletonEquipment");
                 if (slot >= 0 && slot < equipInventory.getSizeInventory()) {
-                    equipInventory.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
+                    equipInventory.setInventorySlotContents(slot, new ItemStack(item));
                 }
             }
         } else {
@@ -600,7 +607,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
         NBTTagList mainInv = new NBTTagList();
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack is = inventory.getStackInSlot(i);
-            if (is != null) {
+            if (!is.isEmpty()) {
                 NBTTagCompound item = new NBTTagCompound();
 
                 item.setByte("SlotSkeletonInventory", (byte) i);
@@ -614,7 +621,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
         NBTTagList armorInv = new NBTTagList();
         for (int i = 0; i < equipInventory.getSizeInventory(); i++) {
             ItemStack is = equipInventory.getStackInSlot(i);
-            if (is != null) {
+            if (!is.isEmpty()) {
                 NBTTagCompound item = new NBTTagCompound();
 
                 item.setByte("SlotSkeletonEquipment", (byte) i);
@@ -638,69 +645,66 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
         return -0.35D;
     }
 
-    public void attackEntityWithRangedAttack(EntityLivingBase target, float p_82196_2_)
+    public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor)
     {
         ItemStack itemstack = this.getHeldItemOffhand();
-        if(itemstack == null || !(itemstack.getItem() instanceof ItemArrow))
+        if(itemstack.isEmpty() || !(itemstack.getItem() instanceof ItemArrow))
             return;
 
-        EntityTippedArrow entitytippedarrow = new EntityTippedArrow(this.worldObj, this);
+        EntityArrow entityarrow = getArrow(distanceFactor);
         double d0 = target.posX - this.posX;
-        double d1 = target.getEntityBoundingBox().minY + (double)(target.height / 3.0F) - entitytippedarrow.posY;
+        double d1 = target.getEntityBoundingBox().minY + (double)(target.height / 3.0F) - entityarrow.posY;
         double d2 = target.posZ - this.posZ;
-        double d3 = (double) MathHelper.sqrt_double(d0 * d0 + d2 * d2);
-        entitytippedarrow.setThrowableHeading(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, (float)(14 - this.worldObj.getDifficulty().getDifficultyId() * 4));
-        int i = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.POWER, this);
-        int j = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.PUNCH, this);
-        DifficultyInstance difficultyinstance = this.worldObj.getDifficultyForLocation(new BlockPos(this));
-        entitytippedarrow.setDamage((double)(p_82196_2_ * 2.0F) + this.rand.nextGaussian() * 0.25D + (double)((float)this.worldObj.getDifficulty().getDifficultyId() * 0.11F));
-
-        if (i > 0)
-        {
-            entitytippedarrow.setDamage(entitytippedarrow.getDamage() + (double)i * 0.5D + 0.5D);
-        }
-
-        if (j > 0)
-        {
-            entitytippedarrow.setKnockbackStrength(j);
-        }
-
-        boolean flag = this.isBurning() && difficultyinstance.func_190083_c() && this.rand.nextBoolean();
-        flag = flag || EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.FLAME, this) > 0;
-
-        if (flag)
-        {
-            entitytippedarrow.setFire(100);
-        }
-
-        if (itemstack.getItem() == Items.TIPPED_ARROW)
-        {
-            entitytippedarrow.setPotionEffect(itemstack);
-        }
+        double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
+        entityarrow.setThrowableHeading(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, (float)(14 - this.world.getDifficulty().getDifficultyId() * 4));
 
         if(EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.INFINITY, this) <= 0) {
-            if (itemstack.stackSize > 1)
-                itemstack.stackSize--;
+            if (itemstack.getCount() > 1)
+                itemstack.shrink(1);
             else
-                setHeldItem(EnumHand.OFF_HAND, null);
-            entitytippedarrow.pickupStatus = EntityArrow.PickupStatus.ALLOWED;
+                setHeldItem(EnumHand.OFF_HAND, ItemStack.EMPTY);
+            entityarrow.pickupStatus = EntityArrow.PickupStatus.ALLOWED;
         }
 
-        if(getHeldItemMainhand() != null)
+        if(!getHeldItemMainhand().isEmpty())
             getHeldItemMainhand().damageItem(1, this);
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
-        this.worldObj.spawnEntityInWorld(entitytippedarrow);
+        this.world.spawnEntity(entityarrow);
+    }
+
+    protected EntityArrow getArrow(float distanceFactor)
+    {
+        ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
+
+        if (itemstack.getItem() == Items.SPECTRAL_ARROW)
+        {
+            EntitySpectralArrow entityspectralarrow = new EntitySpectralArrow(this.world, this);
+            entityspectralarrow.setEnchantmentEffectsFromEntity(this, distanceFactor);
+            return entityspectralarrow;
+        }
+        else
+        {
+            EntityTippedArrow entityarrow = new EntityTippedArrow(this.world, this);
+            entityarrow.setEnchantmentEffectsFromEntity(this, distanceFactor);
+
+            if (itemstack.getItem() == Items.TIPPED_ARROW)
+            {
+                entityarrow.setPotionEffect(itemstack);
+            }
+
+            return entityarrow;
+        }
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn)
     {
-        return slotIn == EntityEquipmentSlot.MAINHAND ? equipInventory.getStackInSlot(4) : (slotIn == EntityEquipmentSlot.OFFHAND ? equipInventory.getStackInSlot(5) : (slotIn.getSlotType() == EntityEquipmentSlot.Type.ARMOR ? this.equipInventory.getStackInSlot(slotIn.getIndex()) : null));
+        return slotIn == EntityEquipmentSlot.MAINHAND ? equipInventory.getStackInSlot(4) : (slotIn == EntityEquipmentSlot.OFFHAND ? equipInventory.getStackInSlot(5) : (slotIn.getSlotType() == EntityEquipmentSlot.Type.ARMOR ? this.equipInventory.getStackInSlot(slotIn.getIndex()) : ItemStack.EMPTY));
     }
 
     @Override
-    public void setItemStackToSlot(EntityEquipmentSlot slotIn, @Nullable ItemStack stack)
+    public void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack)
     {
         if (slotIn == EntityEquipmentSlot.MAINHAND)
         {
@@ -721,30 +725,34 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     }
 
     @Override
+    @Nonnull
     public Iterable<ItemStack> getHeldEquipment()
     {
         return Lists.newArrayList(this.getHeldItemMainhand(), this.getHeldItemOffhand());
     }
 
     @Override
+    @Nonnull
     public Iterable<ItemStack> getArmorInventoryList()
     {
         return Arrays.asList(equipInventory.getStackInSlot(0), equipInventory.getStackInSlot(1), equipInventory.getStackInSlot(2), equipInventory.getStackInSlot(3));
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public ItemStack getHeldItemMainhand()
     {
         if(equipInventory == null)
-            return null;
+            return ItemStack.EMPTY;
         return equipInventory.getStackInSlot(4);
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public ItemStack getHeldItemOffhand()
     {
+        if(equipInventory == null)
+            return ItemStack.EMPTY;
         return equipInventory.getStackInSlot(5);
     }
 
@@ -754,13 +762,13 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     }
 
     @SideOnly(Side.CLIENT)
-    public void setAugment(String augment){
+    public void setAugment(@Nullable String augment){
         clientAugment = AugmentRegistry.getAugment(augment);
         cachedClientAugment = true;
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public ItemStack getHeldItem(EnumHand hand)
     {
         if (hand == EnumHand.MAIN_HAND)
@@ -778,7 +786,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     }
 
     @Override
-    public void setHeldItem(EnumHand hand, @Nullable ItemStack stack)
+    public void setHeldItem(EnumHand hand, @Nonnull ItemStack stack)
     {
         if (hand == EnumHand.MAIN_HAND)
         {
@@ -827,7 +835,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     public float getBlockPathWeight(BlockPos pos)
     {
         if(!this.hasSkinsuit())
-            return 0.5F - this.worldObj.getLightBrightness(pos);
+            return 0.5F - this.world.getLightBrightness(pos);
         else
             return super.getBlockPathWeight(pos);
     }

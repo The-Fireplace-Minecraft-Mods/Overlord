@@ -38,8 +38,8 @@ public class SetAugmentMessage implements IMessage {
     public static class Handler extends AbstractClientMessageHandler<SetAugmentMessage> {
         @Override
         public IMessage handleClientMessage(EntityPlayer player, SetAugmentMessage message, MessageContext ctx) {
-            if(player.worldObj.getEntityByID(message.skeleton) != null && player.worldObj.getEntityByID(message.skeleton) instanceof EntitySkeletonWarrior)
-                ((EntitySkeletonWarrior)player.worldObj.getEntityByID(message.skeleton)).setAugment(message.augment);
+            if(player.world.getEntityByID(message.skeleton) != null && player.world.getEntityByID(message.skeleton) instanceof EntitySkeletonWarrior)
+                ((EntitySkeletonWarrior)player.world.getEntityByID(message.skeleton)).setAugment(message.augment);
             return null;
         }
     }

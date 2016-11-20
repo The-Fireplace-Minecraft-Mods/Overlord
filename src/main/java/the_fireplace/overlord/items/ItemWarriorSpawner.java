@@ -17,15 +17,19 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author The_Fireplace
  */
 public class ItemWarriorSpawner extends Item {
+    //TODO: Add a tooltip explaining how to use
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    @Nonnull
+    public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
+        ItemStack stack = playerIn.getHeldItem(hand);
         if (worldIn.isRemote)
         {
             return EnumActionResult.SUCCESS;
@@ -52,24 +56,21 @@ public class ItemWarriorSpawner extends Item {
             entity.rotationYawHead = entity.rotationYaw;
             entity.renderYawOffset = entity.rotationYaw;
             entity.onInitialSpawn(worldIn.getDifficultyForLocation(new BlockPos(entity)), null);
-            worldIn.spawnEntityInWorld(entity);
+            worldIn.spawnEntity(entity);
             entity.playLivingSound();
 
-            if (entity != null)
+            if (stack.hasDisplayName())
             {
-                if (stack.hasDisplayName())
-                {
-                    entity.setCustomNameTag(stack.getDisplayName());
-                }
+                entity.setCustomNameTag(stack.getDisplayName());
+            }
 
-                applyItemEntityDataToEntity(worldIn, playerIn, stack, entity);
+            applyItemEntityDataToEntity(worldIn, playerIn, stack, entity);
 
-                entity.setLocationAndAngles(pos.getX()+0.5D, pos.getY() + offsetY, pos.getZ()+0.5D, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
+            entity.setLocationAndAngles(pos.getX()+0.5D, pos.getY() + offsetY, pos.getZ()+0.5D, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
 
-                if (!playerIn.capabilities.isCreativeMode)
-                {
-                    --stack.stackSize;
-                }
+            if (!playerIn.capabilities.isCreativeMode)
+            {
+                stack.shrink(1);
             }
 
             return EnumActionResult.SUCCESS;

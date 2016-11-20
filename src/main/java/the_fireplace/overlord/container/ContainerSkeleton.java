@@ -14,6 +14,8 @@ import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.RequestAugmentMessage;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author The_Fireplace
  */
@@ -87,11 +89,12 @@ public class ContainerSkeleton extends Container {
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer playerIn) {
+    public boolean canInteractWith(@Nonnull EntityPlayer playerIn) {
         return entity.getOwner() != null && entity.getOwner().equals(playerIn);
     }
 
     @Override
+    @Nonnull
     public ItemStack transferStackInSlot(EntityPlayer player, int i) {
         Slot slot = getSlot(i);
         if (slot != null && slot.getHasStack()) {
@@ -100,25 +103,26 @@ public class ContainerSkeleton extends Container {
 
             if (i >= 36) {
                 if (!mergeItemStack(is, 0, 36, false)) {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             } else if (!mergeItemStack(is, 36, 36 + entity.inventory.getSizeInventory() + entity.equipInventory.getSizeInventory(), false)) {
-                return null;
+                return ItemStack.EMPTY;
             }
-            if (is.stackSize == 0) {
-                slot.putStack(null);
+            if (is.isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
-            slot.onPickupFromSlot(player, is);
+            slot.onTake(player, is);
             return result;
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 
+    @Override
     public void onContainerClosed(EntityPlayer player){
         super.onContainerClosed(player);
-        if(entity.worldObj.isRemote)
+        if(entity.world.isRemote)
             PacketDispatcher.sendToServer(new RequestAugmentMessage(entity));
     }
 }

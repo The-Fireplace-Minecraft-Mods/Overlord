@@ -145,8 +145,8 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
     }
 
     @SuppressWarnings("unchecked")
-    /**
-     * Register targeting tasks here
+    /*
+      Register targeting tasks here
      */
     public void addTargetTasks(){
         switch(dataManager.get(ATTACK_MODE)) {
@@ -194,10 +194,10 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
     }
 
     @Override
-    public void onDeath(DamageSource cause)
+    public void onDeath(@Nonnull DamageSource cause)
     {
         super.onDeath(cause);
-        if (!this.worldObj.isRemote && this.worldObj.getGameRules().getBoolean("showDeathMessages") && this.getOwner() instanceof EntityPlayerMP)
+        if (!this.world.isRemote && this.world.getGameRules().getBoolean("showDeathMessages") && this.getOwner() instanceof EntityPlayerMP)
         {
             String name = "";
             if(hasCustomName()) {
@@ -205,7 +205,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
                 name += " (" + proxy.translateToLocal("entity." + EntityList.getEntityString(this) + ".name") + ')';
             }else
                 name += proxy.translateToLocal("entity." + EntityList.getEntityString(this) + ".name");
-            this.getOwner().addChatMessage(new TextComponentTranslation("overlord.armydeath", name, cause.damageType));
+            this.getOwner().sendMessage(new TextComponentTranslation("overlord.armydeath", name, cause.damageType));
         }
     }
 
@@ -351,7 +351,6 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
         return dataManager.get(MOVEMENT_MODE);
     }
 
-    @Nonnull
     @Override
     public UUID getOwnerId() {
         return this.dataManager.get(OWNER_UNIQUE_ID);
@@ -367,7 +366,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
     public EntityLivingBase getOwner() {
         try
         {
-            return this.worldObj.getPlayerEntityByUUID(getOwnerId());
+            return this.world.getPlayerEntityByUUID(getOwnerId());
         }
         catch (IllegalArgumentException var2)
         {
@@ -431,33 +430,37 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
     }
 
     @Override
+    @Nonnull
     public SoundCategory getSoundCategory()
     {
         return SoundCategory.NEUTRAL;
     }
 
     @Override
+    @Nonnull
     protected SoundEvent getSwimSound()
     {
         return SoundEvents.ENTITY_HOSTILE_SWIM;
     }
 
     @Override
+    @Nonnull
     protected SoundEvent getSplashSound()
     {
         return SoundEvents.ENTITY_HOSTILE_SPLASH;
     }
 
     @Override
+    @Nonnull
     protected SoundEvent getFallSound(int heightIn)
     {
         return heightIn > 4 ? SoundEvents.ENTITY_HOSTILE_BIG_FALL : SoundEvents.ENTITY_HOSTILE_SMALL_FALL;
     }
 
     @Override
-    public boolean attackEntityAsMob(Entity entityIn){
-        if(getHeldItemMainhand() != null && getHeldItemMainhand().stackSize <= 0)
-            setHeldItem(EnumHand.MAIN_HAND, null);
+    public boolean attackEntityAsMob(@Nonnull Entity entityIn){
+        if(getHeldItemMainhand().isEmpty())
+            setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
         float f = (float)this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
         int i = 0;
 
@@ -489,30 +492,30 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
             {
                 EntityPlayer entityplayer = (EntityPlayer)entityIn;
                 ItemStack itemstack = this.getHeldItemMainhand();
-                ItemStack itemstack1 = entityplayer.isHandActive() ? entityplayer.getActiveItemStack() : null;
+                ItemStack itemstack1 = entityplayer.isHandActive() ? entityplayer.getActiveItemStack() : ItemStack.EMPTY;
 
-                if (itemstack != null && itemstack1 != null && itemstack.getItem() instanceof ItemAxe && itemstack1.getItem() == Items.SHIELD)
+                if (!itemstack.isEmpty() && !itemstack1.isEmpty() && itemstack.getItem() instanceof ItemAxe && itemstack1.getItem() == Items.SHIELD)
                 {
                     float f1 = 0.25F + (float)EnchantmentHelper.getEfficiencyModifier(this) * 0.05F;
 
                     if (this.rand.nextFloat() < f1)
                     {
                         entityplayer.getCooldownTracker().setCooldown(Items.SHIELD, 100);
-                        this.worldObj.setEntityState(entityplayer, (byte)30);
+                        this.world.setEntityState(entityplayer, (byte)30);
                     }
                 }
             }
 
             this.applyEnchantments(this, entityIn);
 
-            if(getHeldItemMainhand() != null && entityIn instanceof EntityLivingBase)
+            if(!getHeldItemMainhand().isEmpty() && entityIn instanceof EntityLivingBase)
                 getHeldItemMainhand().getItem().hitEntity(getHeldItemMainhand(), (EntityLivingBase)entityIn, this);
 
             if(this.getAugment() != null)
                 this.getAugment().onStrike(this, entityIn);
         }
-        if(getHeldItemMainhand() != null && getHeldItemMainhand().stackSize <= 0)
-            setHeldItem(EnumHand.MAIN_HAND, null);
+        if(getHeldItemMainhand().isEmpty())
+            setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
 
         return flag;
     }

@@ -33,11 +33,11 @@ public class AttackModeMessage implements IMessage {
     public static class Handler extends AbstractServerMessageHandler<AttackModeMessage> {
         @Override
         public IMessage handleServerMessage(EntityPlayer player, AttackModeMessage message, MessageContext ctx) {
-            if(player.worldObj.getEntityByID(message.warrior) != null){
-                if(player.worldObj.getEntityByID(message.warrior) instanceof EntityArmyMember){
-                    ((EntityArmyMember) player.worldObj.getEntityByID(message.warrior)).cycleAttackMode();
+            if(player.world.getEntityByID(message.warrior) != null){
+                if(player.world.getEntityByID(message.warrior) instanceof EntityArmyMember){
+                    ((EntityArmyMember) player.world.getEntityByID(message.warrior)).cycleAttackMode();
                 }else{
-                    System.out.println("Error: Entity is not an Army Member. It is "+player.worldObj.getEntityByID(message.warrior).toString());
+                    System.out.println("Error: Entity is not an Army Member. It is "+player.world.getEntityByID(message.warrior).toString());
                 }
             }else{
                 System.out.println("Error 404: Army Member not found: "+message.warrior);

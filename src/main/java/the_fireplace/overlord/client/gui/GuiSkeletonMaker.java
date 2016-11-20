@@ -76,7 +76,7 @@ public class GuiSkeletonMaker extends GuiContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
         this.drawCenteredString(fontRendererObj, getWarning(), xSize/2, -10, Color.PINK.getRGB());
-        if(te.getStackInSlot(0) == null){
+        if(te.getStackInSlot(0).isEmpty()){
             GlStateManager.enableBlend();
             GlStateManager.color(1.0F, 1.0F, 1.0F, 0.25F);
             Minecraft.getMinecraft().getTextureManager().bindTexture(overlords_seal_texture);
@@ -84,7 +84,7 @@ public class GuiSkeletonMaker extends GuiContainer {
             GlStateManager.resetColor();
             GlStateManager.disableBlend();
         }
-        if(te.getStackInSlot(4) == null){
+        if(te.getStackInSlot(4).isEmpty()){
             GlStateManager.enableBlend();
             GlStateManager.color(1.0F, 1.0F, 1.0F, 0.25F);
             Minecraft.getMinecraft().getTextureManager().bindTexture(milk_texture);
@@ -92,7 +92,7 @@ public class GuiSkeletonMaker extends GuiContainer {
             GlStateManager.resetColor();
             GlStateManager.disableBlend();
         }
-        if(te.getStackInSlot(12) == null){
+        if(te.getStackInSlot(12).isEmpty()){
             GlStateManager.enableBlend();
             GlStateManager.color(1.0F, 1.0F, 1.0F, 0.25F);
             Minecraft.getMinecraft().getTextureManager().bindTexture(skinsuit_texture);
@@ -121,19 +121,19 @@ public class GuiSkeletonMaker extends GuiContainer {
     }
 
     private boolean isButtonEnabled() {
-        if (te.getStackInSlot(1) == null && te.getStackInSlot(2) == null)
+        if (te.getStackInSlot(1).isEmpty() && te.getStackInSlot(2).isEmpty())
             return false;
         int s1 = 0;
         int s2 = 0;
-        if(te.getStackInSlot(1) != null)
-            s1 = te.getStackInSlot(1).stackSize;
-        if(te.getStackInSlot(2) != null)
-            s2 = te.getStackInSlot(2).stackSize;
+        if(!te.getStackInSlot(1).isEmpty())
+            s1 = te.getStackInSlot(1).getCount();
+        if(!te.getStackInSlot(2).isEmpty())
+            s2 = te.getStackInSlot(2).getCount();
         return te.getMilk() >= 2 && s1+s2 >= ConfigValues.SERVER_BONEREQ_WARRIOR;
     }
 
     private String getWarning(){
-        if(te.getStackInSlot(0) == null){
+        if(te.getStackInSlot(0).isEmpty()){
             return I18n.format("skeleton_maker.warning.unclaimed");
         }else{
             if(te.getStackInSlot(0).getTagCompound() == null){

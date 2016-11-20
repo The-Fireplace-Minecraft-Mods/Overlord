@@ -94,7 +94,7 @@ public class GuiRing extends GuiScreen {
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
         if (keyCode == 1 || this.mc.gameSettings.keyBindInventory.isActiveAndMatches(keyCode)) {
-            this.mc.thePlayer.closeScreen();
+            this.mc.player.closeScreen();
         }
         super.keyTyped(typedChar, keyCode);
     }

@@ -11,6 +11,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author The_Fireplace
  */
@@ -83,11 +85,12 @@ public class ContainerSkeletonMaker extends Container {
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer playerIn) {
-        return te.isUseableByPlayer(playerIn);
+    public boolean canInteractWith(@Nonnull EntityPlayer playerIn) {
+        return te.isUsableByPlayer(playerIn);
     }
 
     @Override
+    @Nonnull
     public ItemStack transferStackInSlot(EntityPlayer player, int i) {
         Slot slot = getSlot(i);
         if (slot != null && slot.getHasStack()) {
@@ -96,19 +99,19 @@ public class ContainerSkeletonMaker extends Container {
 
             if (i >= 36) {
                 if (!mergeItemStack(is, 0, 36, false)) {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             } else if (!mergeItemStack(is, 36, 36 + te.getSizeInventory(), false)) {
-                return null;
+                return ItemStack.EMPTY;
             }
-            if (is.stackSize == 0) {
-                slot.putStack(null);
+            if (is.isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
-            slot.onPickupFromSlot(player, is);
+            slot.onTake(player, is);
             return result;
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 }

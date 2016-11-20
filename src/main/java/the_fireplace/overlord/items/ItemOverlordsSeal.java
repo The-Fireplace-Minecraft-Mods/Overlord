@@ -13,6 +13,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.Overlord;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 import static the_fireplace.overlord.Overlord.proxy;
@@ -23,8 +24,10 @@ import static the_fireplace.overlord.Overlord.proxy;
 public class ItemOverlordsSeal extends Item {
     @SuppressWarnings("unchecked")
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer playerIn, EnumHand hand)
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand hand)
     {
+        ItemStack stack = playerIn.getHeldItem(hand);
         if(stack.getTagCompound() == null)
             stack.setTagCompound(new NBTTagCompound());
         if (!stack.getTagCompound().hasKey("Owner")) {

@@ -73,7 +73,7 @@ public class GuiBabySkeletonMaker extends GuiContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
         this.drawCenteredString(fontRendererObj, getWarning(), xSize/2, -10, Color.PINK.getRGB());
-        if(te.getStackInSlot(0) == null){
+        if(te.getStackInSlot(0).isEmpty()){
             GlStateManager.enableBlend();
             GlStateManager.color(1.0F, 1.0F, 1.0F, 0.25F);
             Minecraft.getMinecraft().getTextureManager().bindTexture(overlords_seal_texture);
@@ -81,7 +81,7 @@ public class GuiBabySkeletonMaker extends GuiContainer {
             GlStateManager.resetColor();
             GlStateManager.disableBlend();
         }
-        if(te.getStackInSlot(2) == null){
+        if(te.getStackInSlot(2).isEmpty()){
             GlStateManager.enableBlend();
             GlStateManager.color(1.0F, 1.0F, 1.0F, 0.25F);
             Minecraft.getMinecraft().getTextureManager().bindTexture(milk_texture);
@@ -89,7 +89,7 @@ public class GuiBabySkeletonMaker extends GuiContainer {
             GlStateManager.resetColor();
             GlStateManager.disableBlend();
         }
-        if(te.getStackInSlot(9) == null){
+        if(te.getStackInSlot(9).isEmpty()){
             GlStateManager.enableBlend();
             GlStateManager.color(1.0F, 1.0F, 1.0F, 0.25F);
             Minecraft.getMinecraft().getTextureManager().bindTexture(skinsuit_texture);
@@ -118,13 +118,13 @@ public class GuiBabySkeletonMaker extends GuiContainer {
     }
 
     private boolean isButtonEnabled() {
-        if (te.getStackInSlot(1) == null || te.getStackInSlot(2) == null)
+        if (te.getStackInSlot(1).isEmpty() || te.getStackInSlot(2).isEmpty())
             return false;
-        return te.getStackInSlot(2).getItem() == Items.MILK_BUCKET && te.getStackInSlot(1).stackSize >= ConfigValues.SERVER_BONEREQ_BABY;
+        return te.getStackInSlot(2).getItem() == Items.MILK_BUCKET && te.getStackInSlot(1).getCount() >= ConfigValues.SERVER_BONEREQ_BABY;
     }
 
     private String getWarning(){
-        if(te.getStackInSlot(0) == null){
+        if(te.getStackInSlot(0).isEmpty()){
             return I18n.format("skeleton_maker.warning.unclaimed");
         }else{
             if(te.getStackInSlot(0).getTagCompound() == null){

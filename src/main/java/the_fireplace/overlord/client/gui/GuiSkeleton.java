@@ -171,7 +171,7 @@ public class GuiSkeleton extends GuiContainer {
 
     @Override
     public void onGuiClosed(){
-        if(entity.worldObj.isRemote)
+        if(entity.world.isRemote)
             PacketDispatcher.sendToServer(new RequestAugmentMessage(entity));
         super.onGuiClosed();
     }

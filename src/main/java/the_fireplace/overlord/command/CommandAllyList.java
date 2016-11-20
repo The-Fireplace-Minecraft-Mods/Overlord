@@ -15,7 +15,7 @@ import the_fireplace.overlord.tools.StringPair;
  */
 public class CommandAllyList extends CommandBase {
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "allylist";
     }
 
@@ -28,18 +28,18 @@ public class CommandAllyList extends CommandBase {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (sender instanceof EntityPlayer) {
             if(!Alliances.getInstance().getAllies(((EntityPlayer) sender).getUniqueID()).isEmpty()) {
-                sender.addChatMessage(new TextComponentTranslation("overlord.allylist"));
+                sender.sendMessage(new TextComponentTranslation("overlord.allylist"));
                 for(StringPair pait:Alliances.getInstance().getAllies(((EntityPlayer) sender).getUniqueID())){
-                    sender.addChatMessage(new TextComponentString(pait.getPlayerName()));
+                    sender.sendMessage(new TextComponentString(pait.getPlayerName()));
                 }
             }else{
-                sender.addChatMessage(new TextComponentTranslation("overlord.nofriends"));
+                sender.sendMessage(new TextComponentTranslation("overlord.nofriends"));
             }
         }
     }
 
     @Override
-    public String getCommandUsage(ICommandSender icommandsender) {
+    public String getUsage(ICommandSender icommandsender) {
         return "/allylist";
     }
 }

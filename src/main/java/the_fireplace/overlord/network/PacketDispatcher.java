@@ -55,7 +55,7 @@ public class PacketDispatcher {
     }
 
     public static final void sendToAllAround(IMessage message, EntityPlayer player, double range) {
-        PacketDispatcher.dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(player.worldObj.provider.getDimension(), player.posX, player.posY, player.posZ, range));
+        PacketDispatcher.dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(player.world.provider.getDimension(), player.posX, player.posY, player.posZ, range));
     }
 
     public static final void sendToDimension(IMessage message, int dimensionId) {

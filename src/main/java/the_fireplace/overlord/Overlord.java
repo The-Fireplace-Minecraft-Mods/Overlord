@@ -18,6 +18,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.stats.Achievement;
 import net.minecraft.stats.AchievementList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
@@ -80,8 +81,8 @@ public class Overlord {
 
     public static final CreativeTabs tabOverlord = new CreativeTabs(MODID) {
         @Override
-        public Item getTabIconItem() {
-            return Item.getItemFromBlock(Overlord.skeleton_maker);
+        public ItemStack getTabIconItem() {
+            return new ItemStack(Overlord.skeleton_maker);
         }
     };
 
@@ -144,8 +145,8 @@ public class Overlord {
         GameRegistry.registerTileEntity(TileEntitySkeletonMaker.class, "skeleton_maker");
         GameRegistry.registerTileEntity(TileEntityBabySkeletonMaker.class, "baby_skeleton_maker");
         int eid=-1;
-        EntityRegistry.registerModEntity(EntitySkeletonWarrior.class, "skeleton_warrior", ++eid, instance, 128, 2, false);
-        EntityRegistry.registerModEntity(EntityBabySkeleton.class, "skeleton_baby", ++eid, instance, 64, 2, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(MODID+":skeleton_warrior"), EntitySkeletonWarrior.class, "skeleton_warrior", ++eid, instance, 128, 2, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(MODID+":skeleton_baby"), EntityBabySkeleton.class, "skeleton_baby", ++eid, instance, 64, 2, false);
         proxy.registerClient();
         MinecraftForge.EVENT_BUS.register(new CommonEvents());
         DataSerializers.registerSerializer(CustomDataSerializers.UNIQUE_ID);
@@ -217,7 +218,7 @@ public class Overlord {
     public static ItemStack crusaderShield(){
         ItemStack shieldStack = new ItemStack(Items.SHIELD);
         NBTTagCompound tagCompound = new NBTTagCompound();
-        NBTTagCompound bet = shieldStack.getSubCompound("BlockEntityTag", true);
+        NBTTagCompound bet = shieldStack.getSubCompound("BlockEntityTag");
         bet.setInteger("Base", 15);
         NBTTagList nbttaglist = new NBTTagList();
         NBTTagCompound nbttagcompound = new NBTTagCompound();
