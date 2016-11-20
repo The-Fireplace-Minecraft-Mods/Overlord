@@ -21,7 +21,7 @@ import java.io.File;
 public class ClientProxy extends CommonProxy {
     @SuppressWarnings("ConfusingArgumentToVarargsMethod")
     @Override
-    public String translateToLocal(String u, String... args){
+    public String translateToLocal(String u, Object... args){
         return I18n.format(u, args);
     }
 
