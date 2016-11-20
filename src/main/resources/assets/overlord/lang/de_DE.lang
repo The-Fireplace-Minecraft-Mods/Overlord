@@ -15,6 +15,8 @@ skeleton_maker.warning.notmine=Warung: Dieses Skelett wird %s gehören.
 skeleton_maker.warning.suffocation=Warung: Dein Skelett-Schöpfer hat Blöcke über sich. Die erzeugten Skelette könnten ersticken.
 entity.overlord.skeleton_warrior.name=Skelettkrieger
 entity.overlord.skeleton_baby.name=Babyskelett
+entity.skeleton_warrior.name=Skelettkrieger
+entity.skeleton_baby.name=Babyskelett
 
 skeleton.mode.aggressive=Aggressiv
 skeleton.mode.defensive=Defensiv

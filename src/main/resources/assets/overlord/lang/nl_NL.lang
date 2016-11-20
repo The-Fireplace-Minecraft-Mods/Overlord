@@ -15,6 +15,8 @@ skeleton_maker.warning.notmine=Waarschuwing: Dit skelet zal aan %s toebehoren.
 skeleton_maker.warning.suffocation=Waarschuwing: Je Skelet Maker heeft blokken boven zich. Het uitgekomen skelet kan stikken.
 entity.overlord.skeleton_warrior.name=Skelet Krijger
 entity.overlord.skeleton_baby.name=Baby Skelet
+entity.skeleton_warrior.name=Skelet Krijger
+entity.skeleton_baby.name=Baby Skelet
 
 skeleton.mode.aggressive=Agressief
 skeleton.mode.defensive=Defensief
