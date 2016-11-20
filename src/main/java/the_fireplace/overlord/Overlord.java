@@ -221,6 +221,8 @@ public class Overlord {
         ItemStack shieldStack = new ItemStack(Items.SHIELD);
         NBTTagCompound tagCompound = new NBTTagCompound();
         NBTTagCompound bet = shieldStack.getSubCompound("BlockEntityTag");
+        if(bet == null)
+            bet = new NBTTagCompound();
         bet.setInteger("Base", 15);
         NBTTagList nbttaglist = new NBTTagList();
         NBTTagCompound nbttagcompound = new NBTTagCompound();

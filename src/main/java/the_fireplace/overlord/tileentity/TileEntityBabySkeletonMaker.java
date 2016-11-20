@@ -122,7 +122,10 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
     @Override
     @Nonnull
     public ItemStack getStackInSlot(int index) {
-        return inventory[index];
+        if(inventory[index] != null)
+            return inventory[index];
+        else
+            return ItemStack.EMPTY;
     }
 
     @Override
@@ -212,7 +215,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
     @Override
     public void clear() {
         for (int i = 0; i < inventory.length; ++i) {
-            inventory[i] = null;
+            inventory[i] = ItemStack.EMPTY;
         }
     }
 
