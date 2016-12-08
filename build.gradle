@@ -165,6 +165,20 @@ uploadArchives {
                                 }
                             }
                         }
+                        contributors {
+                            contributor {
+                                name "The_BrainStone"
+                                roles {
+                                    role "translator"
+                                }
+                            }
+                            contributor {
+                                name "Dracindo"
+                                roles {
+                                    role "translator"
+                                }
+                            }
+                        }
                     }
                 }
             }
