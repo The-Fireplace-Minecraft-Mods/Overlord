@@ -30,11 +30,6 @@ public class EntityAIWarriorBow extends EntityAIBase
         this.setMutexBits(3);
     }
 
-    public void setAttackCooldown(int p_189428_1_)
-    {
-        this.attackCooldown = p_189428_1_;
-    }
-
     /**
      * Returns whether the EntityAIBase should begin execution.
      */
@@ -46,7 +41,7 @@ public class EntityAIWarriorBow extends EntityAIBase
 
     protected boolean isBowInMainhand()
     {
-        return this.entity.getHeldItemMainhand() != null && this.entity.getHeldItemMainhand().getItem() instanceof ItemBow;
+        return !this.entity.getHeldItemMainhand().isEmpty() && this.entity.getHeldItemMainhand().getItem() instanceof ItemBow;
     }
 
     /**

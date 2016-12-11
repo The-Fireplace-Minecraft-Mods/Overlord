@@ -76,7 +76,7 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
             }
             else
             {
-                Collections.sort(list, this.theNearestAttackableTargetSorter);
+                list.sort(this.theNearestAttackableTargetSorter);
                 if(!((EntityArmyMember)this.taskOwner).shouldAttackEntity(list.get(0), ((EntityArmyMember)this.taskOwner).getOwner()))
                     return false;
                 this.targetEntity = list.get(0);

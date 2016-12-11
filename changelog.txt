@@ -1,4 +1,2 @@
-Updated to 1.11
-Fixed potential dupe bug
-Greatly improved the Skeleton Placers
-Greatly improved the efficiency of the update of Milk in the Skeleton Warrior Maker
+Fixed some itemstack bugs
+Fixed Baby Skeleton held item rendering

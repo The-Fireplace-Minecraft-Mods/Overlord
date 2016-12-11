@@ -36,7 +36,7 @@ public class CommonEvents {
                             if(event.getItemStack().getCount() > 1)
                                 event.getItemStack().shrink(1);
                             else
-                                event.getEntityPlayer().setItemStackToSlot(event.getHand() == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, null);
+                                event.getEntityPlayer().setItemStackToSlot(event.getHand() == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, ItemStack.EMPTY);
                             event.getEntityPlayer().inventory.addItemStackToInventory(new ItemStack(Items.BUCKET));
                         }
                         if(event.getTarget() instanceof EntitySkeletonWarrior)

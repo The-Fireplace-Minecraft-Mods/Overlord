@@ -310,7 +310,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                 }
             }
 
-            this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D)).stream().filter(entityitem -> !entityitem.isDead && entityitem.getEntityItem() != null && !entityitem.cannotPickup()).forEach(entityitem -> {
+            this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D)).stream().filter(entityitem -> !entityitem.isDead && !entityitem.getEntityItem().isEmpty() && !entityitem.cannotPickup()).forEach(entityitem -> {
                 ItemStack stack2 = inventory.addItem(entityitem.getEntityItem());
                 if (!stack2.isEmpty()) {
                     if(stack2.getCount() != entityitem.getEntityItem().getCount())

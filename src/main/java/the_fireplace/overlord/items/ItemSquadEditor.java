@@ -21,7 +21,8 @@ public class ItemSquadEditor extends Item {
     @Nonnull
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand hand)
     {
-        FMLNetworkHandler.openGui(playerIn, Overlord.instance, -2, worldIn, (int)playerIn.posX, (int)playerIn.posY, (int)playerIn.posZ);
+        if(!worldIn.isRemote)
+            FMLNetworkHandler.openGui(playerIn, Overlord.instance, -2, worldIn, (int)playerIn.posX, (int)playerIn.posY, (int)playerIn.posZ);
         return new ActionResult(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
     }
 }

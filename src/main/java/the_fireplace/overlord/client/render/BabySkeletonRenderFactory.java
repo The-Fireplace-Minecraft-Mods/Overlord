@@ -12,6 +12,6 @@ public class BabySkeletonRenderFactory implements IRenderFactory<EntityBabySkele
     @SuppressWarnings("unchecked")
     @Override
     public Render createRenderFor(RenderManager manager) {
-        return new RenderBabySkeleton(manager);
+        return new RenderBabySkeleton(manager, new ModelBabySkeleton());
     }
 }
