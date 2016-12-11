@@ -34,7 +34,7 @@ allprojects {
 }
 
 minecraft {
-    version = "1.11-13.19.0.2153"
+    version = "1.11-13.19.1.2188"
     runDir = "run"
     replace '${version}', project.version
     mappings = "snapshot_20161119"
