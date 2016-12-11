@@ -29,7 +29,7 @@ import java.util.UUID;
  */
 public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInventory, ISkeletonMaker {
     private ItemStack[] inventory;
-    public static final int[] clearslots = new int[]{2,4,5,6,7,8,9};
+    public static final int[] clearslots = new int[]{4,5,6,7,8,9};
 
     public TileEntityBabySkeletonMaker() {
         inventory = new ItemStack[10];
@@ -57,14 +57,28 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
         for(int i:clearslots){
             setInventorySlotContents(i, ItemStack.EMPTY);
         }
-        if(!getStackInSlot(3).isEmpty()){
-            if(getStackInSlot(3).getCount() < getStackInSlot(3).getMaxStackSize())
-                getStackInSlot(3).grow(1);
-            else
-                babySkeleton.entityDropItem(new ItemStack(Items.BUCKET), 0.1F);
-        }else{
-            setInventorySlotContents(3, new ItemStack(Items.BUCKET));
+        if(getStackInSlot(2).getItem() == Items.MILK_BUCKET) {
+            if (!getStackInSlot(3).isEmpty()) {
+                if (getStackInSlot(3).getItem() == Items.BUCKET && getStackInSlot(3).getCount() < getStackInSlot(3).getMaxStackSize())
+                    getStackInSlot(3).grow(1);
+                else
+                    babySkeleton.entityDropItem(new ItemStack(Items.BUCKET), 0.1F);
+            } else {
+                setInventorySlotContents(3, new ItemStack(Items.BUCKET));
+            }
+        }else if(getStackInSlot(2).getItem() == Overlord.milk_bottle) {
+            if (!getStackInSlot(3).isEmpty()) {
+                if (getStackInSlot(3).getItem() == Items.GLASS_BOTTLE && getStackInSlot(3).getCount() < getStackInSlot(3).getMaxStackSize())
+                    getStackInSlot(3).grow(1);
+                else
+                    babySkeleton.entityDropItem(new ItemStack(Items.GLASS_BOTTLE), 0.1F);
+            } else {
+                setInventorySlotContents(3, new ItemStack(Items.GLASS_BOTTLE));
+            }
         }
+        getStackInSlot(2).shrink(1);
+        if(getStackInSlot(2).isEmpty())
+            setInventorySlotContents(2, ItemStack.EMPTY);
         if(!getStackInSlot(1).isEmpty()){
             if(getStackInSlot(1).getCount() <= ConfigValues.BONEREQ_BABY)
                 setInventorySlotContents(1, ItemStack.EMPTY);
@@ -181,7 +195,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 
     @Override
     public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack) {
-        return (index == 0 && stack.getItem() == Overlord.overlords_seal) || (index == 1 && stack.getItem() == Items.BONE) || (index == 2 && stack.getItem() == Items.MILK_BUCKET) || (index > 3 && index < 8 && stack.getItem().isValidArmor(stack, getSlotEquipmentType(index), null) || (index == 9 && stack.getItem() == Overlord.skinsuit));
+        return (index == 0 && stack.getItem() == Overlord.overlords_seal) || (index == 1 && stack.getItem() == Items.BONE) || (index == 2 && (stack.getItem() == Items.MILK_BUCKET || stack.getItem() == Overlord.milk_bottle)) || (index > 3 && index < 8 && stack.getItem().isValidArmor(stack, getSlotEquipmentType(index), null) || (index == 9 && stack.getItem() == Overlord.skinsuit));
     }
 
     private EntityEquipmentSlot getSlotEquipmentType(int index){

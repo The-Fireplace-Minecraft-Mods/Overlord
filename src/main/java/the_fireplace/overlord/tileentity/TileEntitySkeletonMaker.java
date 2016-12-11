@@ -61,6 +61,22 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
                     setInventorySlotContents(4, ItemStack.EMPTY);
                 setInventorySlotContents(5, new ItemStack(Items.BUCKET));
             }
+        }else if(!getStackInSlot(4).isEmpty() && getStackInSlot(4).getItem() == Overlord.milk_bottle && getMilk() < 2){
+            if(!getStackInSlot(5).isEmpty() && getStackInSlot(5).getItem() == Items.GLASS_BOTTLE && getStackInSlot(5).getCount() < getStackInSlot(5).getMaxStackSize()) {
+                setMilk((byte) (getMilk() + 1));
+                getStackInSlot(5).grow(1);
+                if(getStackInSlot(4).getCount() > 1)
+                    getStackInSlot(4).shrink(1);
+                else
+                    setInventorySlotContents(4, ItemStack.EMPTY);
+            }else if(getStackInSlot(5).isEmpty()){
+                setMilk((byte) (getMilk() + 1));
+                if(getStackInSlot(4).getCount() > 1)
+                    getStackInSlot(4).shrink(1);
+                else
+                    setInventorySlotContents(4, ItemStack.EMPTY);
+                setInventorySlotContents(5, new ItemStack(Items.GLASS_BOTTLE));
+            }
         }
     }
 
@@ -227,7 +243,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 
     @Override
     public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack) {
-        return (index == 0 && stack.getItem() == Overlord.overlords_seal) || ((index == 1 || index == 2) && stack.getItem() == Items.BONE) || (index == 3 && AugmentRegistry.getAugment(stack) != null) || (index == 4 && stack.getItem() == Items.MILK_BUCKET) || (index > 5 && index < 10 && stack.getItem().isValidArmor(stack, getSlotEquipmentType(index), null) || (index == 12 && stack.getItem() == Overlord.skinsuit));
+        return (index == 0 && stack.getItem() == Overlord.overlords_seal) || ((index == 1 || index == 2) && stack.getItem() == Items.BONE) || (index == 3 && AugmentRegistry.getAugment(stack) != null) || (index == 4 && (stack.getItem() == Items.MILK_BUCKET || stack.getItem() == Overlord.milk_bottle)) || (index > 5 && index < 10 && stack.getItem().isValidArmor(stack, getSlotEquipmentType(index), null) || (index == 12 && stack.getItem() == Overlord.skinsuit));
     }
 
     private EntityEquipmentSlot getSlotEquipmentType(int index){
