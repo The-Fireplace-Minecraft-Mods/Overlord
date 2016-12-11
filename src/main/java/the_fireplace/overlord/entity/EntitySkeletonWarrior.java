@@ -264,20 +264,29 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     }
 
     ItemStack bucket = new ItemStack(Items.BUCKET);
+    ItemStack bottle = new ItemStack(Items.GLASS_BOTTLE);
     @Override
     public void onLivingUpdate()
     {
         if(!this.world.isRemote) {
             for(int i=0;i<this.inventory.getSizeInventory();i++){
-                if(!inventory.getStackInSlot(i).isEmpty())
-                    if(inventory.getStackInSlot(i).getItem() == Items.MILK_BUCKET){
+                if(!inventory.getStackInSlot(i).isEmpty()) {
+                    if (inventory.getStackInSlot(i).getItem() == Items.MILK_BUCKET) {
+                        this.increaseMilkLevel(true);
+                        if (inventory.getStackInSlot(i).getCount() > 1)
+                            inventory.getStackInSlot(i).shrink(1);
+                        else
+                            inventory.setInventorySlotContents(i, ItemStack.EMPTY);
+                        inventory.addItem(bucket);
+                    }else if(inventory.getStackInSlot(i).getItem() == Overlord.milk_bottle){
                         this.increaseMilkLevel(true);
                         if(inventory.getStackInSlot(i).getCount() > 1)
                             inventory.getStackInSlot(i).shrink(1);
                         else
                             inventory.setInventorySlotContents(i, ItemStack.EMPTY);
-                        inventory.addItem(bucket);
+                        inventory.addItem(bottle);
                     }
+                }
             }
             checkLevelUp();
 
@@ -316,9 +325,9 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                     if(stack2.getCount() != entityitem.getEntityItem().getCount())
                         playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
                     entityitem.getEntityItem().setCount(stack2.getCount());
-                    if(stack2.getItem() == Items.MILK_BUCKET){
+                    if(stack2.getItem() == Items.MILK_BUCKET || stack2.getItem() == Overlord.milk_bottle){
                         for(int i=0;i<inventory.getSizeInventory();i++){
-                            if(!inventory.getStackInSlot(i).isEmpty() && inventory.getStackInSlot(i).getItem() == Items.BUCKET) {
+                            if(!inventory.getStackInSlot(i).isEmpty() && (inventory.getStackInSlot(i).getItem() == Items.BUCKET || inventory.getStackInSlot(i).getItem() == Items.GLASS_BOTTLE)) {
                                 entityDropItem(inventory.getStackInSlot(i), 0.1F);
                                 inventory.setInventorySlotContents(i, ItemStack.EMPTY);
                             }
