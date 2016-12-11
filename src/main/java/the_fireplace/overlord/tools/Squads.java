@@ -60,7 +60,6 @@ public class Squads implements Serializable {
         readFromFile();
     }
 
-    @SuppressWarnings("TryWithIdenticalCatches")
     private static void readFromFile() {
         File f = new File(saveDir, dataFileName);
         if (f.exists()) {
@@ -68,11 +67,7 @@ public class Squads implements Serializable {
                 ObjectInputStream stream = new ObjectInputStream(new FileInputStream(f));
                 instance = (Squads) stream.readObject();
                 stream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                instance = new Squads();
-                f.delete();
-            } catch (ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
                 instance = new Squads();
                 f.delete();
