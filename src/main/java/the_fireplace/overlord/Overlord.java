@@ -45,6 +45,7 @@ import the_fireplace.overlord.command.*;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.EntityBabySkeleton;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
+import the_fireplace.overlord.entity.projectile.EntityMilkBottle;
 import the_fireplace.overlord.items.*;
 import the_fireplace.overlord.network.OverlordGuiHandler;
 import the_fireplace.overlord.network.PacketDispatcher;
@@ -100,6 +101,7 @@ public class Overlord {
     public static final Item skinsuit = new Item().setUnlocalizedName("skinsuit").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item warrior_spawner = new ItemWarriorSpawner().setUnlocalizedName("warrior_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item baby_spawner = new ItemBabySpawner().setUnlocalizedName("baby_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
+    public static final Item milk_bottle = new ItemMilkBottle().setMaxStackSize(16);
 
     public static void syncConfig() {
         ConfigValues.HELMETDAMAGE = HELMETDAMAGE_PROPERTY.getBoolean();
@@ -143,12 +145,14 @@ public class Overlord {
         registerItem(skinsuit);
         registerItem(warrior_spawner);
         registerItem(baby_spawner);
+        registerItem(milk_bottle);
         OreDictionary.registerOre("book", squad_editor);
         GameRegistry.registerTileEntity(TileEntitySkeletonMaker.class, "skeleton_maker");
         GameRegistry.registerTileEntity(TileEntityBabySkeletonMaker.class, "baby_skeleton_maker");
         int eid=-1;
         EntityRegistry.registerModEntity(new ResourceLocation(MODID+":skeleton_warrior"), EntitySkeletonWarrior.class, "skeleton_warrior", ++eid, instance, 128, 2, false);
         EntityRegistry.registerModEntity(new ResourceLocation(MODID+":skeleton_baby"), EntityBabySkeleton.class, "skeleton_baby", ++eid, instance, 64, 2, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(MODID+":milk_bottle"), EntityMilkBottle.class, "milk_bottle", ++eid, instance, 32, 10, true);
         proxy.registerClient();
         MinecraftForge.EVENT_BUS.register(new CommonEvents());
         DataSerializers.registerSerializer(CustomDataSerializers.UNIQUE_ID);
@@ -196,6 +200,7 @@ public class Overlord {
         rmm(skinsuit);
         rmm(warrior_spawner);
         rmm(baby_spawner);
+        rmm(milk_bottle);
     }
 
     @SideOnly(Side.CLIENT)
