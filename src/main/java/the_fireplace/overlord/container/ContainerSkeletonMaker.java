@@ -9,6 +9,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
 
 import javax.annotation.Nonnull;
@@ -101,7 +102,7 @@ public class ContainerSkeletonMaker extends Container {
                 if (!mergeItemStack(is, 0, 36, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!mergeItemStack(is, 36, 36 + te.getSizeInventory(), false)) {
+            } else if (!mergeItemStack(is, 36, 36 + te.getSizeInventory(), is.getItem() == Overlord.skinsuit)) {
                 return ItemStack.EMPTY;
             }
             if (is.isEmpty()) {
