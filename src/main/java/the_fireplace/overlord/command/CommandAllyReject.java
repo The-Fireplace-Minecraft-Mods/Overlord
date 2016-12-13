@@ -1,5 +1,6 @@
 package the_fireplace.overlord.command;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -9,14 +10,17 @@ import net.minecraft.util.text.TextComponentTranslation;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.tools.Alliance;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.UUID;
 
 /**
  * @author The_Fireplace
  */
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class CommandAllyReject extends CommandBase {
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "allyreject";
     }
 
@@ -33,17 +37,17 @@ public class CommandAllyReject extends CommandBase {
                     Overlord.instance.pendingAlliances.remove(alliance);
                     EntityPlayer nonally = server.getEntityWorld().getPlayerEntityByUUID(UUID.fromString(alliance.getUser1().getUUID()));
                     if(nonally != null)
-                        nonally.addChatMessage(new TextComponentTranslation("overlord.allyreject", ((EntityPlayer) sender).getDisplayNameString()));
-                    sender.addChatMessage(new TextComponentTranslation("overlord.allyrejected", alliance.getUser1().getPlayerName()));
+                        nonally.sendMessage(new TextComponentTranslation("overlord.allyreject", ((EntityPlayer) sender).getDisplayNameString()));
+                    sender.sendMessage(new TextComponentTranslation("overlord.allyrejected", alliance.getUser1().getPlayerName()));
                     return;
                 }
             }
-            sender.addChatMessage(new TextComponentTranslation("overlord.nothingpending"));
+            sender.sendMessage(new TextComponentTranslation("overlord.nothingpending"));
         }
     }
 
     @Override
-    public String getCommandUsage(ICommandSender icommandsender) {
+    public String getUsage(ICommandSender icommandsender) {
         return "/allyreject";
     }
 }

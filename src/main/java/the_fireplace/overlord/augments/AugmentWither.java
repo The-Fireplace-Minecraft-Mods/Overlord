@@ -4,8 +4,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
+import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import the_fireplace.overlord.entity.EntityArmyMember;
 import the_fireplace.overlord.tools.Augment;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author The_Fireplace
@@ -19,6 +22,7 @@ public class AugmentWither extends Augment {
     }
 
     @Override
+    @Nonnull
     public String augmentId() {
         return "wither";
     }

@@ -6,11 +6,14 @@ import net.minecraft.potion.PotionEffect;
 import the_fireplace.overlord.entity.EntityArmyMember;
 import the_fireplace.overlord.tools.Augment;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author The_Fireplace
  */
 public class AugmentIron extends Augment {
     @Override
+    @Nonnull
     public String augmentId() {
         return "iron";
     }

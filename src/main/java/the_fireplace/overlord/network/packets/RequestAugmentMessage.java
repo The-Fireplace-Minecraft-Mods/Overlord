@@ -34,12 +34,12 @@ public class RequestAugmentMessage implements IMessage {
         @Override
         public IMessage handleServerMessage(EntityPlayer player, RequestAugmentMessage message, MessageContext ctx) {
             String augmentID = "";
-            if(player.worldObj.getEntityByID(message.warrior) != null){
-                if(player.worldObj.getEntityByID(message.warrior) instanceof EntityArmyMember){
-                    if(((EntityArmyMember) player.worldObj.getEntityByID(message.warrior)).getAugment() != null)
-                        augmentID = ((EntityArmyMember) player.worldObj.getEntityByID(message.warrior)).getAugment().augmentId();
+            if(player.world.getEntityByID(message.warrior) != null){
+                if(player.world.getEntityByID(message.warrior) instanceof EntityArmyMember){
+                    if(((EntityArmyMember) player.world.getEntityByID(message.warrior)).getAugment() != null)
+                        augmentID = ((EntityArmyMember) player.world.getEntityByID(message.warrior)).getAugment().augmentId();
                 }else{
-                    System.out.println("Error: Entity is not an army member. It is "+player.worldObj.getEntityByID(message.warrior).toString());
+                    System.out.println("Error: Entity is not an army member. It is "+player.world.getEntityByID(message.warrior).toString());
                 }
             }else{
                 System.out.println("Error 404: Army Member not found: "+message.warrior);

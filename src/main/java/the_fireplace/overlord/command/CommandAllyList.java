@@ -1,5 +1,6 @@
 package the_fireplace.overlord.command;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -10,12 +11,16 @@ import net.minecraft.util.text.TextComponentTranslation;
 import the_fireplace.overlord.tools.Alliances;
 import the_fireplace.overlord.tools.StringPair;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * @author The_Fireplace
  */
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class CommandAllyList extends CommandBase {
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "allylist";
     }
 
@@ -28,18 +33,18 @@ public class CommandAllyList extends CommandBase {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (sender instanceof EntityPlayer) {
             if(!Alliances.getInstance().getAllies(((EntityPlayer) sender).getUniqueID()).isEmpty()) {
-                sender.addChatMessage(new TextComponentTranslation("overlord.allylist"));
-                for(StringPair pait:Alliances.getInstance().getAllies(((EntityPlayer) sender).getUniqueID())){
-                    sender.addChatMessage(new TextComponentString(pait.getPlayerName()));
+                sender.sendMessage(new TextComponentTranslation("overlord.allylist"));
+                for(StringPair pair:Alliances.getInstance().getAllies(((EntityPlayer) sender).getUniqueID())){
+                    sender.sendMessage(new TextComponentString(pair.getPlayerName()));
                 }
             }else{
-                sender.addChatMessage(new TextComponentTranslation("overlord.nofriends"));
+                sender.sendMessage(new TextComponentTranslation("overlord.nofriends"));
             }
         }
     }
 
     @Override
-    public String getCommandUsage(ICommandSender icommandsender) {
+    public String getUsage(ICommandSender icommandsender) {
         return "/allylist";
     }
 }

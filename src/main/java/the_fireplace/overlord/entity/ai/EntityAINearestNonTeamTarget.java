@@ -68,7 +68,7 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
         }
         else if (this.targetClass != EntityPlayer.class && this.targetClass != EntityPlayerMP.class)
         {
-            List<T> list = getEntitiesWithinAABB(this.taskOwner.worldObj, this.targetClass, this.getTargetableArea(this.getTargetDistance()), this.targetEntitySelector);
+            List<T> list = getEntitiesWithinAABB(this.taskOwner.world, this.targetClass, this.getTargetableArea(this.getTargetDistance()), this.targetEntitySelector);
 
             if (list.isEmpty())
             {
@@ -85,7 +85,7 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
         }
         else
         {
-            this.targetEntity = (T)getNearestAttackablePlayer(this.taskOwner.worldObj, this.taskOwner.posX, this.taskOwner.posY + (double)this.taskOwner.getEyeHeight(), this.taskOwner.posZ, this.getTargetDistance(), this.getTargetDistance(), new Function<EntityPlayer, Double>() {
+            this.targetEntity = (T)getNearestAttackablePlayer(this.taskOwner.world, this.taskOwner.posX, this.taskOwner.posY + (double)this.taskOwner.getEyeHeight(), this.taskOwner.posZ, this.getTargetDistance(), this.getTargetDistance(), new Function<EntityPlayer, Double>() {
                 @Override
                 @Nullable
                 public Double apply(@Nullable EntityPlayer p_apply_1_) {
@@ -154,14 +154,14 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
     }
 
     @Nullable
-    public EntityPlayer getNearestAttackablePlayer(World worldObj, double posX, double posY, double posZ, double maxXZDistance, double maxYDistance, @Nullable Function<EntityPlayer, Double> playerToDouble, @Nullable Predicate<EntityPlayer> p_184150_12_)
+    public EntityPlayer getNearestAttackablePlayer(World world, double posX, double posY, double posZ, double maxXZDistance, double maxYDistance, @Nullable Function<EntityPlayer, Double> playerToDouble, @Nullable Predicate<EntityPlayer> p_184150_12_)
     {
         double d0 = -1.0D;
         EntityPlayer entityplayer = null;
 
-        for (int i = 0; i < worldObj.playerEntities.size(); ++i)
+        for (int i = 0; i < world.playerEntities.size(); ++i)
         {
-            EntityPlayer entityplayer1 = worldObj.playerEntities.get(i);
+            EntityPlayer entityplayer1 = world.playerEntities.get(i);
             if(entityplayer1.getUniqueID() == ((EntityArmyMember)this.taskOwner).getOwnerId() || Alliances.getInstance().isAlliedTo(entityplayer1.getUniqueID(), ((EntityArmyMember)this.taskOwner).getOwnerId()))
                 continue;//Skip the owner
             if(((EntityArmyMember)taskOwner).getAttackMode() < 2 && !Enemies.getInstance().isEnemiesWith(((EntityArmyMember)taskOwner).getOwnerId(), entityplayer1.getUniqueID()))

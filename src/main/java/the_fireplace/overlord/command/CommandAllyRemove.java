@@ -1,5 +1,6 @@
 package the_fireplace.overlord.command;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -12,12 +13,16 @@ import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.tools.Alliance;
 import the_fireplace.overlord.tools.Alliances;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * @author The_Fireplace
  */
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class CommandAllyRemove extends CommandBase {
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "allyremove";
     }
 
@@ -45,22 +50,22 @@ public class CommandAllyRemove extends CommandBase {
                         if(sender instanceof EntityPlayerMP)
                             if(((EntityPlayerMP) sender).getStatFile().canUnlockAchievement(Overlord.breakalliance))
                                 ((EntityPlayer)sender).addStat(Overlord.breakalliance);
-                        player.addChatMessage(new TextComponentTranslation("overlord.allytermination", ((EntityPlayer) sender).getDisplayNameString()));
-                        sender.addChatMessage(new TextComponentTranslation("overlord.allyterminated", player.getDisplayNameString()));
+                        player.sendMessage(new TextComponentTranslation("overlord.allytermination", ((EntityPlayer) sender).getDisplayNameString()));
+                        sender.sendMessage(new TextComponentTranslation("overlord.allyterminated", player.getDisplayNameString()));
                     } else {
-                        sender.addChatMessage(new TextComponentTranslation("overlord.notallied", player.getDisplayNameString()));
+                        sender.sendMessage(new TextComponentTranslation("overlord.notallied", player.getDisplayNameString()));
                     }
                 }else{
-                    sender.addChatMessage(new TextComponentTranslation("commands.generic.player.notFound"));
+                    sender.sendMessage(new TextComponentTranslation("commands.generic.player.notFound"));
                 }
             }else{
-                throw new WrongUsageException(getCommandUsage(sender));
+                throw new WrongUsageException(getUsage(sender));
             }
         }
     }
 
     @Override
-    public String getCommandUsage(ICommandSender icommandsender) {
+    public String getUsage(ICommandSender icommandsender) {
         return "/allyremove <PlayerName>";
     }
 }

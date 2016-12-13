@@ -129,6 +129,8 @@ public class GuiSkeleton extends GuiContainer {
             setMovementModeText();
         }
         super.updateScreen();
+        if(!this.entity.isEntityAlive() || this.entity.isDead)
+            this.mc.player.closeScreen();
     }
 
     public void setAttackModeText(){
@@ -171,7 +173,7 @@ public class GuiSkeleton extends GuiContainer {
 
     @Override
     public void onGuiClosed(){
-        if(entity.worldObj.isRemote)
+        if(entity.world.isRemote)
             PacketDispatcher.sendToServer(new RequestAugmentMessage(entity));
         super.onGuiClosed();
     }

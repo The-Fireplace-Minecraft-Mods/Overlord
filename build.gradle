@@ -24,9 +24,9 @@ apply plugin: 'net.cazzar.gradle.modsio'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
-version = "1.3.7"
+version = "2.0.1"
 group= "the_fireplace.overlord"
-archivesBaseName = "Overlord"
+archivesBaseName = "Overlord-1.10.2"
 
 allprojects {
     sourceCompatibility = 1.8
@@ -34,15 +34,15 @@ allprojects {
 }
 
 minecraft {
-    version = "1.10.2-12.18.1.2075"
+    version = "1.10.2-12.18.3.2185"
     runDir = "run"
     replace '${version}', project.version
-    mappings = "snapshot_20160518"
+    mappings = "stable_29"
     useDepAts = true
 }
 
 dependencies {
-	deobfCompile group: "mezz.jei", name: "jei_1.10.2", version: "3.9.0.246"
+	deobfCompile group: "mezz.jei", name: "jei_1.10.2", version: "3.13.6.389"
 }
 
 repositories{
@@ -125,7 +125,7 @@ modsIO {
 		modid = "1239"
 		minecraft = "1.10.2"
 		try{changelog = file('changelog.txt').text}catch(Exception e){changelog=""}
-		tag = "beta"
+		tag = ""
 		current = true
     }
 }
@@ -162,6 +162,20 @@ uploadArchives {
                                 roles {
                                     role "owner"
                                     role "developer"
+                                }
+                            }
+                        }
+                        contributors {
+                            contributor {
+                                name "The_BrainStone"
+                                roles {
+                                    role "translator"
+                                }
+                            }
+                            contributor {
+                                name "Dracindo"
+                                roles {
+                                    role "translator"
                                 }
                             }
                         }

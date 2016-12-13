@@ -15,6 +15,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -60,6 +61,22 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
                     setInventorySlotContents(4, null);
                 setInventorySlotContents(5, new ItemStack(Items.BUCKET));
             }
+        }else if(getStackInSlot(4) != null && getStackInSlot(4).getItem() == Overlord.milk_bottle && getMilk() < 2){
+            if(getStackInSlot(5) != null && getStackInSlot(5).getItem() == Items.GLASS_BOTTLE && getStackInSlot(5).stackSize < getStackInSlot(5).getMaxStackSize()) {
+                setMilk((byte) (getMilk() + 1));
+                getStackInSlot(5).stackSize++;
+                if(getStackInSlot(4).stackSize > 1)
+                    getStackInSlot(4).stackSize--;
+                else
+                    setInventorySlotContents(4, null);
+            }else if(getStackInSlot(5) == null){
+                setMilk((byte) (getMilk() + 1));
+                if(getStackInSlot(4).stackSize > 1)
+                    getStackInSlot(4).stackSize--;
+                else
+                    setInventorySlotContents(4, null);
+                setInventorySlotContents(5, new ItemStack(Items.GLASS_BOTTLE));
+            }
         }
     }
 
@@ -71,7 +88,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
                 owner = UUID.fromString(getStackInSlot(0).getTagCompound().getString("Owner"));
             }
         }
-        EntitySkeletonWarrior skeletonWarrior = new EntitySkeletonWarrior(worldObj, owner);
+        EntitySkeletonWarrior skeletonWarrior = new EntitySkeletonWarrior(world, owner);
         skeletonWarrior.setLocationAndAngles(pos.getX()+0.5, pos.getY()+1, pos.getZ()+0.5, 1, 0);
         skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.HEAD, getStackInSlot(9));
         skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.CHEST, getStackInSlot(8));
@@ -90,7 +107,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
             }
         }
 
-        worldObj.spawnEntityInWorld(skeletonWarrior);
+        world.spawnEntity(skeletonWarrior);
         if(getStackInSlot(12) != null)
             skeletonWarrior.applySkinsuit(getStackInSlot(12));
         setMilk((byte)0);
@@ -145,7 +162,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 
     @Override
     public ITextComponent getDisplayName() {
-        return null;
+        return new TextComponentTranslation("tile.skeleton_maker.name");
     }
 
     @Override
@@ -195,7 +212,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
     }
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
+    public boolean isUsableByPlayer(EntityPlayer player) {
         return player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64;
     }
 
@@ -209,7 +226,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return (index == 0 && stack.getItem() == Overlord.overlords_seal) || ((index == 1 || index == 2) && stack.getItem() == Items.BONE) || (index == 3 && AugmentRegistry.getAugment(stack) != null) || (index == 4 && stack.getItem() == Items.MILK_BUCKET) || (index > 5 && index < 10 && stack.getItem().isValidArmor(stack, getSlotEquipmentType(index), null) || (index == 12 && stack.getItem() == Overlord.skinsuit));
+        return (index == 0 && stack.getItem() == Overlord.overlords_seal) || ((index == 1 || index == 2) && stack.getItem() == Items.BONE) || (index == 3 && AugmentRegistry.getAugment(stack) != null) || (index == 4 && (stack.getItem() == Items.MILK_BUCKET || stack.getItem() == Overlord.milk_bottle)) || (index > 5 && index < 10 && stack.getItem().isValidArmor(stack, getSlotEquipmentType(index), null) || (index == 12 && stack.getItem() == Overlord.skinsuit));
     }
 
     private EntityEquipmentSlot getSlotEquipmentType(int index){
@@ -290,8 +307,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
     public int[] getSlotsForFace(EnumFacing side) {
         if (side == EnumFacing.EAST || side == EnumFacing.WEST || side == EnumFacing.NORTH || side == EnumFacing.SOUTH || side == EnumFacing.UP) {
             return new int[]{1, 2, 3, 4, 6, 7, 8, 9, 12};
-        }
-        if (side == EnumFacing.DOWN) {
+        }else if (side == EnumFacing.DOWN) {
             return new int[]{5};
         }
         return null;
@@ -341,9 +357,9 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
     public void setMilk(byte milk){
         this.milk = milk;
         markDirty();
-        if(!worldObj.isRemote) {
-            PacketDispatcher.sendToAll(new SetMilkMessage(pos, milk));//TODO: Find a more efficient way than sending it to everyone
-            worldObj.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        if(!world.isRemote) {
+            PacketDispatcher.sendToAllAround(new SetMilkMessage(pos, milk), world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 16);
+            world.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
     }
 }

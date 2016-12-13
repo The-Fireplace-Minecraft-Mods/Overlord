@@ -4,6 +4,8 @@ import net.minecraft.entity.Entity;
 import the_fireplace.overlord.entity.EntityArmyMember;
 import the_fireplace.overlord.tools.Augment;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author The_Fireplace
  */
@@ -21,6 +23,7 @@ public class AugmentSlowRegen extends Augment {
     }
 
     @Override
+    @Nonnull
     public String augmentId() {
         return "slow_regen";
     }

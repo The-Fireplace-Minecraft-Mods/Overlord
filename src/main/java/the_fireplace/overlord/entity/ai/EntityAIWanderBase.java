@@ -82,20 +82,4 @@ public class EntityAIWanderBase extends EntityAIBase {
     {
         this.entity.getNavigator().tryMoveToXYZ(this.xPosition, this.yPosition, this.zPosition, this.speed);
     }
-
-    /**
-     * Makes task to bypass chance
-     */
-    public void makeUpdate()
-    {
-        this.mustUpdate = true;
-    }
-
-    /**
-     * Changes task random possibility for execution
-     */
-    public void setExecutionChance(int newchance)
-    {
-        this.executionChance = newchance;
-    }
 }

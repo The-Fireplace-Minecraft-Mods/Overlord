@@ -14,9 +14,13 @@ import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.RequestAugmentMessage;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * @author The_Fireplace
  */
+@ParametersAreNonnullByDefault
 public class ContainerSkeleton extends Container {
     private EntitySkeletonWarrior entity;
     private static final EntityEquipmentSlot[] EQUIPMENT_SLOTS = new EntityEquipmentSlot[] {EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
@@ -47,7 +51,7 @@ public class ContainerSkeleton extends Container {
                 }
 
                 @Override
-                public boolean isItemValid(ItemStack stack)
+                public boolean isItemValid(@Nullable ItemStack stack)
                 {
                     return stack != null && stack.getItem().isValidArmor(stack, entityequipmentslot, null);
                 }
@@ -116,9 +120,10 @@ public class ContainerSkeleton extends Container {
         return null;
     }
 
+    @Override
     public void onContainerClosed(EntityPlayer player){
         super.onContainerClosed(player);
-        if(entity.worldObj.isRemote)
+        if(entity.world.isRemote)
             PacketDispatcher.sendToServer(new RequestAugmentMessage(entity));
     }
 }

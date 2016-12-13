@@ -12,6 +12,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -28,7 +29,7 @@ import java.util.UUID;
 public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInventory, ISkeletonMaker {
     private ItemStack[] inventory;
     public static final String PROP_NAME = "TileEntityBabySkeletonMaker";
-    public static final int[] clearslots = new int[]{2,4,5,6,7,8,9};
+    public static final int[] clearslots = new int[]{4,5,6,7,8,9};
 
     public TileEntityBabySkeletonMaker() {
         inventory = new ItemStack[10];
@@ -42,7 +43,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
                 owner = UUID.fromString(getStackInSlot(0).getTagCompound().getString("Owner"));
             }
         }
-        EntityBabySkeleton babySkeleton = new EntityBabySkeleton(worldObj, owner);
+        EntityBabySkeleton babySkeleton = new EntityBabySkeleton(world, owner);
         babySkeleton.setLocationAndAngles(pos.getX()+0.5, pos.getY()+1, pos.getZ()+0.5, 1, 0);
         babySkeleton.setItemStackToSlot(EntityEquipmentSlot.HEAD, getStackInSlot(7));
         babySkeleton.setItemStackToSlot(EntityEquipmentSlot.CHEST, getStackInSlot(6));
@@ -50,20 +51,34 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
         babySkeleton.setItemStackToSlot(EntityEquipmentSlot.FEET, getStackInSlot(4));
         babySkeleton.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, getStackInSlot(8));
 
-        worldObj.spawnEntityInWorld(babySkeleton);
+        world.spawnEntity(babySkeleton);
         if(getStackInSlot(9) != null)
             babySkeleton.applySkinsuit(getStackInSlot(9));
         for(int i:clearslots){
             setInventorySlotContents(i, null);
         }
-        if(getStackInSlot(3) != null){
-            if(getStackInSlot(3).stackSize < getStackInSlot(3).getMaxStackSize())
-                getStackInSlot(3).stackSize++;
-            else
-                babySkeleton.entityDropItem(new ItemStack(Items.BUCKET), 0.1F);
-        }else{
-            setInventorySlotContents(3, new ItemStack(Items.BUCKET));
+        if(getStackInSlot(2).getItem() == Items.MILK_BUCKET) {
+            if (getStackInSlot(3) != null) {
+                if (getStackInSlot(3).getItem() == Items.BUCKET && getStackInSlot(3).stackSize < getStackInSlot(3).getMaxStackSize())
+                    getStackInSlot(3).stackSize++;
+                else
+                    babySkeleton.entityDropItem(new ItemStack(Items.BUCKET), 0.1F);
+            } else {
+                setInventorySlotContents(3, new ItemStack(Items.BUCKET));
+            }
+        }else if(getStackInSlot(2).getItem() == Overlord.milk_bottle) {
+            if (getStackInSlot(3) != null) {
+                if (getStackInSlot(3).getItem() == Items.GLASS_BOTTLE && getStackInSlot(3).stackSize < getStackInSlot(3).getMaxStackSize())
+                    getStackInSlot(3).stackSize++;
+                else
+                    babySkeleton.entityDropItem(new ItemStack(Items.GLASS_BOTTLE), 0.1F);
+            } else {
+                setInventorySlotContents(3, new ItemStack(Items.GLASS_BOTTLE));
+            }
         }
+        getStackInSlot(2).stackSize--;
+        if(getStackInSlot(2) != null && getStackInSlot(2).stackSize <= 0)
+            setInventorySlotContents(2, null);
         if(getStackInSlot(1) != null){
             if(getStackInSlot(1).stackSize <= ConfigValues.BONEREQ_BABY)
                 setInventorySlotContents(1, null);
@@ -99,7 +114,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 
     @Override
     public ITextComponent getDisplayName() {
-        return null;
+        return new TextComponentTranslation("tile.baby_skeleton_maker.name");
     }
 
     @Override
@@ -149,7 +164,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
     }
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
+    public boolean isUsableByPlayer(EntityPlayer player) {
         return player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64;
     }
 
@@ -163,7 +178,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return (index == 0 && stack.getItem() == Overlord.overlords_seal) || (index == 1 && stack.getItem() == Items.BONE) || (index == 2 && stack.getItem() == Items.MILK_BUCKET) || (index > 3 && index < 8 && stack.getItem().isValidArmor(stack, getSlotEquipmentType(index), null) || (index == 9 && stack.getItem() == Overlord.skinsuit));
+        return (index == 0 && stack.getItem() == Overlord.overlords_seal) || (index == 1 && stack.getItem() == Items.BONE) || (index == 2 && (stack.getItem() == Items.MILK_BUCKET || stack.getItem() == Overlord.milk_bottle)) || (index > 3 && index < 8 && stack.getItem().isValidArmor(stack, getSlotEquipmentType(index), null) || (index == 9 && stack.getItem() == Overlord.skinsuit));
     }
 
     private EntityEquipmentSlot getSlotEquipmentType(int index){
@@ -242,8 +257,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
     public int[] getSlotsForFace(EnumFacing side) {
         if (side == EnumFacing.EAST || side == EnumFacing.WEST || side == EnumFacing.NORTH || side == EnumFacing.SOUTH || side == EnumFacing.UP) {
             return new int[]{1, 2, 4, 5, 6, 7, 9};
-        }
-        if (side == EnumFacing.DOWN) {
+        }else if (side == EnumFacing.DOWN) {
             return new int[]{3};
         }
         return null;

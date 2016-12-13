@@ -9,11 +9,16 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
+
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * @author The_Fireplace
  */
+@ParametersAreNonnullByDefault
 public class ContainerSkeletonMaker extends Container {
     private TileEntitySkeletonMaker te;
     private static final EntityEquipmentSlot[] EQUIPMENT_SLOTS = new EntityEquipmentSlot[] {EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
@@ -55,7 +60,7 @@ public class ContainerSkeletonMaker extends Container {
                 }
 
                 @Override
-                public boolean isItemValid(ItemStack stack)
+                public boolean isItemValid(@Nullable ItemStack stack)
                 {
                     return stack != null && stack.getItem().isValidArmor(stack, entityequipmentslot, null);
                 }
@@ -84,7 +89,7 @@ public class ContainerSkeletonMaker extends Container {
 
     @Override
     public boolean canInteractWith(EntityPlayer playerIn) {
-        return te.isUseableByPlayer(playerIn);
+        return te.isUsableByPlayer(playerIn);
     }
 
     @Override
@@ -98,7 +103,7 @@ public class ContainerSkeletonMaker extends Container {
                 if (!mergeItemStack(is, 0, 36, false)) {
                     return null;
                 }
-            } else if (!mergeItemStack(is, 36, 36 + te.getSizeInventory(), false)) {
+            } else if (!mergeItemStack(is, 36, 36 + te.getSizeInventory(), is.getItem() == Overlord.skinsuit)) {
                 return null;
             }
             if (is.stackSize == 0) {

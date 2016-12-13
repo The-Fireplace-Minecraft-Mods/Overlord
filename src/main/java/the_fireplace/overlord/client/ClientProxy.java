@@ -9,9 +9,11 @@ import the_fireplace.overlord.CommonProxy;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.client.render.BabySkeletonRenderFactory;
 import the_fireplace.overlord.client.render.LayerSkinsuit;
+import the_fireplace.overlord.client.render.MilkBottleRenderFactory;
 import the_fireplace.overlord.client.render.SkeletonWarriorRenderFactory;
 import the_fireplace.overlord.entity.EntityBabySkeleton;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
+import the_fireplace.overlord.entity.projectile.EntityMilkBottle;
 
 import java.io.File;
 
@@ -19,15 +21,14 @@ import java.io.File;
  * @author The_Fireplace
  */
 public class ClientProxy extends CommonProxy {
-    @SuppressWarnings("ConfusingArgumentToVarargsMethod")
     @Override
-    public String translateToLocal(String u, String... args){
+    public String translateToLocal(String u, Object... args){
         return I18n.format(u, args);
     }
 
     @Override
     public EntityPlayer getPlayerEntity(MessageContext ctx) {
-        return (ctx.side.isClient() ? Minecraft.getMinecraft().thePlayer : super.getPlayerEntity(ctx));
+        return (ctx.side.isClient() ? Minecraft.getMinecraft().player : super.getPlayerEntity(ctx));
     }
 
     @Override
@@ -35,6 +36,7 @@ public class ClientProxy extends CommonProxy {
         Overlord.instance.registerItemRenders();
         RenderingRegistry.registerEntityRenderingHandler(EntitySkeletonWarrior.class, new SkeletonWarriorRenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(EntityBabySkeleton.class, new BabySkeletonRenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(EntityMilkBottle.class, new MilkBottleRenderFactory());
         if(LayerSkinsuit.cachedir.exists()){
             if(LayerSkinsuit.cachedir.listFiles().length > 0)
             for(File file:LayerSkinsuit.cachedir.listFiles()){

@@ -1,1 +1,7 @@
-Fixed Nonnull annotation
+Added the Milk Bottle
+Fixed Baby Skeleton held item rendering
+Fixed Squad Editor on servers
+Fixed shift+clicking Skinsuit into Skeleton Makers
+Fixed potential dupe bug
+Greatly improved the Skeleton Placers
+Greatly improved the efficiency of the update of Milk in the Skeleton Warrior Maker

@@ -93,10 +93,10 @@ public class EntityBabySkeleton extends EntityArmyMember {
         if(this.getOwner() != null){
             if(this.getOwner().equals(player)){
                 if(!player.isSneaking()) {
-                    FMLNetworkHandler.openGui(player, Overlord.instance, hashCode(), worldObj, (int) this.posX, (int) this.posY, (int) this.posZ);
+                    FMLNetworkHandler.openGui(player, Overlord.instance, hashCode(), world, (int) this.posX, (int) this.posY, (int) this.posZ);
                     return true;
                 }else{
-                    if(!worldObj.isRemote)
+                    if(!world.isRemote)
                     if(stack != null){
                         if(stack.getItem() == Overlord.skinsuit && !this.hasSkinsuit()){
                             applySkinsuit(stack);
@@ -114,13 +114,9 @@ public class EntityBabySkeleton extends EntityArmyMember {
                             this.dataManager.set(HAS_SKINSUIT, Boolean.valueOf(false));
                             this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
                         }else if(stack.getItem() == Overlord.baby_spawner){
-                            if(stack.getTagCompound() != null){
-                                this.readFromNBT(stack.getTagCompound());
-                            }else{
-                                NBTTagCompound compound = new NBTTagCompound();
-                                this.writeEntityToNBT(compound);
-                                stack.setTagCompound(compound);
-                            }
+                            NBTTagCompound compound = new NBTTagCompound();
+                            this.writeEntityToNBT(compound);
+                            stack.setTagCompound(compound);
                         }
                     }
                 }
@@ -163,13 +159,13 @@ public class EntityBabySkeleton extends EntityArmyMember {
     @Override
     public void onLivingUpdate()
     {
-        if(!this.worldObj.isRemote) {
-            if (this.worldObj.isDaytime()) {
+        if(!this.world.isRemote) {
+            if (this.world.isDaytime()) {
                 float f = this.getBrightness(1.0F);
                 BlockPos blockpos = this.getRidingEntity() instanceof EntityBoat ? (new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ)).up() : new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ);
 
                 if(!hasSkinsuit())
-                if (f > 0.5F && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.worldObj.canSeeSky(blockpos)) {
+                if (f > 0.5F && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.world.canSeeSky(blockpos)) {
                     boolean flag = true;
                     ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
@@ -238,12 +234,12 @@ public class EntityBabySkeleton extends EntityArmyMember {
             this.entityDropItem(new ItemStack(Items.SKULL), 0.0F);
         }
 
-        if(!this.worldObj.isRemote){
+        if(!this.world.isRemote){
             for(int i=0;i<equipInventory.getSizeInventory();i++){
                 if(equipInventory.getStackInSlot(i) != null){
-                    EntityItem entityitem = new EntityItem(worldObj, posX, posY, posZ, equipInventory.getStackInSlot(i));
+                    EntityItem entityitem = new EntityItem(world, posX, posY, posZ, equipInventory.getStackInSlot(i));
                     entityitem.setPickupDelay(40);
-                    worldObj.spawnEntityInWorld(entityitem);
+                    world.spawnEntity(entityitem);
                 }
             }
         }
@@ -399,7 +395,7 @@ public class EntityBabySkeleton extends EntityArmyMember {
     public float getBlockPathWeight(BlockPos pos)
     {
         if(!this.hasSkinsuit())
-            return 0.5F - this.worldObj.getLightBrightness(pos);
+            return 0.5F - this.world.getLightBrightness(pos);
         else
             return super.getBlockPathWeight(pos);
     }

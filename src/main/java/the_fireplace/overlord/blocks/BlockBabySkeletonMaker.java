@@ -1,5 +1,6 @@
 package the_fireplace.overlord.blocks;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -20,9 +21,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.tileentity.TileEntityBabySkeletonMaker;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author The_Fireplace
  */
+@MethodsReturnNonnullByDefault
 public class BlockBabySkeletonMaker extends BlockContainer {
     public BlockBabySkeletonMaker() {
         super(Material.IRON);
@@ -44,11 +48,6 @@ public class BlockBabySkeletonMaker extends BlockContainer {
     }
 
     @Override
-    public boolean isVisuallyOpaque() {
-        return false;
-    }
-
-    @Override
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
@@ -60,7 +59,7 @@ public class BlockBabySkeletonMaker extends BlockContainer {
     }
 
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
+    public TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
         return new TileEntityBabySkeletonMaker();
     }
 

@@ -2,6 +2,7 @@ package the_fireplace.overlord;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -27,25 +28,37 @@ import java.util.Random;
 public class CommonEvents {
     @SubscribeEvent
     public void rightClickEntity(PlayerInteractEvent.EntityInteract event){
-        if(event.getTarget() instanceof EntitySkeleton || ((event.getTarget() instanceof EntitySkeletonWarrior || event.getTarget() instanceof EntityBabySkeleton) && event.getEntityPlayer().isSneaking()))
-            if(((EntityLivingBase) event.getTarget()).getHealth() < ((EntityLivingBase) event.getTarget()).getMaxHealth())
-                if(event.getItemStack() != null)
-                    if(event.getItemStack().getItem() == Items.MILK_BUCKET){
+        if(event.getTarget() instanceof EntitySkeleton || ((event.getTarget() instanceof EntitySkeletonWarrior || event.getTarget() instanceof EntityBabySkeleton) && event.getEntityPlayer().isSneaking())) {
+            if (((EntityLivingBase) event.getTarget()).getHealth() < ((EntityLivingBase) event.getTarget()).getMaxHealth())
+                if (event.getItemStack() != null)
+                    if (event.getItemStack().getItem() == Items.MILK_BUCKET) {
                         ((EntityLivingBase) event.getTarget()).heal(1);
-                        if(!event.getEntityPlayer().isCreative()) {
-                            if(event.getItemStack().stackSize > 1)
+                        if (!event.getEntityPlayer().isCreative()) {
+                            if (event.getItemStack().stackSize > 1)
                                 event.getItemStack().stackSize--;
                             else
                                 event.getEntityPlayer().setItemStackToSlot(event.getHand() == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, null);
                             event.getEntityPlayer().inventory.addItemStackToInventory(new ItemStack(Items.BUCKET));
                         }
-                        if(event.getTarget() instanceof EntitySkeletonWarrior)
+                        if (event.getTarget() instanceof EntitySkeletonWarrior)
                             ((EntitySkeletonWarrior) event.getTarget()).increaseMilkLevel(false);
                     }
+        }else if(event.getTarget() instanceof EntityCow){
+            if(event.getItemStack() != null)
+                if(event.getItemStack().getItem() == Items.GLASS_BOTTLE){
+                    if (!event.getEntityPlayer().isCreative()) {
+                        if (event.getItemStack().stackSize > 1)
+                            event.getItemStack().stackSize--;
+                        else
+                            event.getEntityPlayer().setItemStackToSlot(event.getHand() == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, null);
+                    }
+                    event.getEntityPlayer().inventory.addItemStackToInventory(new ItemStack(Overlord.milk_bottle));
+                }
+        }
     }
     @SubscribeEvent
     public void entityTick(LivingEvent.LivingUpdateEvent event){
-        if(!event.getEntityLiving().worldObj.isRemote){
+        if(!event.getEntityLiving().world.isRemote){
             if(event.getEntityLiving() instanceof EntitySkeleton || event.getEntityLiving() instanceof EntitySkeletonWarrior || event.getEntityLiving() instanceof EntityBabySkeleton){
                 if(event.getEntityLiving().ticksExisted < 5){
                     if(event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.HEAD) == null){
@@ -65,7 +78,7 @@ public class CommonEvents {
     }
     @SubscribeEvent
     public void livingHurt(LivingHurtEvent event){
-        if(!event.getEntity().worldObj.isRemote)
+        if(!event.getEntity().world.isRemote)
         if(event.getSource().isProjectile()){
             if(event.getEntityLiving() instanceof EntityPlayerMP){
                 if(event.getSource().getEntity() instanceof EntitySkeletonWarrior){
@@ -79,10 +92,10 @@ public class CommonEvents {
     }
     @SubscribeEvent
     public void livingDeath(LivingDeathEvent event){
-        if(!event.getEntityLiving().worldObj.isRemote){
+        if(!event.getEntityLiving().world.isRemote){
             if(event.getSource().getEntity() instanceof EntityWolf && event.getEntityLiving() instanceof EntityArmyMember){
                 if(((EntityWolf) event.getSource().getEntity()).getOwnerId() != null){
-                    EntityPlayer wolfOwner = ((EntityArmyMember) event.getEntityLiving()).worldObj.getPlayerEntityByUUID(((EntityWolf) event.getSource().getEntity()).getOwnerId());
+                    EntityPlayer wolfOwner = ((EntityArmyMember) event.getEntityLiving()).world.getPlayerEntityByUUID(((EntityWolf) event.getSource().getEntity()).getOwnerId());
                     if(wolfOwner != null){
                         if(wolfOwner instanceof EntityPlayerMP)
                             if(((EntityPlayerMP) wolfOwner).getStatFile().canUnlockAchievement(Overlord.wardog)) {

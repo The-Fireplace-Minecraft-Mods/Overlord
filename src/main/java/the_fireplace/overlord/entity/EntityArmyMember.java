@@ -1,5 +1,6 @@
 package the_fireplace.overlord.entity;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
@@ -39,6 +40,7 @@ import the_fireplace.overlord.tools.Enemies;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.UUID;
 
 import static the_fireplace.overlord.Overlord.proxy;
@@ -47,6 +49,8 @@ import static the_fireplace.overlord.Overlord.proxy;
  * The base Army Member class. All entities that you want to be part of the army should extend this.
  * @author The_Fireplace
  */
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public abstract class EntityArmyMember extends EntityCreature implements IEntityOwnable {
 
     protected static final DataParameter<UUID> OWNER_UNIQUE_ID = EntityDataManager.createKey(EntityArmyMember.class, CustomDataSerializers.UNIQUE_ID);
@@ -197,7 +201,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
     public void onDeath(DamageSource cause)
     {
         super.onDeath(cause);
-        if (!this.worldObj.isRemote && this.worldObj.getGameRules().getBoolean("showDeathMessages") && this.getOwner() instanceof EntityPlayerMP)
+        if (!this.world.isRemote && this.world.getGameRules().getBoolean("showDeathMessages") && this.getOwner() instanceof EntityPlayerMP)
         {
             String name = "";
             if(hasCustomName()) {
@@ -205,7 +209,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
                 name += " (" + proxy.translateToLocal("entity." + EntityList.getEntityString(this) + ".name") + ')';
             }else
                 name += proxy.translateToLocal("entity." + EntityList.getEntityString(this) + ".name");
-            this.getOwner().addChatMessage(new TextComponentTranslation("overlord.armydeath", name, cause.damageType));
+            this.getOwner().sendMessage(new TextComponentTranslation("overlord.armydeath", name, cause.damageType));
         }
     }
 
@@ -367,7 +371,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
     public EntityLivingBase getOwner() {
         try
         {
-            return this.worldObj.getPlayerEntityByUUID(getOwnerId());
+            return this.world.getPlayerEntityByUUID(getOwnerId());
         }
         catch (IllegalArgumentException var2)
         {
@@ -498,7 +502,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
                     if (this.rand.nextFloat() < f1)
                     {
                         entityplayer.getCooldownTracker().setCooldown(Items.SHIELD, 100);
-                        this.worldObj.setEntityState(entityplayer, (byte)30);
+                        this.world.setEntityState(entityplayer, (byte)30);
                     }
                 }
             }

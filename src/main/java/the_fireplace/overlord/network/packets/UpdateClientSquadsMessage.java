@@ -12,14 +12,14 @@ import java.util.ArrayList;
 /**
  * @author The_Fireplace
  */
-public class UpdateSquadsMessage implements IMessage {
+public class UpdateClientSquadsMessage implements IMessage {
 
     public ArrayList<String> names;
 
-    public UpdateSquadsMessage() {
+    public UpdateClientSquadsMessage() {
     }
 
-    public UpdateSquadsMessage(ArrayList<String> names){
+    public UpdateClientSquadsMessage(ArrayList<String> names){
         this.names=names;
     }
 
@@ -39,11 +39,11 @@ public class UpdateSquadsMessage implements IMessage {
             ByteBufUtils.writeUTF8String(buf, name);
     }
 
-    public static class Handler extends AbstractServerMessageHandler<UpdateSquadsMessage> {
+    public static class Handler extends AbstractClientMessageHandler<UpdateClientSquadsMessage> {
         @Override
-        public IMessage handleServerMessage(EntityPlayer player, UpdateSquadsMessage message, MessageContext ctx) {
+        public IMessage handleClientMessage(EntityPlayer player, UpdateClientSquadsMessage message, MessageContext ctx) {
             Squads.getInstance().setPlayerSquadNames(player.getUniqueID(), message.names);
-            return new UpdateClientSquadsMessage(message.names);
+            return null;
         }
     }
 }

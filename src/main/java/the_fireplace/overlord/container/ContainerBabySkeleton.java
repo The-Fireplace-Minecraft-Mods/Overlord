@@ -12,9 +12,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.entity.EntityBabySkeleton;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * @author The_Fireplace
  */
+@ParametersAreNonnullByDefault
 public class ContainerBabySkeleton extends Container {
     private EntityBabySkeleton entity;
     private static final EntityEquipmentSlot[] EQUIPMENT_SLOTS = new EntityEquipmentSlot[] {EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
@@ -44,7 +48,7 @@ public class ContainerBabySkeleton extends Container {
                 }
 
                 @Override
-                public boolean isItemValid(ItemStack stack)
+                public boolean isItemValid(@Nullable ItemStack stack)
                 {
                     return stack != null && stack.getItem().isValidArmor(stack, entityequipmentslot, null);
                 }

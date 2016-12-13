@@ -1,9 +1,10 @@
 package the_fireplace.overlord.client.render;
 
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.RenderBiped;
+import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
+import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -13,13 +14,14 @@ import the_fireplace.overlord.entity.EntityBabySkeleton;
  * @author The_Fireplace
  */
 @SideOnly(Side.CLIENT)
-public class RenderBabySkeleton extends RenderBiped<EntityBabySkeleton>
+public class RenderBabySkeleton extends RenderLiving<EntityBabySkeleton>
 {
     private static final ResourceLocation SKELETON_TEXTURES = new ResourceLocation("textures/entity/skeleton/skeleton.png");
 
     public RenderBabySkeleton(RenderManager renderManagerIn)
     {
         super(renderManagerIn, new ModelBabySkeleton(), 0.5F);
+        this.addLayer(new LayerHeldItem(this));
         this.addLayer(new LayerBabySkinsuit(this));
         this.addLayer(new LayerBipedArmor(this)
         {

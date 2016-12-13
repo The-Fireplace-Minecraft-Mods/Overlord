@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  * @author The_Fireplace
  */
 public class CommonProxy {
-    public String translateToLocal(String key, String... args){
+    public String translateToLocal(String key, Object... args){
         return key;
     }
 
