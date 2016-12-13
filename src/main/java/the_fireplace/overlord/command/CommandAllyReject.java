@@ -20,7 +20,7 @@ import java.util.UUID;
 @ParametersAreNonnullByDefault
 public class CommandAllyReject extends CommandBase {
     @Override
-    public String getName() {
+    public String getCommandName() {
         return "allyreject";
     }
 
@@ -37,17 +37,17 @@ public class CommandAllyReject extends CommandBase {
                     Overlord.instance.pendingAlliances.remove(alliance);
                     EntityPlayer nonally = server.getEntityWorld().getPlayerEntityByUUID(UUID.fromString(alliance.getUser1().getUUID()));
                     if(nonally != null)
-                        nonally.sendMessage(new TextComponentTranslation("overlord.allyreject", ((EntityPlayer) sender).getDisplayNameString()));
-                    sender.sendMessage(new TextComponentTranslation("overlord.allyrejected", alliance.getUser1().getPlayerName()));
+                        nonally.addChatMessage(new TextComponentTranslation("overlord.allyreject", ((EntityPlayer) sender).getDisplayNameString()));
+                    sender.addChatMessage(new TextComponentTranslation("overlord.allyrejected", alliance.getUser1().getPlayerName()));
                     return;
                 }
             }
-            sender.sendMessage(new TextComponentTranslation("overlord.nothingpending"));
+            sender.addChatMessage(new TextComponentTranslation("overlord.nothingpending"));
         }
     }
 
     @Override
-    public String getUsage(ICommandSender icommandsender) {
+    public String getCommandUsage(ICommandSender icommandsender) {
         return "/allyreject";
     }
 }

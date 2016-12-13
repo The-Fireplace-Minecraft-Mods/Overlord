@@ -15,12 +15,12 @@ public class CustomDataSerializers {
         @Override
         public void write(PacketBuffer buf, UUID value)
         {
-            buf.writeUniqueId(value);
+            buf.writeUuid(value);
         }
         @Override
         public UUID read(PacketBuffer buf)
         {
-            return buf.readUniqueId();
+            return buf.readUuid();
         }
         @Override
         public DataParameter<UUID> createKey(int id)

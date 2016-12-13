@@ -89,7 +89,7 @@ public class ContainerSkeletonMaker extends Container {
 
     @Override
     public boolean canInteractWith(EntityPlayer playerIn) {
-        return te.isUsableByPlayer(playerIn);
+        return te.isUseableByPlayer(playerIn);
     }
 
     @Override

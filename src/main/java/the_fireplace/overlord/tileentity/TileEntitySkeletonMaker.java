@@ -88,7 +88,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
                 owner = UUID.fromString(getStackInSlot(0).getTagCompound().getString("Owner"));
             }
         }
-        EntitySkeletonWarrior skeletonWarrior = new EntitySkeletonWarrior(world, owner);
+        EntitySkeletonWarrior skeletonWarrior = new EntitySkeletonWarrior(worldObj, owner);
         skeletonWarrior.setLocationAndAngles(pos.getX()+0.5, pos.getY()+1, pos.getZ()+0.5, 1, 0);
         skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.HEAD, getStackInSlot(9));
         skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.CHEST, getStackInSlot(8));
@@ -107,7 +107,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
             }
         }
 
-        world.spawnEntity(skeletonWarrior);
+        worldObj.spawnEntityInWorld(skeletonWarrior);
         if(getStackInSlot(12) != null)
             skeletonWarrior.applySkinsuit(getStackInSlot(12));
         setMilk((byte)0);
@@ -212,7 +212,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
     }
 
     @Override
-    public boolean isUsableByPlayer(EntityPlayer player) {
+    public boolean isUseableByPlayer(EntityPlayer player) {
         return player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64;
     }
 
@@ -357,9 +357,9 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
     public void setMilk(byte milk){
         this.milk = milk;
         markDirty();
-        if(!world.isRemote) {
-            PacketDispatcher.sendToAllAround(new SetMilkMessage(pos, milk), world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 16);
-            world.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        if(!worldObj.isRemote) {
+            PacketDispatcher.sendToAllAround(new SetMilkMessage(pos, milk), worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 16);
+            worldObj.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
     }
 }

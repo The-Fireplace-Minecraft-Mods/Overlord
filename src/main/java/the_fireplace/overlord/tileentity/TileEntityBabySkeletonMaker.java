@@ -43,7 +43,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
                 owner = UUID.fromString(getStackInSlot(0).getTagCompound().getString("Owner"));
             }
         }
-        EntityBabySkeleton babySkeleton = new EntityBabySkeleton(world, owner);
+        EntityBabySkeleton babySkeleton = new EntityBabySkeleton(worldObj, owner);
         babySkeleton.setLocationAndAngles(pos.getX()+0.5, pos.getY()+1, pos.getZ()+0.5, 1, 0);
         babySkeleton.setItemStackToSlot(EntityEquipmentSlot.HEAD, getStackInSlot(7));
         babySkeleton.setItemStackToSlot(EntityEquipmentSlot.CHEST, getStackInSlot(6));
@@ -51,7 +51,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
         babySkeleton.setItemStackToSlot(EntityEquipmentSlot.FEET, getStackInSlot(4));
         babySkeleton.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, getStackInSlot(8));
 
-        world.spawnEntity(babySkeleton);
+        worldObj.spawnEntityInWorld(babySkeleton);
         if(getStackInSlot(9) != null)
             babySkeleton.applySkinsuit(getStackInSlot(9));
         for(int i:clearslots){
@@ -164,7 +164,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
     }
 
     @Override
-    public boolean isUsableByPlayer(EntityPlayer player) {
+    public boolean isUseableByPlayer(EntityPlayer player) {
         return player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64;
     }
 

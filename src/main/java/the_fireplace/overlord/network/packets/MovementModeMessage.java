@@ -33,11 +33,11 @@ public class MovementModeMessage implements IMessage {
     public static class Handler extends AbstractServerMessageHandler<MovementModeMessage> {
         @Override
         public IMessage handleServerMessage(EntityPlayer player, MovementModeMessage message, MessageContext ctx) {
-            if(player.world.getEntityByID(message.warrior) != null){
-                if(player.world.getEntityByID(message.warrior) instanceof EntityArmyMember){
-                    ((EntityArmyMember) player.world.getEntityByID(message.warrior)).cycleMovementMode();
+            if(player.worldObj.getEntityByID(message.warrior) != null){
+                if(player.worldObj.getEntityByID(message.warrior) instanceof EntityArmyMember){
+                    ((EntityArmyMember) player.worldObj.getEntityByID(message.warrior)).cycleMovementMode();
                 }else{
-                    System.out.println("Error: Entity is not an army member. It is "+player.world.getEntityByID(message.warrior).toString());
+                    System.out.println("Error: Entity is not an army member. It is "+player.worldObj.getEntityByID(message.warrior).toString());
                 }
             }else{
                 System.out.println("Error 404: Army Member not found: "+message.warrior);

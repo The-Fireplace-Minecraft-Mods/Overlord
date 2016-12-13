@@ -201,7 +201,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
     public void onDeath(DamageSource cause)
     {
         super.onDeath(cause);
-        if (!this.world.isRemote && this.world.getGameRules().getBoolean("showDeathMessages") && this.getOwner() instanceof EntityPlayerMP)
+        if (!this.worldObj.isRemote && this.worldObj.getGameRules().getBoolean("showDeathMessages") && this.getOwner() instanceof EntityPlayerMP)
         {
             String name = "";
             if(hasCustomName()) {
@@ -209,7 +209,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
                 name += " (" + proxy.translateToLocal("entity." + EntityList.getEntityString(this) + ".name") + ')';
             }else
                 name += proxy.translateToLocal("entity." + EntityList.getEntityString(this) + ".name");
-            this.getOwner().sendMessage(new TextComponentTranslation("overlord.armydeath", name, cause.damageType));
+            this.getOwner().addChatMessage(new TextComponentTranslation("overlord.armydeath", name, cause.damageType));
         }
     }
 
@@ -371,7 +371,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
     public EntityLivingBase getOwner() {
         try
         {
-            return this.world.getPlayerEntityByUUID(getOwnerId());
+            return this.worldObj.getPlayerEntityByUUID(getOwnerId());
         }
         catch (IllegalArgumentException var2)
         {
@@ -502,7 +502,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
                     if (this.rand.nextFloat() < f1)
                     {
                         entityplayer.getCooldownTracker().setCooldown(Items.SHIELD, 100);
-                        this.world.setEntityState(entityplayer, (byte)30);
+                        this.worldObj.setEntityState(entityplayer, (byte)30);
                     }
                 }
             }

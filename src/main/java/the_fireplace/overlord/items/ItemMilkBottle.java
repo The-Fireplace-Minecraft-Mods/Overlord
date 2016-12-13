@@ -38,7 +38,7 @@ public class ItemMilkBottle extends Item {
         if (!worldIn.isRemote) {
             EntityMilkBottle bottle = new EntityMilkBottle(worldIn, playerIn);
             bottle.setHeadingFromThrower(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
-            worldIn.spawnEntity(bottle);
+            worldIn.spawnEntityInWorld(bottle);
         }
 
         return new ActionResult(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));

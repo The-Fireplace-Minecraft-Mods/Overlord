@@ -42,7 +42,7 @@ public class DebugSkeletonMessage implements IMessage {
         @Override
         public IMessage handleServerMessage(EntityPlayer player, DebugSkeletonMessage message, MessageContext ctx) {
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                EntitySkeletonWarrior skeletonWarrior = new EntitySkeletonWarrior(player.world, null);
+                EntitySkeletonWarrior skeletonWarrior = new EntitySkeletonWarrior(player.worldObj, null);
                 skeletonWarrior.setLocationAndAngles(message.pos.getX(), message.pos.getY(), message.pos.getZ(), 1, 0);
                 skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(Items.CHAINMAIL_HELMET));
                 skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(Items.CHAINMAIL_CHESTPLATE));
@@ -51,7 +51,7 @@ public class DebugSkeletonMessage implements IMessage {
                 skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
                 skeletonWarrior.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, Overlord.crusaderShield());
 
-                player.world.spawnEntity(skeletonWarrior);
+                player.worldObj.spawnEntityInWorld(skeletonWarrior);
             });
             return null;
         }

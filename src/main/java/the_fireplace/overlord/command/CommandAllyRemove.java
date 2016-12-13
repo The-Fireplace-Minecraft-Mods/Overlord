@@ -22,7 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class CommandAllyRemove extends CommandBase {
     @Override
-    public String getName() {
+    public String getCommandName() {
         return "allyremove";
     }
 
@@ -50,22 +50,22 @@ public class CommandAllyRemove extends CommandBase {
                         if(sender instanceof EntityPlayerMP)
                             if(((EntityPlayerMP) sender).getStatFile().canUnlockAchievement(Overlord.breakalliance))
                                 ((EntityPlayer)sender).addStat(Overlord.breakalliance);
-                        player.sendMessage(new TextComponentTranslation("overlord.allytermination", ((EntityPlayer) sender).getDisplayNameString()));
-                        sender.sendMessage(new TextComponentTranslation("overlord.allyterminated", player.getDisplayNameString()));
+                        player.addChatMessage(new TextComponentTranslation("overlord.allytermination", ((EntityPlayer) sender).getDisplayNameString()));
+                        sender.addChatMessage(new TextComponentTranslation("overlord.allyterminated", player.getDisplayNameString()));
                     } else {
-                        sender.sendMessage(new TextComponentTranslation("overlord.notallied", player.getDisplayNameString()));
+                        sender.addChatMessage(new TextComponentTranslation("overlord.notallied", player.getDisplayNameString()));
                     }
                 }else{
-                    sender.sendMessage(new TextComponentTranslation("commands.generic.player.notFound"));
+                    sender.addChatMessage(new TextComponentTranslation("commands.generic.player.notFound"));
                 }
             }else{
-                throw new WrongUsageException(getUsage(sender));
+                throw new WrongUsageException(getCommandUsage(sender));
             }
         }
     }
 
     @Override
-    public String getUsage(ICommandSender icommandsender) {
+    public String getCommandUsage(ICommandSender icommandsender) {
         return "/allyremove <PlayerName>";
     }
 }

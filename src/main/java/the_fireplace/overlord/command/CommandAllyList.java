@@ -20,7 +20,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class CommandAllyList extends CommandBase {
     @Override
-    public String getName() {
+    public String getCommandName() {
         return "allylist";
     }
 
@@ -33,18 +33,18 @@ public class CommandAllyList extends CommandBase {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (sender instanceof EntityPlayer) {
             if(!Alliances.getInstance().getAllies(((EntityPlayer) sender).getUniqueID()).isEmpty()) {
-                sender.sendMessage(new TextComponentTranslation("overlord.allylist"));
+                sender.addChatMessage(new TextComponentTranslation("overlord.allylist"));
                 for(StringPair pair:Alliances.getInstance().getAllies(((EntityPlayer) sender).getUniqueID())){
-                    sender.sendMessage(new TextComponentString(pair.getPlayerName()));
+                    sender.addChatMessage(new TextComponentString(pair.getPlayerName()));
                 }
             }else{
-                sender.sendMessage(new TextComponentTranslation("overlord.nofriends"));
+                sender.addChatMessage(new TextComponentTranslation("overlord.nofriends"));
             }
         }
     }
 
     @Override
-    public String getUsage(ICommandSender icommandsender) {
+    public String getCommandUsage(ICommandSender icommandsender) {
         return "/allylist";
     }
 }

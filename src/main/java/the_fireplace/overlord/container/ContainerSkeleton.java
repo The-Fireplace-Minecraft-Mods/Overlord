@@ -123,7 +123,7 @@ public class ContainerSkeleton extends Container {
     @Override
     public void onContainerClosed(EntityPlayer player){
         super.onContainerClosed(player);
-        if(entity.world.isRemote)
+        if(entity.worldObj.isRemote)
             PacketDispatcher.sendToServer(new RequestAugmentMessage(entity));
     }
 }

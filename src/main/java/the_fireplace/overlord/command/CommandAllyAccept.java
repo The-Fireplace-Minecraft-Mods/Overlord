@@ -22,7 +22,7 @@ import java.util.UUID;
 @ParametersAreNonnullByDefault
 public class CommandAllyAccept extends CommandBase {
     @Override
-    public String getName() {
+    public String getCommandName() {
         return "allyaccept";
     }
 
@@ -40,24 +40,24 @@ public class CommandAllyAccept extends CommandBase {
                     Overlord.instance.pendingAlliances.remove(alliance);
                     EntityPlayer ally = server.getEntityWorld().getPlayerEntityByUUID(UUID.fromString(alliance.getUser1().getUUID()));
                     if(ally != null) {
-                        ally.sendMessage(new TextComponentTranslation("overlord.allyaccept", ((EntityPlayer) sender).getDisplayNameString()));
+                        ally.addChatMessage(new TextComponentTranslation("overlord.allyaccept", ((EntityPlayer) sender).getDisplayNameString()));
                         if(ally instanceof EntityPlayerMP)
                             if(((EntityPlayerMP) ally).getStatFile().canUnlockAchievement(Overlord.alliance))
                                 ally.addStat(Overlord.alliance);
                     }
-                    sender.sendMessage(new TextComponentTranslation("overlord.allyaccepted", alliance.getUser1().getPlayerName()));
+                    sender.addChatMessage(new TextComponentTranslation("overlord.allyaccepted", alliance.getUser1().getPlayerName()));
                     if(sender instanceof EntityPlayerMP)
                         if(((EntityPlayerMP) sender).getStatFile().canUnlockAchievement(Overlord.alliance))
                             ((EntityPlayer)sender).addStat(Overlord.alliance);
                     return;
                 }
             }
-            sender.sendMessage(new TextComponentTranslation("overlord.nothingpending"));
+            sender.addChatMessage(new TextComponentTranslation("overlord.nothingpending"));
         }
     }
 
     @Override
-    public String getUsage(ICommandSender icommandsender) {
+    public String getCommandUsage(ICommandSender icommandsender) {
         return "/allyaccept";
     }
 }

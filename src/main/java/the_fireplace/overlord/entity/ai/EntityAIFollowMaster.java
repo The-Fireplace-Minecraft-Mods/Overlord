@@ -31,7 +31,7 @@ public class EntityAIFollowMaster extends EntityAIBase
     public EntityAIFollowMaster(EntityArmyMember thePetIn, double followSpeedIn, float minDistIn, float maxDistIn)
     {
         this.thePet = thePetIn;
-        this.theWorld = thePetIn.world;
+        this.theWorld = thePetIn.worldObj;
         this.followSpeed = followSpeedIn;
         this.petPathfinder = thePetIn.getNavigator();
         this.minDist = minDistIn;
@@ -128,9 +128,9 @@ public class EntityAIFollowMaster extends EntityAIBase
                     {
                         if (this.thePet.getDistanceSqToEntity(this.theOwner) >= 144.0D)
                         {
-                            int i = MathHelper.floor(this.theOwner.posX) - 2;
-                            int j = MathHelper.floor(this.theOwner.posZ) - 2;
-                            int k = MathHelper.floor(this.theOwner.getEntityBoundingBox().minY);
+                            int i = MathHelper.floor_double(this.theOwner.posX) - 2;
+                            int j = MathHelper.floor_double(this.theOwner.posZ) - 2;
+                            int k = MathHelper.floor_double(this.theOwner.getEntityBoundingBox().minY);
 
                             for (int l = 0; l <= 4; ++l)
                             {

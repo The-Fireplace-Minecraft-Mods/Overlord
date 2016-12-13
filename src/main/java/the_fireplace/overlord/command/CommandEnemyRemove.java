@@ -22,7 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class CommandEnemyRemove extends CommandBase {
     @Override
-    public String getName() {
+    public String getCommandName() {
         return "enemyremove";
     }
 
@@ -44,25 +44,25 @@ public class CommandEnemyRemove extends CommandBase {
                                 break;
                             }
                         }
-                        player.sendMessage(new TextComponentTranslation("overlord.enemytermination", ((EntityPlayer) sender).getDisplayNameString()));
-                        sender.sendMessage(new TextComponentTranslation("overlord.enemyterminated", player.getDisplayNameString()));
+                        player.addChatMessage(new TextComponentTranslation("overlord.enemytermination", ((EntityPlayer) sender).getDisplayNameString()));
+                        sender.addChatMessage(new TextComponentTranslation("overlord.enemyterminated", player.getDisplayNameString()));
                         if(sender instanceof EntityPlayerMP)
                             if(((EntityPlayerMP) sender).getStatFile().canUnlockAchievement(Overlord.forgiver))
                                 ((EntityPlayer)sender).addStat(Overlord.forgiver);
                     } else {
-                        sender.sendMessage(new TextComponentTranslation("overlord.notenemied", player.getDisplayNameString()));
+                        sender.addChatMessage(new TextComponentTranslation("overlord.notenemied", player.getDisplayNameString()));
                     }
                 }else{
-                    sender.sendMessage(new TextComponentTranslation("commands.generic.player.notFound"));
+                    sender.addChatMessage(new TextComponentTranslation("commands.generic.player.notFound"));
                 }
             }else{
-                throw new WrongUsageException(getUsage(sender));
+                throw new WrongUsageException(getCommandUsage(sender));
             }
         }
     }
 
     @Override
-    public String getUsage(ICommandSender icommandsender) {
+    public String getCommandUsage(ICommandSender icommandsender) {
         return "/enemyremove <PlayerName>";
     }
 }

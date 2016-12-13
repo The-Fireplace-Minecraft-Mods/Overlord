@@ -23,7 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 public class CommandAlly extends CommandBase {
     @Override
-    public String getName() {
+    public String getCommandName() {
         return "ally";
     }
 
@@ -43,31 +43,31 @@ public class CommandAlly extends CommandBase {
                             if (!Overlord.instance.pendingAlliances.contains(new Alliance(new StringPair(player.getUniqueID().toString(), player.getDisplayNameString()), new StringPair(((EntityPlayer) sender).getUniqueID().toString(), ((EntityPlayer) sender).getDisplayNameString())))) {
                                 if (!Alliances.getInstance().isAlliedTo(((EntityPlayer) sender).getUniqueID(), player.getUniqueID())) {
                                     Overlord.instance.pendingAlliances.add(new Alliance(new StringPair(((EntityPlayer) sender).getUniqueID().toString(), ((EntityPlayer) sender).getDisplayNameString()), new StringPair(player.getUniqueID().toString(), player.getDisplayNameString())));
-                                    player.sendMessage(new TextComponentTranslation("overlord.allyrequest", ((EntityPlayer) sender).getDisplayNameString()));
-                                    sender.sendMessage(new TextComponentTranslation("overlord.requestsent", player.getDisplayNameString()));
+                                    player.addChatMessage(new TextComponentTranslation("overlord.allyrequest", ((EntityPlayer) sender).getDisplayNameString()));
+                                    sender.addChatMessage(new TextComponentTranslation("overlord.requestsent", player.getDisplayNameString()));
                                 } else {
-                                    sender.sendMessage(new TextComponentTranslation("overlord.alreadyallied", player.getDisplayNameString()));
+                                    sender.addChatMessage(new TextComponentTranslation("overlord.alreadyallied", player.getDisplayNameString()));
                                 }
                             } else {
-                                sender.sendMessage(new TextComponentTranslation("overlord.alreadyrequested.other", player.getDisplayNameString()));
+                                sender.addChatMessage(new TextComponentTranslation("overlord.alreadyrequested.other", player.getDisplayNameString()));
                             }
                         } else {
-                            sender.sendMessage(new TextComponentTranslation("overlord.alreadyrequested", player.getDisplayNameString()));
+                            sender.addChatMessage(new TextComponentTranslation("overlord.alreadyrequested", player.getDisplayNameString()));
                         }
                     }else{
-                        sender.sendMessage(new TextComponentTranslation("overlord.enemieswith", player.getDisplayNameString()));
+                        sender.addChatMessage(new TextComponentTranslation("overlord.enemieswith", player.getDisplayNameString()));
                     }
                 }else{
-                    sender.sendMessage(new TextComponentTranslation("commands.generic.player.notFound"));
+                    sender.addChatMessage(new TextComponentTranslation("commands.generic.player.notFound"));
                 }
             }else{
-                throw new WrongUsageException(getUsage(sender));
+                throw new WrongUsageException(getCommandUsage(sender));
             }
         }
     }
 
     @Override
-    public String getUsage(ICommandSender icommandsender) {
+    public String getCommandUsage(ICommandSender icommandsender) {
         return "/ally <PlayerName>";
     }
 }

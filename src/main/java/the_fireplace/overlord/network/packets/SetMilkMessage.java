@@ -40,8 +40,8 @@ public class SetMilkMessage implements IMessage {
     public static class Handler extends AbstractClientMessageHandler<SetMilkMessage> {
         @Override
         public IMessage handleClientMessage(EntityPlayer player, SetMilkMessage message, MessageContext ctx) {
-            if(player.world.getTileEntity(message.pos) instanceof TileEntitySkeletonMaker){
-                ((TileEntitySkeletonMaker) player.world.getTileEntity(message.pos)).setMilk(message.milk);
+            if(player.worldObj.getTileEntity(message.pos) instanceof TileEntitySkeletonMaker){
+                ((TileEntitySkeletonMaker) player.worldObj.getTileEntity(message.pos)).setMilk(message.milk);
             }
             return null;
         }

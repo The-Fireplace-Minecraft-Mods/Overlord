@@ -68,7 +68,7 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
         }
         else if (this.targetClass != EntityPlayer.class && this.targetClass != EntityPlayerMP.class)
         {
-            List<T> list = getEntitiesWithinAABB(this.taskOwner.world, this.targetClass, this.getTargetableArea(this.getTargetDistance()), this.targetEntitySelector);
+            List<T> list = getEntitiesWithinAABB(this.taskOwner.worldObj, this.targetClass, this.getTargetableArea(this.getTargetDistance()), this.targetEntitySelector);
 
             if (list.isEmpty())
             {
@@ -85,7 +85,7 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
         }
         else
         {
-            this.targetEntity = (T)getNearestAttackablePlayer(this.taskOwner.world, this.taskOwner.posX, this.taskOwner.posY + (double)this.taskOwner.getEyeHeight(), this.taskOwner.posZ, this.getTargetDistance(), this.getTargetDistance(), new Function<EntityPlayer, Double>() {
+            this.targetEntity = (T)getNearestAttackablePlayer(this.taskOwner.worldObj, this.taskOwner.posX, this.taskOwner.posY + (double)this.taskOwner.getEyeHeight(), this.taskOwner.posZ, this.getTargetDistance(), this.getTargetDistance(), new Function<EntityPlayer, Double>() {
                 @Override
                 @Nullable
                 public Double apply(@Nullable EntityPlayer p_apply_1_) {

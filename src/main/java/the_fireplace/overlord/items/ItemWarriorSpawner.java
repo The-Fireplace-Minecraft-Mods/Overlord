@@ -54,7 +54,7 @@ public class ItemWarriorSpawner extends Item {
             entity.rotationYawHead = entity.rotationYaw;
             entity.renderYawOffset = entity.rotationYaw;
             entity.onInitialSpawn(worldIn.getDifficultyForLocation(new BlockPos(entity)), null);
-            worldIn.spawnEntity(entity);
+            worldIn.spawnEntityInWorld(entity);
             entity.playLivingSound();
 
             if (entity != null)

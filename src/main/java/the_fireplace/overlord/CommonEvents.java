@@ -58,7 +58,7 @@ public class CommonEvents {
     }
     @SubscribeEvent
     public void entityTick(LivingEvent.LivingUpdateEvent event){
-        if(!event.getEntityLiving().world.isRemote){
+        if(!event.getEntityLiving().worldObj.isRemote){
             if(event.getEntityLiving() instanceof EntitySkeleton || event.getEntityLiving() instanceof EntitySkeletonWarrior || event.getEntityLiving() instanceof EntityBabySkeleton){
                 if(event.getEntityLiving().ticksExisted < 5){
                     if(event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.HEAD) == null){
@@ -78,7 +78,7 @@ public class CommonEvents {
     }
     @SubscribeEvent
     public void livingHurt(LivingHurtEvent event){
-        if(!event.getEntity().world.isRemote)
+        if(!event.getEntity().worldObj.isRemote)
         if(event.getSource().isProjectile()){
             if(event.getEntityLiving() instanceof EntityPlayerMP){
                 if(event.getSource().getEntity() instanceof EntitySkeletonWarrior){
@@ -92,10 +92,10 @@ public class CommonEvents {
     }
     @SubscribeEvent
     public void livingDeath(LivingDeathEvent event){
-        if(!event.getEntityLiving().world.isRemote){
+        if(!event.getEntityLiving().worldObj.isRemote){
             if(event.getSource().getEntity() instanceof EntityWolf && event.getEntityLiving() instanceof EntityArmyMember){
                 if(((EntityWolf) event.getSource().getEntity()).getOwnerId() != null){
-                    EntityPlayer wolfOwner = ((EntityArmyMember) event.getEntityLiving()).world.getPlayerEntityByUUID(((EntityWolf) event.getSource().getEntity()).getOwnerId());
+                    EntityPlayer wolfOwner = ((EntityArmyMember) event.getEntityLiving()).worldObj.getPlayerEntityByUUID(((EntityWolf) event.getSource().getEntity()).getOwnerId());
                     if(wolfOwner != null){
                         if(wolfOwner instanceof EntityPlayerMP)
                             if(((EntityPlayerMP) wolfOwner).getStatFile().canUnlockAchievement(Overlord.wardog)) {

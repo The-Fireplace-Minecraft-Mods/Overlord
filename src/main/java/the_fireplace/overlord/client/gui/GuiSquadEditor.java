@@ -96,7 +96,7 @@ public class GuiSquadEditor extends GuiScreen {
     protected void actionPerformed(GuiButton button) {
         if (button.enabled) {
             if(button.id == 0){
-                this.mc.player.closeScreen();
+                this.mc.thePlayer.closeScreen();
             }
             if(button.id == 1){
                 ArrayList<String> names = new ArrayList();
@@ -106,7 +106,7 @@ public class GuiSquadEditor extends GuiScreen {
                 names.add(four.getText());
                 names.add(five.getText());
                 PacketDispatcher.sendToServer(new UpdateSquadsMessage(names));
-                this.mc.player.closeScreen();
+                this.mc.thePlayer.closeScreen();
             }
         }
     }

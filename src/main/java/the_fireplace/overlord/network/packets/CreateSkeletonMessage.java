@@ -36,8 +36,8 @@ public class CreateSkeletonMessage implements IMessage {
     public static class Handler extends AbstractServerMessageHandler<CreateSkeletonMessage> {
         @Override
         public IMessage handleServerMessage(EntityPlayer player, CreateSkeletonMessage message, MessageContext ctx) {
-            if(player.world.getTileEntity(message.pos) instanceof ISkeletonMaker){
-                ((ISkeletonMaker) player.world.getTileEntity(message.pos)).spawnSkeleton();
+            if(player.worldObj.getTileEntity(message.pos) instanceof ISkeletonMaker){
+                ((ISkeletonMaker) player.worldObj.getTileEntity(message.pos)).spawnSkeleton();
             }
             return null;
         }
