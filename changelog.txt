@@ -1,5 +1,1 @@
-Added the Milk Bottle
-Fixed some itemstack bugs
-Fixed Baby Skeleton held item rendering
-Fixed Squad Editor on servers
-Fixed shift+clicking Skinsuit into Skeleton Makers
+Added break sound to the Milk Bottle
