@@ -3,6 +3,8 @@ package the_fireplace.overlord.entity.projectile;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -49,6 +51,7 @@ public class EntityMilkBottle extends EntityThrowable {
                     }
                 }
             }
+            worldObj.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.NEUTRAL, 0.5F, 0.8F/(rand.nextFloat()*0.4F+0.8F));
             this.setDead();
         }
     }
