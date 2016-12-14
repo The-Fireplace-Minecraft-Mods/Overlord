@@ -4,7 +4,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
-import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -21,7 +20,7 @@ public class RenderBabySkeleton extends RenderLiving<EntityBabySkeleton>
     public RenderBabySkeleton(RenderManager renderManagerIn)
     {
         super(renderManagerIn, new ModelBabySkeleton(), 0.5F);
-        this.addLayer(new LayerHeldItem(this));
+        this.addLayer(new LayerBabyHeldItem(this));
         this.addLayer(new LayerBabySkinsuit(this));
         this.addLayer(new LayerBipedArmor(this)
         {

@@ -1,1 +1,2 @@
-Backport of 2.0.1 to Minecraft 1.9.4
+Added break sound to the Milk Bottle
+Fixed Baby Skeleton handheld item rendering
