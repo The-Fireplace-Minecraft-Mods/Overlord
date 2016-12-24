@@ -529,6 +529,12 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                     world.spawnEntity(entityitem);
                 }
             }
+            if(hasSkinsuit()){
+                ItemStack stack = new ItemStack(Overlord.skinsuit).setStackDisplayName(getSkinsuitName());
+                EntityItem entityitem = new EntityItem(world, posX, posY, posZ, stack);
+                entityitem.setDefaultPickupDelay();
+                world.spawnEntity(entityitem);
+            }
         }
     }
 

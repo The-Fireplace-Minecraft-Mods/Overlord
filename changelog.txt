@@ -1,1 +1,1 @@
-Added break sound to the Milk Bottle
+Equipped skinsuits now drop when your skeletons die.
