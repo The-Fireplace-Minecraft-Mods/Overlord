@@ -1,1 +1,3 @@
 Equipped skinsuits now drop when your skeletons die.
+Obsidian augment now protects from lava
+Milk Bottles can now be put in to Skeleton Makers using their GUIs
