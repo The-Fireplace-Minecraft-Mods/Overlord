@@ -4,6 +4,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
@@ -76,5 +77,19 @@ public class BlockBabySkeletonMaker extends BlockContainer {
             return true;
         } else
             return false;
+    }
+
+    @Override
+    public void breakBlock(World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state)
+    {
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+
+        if (tileentity instanceof TileEntityBabySkeletonMaker)
+        {
+            InventoryHelper.dropInventoryItems(worldIn, pos, (TileEntityBabySkeletonMaker)tileentity);
+            worldIn.updateComparatorOutputLevel(pos, this);
+        }
+
+        super.breakBlock(worldIn, pos, state);
     }
 }
