@@ -61,7 +61,7 @@ import java.util.ArrayList;
 /**
  * @author The_Fireplace
  */
-@Mod(modid= Overlord.MODID, name= Overlord.MODNAME, guiFactory = "the_fireplace.overlord.client.gui.OverlordConfigGuiFactory", updateJSON = "http://thefireplace.bitnamiapp.com/jsons/overlord.json")
+@Mod(modid= Overlord.MODID, name= Overlord.MODNAME, guiFactory = "the_fireplace.overlord.client.gui.OverlordConfigGuiFactory", updateJSON = "http://thefireplace.bitnamiapp.com/jsons/overlord.json", acceptedMinecraftVersions = "[1.11,*)")
 public class Overlord {
     public static final String MODNAME = "Overlord";
     public static final String MODID = "overlord";
