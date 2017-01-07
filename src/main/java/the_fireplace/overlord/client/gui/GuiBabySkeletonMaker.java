@@ -118,7 +118,7 @@ public class GuiBabySkeletonMaker extends GuiContainer {
     }
 
     private boolean isButtonEnabled() {
-        return !(te.getStackInSlot(1).isEmpty() || te.getStackInSlot(2).isEmpty()) && te.getStackInSlot(2).getItem() == Items.MILK_BUCKET && te.getStackInSlot(1).getCount() >= ConfigValues.SERVER_BONEREQ_BABY;
+        return !(te.getStackInSlot(1).isEmpty() || te.getStackInSlot(2).isEmpty()) && (te.getStackInSlot(2).getItem() == Items.MILK_BUCKET || te.getStackInSlot(2).getItem() == Overlord.milk_bottle) && te.getStackInSlot(1).getCount() >= ConfigValues.SERVER_BONEREQ_BABY;
     }
 
     private String getWarning(){

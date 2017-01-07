@@ -22,6 +22,19 @@ import static the_fireplace.overlord.Overlord.proxy;
  * @author The_Fireplace
  */
 public class ItemOverlordsSeal extends Item {
+
+    private boolean canOpenGui;
+    private boolean consumable;
+
+    public ItemOverlordsSeal(){
+        this(true, false);
+    }
+
+    public ItemOverlordsSeal(boolean canOpenGui, boolean consumedOnUse){
+        this.canOpenGui = canOpenGui;
+        this.consumable = consumedOnUse;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     @Nonnull
@@ -34,13 +47,17 @@ public class ItemOverlordsSeal extends Item {
             stack.getTagCompound().setString("Owner", playerIn.getUniqueID().toString());
             stack.getTagCompound().setString("OwnerName", playerIn.getDisplayNameString());
             return new ActionResult(EnumActionResult.SUCCESS, stack);
-        }else{
+        }else if(canOpenGui) {
             if(stack.getTagCompound().getString("Owner").equals(playerIn.getUniqueID().toString())){
                 FMLNetworkHandler.openGui(playerIn, Overlord.instance, -1, worldIn, (int)playerIn.posX, (int)playerIn.posY, (int)playerIn.posZ);
+                if(consumable)
+                    stack.shrink(1);
                 return new ActionResult(EnumActionResult.SUCCESS, stack);
             }else{
                 return new ActionResult(EnumActionResult.FAIL, stack);
             }
+        }else{
+            return new ActionResult(EnumActionResult.PASS, stack);
         }
     }
 
@@ -49,9 +66,9 @@ public class ItemOverlordsSeal extends Item {
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
         if(stack.getTagCompound() != null && stack.getTagCompound().hasKey("Owner")) {
-            tooltip.add(proxy.translateToLocal("item.overlords_seal.tooltip", stack.getTagCompound().getString("OwnerName")));
+            tooltip.add(proxy.translateToLocal(getUnlocalizedName()+".tooltip", stack.getTagCompound().getString("OwnerName"), stack.getCount() > 1 ? "s" : ""));
         }else{
-            tooltip.add(proxy.translateToLocal("item.overlords_seal.tooltip.default"));
+            tooltip.add(proxy.translateToLocal(getUnlocalizedName()+".tooltip.default", stack.getCount() > 1 ? "ese" : "is", stack.getCount() > 1 ? "s" : ""));
         }
     }
 
@@ -60,5 +77,9 @@ public class ItemOverlordsSeal extends Item {
     public boolean hasEffect(ItemStack stack)
     {
         return stack.getTagCompound() != null && stack.getTagCompound().hasKey("Owner");
+    }
+
+    public boolean isConsumable(){
+        return consumable;
     }
 }

@@ -1,8 +1,11 @@
 tile.skeleton_maker.name=Skeleton Warrior Maker
 tile.baby_skeleton_maker.name=Baby Skeleton Maker
 item.overlords_seal.name=Overlord's Seal
+item.overlords_stamp.name=Overlord's Stamp
 item.overlords_seal.tooltip.default=Right-Click to make this your seal!
-item.overlords_seal.tooltip=Seal of %s
+item.overlords_seal.tooltip=Seal of %1$s
+item.overlords_stamp.tooltip.default=Right-Click to make th%1$s your stamp%2$s!
+item.overlords_stamp.tooltip=Stamp%2$s of %1$s
 item.squad_editor.name=Squad Editor
 item.sans_mask.name=Sans Mask
 item.skinsuit.name=Skinsuit

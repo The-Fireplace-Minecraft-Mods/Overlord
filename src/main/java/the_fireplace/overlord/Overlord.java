@@ -96,6 +96,7 @@ public class Overlord {
     public static final Block skeleton_maker = new BlockSkeletonMaker();
     public static final Block baby_skeleton_maker = new BlockBabySkeletonMaker();
     public static final Item overlords_seal = new ItemOverlordsSeal().setUnlocalizedName("overlords_seal").setCreativeTab(tabOverlord).setMaxStackSize(1);
+    public static final Item overlords_stamp = new ItemOverlordsSeal(false, true).setUnlocalizedName("overlords_stamp").setCreativeTab(tabOverlord);
     public static final Item squad_editor = new ItemSquadEditor().setUnlocalizedName("squad_editor").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item sans_mask = new ItemSansMask(sans);
     public static final Item skinsuit = new Item().setUnlocalizedName("skinsuit").setCreativeTab(tabOverlord).setMaxStackSize(1);
@@ -140,6 +141,7 @@ public class Overlord {
         registerBlock(skeleton_maker);
         registerBlock(baby_skeleton_maker);
         registerItem(overlords_seal);
+        registerItem(overlords_stamp);
         registerItem(squad_editor);
         registerItem(sans_mask);
         registerItem(skinsuit);
@@ -195,6 +197,7 @@ public class Overlord {
         rmm(skeleton_maker);
         rmm(baby_skeleton_maker);
         rmm(overlords_seal);
+        rmm(overlords_stamp);
         rmm(squad_editor);
         rmm(sans_mask);
         rmm(skinsuit);

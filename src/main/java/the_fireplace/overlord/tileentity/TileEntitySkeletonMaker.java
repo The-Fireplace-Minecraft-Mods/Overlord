@@ -23,6 +23,7 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
+import the_fireplace.overlord.items.ItemOverlordsSeal;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.SetMilkMessage;
 import the_fireplace.overlord.registry.AugmentRegistry;
@@ -86,6 +87,9 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
         if(!getStackInSlot(0).isEmpty()){
             if(getStackInSlot(0).getTagCompound() != null){
                 owner = UUID.fromString(getStackInSlot(0).getTagCompound().getString("Owner"));
+                if(getStackInSlot(0).getItem() instanceof ItemOverlordsSeal)
+                    if(((ItemOverlordsSeal)getStackInSlot(0).getItem()).isConsumable())
+                        getStackInSlot(0).shrink(1);
             }
         }
         EntitySkeletonWarrior skeletonWarrior = new EntitySkeletonWarrior(world, owner);
@@ -243,7 +247,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 
     @Override
     public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack) {
-        return (index == 0 && stack.getItem() == Overlord.overlords_seal) || ((index == 1 || index == 2) && stack.getItem() == Items.BONE) || (index == 3 && AugmentRegistry.getAugment(stack) != null) || (index == 4 && (stack.getItem() == Items.MILK_BUCKET || stack.getItem() == Overlord.milk_bottle)) || (index > 5 && index < 10 && stack.getItem().isValidArmor(stack, getSlotEquipmentType(index), null) || (index == 12 && stack.getItem() == Overlord.skinsuit));
+        return (index == 0 && stack.getItem() instanceof ItemOverlordsSeal) || ((index == 1 || index == 2) && stack.getItem() == Items.BONE) || (index == 3 && AugmentRegistry.getAugment(stack) != null) || (index == 4 && (stack.getItem() == Items.MILK_BUCKET || stack.getItem() == Overlord.milk_bottle)) || (index > 5 && index < 10 && stack.getItem().isValidArmor(stack, getSlotEquipmentType(index), null) || (index == 12 && stack.getItem() == Overlord.skinsuit));
     }
 
     private EntityEquipmentSlot getSlotEquipmentType(int index){
