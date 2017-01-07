@@ -26,7 +26,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -205,7 +204,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
                 name += " (" + proxy.translateToLocal("entity." + EntityList.getEntityString(this) + ".name") + ')';
             }else
                 name += proxy.translateToLocal("entity." + EntityList.getEntityString(this) + ".name");
-            this.getOwner().sendMessage(new TextComponentTranslation("overlord.armydeath", name, cause.damageType));
+            this.getOwner().sendMessage(cause.getDeathMessage(this));
         }
     }
 
