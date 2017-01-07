@@ -12,7 +12,7 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import the_fireplace.overlord.entity.EntitySkeletonWarrior;
+import the_fireplace.overlord.entity.EntityConvertedSkeleton;
 
 import javax.annotation.Nonnull;
 
@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
  * @author The_Fireplace
  */
 @SideOnly(Side.CLIENT)
-public class ModelSkeletonWarrior extends ModelBiped
+public class ModelConvertedSkeleton extends ModelBiped
 {
     public ModelRenderer skinsuitHead;
     public ModelRenderer skinsuitHeadwear;
@@ -36,12 +36,12 @@ public class ModelSkeletonWarrior extends ModelBiped
     public ModelRenderer skinsuitBodyWear;
     public boolean smallSkinsuitArms;
     public boolean skinsuit;
-    public ModelSkeletonWarrior()
+    public ModelConvertedSkeleton()
     {
         this(0.0F, false, false, 1);
     }
 
-    public ModelSkeletonWarrior(float modelSize, boolean notmain, boolean hasSkinsuit, int texScale)
+    public ModelConvertedSkeleton(float modelSize, boolean notmain, boolean hasSkinsuit, int texScale)
     {
         super(modelSize, 0.0F, 64, 32*texScale);
 
@@ -124,19 +124,19 @@ public class ModelSkeletonWarrior extends ModelBiped
     @Override
     public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float p_78086_2_, float p_78086_3_, float partialTickTime)
     {
-        this.rightArmPose = ModelBiped.ArmPose.EMPTY;
-        this.leftArmPose = ModelBiped.ArmPose.EMPTY;
+        this.rightArmPose = ArmPose.EMPTY;
+        this.leftArmPose = ArmPose.EMPTY;
         ItemStack itemstack = entitylivingbaseIn.getHeldItem(EnumHand.MAIN_HAND);
 
-        if (!itemstack.isEmpty() && itemstack.getItem() == Items.BOW && ((EntitySkeletonWarrior)entitylivingbaseIn).isSwingingArms())
+        if (!itemstack.isEmpty() && itemstack.getItem() == Items.BOW && ((EntityConvertedSkeleton)entitylivingbaseIn).isSwingingArms())
         {
             if (entitylivingbaseIn.getPrimaryHand() == EnumHandSide.RIGHT)
             {
-                this.rightArmPose = ModelBiped.ArmPose.BOW_AND_ARROW;
+                this.rightArmPose = ArmPose.BOW_AND_ARROW;
             }
             else
             {
-                this.leftArmPose = ModelBiped.ArmPose.BOW_AND_ARROW;
+                this.leftArmPose = ArmPose.BOW_AND_ARROW;
             }
         }
 
@@ -174,7 +174,7 @@ public class ModelSkeletonWarrior extends ModelBiped
     {
         super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entityIn);
         ItemStack itemstack = ((EntityLivingBase)entityIn).getHeldItemMainhand();
-        EntitySkeletonWarrior entityskeleton = (EntitySkeletonWarrior) entityIn;
+        EntityConvertedSkeleton entityskeleton = (EntityConvertedSkeleton) entityIn;
 
         if (entityskeleton.isSwingingArms() && (itemstack.isEmpty() || itemstack.getItem() != Items.BOW))
         {

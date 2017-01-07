@@ -4,14 +4,14 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.item.ItemBow;
 import net.minecraft.util.EnumHand;
-import the_fireplace.overlord.entity.EntitySkeletonWarrior;
+import the_fireplace.overlord.entity.EntityArmyMember;
 
 /**
  * @author The_Fireplace
  */
 public class EntityAIWarriorBow extends EntityAIBase
 {
-    private final EntitySkeletonWarrior entity;
+    private final EntityArmyMember entity;
     private final double moveSpeedAmp;
     private int attackCooldown;
     private final float maxAttackDistance;
@@ -21,7 +21,7 @@ public class EntityAIWarriorBow extends EntityAIBase
     private boolean strafingBackwards;
     private int strafingTime = -1;
 
-    public EntityAIWarriorBow(EntitySkeletonWarrior skeleton, double speedAmplifier, int delay, float maxDistance)
+    public EntityAIWarriorBow(EntityArmyMember skeleton, double speedAmplifier, int delay, float maxDistance)
     {
         this.entity = skeleton;
         this.moveSpeedAmp = speedAmplifier;

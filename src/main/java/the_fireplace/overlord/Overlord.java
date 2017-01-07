@@ -44,6 +44,8 @@ import the_fireplace.overlord.blocks.BlockSkeletonMaker;
 import the_fireplace.overlord.command.*;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.EntityBabySkeleton;
+import the_fireplace.overlord.entity.EntityConvertedSkeleton;
+import the_fireplace.overlord.entity.EntityCuringSkeleton;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.entity.projectile.EntityMilkBottle;
 import the_fireplace.overlord.items.*;
@@ -102,6 +104,7 @@ public class Overlord {
     public static final Item skinsuit = new Item().setUnlocalizedName("skinsuit").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item warrior_spawner = new ItemWarriorSpawner().setUnlocalizedName("warrior_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item baby_spawner = new ItemBabySpawner().setUnlocalizedName("baby_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
+    public static final Item converted_spawner = new ItemConvertedSpawner().setUnlocalizedName("converted_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item milk_bottle = new ItemMilkBottle().setMaxStackSize(16);
 
     public static void syncConfig() {
@@ -147,6 +150,7 @@ public class Overlord {
         registerItem(skinsuit);
         registerItem(warrior_spawner);
         registerItem(baby_spawner);
+        registerItem(converted_spawner);
         registerItem(milk_bottle);
         OreDictionary.registerOre("book", squad_editor);
         GameRegistry.registerTileEntity(TileEntitySkeletonMaker.class, "skeleton_maker");
@@ -155,6 +159,8 @@ public class Overlord {
         EntityRegistry.registerModEntity(new ResourceLocation(MODID+":skeleton_warrior"), EntitySkeletonWarrior.class, "skeleton_warrior", ++eid, instance, 128, 2, false);
         EntityRegistry.registerModEntity(new ResourceLocation(MODID+":skeleton_baby"), EntityBabySkeleton.class, "skeleton_baby", ++eid, instance, 64, 2, false);
         EntityRegistry.registerModEntity(new ResourceLocation(MODID+":milk_bottle"), EntityMilkBottle.class, "milk_bottle", ++eid, instance, 32, 10, true);
+        EntityRegistry.registerModEntity(new ResourceLocation(MODID+":skeleton_converted"), EntityConvertedSkeleton.class, "skeleton_converted", ++eid, instance, 116, 2, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(MODID+":skeleton_curing"), EntityCuringSkeleton.class, "skeleton_curing", ++eid, instance, 48, 2, false);
         proxy.registerClient();
         MinecraftForge.EVENT_BUS.register(new CommonEvents());
         DataSerializers.registerSerializer(CustomDataSerializers.UNIQUE_ID);
@@ -203,6 +209,7 @@ public class Overlord {
         rmm(skinsuit);
         rmm(warrior_spawner);
         rmm(baby_spawner);
+        rmm(converted_spawner);
         rmm(milk_bottle);
     }
 
@@ -245,6 +252,7 @@ public class Overlord {
 
     public static Achievement firstBaby = new Achievement("firstbaby", "firstbaby", 1, 1, Items.SKULL, AchievementList.BUILD_PICKAXE);
     public static Achievement firstSkeleton = new Achievement("firstskeleton", "firstskeleton", 0, 0, Items.SKULL, AchievementList.BUILD_PICKAXE);
+    public static Achievement converter = new Achievement("converter", "converter", -1, -1, Items.GOLDEN_APPLE, AchievementList.BUILD_PICKAXE);
     public static Achievement secondSkeleton = new Achievement("secondskeleton", "secondskeleton", 0, 2, Items.SKULL, firstSkeleton);
     public static Achievement firstMilk = new Achievement("firstmilk", "firstmilk", 2, 0, Items.MILK_BUCKET, firstSkeleton);
     public static Achievement firstLevel = new Achievement("firstlevel", "firstlevel", 0, -2, Items.BONE, firstSkeleton);
@@ -269,6 +277,7 @@ public class Overlord {
     private static void addAchievements(){
         firstBaby.registerStat();
         firstSkeleton.registerStat();
+        converter.registerStat();
         secondSkeleton.registerStat();
         firstLevel.registerStat();
         firstMilk.registerStat();
@@ -287,6 +296,6 @@ public class Overlord {
         heya.registerStat();
         heya.setSpecial();
         AchievementPage.registerAchievementPage(new AchievementPage(MODNAME,
-                firstBaby, firstSkeleton, secondSkeleton, firstLevel, firstMilk, armedSkeleton, sally, crusader, milk256, milk9001, nmyi, alliance, breakalliance, warmonger, forgiver, wardog, heya));
+                firstBaby, firstSkeleton, converter, secondSkeleton, firstLevel, firstMilk, armedSkeleton, sally, crusader, milk256, milk9001, nmyi, alliance, breakalliance, warmonger, forgiver, wardog, heya));
     }
 }

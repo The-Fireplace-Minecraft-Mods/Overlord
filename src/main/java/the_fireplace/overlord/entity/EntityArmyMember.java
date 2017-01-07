@@ -554,4 +554,9 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
             return false;
         }
     }
+
+    public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor)
+    {
+
+    }
 }
