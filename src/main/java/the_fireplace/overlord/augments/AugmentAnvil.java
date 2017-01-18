@@ -35,7 +35,7 @@ public class AugmentAnvil extends Augment {
         if(entity.fallDistance > 2){
             if(!entity.world.getEntitiesWithinAABB(EntityLivingBase.class, entity.getEntityBoundingBox().offset(new BlockPos(0, -2, 0))).isEmpty())
                 for(EntityLivingBase fallenon:entity.world.getEntitiesWithinAABB(EntityLivingBase.class, entity.getEntityBoundingBox().offset(new BlockPos(0, -2, 0)).expandXyz(1))){
-                    fallenon.attackEntityFrom(DamageSource.anvil, (float)Math.min(MathHelper.floor((float)MathHelper.ceil(entity.fallDistance - 1.0F) * 2.0F)/2, 40));
+                    fallenon.attackEntityFrom(DamageSource.ANVIL, (float)Math.min(MathHelper.floor((float)MathHelper.ceil(entity.fallDistance - 1.0F) * 2.0F)/2, 40));
                 }
         }
         if(entity.getActivePotionEffect(MobEffects.RESISTANCE) == null)
