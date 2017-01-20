@@ -24,6 +24,7 @@ public class CraftingRecipes {
         addRecipe(overlords_seal, "nin", "i i", "nin", 'n', "nuggetGold", 'i', "ingotIron");
         addRecipe(overlords_stamp, " s", "sp", " d", 's', "stickWood", 'p', "paper", 'd', "dye");
         addRecipe(overlords_stamp, "s ", "ps", "d ", 's', "stickWood", 'p', "paper", 'd', "dye");
+        addRecipe(new ItemStack(Items.CAKE), "mmm", "ses", "www", 'm', Overlord.milk_bottle, 's', Items.SUGAR, 'e', "egg", 'w', "cropWheat");
         addShapelessRecipe(skinsuit, Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, Items.LEATHER_LEGGINGS, Items.LEATHER_BOOTS, Items.ROTTEN_FLESH, Items.ROTTEN_FLESH, "dyeGreen", "dyeBlue", "dyeRed");
         addShapelessRecipe(squad_editor, Items.BOOK, "dyeBlack", "bone");
     }

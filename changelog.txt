@@ -1,4 +1,1 @@
-Fixed mod not initializing
-Added the Overlord's Stamp
-Improved army member death messages
-Added the ability to convert Skeletons into members of your army
+Cake can now be crafted with Milk Bottles
