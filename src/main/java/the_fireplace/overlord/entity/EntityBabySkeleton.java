@@ -242,6 +242,12 @@ public class EntityBabySkeleton extends EntityArmyMember {
                     worldObj.spawnEntityInWorld(entityitem);
                 }
             }
+            if(hasSkinsuit()){
+                ItemStack stack = new ItemStack(Overlord.skinsuit).setStackDisplayName(getSkinsuitName());
+                EntityItem entityitem = new EntityItem(worldObj, posX, posY, posZ, stack);
+                entityitem.setDefaultPickupDelay();
+                worldObj.spawnEntityInWorld(entityitem);
+            }
         }
     }
 

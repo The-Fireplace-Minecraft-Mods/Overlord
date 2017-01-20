@@ -21,4 +21,10 @@ public class SlotAugment extends Slot {
     public boolean isItemValid(ItemStack stack) {
         return AugmentRegistry.getAugment(stack) != null;
     }
+
+    @Override
+    public int getSlotStackLimit()
+    {
+        return 1;
+    }
 }

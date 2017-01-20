@@ -1,2 +1,10 @@
-Added break sound to the Milk Bottle
-Fixed Baby Skeleton handheld item rendering
+Added the Overlord's Stamp
+Improved army member death messages
+Added the ability to convert Skeletons into members of your army
+Cake can now be crafted with Milk Bottles
+Equipped skinsuits now drop when your skeletons die
+Obsidian augment now protects from lava
+Milk Bottles can now be put in to Skeleton Makers using their GUIs
+Skeleton Makers now drop their contents when broken
+Shift Clicking a stack of augment items no longer puts the whole stack in the augment slot
+Fixed Baby Skeleton held item rendering

@@ -1,8 +1,6 @@
 package the_fireplace.overlord.entity;
 
 import com.google.common.collect.Lists;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -10,7 +8,6 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -29,7 +26,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -44,35 +40,26 @@ import the_fireplace.overlord.network.packets.RequestAugmentMessage;
 import the_fireplace.overlord.registry.AugmentRegistry;
 import the_fireplace.overlord.tools.Augment;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.UUID;
-
 /**
  * @author The_Fireplace
  */
-public class EntitySkeletonWarrior extends EntityArmyMember {
-
-    private static final DataParameter<Integer> SKELETON_POWER_LEVEL = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> TOTAL_MILK_LEVEL = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> XP = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
-    private static final DataParameter<String> SKINSUIT_NAME = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.STRING);
-    private static final DataParameter<Boolean> HAS_SKINSUIT = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BOOLEAN);
+public class EntityConvertedSkeleton extends EntityArmyMember {
+    private static final DataParameter<String> SKINSUIT_NAME = EntityDataManager.createKey(EntityConvertedSkeleton.class, DataSerializers.STRING);
+    private static final DataParameter<Boolean> HAS_SKINSUIT = EntityDataManager.createKey(EntityConvertedSkeleton.class, DataSerializers.BOOLEAN);
     private EntityAIWarriorBow aiArrowAttack = null;
-
     public final InventoryBasic inventory;
     public final InventoryBasic equipInventory;
-
     public boolean cachedClientAugment = false;
     public Augment clientAugment = null;
-
-    public EntitySkeletonWarrior instance;
-
-    public EntitySkeletonWarrior(World world){
+    public EntityConvertedSkeleton instance;
+    public EntityConvertedSkeleton(World world) {
         this(world, null);
     }
-
-    public EntitySkeletonWarrior(World world, @Nullable UUID owner){
+    public EntityConvertedSkeleton(World world, @Nullable UUID owner) {
         super(world, owner);
         instance = this;
         this.inventory = new InventoryBasic("Items", false, 9);
@@ -89,6 +76,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                     PacketDispatcher.sendToServer(new RequestAugmentMessage(instance));
             }
             @Override
+            @Nonnull
             public ItemStack removeStackFromSlot(int index)
             {
                 ItemStack stack = super.removeStackFromSlot(index);
@@ -97,6 +85,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                 return stack;
             }
             @Override
+            @Nonnull
             public ItemStack decrStackSize(int index, int count)
             {
                 ItemStack stack = super.decrStackSize(index, count);
@@ -108,19 +97,11 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
         this.setCanPickUpLoot(true);
         if(getOwner() != null){
             if(getOwner() instanceof EntityPlayerMP)
-                if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.firstSkeleton)) {
-                    ((EntityPlayer) getOwner()).addStat(Overlord.firstSkeleton);
-                    return;
-                }
-        }
-        if(getOwner() != null){
-            if(getOwner() instanceof EntityPlayerMP)
-                if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.secondSkeleton)) {
-                    ((EntityPlayer) getOwner()).addStat(Overlord.secondSkeleton);
+                if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.converter)) {
+                    ((EntityPlayer) getOwner()).addStat(Overlord.converter);
                 }
         }
     }
-
     @Override
     public void addAttackTasks(){
         if(aiAttackOnCollide == null){
@@ -130,16 +111,14 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                 public void resetTask()
                 {
                     super.resetTask();
-                    EntitySkeletonWarrior.this.setSwingingArms(false);
+                    EntityConvertedSkeleton.this.setSwingingArms(false);
                 }
-
                 @Override
                 public void startExecuting()
                 {
                     super.startExecuting();
-                    EntitySkeletonWarrior.this.setSwingingArms(true);
+                    EntityConvertedSkeleton.this.setSwingingArms(true);
                 }
-
                 @Override
                 public void updateTask(){
                     if(this.attacker.getHeldItemMainhand() != null && this.attacker.getHeldItemOffhand() != null && this.attacker.getHeldItemMainhand().getItem() instanceof ItemBow && this.attacker.getHeldItemOffhand().getItem() instanceof ItemArrow) {
@@ -162,57 +141,56 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
         if(this.dataManager.get(MOVEMENT_MODE) > 0)
             this.tasks.addTask(5, aiAttackOnCollide);
     }
-
     @Override
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(1.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(16.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(0.5D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
     }
-
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack)
+    public boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack is)
     {
         if(this.getOwner() != null){
             if(this.getOwner().equals(player)){
                 if(!player.isSneaking()) {
                     FMLNetworkHandler.openGui(player, Overlord.instance, hashCode(), worldObj, (int) this.posX, (int) this.posY, (int) this.posZ);
                     return true;
-                }else{
-                    if(!worldObj.isRemote)
-                    if(stack != null){
-                        if(stack.getItem() == Overlord.skinsuit && !this.hasSkinsuit()){
-                            applySkinsuit(stack);
-                            if(!player.isCreative())
-                                stack.stackSize--;
-                        }else if(stack.getItem() == Items.SHEARS && this.hasSkinsuit()){
-                            if(!player.isCreative()) {
-                                stack.damageItem(1, player);
-                                entityDropItem(new ItemStack(Overlord.skinsuit).setStackDisplayName(getSkinsuitName()), 0.1F);
+                }else {
+                    if (!worldObj.isRemote){
+                        ItemStack stack = player.getHeldItem(hand);
+                        if (stack != null) {
+                            if (stack.getItem() == Overlord.skinsuit && !this.hasSkinsuit()) {
+                                applySkinsuit(stack);
+                                if (!player.isCreative())
+                                    stack.stackSize--;
+                            } else if (stack.getItem() == Items.SHEARS && this.hasSkinsuit()) {
+                                if (!player.isCreative()) {
+                                    stack.damageItem(1, player);
+                                    entityDropItem(new ItemStack(Overlord.skinsuit).setStackDisplayName(getSkinsuitName()), 0.1F);
+                                }
+                                if (ConfigValues.SKINSUITNAMETAGS && this.hasCustomName()) {
+                                    if (this.getCustomNameTag().equals(getSkinsuitName()))
+                                        this.setCustomNameTag("");
+                                }
+                                this.dataManager.set(HAS_SKINSUIT, Boolean.valueOf(false));
+                                this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
+                            } else if (stack.getItem() == Overlord.converted_spawner) {
+                                NBTTagCompound compound = new NBTTagCompound();
+                                this.writeEntityToNBT(compound);
+                                stack.setTagCompound(compound);
                             }
-                            if(ConfigValues.SKINSUITNAMETAGS && this.hasCustomName()){
-                                if(this.getCustomNameTag().equals(getSkinsuitName()))
-                                    this.setCustomNameTag("");
-                            }
-                            this.dataManager.set(HAS_SKINSUIT, Boolean.valueOf(false));
-                            this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
-                        }else if(stack.getItem() == Overlord.warrior_spawner){
-                            NBTTagCompound compound = new NBTTagCompound();
-                            this.writeEntityToNBT(compound);
-                            stack.setTagCompound(compound);
                         }
                     }
                 }
             }
         }
-        return super.processInteract(player, hand, stack);
+        return super.processInteract(player, hand, is);
     }
-
-    public void applySkinsuit(ItemStack stack){
+    public void applySkinsuit(@Nonnull ItemStack stack){
         this.dataManager.set(HAS_SKINSUIT, Boolean.valueOf(true));
         if(stack.hasDisplayName()) {
             this.dataManager.set(SKINSUIT_NAME, String.valueOf(stack.getDisplayName()));
@@ -221,25 +199,13 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
         }else
             this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
     }
-
     @Override
     protected void entityInit()
     {
         super.entityInit();
-        this.dataManager.register(SKELETON_POWER_LEVEL, Integer.valueOf(1));
-        this.dataManager.register(TOTAL_MILK_LEVEL, Integer.valueOf(0));
         this.dataManager.register(HAS_SKINSUIT, Boolean.valueOf(false));
         this.dataManager.register(SKINSUIT_NAME, String.valueOf(""));
-        this.dataManager.register(XP, Integer.valueOf(0));
     }
-
-    @Override
-    protected void playStepSound(BlockPos pos, Block blockIn)
-    {
-        SoundEvent soundevent = SoundEvents.ENTITY_SKELETON_STEP;
-        this.playSound(soundevent, (float)(0.15F*Math.sqrt(dataManager.get(SKELETON_POWER_LEVEL))), 1.0F);
-    }
-
     @Override
     public Augment getAugment(){
         if(equipInventory == null)
@@ -248,13 +214,12 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
             return clientAugment;
         return AugmentRegistry.getAugment(equipInventory.getStackInSlot(6));
     }
-
     @Override
+    @Nonnull
     public EnumCreatureAttribute getCreatureAttribute()
     {
         return EnumCreatureAttribute.UNDEAD;
     }
-
     ItemStack bucket = new ItemStack(Items.BUCKET);
     ItemStack bottle = new ItemStack(Items.GLASS_BOTTLE);
     @Override
@@ -262,60 +227,53 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     {
         if(!this.worldObj.isRemote) {
             for(int i=0;i<this.inventory.getSizeInventory();i++){
-                if(inventory.getStackInSlot(i) != null)
-                    if(inventory.getStackInSlot(i).getItem() == Items.MILK_BUCKET){
-                        this.increaseMilkLevel(true);
-                        if(inventory.getStackInSlot(i).stackSize > 1)
+                if(inventory.getStackInSlot(i) != null && this.getHealth() < this.getMaxHealth()) {
+                    if (inventory.getStackInSlot(i).getItem() == Items.MILK_BUCKET) {
+                        this.heal(1);
+                        if (inventory.getStackInSlot(i).stackSize > 1)
                             inventory.getStackInSlot(i).stackSize--;
                         else
                             inventory.setInventorySlotContents(i, null);
                         inventory.addItem(bucket);
                     }else if(inventory.getStackInSlot(i).getItem() == Overlord.milk_bottle){
-                        this.increaseMilkLevel(true);
+                        this.heal(1);
                         if(inventory.getStackInSlot(i).stackSize > 1)
                             inventory.getStackInSlot(i).stackSize--;
                         else
                             inventory.setInventorySlotContents(i, null);
                         inventory.addItem(bottle);
                     }
+                }
             }
-            checkLevelUp();
-
             if (this.worldObj.isDaytime()) {
                 float f = this.getBrightness(1.0F);
                 BlockPos blockpos = this.getRidingEntity() instanceof EntityBoat ? (new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ)).up() : new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ);
-
                 if(!hasSkinsuit())
-                if (f > 0.5F && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.worldObj.canSeeSky(blockpos)) {
-                    boolean flag = true;
-                    ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-
-                    if (itemstack != null) {
-                        if(ConfigValues.HELMETDAMAGE)
-                            if (itemstack.isItemStackDamageable()) {
-                                itemstack.setItemDamage(itemstack.getItemDamage() + this.rand.nextInt(2));
-
-                                if (itemstack.getItemDamage() >= itemstack.getMaxDamage()) {
-                                    this.renderBrokenItemStack(itemstack);
-                                    this.setItemStackToSlot(EntityEquipmentSlot.HEAD, null);
+                    if (f > 0.5F && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.worldObj.canSeeSky(blockpos)) {
+                        boolean flag = true;
+                        ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+                        if (itemstack != null) {
+                            if(ConfigValues.HELMETDAMAGE)
+                                if (itemstack.isItemStackDamageable()) {
+                                    itemstack.setItemDamage(itemstack.getItemDamage() + this.rand.nextInt(2));
+                                    if (itemstack.getItemDamage() >= itemstack.getMaxDamage()) {
+                                        this.renderBrokenItemStack(itemstack);
+                                        this.setItemStackToSlot(EntityEquipmentSlot.HEAD, null);
+                                    }
                                 }
-                            }
-
-                        flag = false;
+                            flag = false;
+                        }
+                        if (flag) {
+                            this.setFire(6);
+                        }
                     }
-
-                    if (flag) {
-                        this.setFire(6);
-                    }
-                }
             }
-
             this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D)).stream().filter(entityitem -> !entityitem.isDead && entityitem.getEntityItem() != null && !entityitem.cannotPickup()).forEach(entityitem -> {
                 ItemStack stack2 = inventory.addItem(entityitem.getEntityItem());
                 if (stack2 != null) {
                     if(stack2.stackSize != entityitem.getEntityItem().stackSize)
                         playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
-                    entityitem.getEntityItem().stackSize = stack2.stackSize;
+                    entityitem.getEntityItem().stackSize=stack2.stackSize;
                     if(stack2.getItem() == Items.MILK_BUCKET || stack2.getItem() == Overlord.milk_bottle){
                         for(int i=0;i<inventory.getSizeInventory();i++){
                             if(inventory.getStackInSlot(i) != null && (inventory.getStackInSlot(i).getItem() == Items.BUCKET || inventory.getStackInSlot(i).getItem() == Items.GLASS_BOTTLE)) {
@@ -329,56 +287,6 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                     playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
                 }
             });
-
-            for(EntityXPOrb xp:worldObj.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox().expand(8, 5, 8))){
-                xp.motionY -= 0.029999999329447746D;
-
-                if (xp.worldObj.getBlockState(new BlockPos(this)).getMaterial() == Material.LAVA)
-                {
-                    xp.motionY = 0.20000000298023224D;
-                    xp.motionX = (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
-                    xp.motionZ = (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
-                    xp.playSound(SoundEvents.ENTITY_GENERIC_BURN, 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
-                }
-
-                this.pushOutOfBlocks(this.posX, (this.getEntityBoundingBox().minY + this.getEntityBoundingBox().maxY) / 2.0D, this.posZ);
-                double d1 = (this.posX - xp.posX) / 8.0D;
-                double d2 = (this.posY + (double)this.getEyeHeight() / 2.0D - xp.posY) / 8.0D;
-                double d3 = (this.posZ - xp.posZ) / 8.0D;
-                double d4 = Math.sqrt(d1 * d1 + d2 * d2 + d3 * d3);
-                double d5 = 1.0D - d4;
-
-                if (d5 > 0.0D)
-                {
-                    d5 = d5 * d5;
-                    xp.motionX += d1 / d4 * d5 * 0.1D;
-                    xp.motionY += d2 / d4 * d5 * 0.1D;
-                    xp.motionZ += d3 / d4 * d5 * 0.1D;
-                }
-
-                xp.moveEntity(xp.motionX, xp.motionY, xp.motionZ);
-                float f = 0.98F;
-
-                if (this.onGround)
-                {
-                    f = xp.worldObj.getBlockState(new BlockPos(MathHelper.floor_double(xp.posX), MathHelper.floor_double(xp.getEntityBoundingBox().minY) - 1, MathHelper.floor_double(xp.posZ))).getBlock().slipperiness * 0.98F;
-                }
-
-                xp.motionX *= (double)f;
-                xp.motionY *= 0.9800000190734863D;
-                xp.motionZ *= (double)f;
-
-                if (xp.onGround)
-                {
-                    xp.motionY *= -0.8999999761581421D;
-                }
-            }
-            for(EntityXPOrb xp:worldObj.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox())){
-                if(xp.delayBeforeCanPickup <= 0){
-                    this.addXP(xp.getXpValue());
-                    xp.setDead();
-                }
-            }
             //Bow stuffs
             if(getHeldItemMainhand() != null){
                 if(getHeldItemMainhand().getItem() instanceof ItemBow)
@@ -397,14 +305,14 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                             }
                         }
                         if(swapWeapon)
-                        for(int i=0;i<inventory.getSizeInventory();i++){
-                            if(inventory.getStackInSlot(i) != null && inventory.getStackInSlot(i).getItem() instanceof ItemSword){
-                                ItemStack clone = inventory.getStackInSlot(i).copy();
-                                inventory.setInventorySlotContents(i, getHeldItemMainhand());
-                                setHeldItem(EnumHand.MAIN_HAND, clone);
-                                break;
+                            for(int i=0;i<inventory.getSizeInventory();i++){
+                                if(inventory.getStackInSlot(i) != null && inventory.getStackInSlot(i).getItem() instanceof ItemSword){
+                                    ItemStack clone = inventory.getStackInSlot(i).copy();
+                                    inventory.setInventorySlotContents(i, getHeldItemMainhand());
+                                    setHeldItem(EnumHand.MAIN_HAND, clone);
+                                    break;
+                                }
                             }
-                        }
                     }
             }
             //Equipment Achievements
@@ -429,81 +337,32 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                     if(getHeldItemOffhand() != null)
                         if(getHeldItemOffhand().getTagCompound() != null && getHeldItemOffhand().getItem() instanceof ItemShield)
                             if(getHeldItemOffhand().getTagCompound().equals(Overlord.crusaderShield().getTagCompound()))
-                    if(getOwner() != null){
-                        if(getOwner() instanceof EntityPlayerMP)
-                            if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.crusader)) {
-                                ((EntityPlayer) getOwner()).addStat(Overlord.crusader);
-                            }
-                    }
+                                if(getOwner() != null){
+                                    if(getOwner() instanceof EntityPlayerMP)
+                                        if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.crusader)) {
+                                            ((EntityPlayer) getOwner()).addStat(Overlord.crusader);
+                                        }
+                                }
                 }
             }
         }
-
         this.setSize(0.6F, 1.99F);
-
         float f = this.getBrightness(1.0F);
-
         if (f > 0.5F && !this.hasSkinsuit())
         {
             this.entityAge += 1;
         }
         super.onLivingUpdate();
     }
-
-    public void addXP(int amount){
-        int xp = amount + dataManager.get(XP);
-        dataManager.set(XP, Integer.valueOf(xp));
-    }
-
-    public void increaseMilkLevel(boolean addXp){
-        int milk = getTotalMilkConsumed();
-        dataManager.set(TOTAL_MILK_LEVEL, ++milk);
-        if(addXp) {
-            int xp = getXP();
-            dataManager.set(XP, ++xp);
-        }
-        if(getOwner() != null)
-            if(getOwner() instanceof EntityPlayerMP)
-                ((EntityPlayer) getOwner()).addStat(Overlord.firstMilk);
-        if(getTotalMilkConsumed() >= 256)
-            if(getOwner() != null)
-                ((EntityPlayer) getOwner()).addStat(Overlord.milk256);
-        if(getTotalMilkConsumed() > 9000)
-            if(getOwner() != null)
-                ((EntityPlayer) getOwner()).addStat(Overlord.milk9001);
-    }
-
-    public void checkLevelUp(){
-        int level = dataManager.get(SKELETON_POWER_LEVEL);
-        int xp = getXP();
-        if(xp >= Math.pow(2, level)){
-            xp -= Math.pow(2, level);
-            level++;
-            dataManager.set(XP, xp);
-            dataManager.set(SKELETON_POWER_LEVEL, level);
-            updateEntityAttributes();
-            if(getHealth() < getMaxHealth())
-                heal(getMaxHealth()-getHealth());
-            if(getOwner() != null){
-                if(getOwner() instanceof EntityPlayerMP)
-                    if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.firstLevel)) {
-                        ((EntityPlayer) getOwner()).addStat(Overlord.firstLevel);
-                    }
-            }
-        }
-    }
-
     @Override
-    public void onDeath(DamageSource cause)
+    public void onDeath(@Nonnull DamageSource cause)
     {
         super.onDeath(cause);
-
         if (cause.getEntity() instanceof EntityCreeper && ((EntityCreeper)cause.getEntity()).getPowered() && ((EntityCreeper)cause.getEntity()).isAIEnabled())
         {
             ((EntityCreeper)cause.getEntity()).incrementDroppedSkulls();
             this.entityDropItem(new ItemStack(Items.SKULL), 0.0F);
         }
-
         if(!this.worldObj.isRemote){
             for(int i=0;i<inventory.getSizeInventory();i++){
                 if(inventory.getStackInSlot(i) != null){
@@ -519,39 +378,18 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                     worldObj.spawnEntityInWorld(entityitem);
                 }
             }
+            if(hasSkinsuit()){
+                ItemStack stack = new ItemStack(Overlord.skinsuit).setStackDisplayName(getSkinsuitName());
+                EntityItem entityitem = new EntityItem(worldObj, posX, posY, posZ, stack);
+                entityitem.setDefaultPickupDelay();
+                worldObj.spawnEntityInWorld(entityitem);
+            }
         }
     }
-
     @Override
     public void readEntityFromNBT(NBTTagCompound compound)
     {
         super.readEntityFromNBT(compound);
-
-        if (compound.hasKey("SkeletonPowerLevel"))
-        {
-            int i = compound.getInteger("SkeletonPowerLevel");
-            this.dataManager.set(SKELETON_POWER_LEVEL, i);
-        }
-        if (compound.hasKey("TotalMilkLevel"))
-        {
-            int i = compound.getInteger("TotalMilkLevel");
-            this.dataManager.set(TOTAL_MILK_LEVEL, i);
-        } else if (compound.hasKey("SkeletonMilk")) {
-            int i = compound.getInteger("SkeletonMilk");
-            this.dataManager.set(XP, i);
-            for(int j=1;j<=this.dataManager.get(SKELETON_POWER_LEVEL);j++)
-                i += Math.pow(2, j);
-            this.dataManager.set(TOTAL_MILK_LEVEL, i);
-            int l = compound.getInteger("SkeletonPowerLevel");
-            l *= 2;
-            this.dataManager.set(SKELETON_POWER_LEVEL, l);
-        }
-
-        if(compound.hasKey("XP")){
-            int i = compound.getInteger("XP");
-            this.dataManager.set(XP, i);
-        }
-
         if(compound.hasKey("SkinsuitName")){
             String s = compound.getString("SkinsuitName");
             this.dataManager.set(SKINSUIT_NAME, s);
@@ -570,7 +408,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                 }
             }
         } else {
-            System.out.println("List was null when reading Skeleton Warrior's Inventory");
+            System.out.println("List was null when reading Converted Skeleton's Inventory");
         }
         NBTTagList armorInv = (NBTTagList) compound.getTag("SkeletonEquipment");
         if (armorInv != null) {
@@ -582,62 +420,48 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                 }
             }
         } else {
-            System.out.println("List was null when reading Skeleton Warrior's Equipment");
+            System.out.println("List was null when reading Converted Skeleton's Equipment");
         }
     }
-
     @Override
     public void writeEntityToNBT(NBTTagCompound compound)
     {
         super.writeEntityToNBT(compound);
-        compound.setInteger("SkeletonPowerLevel", this.dataManager.get(SKELETON_POWER_LEVEL));
-        updateEntityAttributes();
-        compound.setInteger("TotalMilkLevel", this.dataManager.get(TOTAL_MILK_LEVEL));
         compound.setBoolean("HasSkinsuit", this.dataManager.get(HAS_SKINSUIT));
         compound.setString("SkinsuitName", this.dataManager.get(SKINSUIT_NAME));
-        compound.setInteger("XP", this.dataManager.get(XP));
-
         NBTTagList mainInv = new NBTTagList();
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack is = inventory.getStackInSlot(i);
             if (is != null) {
                 NBTTagCompound item = new NBTTagCompound();
-
                 item.setByte("SlotSkeletonInventory", (byte) i);
                 is.writeToNBT(item);
-
                 mainInv.appendTag(item);
             }
         }
         compound.setTag("SkeletonInventory", mainInv);
-
         NBTTagList armorInv = new NBTTagList();
         for (int i = 0; i < equipInventory.getSizeInventory(); i++) {
             ItemStack is = equipInventory.getStackInSlot(i);
             if (is != null) {
                 NBTTagCompound item = new NBTTagCompound();
-
                 item.setByte("SlotSkeletonEquipment", (byte) i);
                 is.writeToNBT(item);
-
                 armorInv.appendTag(item);
             }
         }
         compound.setTag("SkeletonEquipment", armorInv);
     }
-
     @Override
     public float getEyeHeight()
     {
         return 1.74F;
     }
-
     @Override
     public double getYOffset()
     {
         return -0.35D;
     }
-
     @Override
     public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor)
     {
@@ -688,16 +512,14 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
         this.worldObj.spawnEntityInWorld(entitytippedarrow);
     }
-
     @Override
     @Nullable
     public ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn)
     {
         return slotIn == EntityEquipmentSlot.MAINHAND ? equipInventory.getStackInSlot(4) : (slotIn == EntityEquipmentSlot.OFFHAND ? equipInventory.getStackInSlot(5) : (slotIn.getSlotType() == EntityEquipmentSlot.Type.ARMOR ? this.equipInventory.getStackInSlot(slotIn.getIndex()) : null));
     }
-
     @Override
-    public void setItemStackToSlot(EntityEquipmentSlot slotIn, @Nullable ItemStack stack)
+    public void setItemStackToSlot(EntityEquipmentSlot slotIn, @Nonnull ItemStack stack)
     {
         if (slotIn == EntityEquipmentSlot.MAINHAND)
         {
@@ -716,19 +538,18 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
             this.equipInventory.setInventorySlotContents(slotIn.getIndex(), stack);
         }
     }
-
     @Override
+    @Nonnull
     public Iterable<ItemStack> getHeldEquipment()
     {
         return Lists.newArrayList(this.getHeldItemMainhand(), this.getHeldItemOffhand());
     }
-
     @Override
+    @Nonnull
     public Iterable<ItemStack> getArmorInventoryList()
     {
         return Arrays.asList(equipInventory.getStackInSlot(0), equipInventory.getStackInSlot(1), equipInventory.getStackInSlot(2), equipInventory.getStackInSlot(3));
     }
-
     @Override
     @Nullable
     public ItemStack getHeldItemMainhand()
@@ -737,25 +558,23 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
             return null;
         return equipInventory.getStackInSlot(4);
     }
-
     @Override
     @Nullable
     public ItemStack getHeldItemOffhand()
     {
+        if(equipInventory == null)
+            return null;
         return equipInventory.getStackInSlot(5);
     }
-
     @Override
     public boolean isPlayer(){
         return true;
     }
-
     @SideOnly(Side.CLIENT)
-    public void setAugment(String augment){
+    public void setAugment(@Nullable String augment){
         clientAugment = AugmentRegistry.getAugment(augment);
         cachedClientAugment = true;
     }
-
     @Override
     @Nullable
     public ItemStack getHeldItem(EnumHand hand)
@@ -773,7 +592,6 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
             throw new IllegalArgumentException("Invalid hand " + hand);
         }
     }
-
     @Override
     public void setHeldItem(EnumHand hand, @Nullable ItemStack stack)
     {
@@ -787,39 +605,15 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
             {
                 throw new IllegalArgumentException("Invalid hand " + hand);
             }
-
             this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, stack);
         }
     }
-
-    public void updateEntityAttributes(){
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(16.0D+(4*Math.sqrt(dataManager.get(SKELETON_POWER_LEVEL))));
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23D+(Math.sqrt(dataManager.get(SKELETON_POWER_LEVEL))/32));
-        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D+dataManager.get(SKELETON_POWER_LEVEL));
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D+(Math.sqrt(dataManager.get(SKELETON_POWER_LEVEL))/2));
-        this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(1.0D+(Math.sqrt(dataManager.get(SKELETON_POWER_LEVEL))/4));
-    }
-
-    public int getTotalMilkConsumed(){
-        return dataManager.get(TOTAL_MILK_LEVEL);
-    }
-
-    public int getXP(){
-        return dataManager.get(XP);
-    }
-
-    public int getLevel(){
-        return dataManager.get(SKELETON_POWER_LEVEL);
-    }
-
     public boolean hasSkinsuit(){
         return this.dataManager.get(HAS_SKINSUIT);
     }
-
     public String getSkinsuitName(){
         return this.dataManager.get(SKINSUIT_NAME);
     }
-
     @Override
     public float getBlockPathWeight(BlockPos pos)
     {

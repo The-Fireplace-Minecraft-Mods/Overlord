@@ -7,6 +7,7 @@ import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -16,9 +17,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import the_fireplace.overlord.entity.EntityArmyMember;
-import the_fireplace.overlord.entity.EntityBabySkeleton;
-import the_fireplace.overlord.entity.EntitySkeletonWarrior;
+import the_fireplace.overlord.entity.*;
 
 import java.util.Random;
 
@@ -43,6 +42,23 @@ public class CommonEvents {
                         if (event.getTarget() instanceof EntitySkeletonWarrior)
                             ((EntitySkeletonWarrior) event.getTarget()).increaseMilkLevel(false);
                     }
+            if(event.getTarget() instanceof EntitySkeleton && ((EntitySkeleton) event.getTarget()).isPotionActive(MobEffects.WEAKNESS) && !(event.getTarget() instanceof EntityCuringSkeleton) && event.getItemStack().getItem() == Items.GOLDEN_APPLE && event.getItemStack().getMetadata() == 0){
+                if (!event.getEntityPlayer().capabilities.isCreativeMode)
+                {
+                    event.getItemStack().stackSize--;
+                }
+                if (!event.getWorld().isRemote)
+                {
+                    EntitySkeleton oldSkelly = (EntitySkeleton)event.getTarget();
+                    EntityCuringSkeleton newSkelly = new EntityCuringSkeleton(event.getWorld(), event.getEntityPlayer() != null ? event.getEntityPlayer().getUniqueID() : null);
+                    newSkelly.copyLocationAndAnglesFrom(oldSkelly);
+                    newSkelly.setHeldItem(EnumHand.MAIN_HAND, oldSkelly.getHeldItemMainhand());
+                    newSkelly.setHeldItem(EnumHand.OFF_HAND, oldSkelly.getHeldItemOffhand());
+                    event.getWorld().removeEntity(oldSkelly);
+                    event.getWorld().spawnEntityInWorld(newSkelly);
+                    newSkelly.startConverting(event.getWorld().rand.nextInt(4802) + 3600);
+                }
+            }
         }else if(event.getTarget() instanceof EntityCow){
             if(event.getItemStack() != null)
                 if(event.getItemStack().getItem() == Items.GLASS_BOTTLE){
@@ -59,7 +75,7 @@ public class CommonEvents {
     @SubscribeEvent
     public void entityTick(LivingEvent.LivingUpdateEvent event){
         if(!event.getEntityLiving().worldObj.isRemote){
-            if(event.getEntityLiving() instanceof EntitySkeleton || event.getEntityLiving() instanceof EntitySkeletonWarrior || event.getEntityLiving() instanceof EntityBabySkeleton){
+            if(event.getEntityLiving() instanceof EntitySkeleton || event.getEntityLiving() instanceof EntitySkeletonWarrior || event.getEntityLiving() instanceof EntityBabySkeleton || event.getEntityLiving() instanceof EntityConvertedSkeleton){
                 if(event.getEntityLiving().ticksExisted < 5){
                     if(event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.HEAD) == null){
                         Random random = new Random();
