@@ -28,20 +28,15 @@ public class LayerBabyHeldItem implements LayerRenderer<EntityLivingBase>
     @Override
     public void doRenderLayer(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {
-        boolean flag = entitylivingbaseIn.getPrimaryHand() == EnumHandSide.RIGHT;
-        ItemStack itemstack = flag ? entitylivingbaseIn.getHeldItemOffhand() : entitylivingbaseIn.getHeldItemMainhand();
-        ItemStack itemstack1 = flag ? entitylivingbaseIn.getHeldItemMainhand() : entitylivingbaseIn.getHeldItemOffhand();
+        ItemStack itemstack1 = entitylivingbaseIn.getHeldItemMainhand();
 
-        if (itemstack != null || itemstack1 != null)
+        if (itemstack1 != null)
         {
             GlStateManager.pushMatrix();
-
-            GlStateManager.translate(0.0F, 0.625F, 0.0F);
-            GlStateManager.rotate(-20.0F, -1.0F, 0.0F, 0.0F);
+            GlStateManager.translate(0.0F, 0.75F, 0.0F);
             GlStateManager.scale(0.5F, 0.5F, 0.5F);
 
             this.renderHeldItem(entitylivingbaseIn, itemstack1, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, EnumHandSide.RIGHT);
-            this.renderHeldItem(entitylivingbaseIn, itemstack, ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, EnumHandSide.LEFT);
             GlStateManager.popMatrix();
         }
     }

@@ -43,6 +43,8 @@ import the_fireplace.overlord.blocks.BlockSkeletonMaker;
 import the_fireplace.overlord.command.*;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.EntityBabySkeleton;
+import the_fireplace.overlord.entity.EntityConvertedSkeleton;
+import the_fireplace.overlord.entity.EntityCuringSkeleton;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.entity.projectile.EntityMilkBottle;
 import the_fireplace.overlord.items.*;
@@ -59,7 +61,7 @@ import java.util.ArrayList;
 /**
  * @author The_Fireplace
  */
-@Mod(modid= Overlord.MODID, name= Overlord.MODNAME, guiFactory = "the_fireplace.overlord.client.gui.OverlordConfigGuiFactory", updateJSON = "http://thefireplace.bitnamiapp.com/jsons/overlord.json")
+@Mod(modid= Overlord.MODID, name= Overlord.MODNAME, guiFactory = "the_fireplace.overlord.client.gui.OverlordConfigGuiFactory", updateJSON = "http://thefireplace.bitnamiapp.com/jsons/overlord.json", acceptedMinecraftVersions = "[1.10,1.10.2]")
 public class Overlord {
     public static final String MODNAME = "Overlord";
     public static final String MODID = "overlord";
@@ -93,11 +95,13 @@ public class Overlord {
     public static final Block skeleton_maker = new BlockSkeletonMaker();
     public static final Block baby_skeleton_maker = new BlockBabySkeletonMaker();
     public static final Item overlords_seal = new ItemOverlordsSeal().setUnlocalizedName("overlords_seal").setCreativeTab(tabOverlord).setMaxStackSize(1);
+    public static final Item overlords_stamp = new ItemOverlordsSeal(false, true).setUnlocalizedName("overlords_stamp").setCreativeTab(tabOverlord);
     public static final Item squad_editor = new ItemSquadEditor().setUnlocalizedName("squad_editor").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item sans_mask = new ItemSansMask(sans);
     public static final Item skinsuit = new Item().setUnlocalizedName("skinsuit").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item warrior_spawner = new ItemWarriorSpawner().setUnlocalizedName("warrior_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item baby_spawner = new ItemBabySpawner().setUnlocalizedName("baby_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
+    public static final Item converted_spawner = new ItemConvertedSpawner().setUnlocalizedName("converted_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item milk_bottle = new ItemMilkBottle().setMaxStackSize(16);
 
     public static void syncConfig() {
@@ -137,11 +141,13 @@ public class Overlord {
         registerBlock(skeleton_maker);
         registerBlock(baby_skeleton_maker);
         registerItem(overlords_seal);
+        registerItem(overlords_stamp);
         registerItem(squad_editor);
         registerItem(sans_mask);
         registerItem(skinsuit);
         registerItem(warrior_spawner);
         registerItem(baby_spawner);
+        registerItem(converted_spawner);
         registerItem(milk_bottle);
         OreDictionary.registerOre("book", squad_editor);
         GameRegistry.registerTileEntity(TileEntitySkeletonMaker.class, "skeleton_maker");
@@ -150,6 +156,8 @@ public class Overlord {
         EntityRegistry.registerModEntity(EntitySkeletonWarrior.class, "skeleton_warrior", ++eid, instance, 128, 2, false);
         EntityRegistry.registerModEntity(EntityBabySkeleton.class, "skeleton_baby", ++eid, instance, 64, 2, false);
         EntityRegistry.registerModEntity(EntityMilkBottle.class, "milk_bottle", ++eid, instance, 32, 10, true);
+        EntityRegistry.registerModEntity(EntityConvertedSkeleton.class, "skeleton_converted", ++eid, instance, 116, 2, false);
+        EntityRegistry.registerModEntity(EntityCuringSkeleton.class, "skeleton_curing", ++eid, instance, 48, 2, false);
         proxy.registerClient();
         MinecraftForge.EVENT_BUS.register(new CommonEvents());
         DataSerializers.registerSerializer(CustomDataSerializers.UNIQUE_ID);
@@ -192,11 +200,13 @@ public class Overlord {
         rmm(skeleton_maker);
         rmm(baby_skeleton_maker);
         rmm(overlords_seal);
+        rmm(overlords_stamp);
         rmm(squad_editor);
         rmm(sans_mask);
         rmm(skinsuit);
         rmm(warrior_spawner);
         rmm(baby_spawner);
+        rmm(converted_spawner);
         rmm(milk_bottle);
     }
 
@@ -237,6 +247,7 @@ public class Overlord {
 
     public static Achievement firstBaby = new Achievement("firstbaby", "firstbaby", 1, 1, Items.SKULL, AchievementList.BUILD_PICKAXE);
     public static Achievement firstSkeleton = new Achievement("firstskeleton", "firstskeleton", 0, 0, Items.SKULL, AchievementList.BUILD_PICKAXE);
+    public static Achievement converter = new Achievement("converter", "converter", -1, -1, Items.GOLDEN_APPLE, AchievementList.BUILD_PICKAXE);
     public static Achievement secondSkeleton = new Achievement("secondskeleton", "secondskeleton", 0, 2, Items.SKULL, firstSkeleton);
     public static Achievement firstMilk = new Achievement("firstmilk", "firstmilk", 2, 0, Items.MILK_BUCKET, firstSkeleton);
     public static Achievement firstLevel = new Achievement("firstlevel", "firstlevel", 0, -2, Items.BONE, firstSkeleton);
@@ -261,6 +272,7 @@ public class Overlord {
     private static void addAchievements(){
         firstBaby.registerStat();
         firstSkeleton.registerStat();
+        converter.registerStat();
         secondSkeleton.registerStat();
         firstLevel.registerStat();
         firstMilk.registerStat();
@@ -279,6 +291,6 @@ public class Overlord {
         heya.registerStat();
         heya.setSpecial();
         AchievementPage.registerAchievementPage(new AchievementPage(MODNAME,
-                firstBaby, firstSkeleton, secondSkeleton, firstLevel, firstMilk, armedSkeleton, sally, crusader, milk256, milk9001, nmyi, alliance, breakalliance, warmonger, forgiver, wardog, heya));
+                firstBaby, firstSkeleton, converter, secondSkeleton, firstLevel, firstMilk, armedSkeleton, sally, crusader, milk256, milk9001, nmyi, alliance, breakalliance, warmonger, forgiver, wardog, heya));
     }
 }
