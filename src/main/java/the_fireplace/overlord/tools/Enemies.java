@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class Enemies implements Serializable {
     private static Enemies instance = null;
     private static final String dataFileName = "overlordenemies.dat";
-    private static final File saveDir = DimensionManager.getCurrentSaveRootDirectory();
+    private static File saveDir = DimensionManager.getCurrentSaveRootDirectory();
 
     private ArrayList<Alliance> enemies;
 
@@ -94,19 +94,21 @@ public class Enemies implements Serializable {
         readFromFile();
     }
 
-    @SuppressWarnings("TryWithIdenticalCatches")
     private static void readFromFile() {
+        if(saveDir == null)
+            saveDir = DimensionManager.getCurrentSaveRootDirectory();
+        if(saveDir == null) {
+            System.out.println("Error: Could not get save directory. Enemies will not load properly.");
+            instance = new Enemies();
+            return;
+        }
         File f = new File(saveDir, dataFileName);
         if (f.exists()) {
             try {
                 ObjectInputStream stream = new ObjectInputStream(new FileInputStream(f));
                 instance = (Enemies) stream.readObject();
                 stream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                instance = new Enemies();
-                f.delete();
-            } catch (ClassNotFoundException e) {
+            } catch (IOException|ClassNotFoundException e) {
                 e.printStackTrace();
                 instance = new Enemies();
                 f.delete();
@@ -118,6 +120,12 @@ public class Enemies implements Serializable {
 
     private static void saveToFile() {
         try {
+            if(saveDir == null)
+                saveDir = DimensionManager.getCurrentSaveRootDirectory();
+            if(saveDir == null) {
+                System.out.println("Error: Could not get save directory. Enemies will not save properly.");
+                return;
+            }
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(new File(saveDir, dataFileName)));
             out.writeObject(instance);
             out.close();

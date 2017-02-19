@@ -12,7 +12,7 @@ import java.util.UUID;
 public class Squads implements Serializable {
     private static Squads instance = null;
     private static final String dataFileName = "overlordplayersquads.dat";
-    private static final File saveDir = DimensionManager.getCurrentSaveRootDirectory();
+    private static File saveDir = DimensionManager.getCurrentSaveRootDirectory();
 
     private ArrayList<SquadData> squads;
 
@@ -61,6 +61,13 @@ public class Squads implements Serializable {
     }
 
     private static void readFromFile() {
+        if(saveDir == null)
+            saveDir = DimensionManager.getCurrentSaveRootDirectory();
+        if(saveDir == null) {
+            System.out.println("Error: Could not get save directory. Squads will not load properly.");
+            instance = new Squads();
+            return;
+        }
         File f = new File(saveDir, dataFileName);
         if (f.exists()) {
             try {
@@ -79,6 +86,10 @@ public class Squads implements Serializable {
 
     private static void saveToFile() {
         try {
+            if(saveDir == null)
+                saveDir = DimensionManager.getCurrentSaveRootDirectory();
+            if(saveDir == null)
+                System.out.println("Error: Could not get save directory. Squads will not save properly.");
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(new File(saveDir, dataFileName)));
             out.writeObject(instance);
             out.close();
