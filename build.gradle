@@ -131,6 +131,7 @@ modsIO {
 }
 
 uploadArchives {
+try{
     repositories {
         mavenDeployer {
             if (project.hasProperty("local_maven")) {
@@ -183,6 +184,8 @@ uploadArchives {
                 }
             }
         }
+    }
+    }catch(Exception e){
     }
 }
 
