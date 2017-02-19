@@ -1,6 +1,7 @@
 package the_fireplace.overlord.tools;
 
 import net.minecraftforge.common.DimensionManager;
+import the_fireplace.overlord.Overlord;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -66,10 +67,12 @@ public class Alliances implements Serializable {
     }
 
     public static void save() {
+        Overlord.logDebug("Alliances saving...");
         saveToFile();
     }
 
     public static void load() {
+        Overlord.logDebug("Alliances loading...");
         readFromFile();
     }
 
@@ -77,7 +80,7 @@ public class Alliances implements Serializable {
         if(saveDir == null)
             saveDir = DimensionManager.getCurrentSaveRootDirectory();
         if(saveDir == null) {
-            System.out.println("Error: Could not get save directory. Alliances will not load properly.");
+            Overlord.logError("Could not get save directory. Alliances will not load properly.");
             instance = new Alliances();
             return;
         }
@@ -102,7 +105,7 @@ public class Alliances implements Serializable {
             if(saveDir == null)
                 saveDir = DimensionManager.getCurrentSaveRootDirectory();
             if(saveDir == null)
-                System.out.println("Error: Could not get save directory. Alliances will not save properly.");
+                Overlord.logError("Could not get save directory. Alliances will not save properly.");
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(new File(saveDir, dataFileName)));
             out.writeObject(instance);
             out.close();

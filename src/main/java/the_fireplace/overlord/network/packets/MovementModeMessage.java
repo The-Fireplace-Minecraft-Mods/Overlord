@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.entity.EntityArmyMember;
 
 /**
@@ -37,10 +38,10 @@ public class MovementModeMessage implements IMessage {
                 if(player.world.getEntityByID(message.warrior) instanceof EntityArmyMember){
                     ((EntityArmyMember) player.world.getEntityByID(message.warrior)).cycleMovementMode();
                 }else{
-                    System.out.println("Error: Entity is not an army member. It is "+player.world.getEntityByID(message.warrior).toString());
+                    Overlord.logError("Entity is not an Army Member. It is "+player.world.getEntityByID(message.warrior).toString());
                 }
             }else{
-                System.out.println("Error 404: Army Member not found: "+message.warrior);
+                Overlord.logError("Error 404: Army Member not found: "+message.warrior);
             }
             return null;
         }

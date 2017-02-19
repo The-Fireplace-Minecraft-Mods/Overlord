@@ -28,6 +28,7 @@ import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.config.ConfigValues;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.UUID;
@@ -52,7 +53,7 @@ public class EntityBabySkeleton extends EntityArmyMember {
             @Override
             public boolean isItemValidForSlot(int index, ItemStack stack)
             {
-                return index >= 4 || stack != null && stack.getItem().isValidArmor(stack, EntityEquipmentSlot.values()[index], null);
+                return index >= 4 || !stack.isEmpty() && stack.getItem().isValidArmor(stack, EntityEquipmentSlot.values()[index], null);
             }
         };
         if(getOwner() != null){
@@ -88,41 +89,43 @@ public class EntityBabySkeleton extends EntityArmyMember {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack)
+    public boolean processInteract(EntityPlayer player, EnumHand hand)
     {
         if(this.getOwner() != null){
             if(this.getOwner().equals(player)){
                 if(!player.isSneaking()) {
                     FMLNetworkHandler.openGui(player, Overlord.instance, hashCode(), world, (int) this.posX, (int) this.posY, (int) this.posZ);
                     return true;
-                }else{
-                    if(!world.isRemote)
-                    if(stack != null){
-                        if(stack.getItem() == Overlord.skinsuit && !this.hasSkinsuit()){
-                            applySkinsuit(stack);
-                            if(!player.isCreative())
-                                stack.stackSize--;
-                        }else if(stack.getItem() == Items.SHEARS && this.hasSkinsuit()){
-                            if(!player.isCreative()) {
-                                stack.damageItem(1, player);
-                                entityDropItem(new ItemStack(Overlord.skinsuit).setStackDisplayName(getSkinsuitName()), 0.1F);
+                } else {
+                    if (!world.isRemote){
+                        ItemStack stack = player.getHeldItem(hand);
+                        if (!stack.isEmpty()) {
+                            if (stack.getItem() == Overlord.skinsuit && !this.hasSkinsuit()) {
+                                applySkinsuit(stack);
+                                if (!player.isCreative())
+                                    stack.shrink(1);
+                            } else if (stack.getItem() == Items.SHEARS && this.hasSkinsuit()) {
+                                if (!player.isCreative()) {
+                                    stack.damageItem(1, player);
+                                    entityDropItem(new ItemStack(Overlord.skinsuit).setStackDisplayName(getSkinsuitName()), 0.1F);
+                                }
+                                if (ConfigValues.SKINSUITNAMETAGS && this.hasCustomName()) {
+                                    if (this.getCustomNameTag().equals(getSkinsuitName()))
+                                        this.setCustomNameTag("");
+                                }
+                                this.dataManager.set(HAS_SKINSUIT, Boolean.valueOf(false));
+                                this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
+                            } else if (stack.getItem() == Overlord.baby_spawner) {
+                                NBTTagCompound compound = new NBTTagCompound();
+                                this.writeEntityToNBT(compound);
+                                stack.setTagCompound(compound);
                             }
-                            if(ConfigValues.SKINSUITNAMETAGS && this.hasCustomName()){
-                                if(this.getCustomNameTag().equals(getSkinsuitName()))
-                                    this.setCustomNameTag("");
-                            }
-                            this.dataManager.set(HAS_SKINSUIT, Boolean.valueOf(false));
-                            this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
-                        }else if(stack.getItem() == Overlord.baby_spawner){
-                            NBTTagCompound compound = new NBTTagCompound();
-                            this.writeEntityToNBT(compound);
-                            stack.setTagCompound(compound);
                         }
                     }
                 }
             }
         }
-        return super.processInteract(player, hand, stack);
+        return super.processInteract(player, hand);
     }
 
     public void applySkinsuit(ItemStack stack){
@@ -151,6 +154,7 @@ public class EntityBabySkeleton extends EntityArmyMember {
     }
 
     @Override
+    @Nonnull
     public EnumCreatureAttribute getCreatureAttribute()
     {
         return EnumCreatureAttribute.UNDEAD;
@@ -169,14 +173,14 @@ public class EntityBabySkeleton extends EntityArmyMember {
                     boolean flag = true;
                     ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
-                    if (itemstack != null) {
+                    if (!itemstack.isEmpty()) {
                         if(ConfigValues.HELMETDAMAGE)
                             if (itemstack.isItemStackDamageable()) {
                                 itemstack.setItemDamage(itemstack.getItemDamage() + this.rand.nextInt(2));
 
                                 if (itemstack.getItemDamage() >= itemstack.getMaxDamage()) {
                                     this.renderBrokenItemStack(itemstack);
-                                    this.setItemStackToSlot(EntityEquipmentSlot.HEAD, null);
+                                    this.setItemStackToSlot(EntityEquipmentSlot.HEAD, ItemStack.EMPTY);
                                 }
                             }
 
@@ -189,7 +193,7 @@ public class EntityBabySkeleton extends EntityArmyMember {
                 }
             }
             //Equipment Achievements
-            if(getHeldItemMainhand() != null){
+            if(!getHeldItemMainhand().isEmpty()){
                 if(getOwner() != null){
                     if(getOwner() instanceof EntityPlayerMP)
                         if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.armedSkeleton)) {
@@ -224,7 +228,7 @@ public class EntityBabySkeleton extends EntityArmyMember {
     }
 
     @Override
-    public void onDeath(DamageSource cause)
+    public void onDeath(@Nonnull DamageSource cause)
     {
         super.onDeath(cause);
 
@@ -236,9 +240,9 @@ public class EntityBabySkeleton extends EntityArmyMember {
 
         if(!this.world.isRemote){
             for(int i=0;i<equipInventory.getSizeInventory();i++){
-                if(equipInventory.getStackInSlot(i) != null){
+                if(!equipInventory.getStackInSlot(i).isEmpty()){
                     EntityItem entityitem = new EntityItem(world, posX, posY, posZ, equipInventory.getStackInSlot(i));
-                    entityitem.setPickupDelay(40);
+                    entityitem.setDefaultPickupDelay();
                     world.spawnEntity(entityitem);
                 }
             }
@@ -269,11 +273,11 @@ public class EntityBabySkeleton extends EntityArmyMember {
                 NBTTagCompound item = (NBTTagCompound) armorInv.get(i);
                 int slot = item.getByte("SlotSkeletonEquipment");
                 if (slot >= 0 && slot < equipInventory.getSizeInventory()) {
-                    equipInventory.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
+                    equipInventory.setInventorySlotContents(slot, new ItemStack(item));
                 }
             }
         } else {
-            System.out.println("List was null when reading Skeleton Warrior's Equipment");
+            Overlord.logWarn("List was null when reading Baby Skeleton's Equipment");
         }
     }
 
@@ -287,7 +291,7 @@ public class EntityBabySkeleton extends EntityArmyMember {
         NBTTagList armorInv = new NBTTagList();
         for (int i = 0; i < equipInventory.getSizeInventory(); i++) {
             ItemStack is = equipInventory.getStackInSlot(i);
-            if (is != null) {
+            if (!is.isEmpty()) {
                 NBTTagCompound item = new NBTTagCompound();
 
                 item.setByte("SlotSkeletonEquipment", (byte) i);
@@ -306,14 +310,14 @@ public class EntityBabySkeleton extends EntityArmyMember {
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn)
     {
-        return slotIn == EntityEquipmentSlot.MAINHAND ? equipInventory.getStackInSlot(4) : (slotIn == EntityEquipmentSlot.OFFHAND ? null : (slotIn.getSlotType() == EntityEquipmentSlot.Type.ARMOR ? this.equipInventory.getStackInSlot(slotIn.getIndex()) : null));
+        return slotIn == EntityEquipmentSlot.MAINHAND ? equipInventory.getStackInSlot(4) : (slotIn == EntityEquipmentSlot.OFFHAND ? ItemStack.EMPTY : (slotIn.getSlotType() == EntityEquipmentSlot.Type.ARMOR ? this.equipInventory.getStackInSlot(slotIn.getIndex()) : ItemStack.EMPTY));
     }
 
     @Override
-    public void setItemStackToSlot(EntityEquipmentSlot slotIn, @Nullable ItemStack stack)
+    public void setItemStackToSlot(EntityEquipmentSlot slotIn, @Nonnull ItemStack stack)
     {
         if (slotIn == EntityEquipmentSlot.MAINHAND)
         {
@@ -328,35 +332,37 @@ public class EntityBabySkeleton extends EntityArmyMember {
     }
 
     @Override
+    @Nonnull
     public Iterable<ItemStack> getHeldEquipment()
     {
         return Lists.newArrayList(this.getHeldItemMainhand());
     }
 
     @Override
+    @Nonnull
     public Iterable<ItemStack> getArmorInventoryList()
     {
         return Arrays.asList(equipInventory.getStackInSlot(0), equipInventory.getStackInSlot(1), equipInventory.getStackInSlot(2), equipInventory.getStackInSlot(3));
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public ItemStack getHeldItemMainhand()
     {
         if(equipInventory == null)
-            return null;
+            return ItemStack.EMPTY;
         return equipInventory.getStackInSlot(4);
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public ItemStack getHeldItemOffhand()
     {
-        return null;
+        return ItemStack.EMPTY;
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public ItemStack getHeldItem(EnumHand hand)
     {
         if (hand == EnumHand.MAIN_HAND)
@@ -365,16 +371,16 @@ public class EntityBabySkeleton extends EntityArmyMember {
         }
         else if (hand == EnumHand.OFF_HAND)
         {
-            return null;
+            return ItemStack.EMPTY;
         }
         else
         {
-            throw new IllegalArgumentException("Invalid hand " + hand);
+            throw new IllegalArgumentException("Invalid hand: " + hand);
         }
     }
 
     @Override
-    public void setHeldItem(EnumHand hand, @Nullable ItemStack stack)
+    public void setHeldItem(EnumHand hand, @Nonnull ItemStack stack)
     {
         if (hand == EnumHand.MAIN_HAND)
         {
@@ -384,7 +390,7 @@ public class EntityBabySkeleton extends EntityArmyMember {
         {
             if (hand != EnumHand.OFF_HAND)
             {
-                throw new IllegalArgumentException("Invalid hand " + hand);
+                throw new IllegalArgumentException("Invalid hand: " + hand);
             }
         }
     }

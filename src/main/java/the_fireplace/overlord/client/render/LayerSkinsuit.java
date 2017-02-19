@@ -50,7 +50,7 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
                 try {
                     if(!cachedir.exists())
                         if(!cachedir.mkdirs())
-                            System.out.println("Skin cache directory creation failed.");
+                            Overlord.logError("Skin cache directory creation failed.");
                     File skinFile = new File(cachedir, skeleton.getSkinsuitName() + ".png");
                     boolean flag = false;
                     if(!skinFile.exists())
@@ -86,7 +86,9 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
                 }catch(Exception e){
                         this.renderer.bindTexture(STEVE);
                         if(!nospam) {
-                            e.printStackTrace();
+                            Overlord.logInfo("Spammy error:");
+                            Overlord.logError(e.getLocalizedMessage());
+                            Overlord.logInfo("This is most likely repeatedly happening, but has only been logged once.");
                             nospam = true;
                         }
                 }
@@ -111,6 +113,7 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
     }
 
     public static boolean cacheSkin(String username) {
+        Overlord.logTrace("Attempting to cache skin for "+username);
         try{
             File file = new File(cachedir, username+".png");
             URL url = new URL(String.format("http://skins.minecraft.net/MinecraftSkins/%s.png", username));
@@ -133,12 +136,13 @@ public class LayerSkinsuit implements LayerRenderer<EntitySkeletonWarrior> {
                 convertOldSkin(file);
             return true;
         }catch(Exception e){
-
+            Overlord.logWarn(e.getLocalizedMessage());
             return false;
         }
     }
 
     public static void convertOldSkin(File file) throws IOException {
+        Overlord.logTrace("Converting "+file+" to 64x64 skin.");
         BufferedImage newSkin = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
         BufferedImage original = new BufferedImage(64, 32, BufferedImage.TYPE_INT_ARGB);
         BufferedImage current = ImageIO.read(file);

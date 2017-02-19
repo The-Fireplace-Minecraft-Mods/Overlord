@@ -1,6 +1,7 @@
 package the_fireplace.overlord.tools;
 
 import net.minecraftforge.common.DimensionManager;
+import the_fireplace.overlord.Overlord;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -92,10 +93,12 @@ public class Enemies implements Serializable {
     }
 
     public static void save() {
+        Overlord.logDebug("Enemies saving...");
         saveToFile();
     }
 
     public static void load() {
+        Overlord.logDebug("Enemies loading...");
         readFromFile();
     }
 
@@ -103,7 +106,7 @@ public class Enemies implements Serializable {
         if(saveDir == null)
             saveDir = DimensionManager.getCurrentSaveRootDirectory();
         if(saveDir == null) {
-            System.out.println("Error: Could not get save directory. Enemies will not load properly.");
+            Overlord.logError("Could not get save directory. Enemies will not load properly.");
             instance = new Enemies();
             return;
         }
@@ -128,7 +131,7 @@ public class Enemies implements Serializable {
             if(saveDir == null)
                 saveDir = DimensionManager.getCurrentSaveRootDirectory();
             if(saveDir == null) {
-                System.out.println("Error: Could not get save directory. Enemies will not save properly.");
+                Overlord.logError("Could not get save directory. Enemies will not save properly.");
                 return;
             }
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(new File(saveDir, dataFileName)));

@@ -302,7 +302,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
                 }
             }
         } else {
-            System.out.println("List was null when reading TileEntitySkeletonMaker NBTTagCompound");
+            Overlord.logWarn("List was null when reading TileEntitySkeletonMaker NBTTagCompound");
         }
         this.milk = compound.getByte("Milk");
     }

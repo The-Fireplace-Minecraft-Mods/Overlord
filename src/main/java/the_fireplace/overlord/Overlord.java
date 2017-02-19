@@ -30,6 +30,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -37,6 +38,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
 import the_fireplace.overlord.augments.*;
 import the_fireplace.overlord.blocks.BlockBabySkeletonMaker;
 import the_fireplace.overlord.blocks.BlockSkeletonMaker;
@@ -81,6 +84,8 @@ public class Overlord {
     @SidedProxy(clientSide = "the_fireplace."+MODID+".client.ClientProxy", serverSide = "the_fireplace."+MODID+".CommonProxy")
     public static CommonProxy proxy;
 
+    private static Logger logger;
+
     public static final CreativeTabs tabOverlord = new CreativeTabs(MODID) {
         @Override
         public Item getTabIconItem() {
@@ -118,6 +123,7 @@ public class Overlord {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
+        logger = event.getModLog();
         PacketDispatcher.registerPackets();
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new OverlordGuiHandler());
         config = new Configuration(event.getSuggestedConfigurationFile());
@@ -165,9 +171,6 @@ public class Overlord {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
-        Alliances.load();
-        Enemies.load();
-        Squads.load();
         addAchievements();
         CraftingRecipes.addRecipes();
         AugmentRegistry.registerAugment(new ItemStack(Items.GOLDEN_APPLE), new AugmentSlowRegen());
@@ -193,6 +196,13 @@ public class Overlord {
         serverCommand.registerCommand(new CommandEnemy());
         serverCommand.registerCommand(new CommandEnemyList());
         serverCommand.registerCommand(new CommandEnemyRemove());
+    }
+
+    @Mod.EventHandler
+    public void serverStarted(FMLServerStartedEvent event){
+        Alliances.load();
+        Enemies.load();
+        Squads.load();
     }
 
     @SideOnly(Side.CLIENT)
@@ -292,5 +302,25 @@ public class Overlord {
         heya.setSpecial();
         AchievementPage.registerAchievementPage(new AchievementPage(MODNAME,
                 firstBaby, firstSkeleton, converter, secondSkeleton, firstLevel, firstMilk, armedSkeleton, sally, crusader, milk256, milk9001, nmyi, alliance, breakalliance, warmonger, forgiver, wardog, heya));
+    }
+
+    public static void logInfo(Object log){
+        logger.info(log);
+    }
+
+    public static void logDebug(Object log){
+        logger.debug(log);
+    }
+
+    public static void logError(Object log){
+        logger.error(log);
+    }
+
+    public static void logTrace(Object log){
+        logger.trace(log);
+    }
+
+    public static void logWarn(Object log){
+        logger.warn(log);
     }
 }
