@@ -21,7 +21,7 @@ deploy:
   stage: deploy
   script:
   - ./gradlew clean
-  - ./gradlew build uploadArchives curseforge uploadToModsIO -PcurseForgeApiKey=$curseForgeApiKey -PmodsioApiKey=$modsioApiKey --stacktrace
+  - ./gradlew build uploadArchives curseforge uploadToModsIO -PcurseForgeApiKey=$curseForgeApiKey -PmodsioApiKey=$modsioApiKey --stacktrace --continue
   - cp $ORIG_ARTIFACTS .
   when: manual
   artifacts:
