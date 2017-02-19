@@ -277,7 +277,7 @@ public class EntityBabySkeleton extends EntityArmyMember {
                 }
             }
         } else {
-            System.out.println("List was null when reading Baby Skeleton's Equipment");
+            Overlord.logWarn("List was null when reading Baby Skeleton's Equipment");
         }
     }
 
