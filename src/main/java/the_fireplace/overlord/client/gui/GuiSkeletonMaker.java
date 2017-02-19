@@ -75,7 +75,7 @@ public class GuiSkeletonMaker extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
-        this.drawCenteredString(fontRendererObj, getWarning(), xSize/2, -10, Color.PINK.getRGB());
+        this.drawCenteredString(fontRenderer, getWarning(), xSize/2, -10, Color.PINK.getRGB());
         if(te.getStackInSlot(0).isEmpty()){
             GlStateManager.enableBlend();
             GlStateManager.color(1.0F, 1.0F, 1.0F, 0.25F);
@@ -102,7 +102,7 @@ public class GuiSkeletonMaker extends GuiContainer {
         }
         if(ConfigValues.SUFFOCATIONWARNING)
         if(te.getWorld().getBlockState(te.getPos().up(2)).getMaterial() != Material.AIR)
-            this.drawCenteredString(fontRendererObj, I18n.format("skeleton_maker.warning.suffocation"), xSize/2, -20, Color.PINK.getRGB());
+            this.drawCenteredString(fontRenderer, I18n.format("skeleton_maker.warning.suffocation"), xSize/2, -20, Color.PINK.getRGB());
     }
 
     @Override
