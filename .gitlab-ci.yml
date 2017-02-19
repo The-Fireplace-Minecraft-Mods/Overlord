@@ -1,3 +1,5 @@
+image: openjdk:8-jdk
+
 variables:
   CACHE_DIR: "$CI_PROJECT_DIR/build"
   CACHE_DIR2: "$CI_PROJECT_DIR/.gradle"
