@@ -440,7 +440,7 @@ public class EntityConvertedSkeleton extends EntityArmyMember {
                 }
             }
         } else {
-            System.out.println("List was null when reading Converted Skeleton's Inventory");
+            Overlord.logWarn("List was null when reading Converted Skeleton's Inventory");
         }
         NBTTagList armorInv = (NBTTagList) compound.getTag("SkeletonEquipment");
         if (armorInv != null) {
@@ -452,7 +452,7 @@ public class EntityConvertedSkeleton extends EntityArmyMember {
                 }
             }
         } else {
-            System.out.println("List was null when reading Converted Skeleton's Equipment");
+            Overlord.logWarn("List was null when reading Converted Skeleton's Equipment");
         }
     }
 

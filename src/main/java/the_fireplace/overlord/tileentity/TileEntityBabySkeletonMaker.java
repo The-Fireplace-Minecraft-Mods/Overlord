@@ -271,7 +271,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
                 }
             }
         } else {
-            System.out.println("List was null when reading TileEntityBabySkeletonMaker NBTTagCompound");
+            Overlord.logWarn("List was null when reading TileEntityBabySkeletonMaker NBTTagCompound");
         }
     }
 

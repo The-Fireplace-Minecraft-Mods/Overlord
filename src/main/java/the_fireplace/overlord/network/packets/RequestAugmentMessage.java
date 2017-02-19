@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.entity.EntityArmyMember;
 
 /**
@@ -39,10 +40,10 @@ public class RequestAugmentMessage implements IMessage {
                     if(((EntityArmyMember) player.world.getEntityByID(message.warrior)).getAugment() != null)
                         augmentID = ((EntityArmyMember) player.world.getEntityByID(message.warrior)).getAugment().augmentId();
                 }else{
-                    System.out.println("Error: Entity is not an army member. It is "+player.world.getEntityByID(message.warrior).toString());
+                    Overlord.logError("Entity is not an Army Member. It is "+player.world.getEntityByID(message.warrior).toString());
                 }
             }else{
-                System.out.println("Error 404: Army Member not found: "+message.warrior);
+                Overlord.logError("Error 404: Army Member not found: "+message.warrior);
             }
             return new SetAugmentMessage(message.warrior, augmentID);
         }

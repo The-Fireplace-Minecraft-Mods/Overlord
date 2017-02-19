@@ -2,6 +2,7 @@ package the_fireplace.overlord.registry;
 
 import com.google.common.collect.Maps;
 import net.minecraft.item.ItemStack;
+import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.tools.Augment;
 
 import javax.annotation.Nullable;
@@ -18,7 +19,7 @@ public abstract class AugmentRegistry {
 
     public static boolean registerAugment(ItemStack item, Augment augment){
         if(augment.augmentId().isEmpty()) {
-            System.out.println("Augment "+augment.getClass()+" has no ID, skipping...");
+            Overlord.logError("Augment "+augment.getClass()+" has no ID, skipping...");
             return false;
         }
         if(!augmentIDs.keySet().contains(augment.augmentId())) {
@@ -28,11 +29,11 @@ public abstract class AugmentRegistry {
                 augmentIDs.put(augment.augmentId(), augment);
                 return true;
             } else {
-                System.out.println("Augment already exists for " + item.getItem());
+                Overlord.logWarn("Augment already exists for " + item.getItem() + ", skipping...");
                 return false;
             }
         }else{
-            System.out.println("Augment already exists for ID "+augment.augmentId()+", skipping "+augment.getClass()+"...");
+            Overlord.logError("Augment already exists for ID "+augment.augmentId()+", skipping "+augment.getClass()+"...");
             return false;
         }
     }
