@@ -1,1 +1,2 @@
 Updated mappings
+Fixed issues related to loading/saving squads, alliances, and enemies
