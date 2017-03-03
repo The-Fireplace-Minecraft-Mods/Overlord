@@ -1,7 +1,14 @@
 package the_fireplace.overlord.tools;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.Overlord;
+import the_fireplace.overlord.network.PacketDispatcher;
+import the_fireplace.overlord.network.packets.SetSquadsMessage;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -19,6 +26,12 @@ public class Squads implements Serializable {
 
     public static Squads getInstance(){
         return instance;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void makeClientInstance(EntityPlayer player, ArrayList<String> squadNames){
+        instance = new Squads();
+        instance.setPlayerSquadNames(player.getUniqueID(), squadNames);
     }
 
     private Squads(){
@@ -51,6 +64,17 @@ public class Squads implements Serializable {
         }
         squads.add(new SquadData(player.toString(), names));
         save();
+
+        if(FMLCommonHandler.instance().getMinecraftServerInstance() != null)
+        if(FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer()){
+            EntityPlayer playerMp = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld().getPlayerEntityByUUID(player);
+            if(playerMp != null){
+                if(!playerMp.world.isRemote && playerMp instanceof EntityPlayerMP)
+                    PacketDispatcher.sendTo(new SetSquadsMessage(getSquadsFor(player)), (EntityPlayerMP)playerMp);
+            }else{
+                Overlord.logError("Could not find player with UUID "+player);
+            }
+        }
     }
 
     public static void save() {
