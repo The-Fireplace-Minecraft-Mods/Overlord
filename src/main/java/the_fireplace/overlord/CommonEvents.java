@@ -17,8 +17,13 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import the_fireplace.overlord.entity.*;
+import the_fireplace.overlord.network.PacketDispatcher;
+import the_fireplace.overlord.network.packets.SetSquadsMessage;
+import the_fireplace.overlord.tools.Squads;
 
 import java.util.Random;
 
@@ -89,10 +94,17 @@ public class CommonEvents {
         }
     }
     @SubscribeEvent
-    public void configCahnged(ConfigChangedEvent.OnConfigChangedEvent event){
+    public void configChanged(ConfigChangedEvent.OnConfigChangedEvent event){
         if(event.getModID().equals(Overlord.MODID)){
             Overlord.syncConfig();
         }
+    }
+    @SubscribeEvent
+    public void onLogin(PlayerEvent.PlayerLoggedInEvent event){
+        if(FMLCommonHandler.instance().getMinecraftServerInstance() != null)
+            if(FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer() && event.player instanceof EntityPlayerMP){
+                PacketDispatcher.sendTo(new SetSquadsMessage(Squads.getInstance().getSquadsFor(event.player.getUniqueID())), (EntityPlayerMP)event.player);
+            }
     }
     @SubscribeEvent
     public void livingHurt(LivingHurtEvent event){

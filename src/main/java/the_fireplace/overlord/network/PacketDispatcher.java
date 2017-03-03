@@ -31,6 +31,7 @@ public class PacketDispatcher {
         PacketDispatcher.registerMessage(SetConfigsMessage.Handler.class, SetConfigsMessage.class, Side.CLIENT);
         PacketDispatcher.registerMessage(RequestAugmentMessage.Handler.class, RequestAugmentMessage.class, Side.SERVER);
         PacketDispatcher.registerMessage(SetAugmentMessage.Handler.class, SetAugmentMessage.class, Side.CLIENT);
+        PacketDispatcher.registerMessage(SetSquadsMessage.Handler.class, SetSquadsMessage.class, Side.CLIENT);
     }
 
     @SuppressWarnings("unchecked")
