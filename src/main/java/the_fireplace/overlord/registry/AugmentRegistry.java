@@ -14,7 +14,7 @@ import java.util.HashMap;
  */
 @ParametersAreNonnullByDefault
 public abstract class AugmentRegistry {
-    private static HashMap<ItemStack, Augment> augments = Maps.newHashMap();
+    private static HashMap<ItemStack, String> augments = Maps.newHashMap();
     private static HashMap<String, Augment> augmentIDs = Maps.newHashMap();
 
     public static boolean registerAugment(ItemStack item, Augment augment){
@@ -22,20 +22,19 @@ public abstract class AugmentRegistry {
             Overlord.logError("Augment "+augment.getClass()+" has no ID, skipping...");
             return false;
         }
-        if(!augmentIDs.keySet().contains(augment.augmentId())) {
+        if (!augments.containsKey(item)) {
             item.setCount(1);
-            if (!augments.containsKey(item)) {
-                augments.put(item, augment);
-                augmentIDs.put(augment.augmentId(), augment);
-                return true;
-            } else {
-                Overlord.logWarn("Augment already exists for " + item.getItem() + ", skipping...");
-                return false;
-            }
-        }else{
-            Overlord.logError("Augment already exists for ID "+augment.augmentId()+", skipping "+augment.getClass()+"...");
+            augments.put(item, augment.augmentId());
+        } else {
+            Overlord.logError("Augment already exists for " + item.getItem() + ", skipping...");
             return false;
         }
+        if(!augmentIDs.keySet().contains(augment.augmentId())) {
+            augmentIDs.put(augment.augmentId(), augment);
+        }else{
+            Overlord.logWarn("Augment already exists for ID "+augment.augmentId()+", skipping "+augment.getClass()+"...");
+        }
+        return true;
     }
 
     @Nullable
@@ -44,9 +43,9 @@ public abstract class AugmentRegistry {
             return null;
         ItemStack stack1 = stack.copy();
         stack1.setCount(1);
-        for(ItemStack augment:augments.keySet()){
-            if(ItemStack.areItemStacksEqual(stack1, augment))
-                return augments.get(augment);
+        for(ItemStack augmentItem:augments.keySet()){
+            if(ItemStack.areItemStacksEqual(stack1, augmentItem))
+                return getAugment(augments.get(augmentItem));
         }
         return null;
     }
