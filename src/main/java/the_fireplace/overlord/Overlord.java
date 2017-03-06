@@ -18,6 +18,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.stats.Achievement;
 import net.minecraft.stats.AchievementList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
@@ -39,7 +40,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Marker;
 import the_fireplace.overlord.augments.*;
 import the_fireplace.overlord.blocks.BlockBabySkeletonMaker;
 import the_fireplace.overlord.blocks.BlockSkeletonMaker;
@@ -59,12 +59,13 @@ import the_fireplace.overlord.tileentity.TileEntityBabySkeletonMaker;
 import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
 import the_fireplace.overlord.tools.*;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 /**
  * @author The_Fireplace
  */
-@Mod(modid= Overlord.MODID, name= Overlord.MODNAME, guiFactory = "the_fireplace.overlord.client.gui.OverlordConfigGuiFactory", updateJSON = "http://thefireplace.bitnamiapp.com/jsons/overlord.json", acceptedMinecraftVersions = "[1.10,1.10.2]")
+@Mod(modid= Overlord.MODID, name= Overlord.MODNAME, guiFactory = "the_fireplace.overlord.client.gui.OverlordConfigGuiFactory", updateJSON = "http://thefireplace.bitnamiapp.com/jsons/overlord.json", acceptedMinecraftVersions = "[1.11.2,)", dependencies = "before:guideapi")
 public class Overlord {
     public static final String MODNAME = "Overlord";
     public static final String MODID = "overlord";
@@ -87,9 +88,10 @@ public class Overlord {
     private static Logger logger;
 
     public static final CreativeTabs tabOverlord = new CreativeTabs(MODID) {
+        @Nonnull
         @Override
-        public Item getTabIconItem() {
-            return Item.getItemFromBlock(Overlord.skeleton_maker);
+        public ItemStack getTabIconItem() {
+            return new ItemStack(Overlord.skeleton_maker);
         }
     };
 
@@ -159,11 +161,11 @@ public class Overlord {
         GameRegistry.registerTileEntity(TileEntitySkeletonMaker.class, "skeleton_maker");
         GameRegistry.registerTileEntity(TileEntityBabySkeletonMaker.class, "baby_skeleton_maker");
         int eid=-1;
-        EntityRegistry.registerModEntity(EntitySkeletonWarrior.class, "skeleton_warrior", ++eid, instance, 128, 2, false);
-        EntityRegistry.registerModEntity(EntityBabySkeleton.class, "skeleton_baby", ++eid, instance, 64, 2, false);
-        EntityRegistry.registerModEntity(EntityMilkBottle.class, "milk_bottle", ++eid, instance, 32, 10, true);
-        EntityRegistry.registerModEntity(EntityConvertedSkeleton.class, "skeleton_converted", ++eid, instance, 116, 2, false);
-        EntityRegistry.registerModEntity(EntityCuringSkeleton.class, "skeleton_curing", ++eid, instance, 48, 2, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(MODID+":skeleton_warrior"), EntitySkeletonWarrior.class, "skeleton_warrior", ++eid, instance, 128, 2, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(MODID+":skeleton_baby"), EntityBabySkeleton.class, "skeleton_baby", ++eid, instance, 64, 2, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(MODID+":milk_bottle"), EntityMilkBottle.class, "milk_bottle", ++eid, instance, 32, 10, true);
+        EntityRegistry.registerModEntity(new ResourceLocation(MODID+":skeleton_converted"), EntityConvertedSkeleton.class, "skeleton_converted", ++eid, instance, 116, 2, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(MODID+":skeleton_curing"), EntityCuringSkeleton.class, "skeleton_curing", ++eid, instance, 48, 2, false);
         proxy.registerClient();
         MinecraftForge.EVENT_BUS.register(new CommonEvents());
         DataSerializers.registerSerializer(CustomDataSerializers.UNIQUE_ID);
@@ -242,7 +244,9 @@ public class Overlord {
     public static ItemStack crusaderShield(){
         ItemStack shieldStack = new ItemStack(Items.SHIELD);
         NBTTagCompound tagCompound = new NBTTagCompound();
-        NBTTagCompound bet = shieldStack.getSubCompound("BlockEntityTag", true);
+        NBTTagCompound bet = shieldStack.getSubCompound("BlockEntityTag");
+        if(bet == null)
+            bet = new NBTTagCompound();
         bet.setInteger("Base", 15);
         NBTTagList nbttaglist = new NBTTagList();
         NBTTagCompound nbttagcompound = new NBTTagCompound();
