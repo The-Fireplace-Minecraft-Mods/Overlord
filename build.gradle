@@ -43,12 +43,16 @@ minecraft {
 
 dependencies {
 	deobfCompile group: "mezz.jei", name: "jei_1.11.2", version: "4.2.3.223"
+	deobfCompile "info.amerifrance.guideapi:Guide-API:1.11-2.1.0-50"
 }
 
 repositories{
     maven { //JEI, Natura, Mantle, TiCon
         url "http://dvs1.progwml6.com/files/maven"
     }
+    maven { //Guide API
+		url "http://tehnut.info/maven/"
+	}
 }
 
 processResources
@@ -106,6 +110,9 @@ curseforge {
 	addGameVersion 'Java 8'
     mainArtifact(jar) {
         displayName = jar.archiveName.replace(".jar", "")
+        relations{
+			requiredLibrary 'guide-api'
+		}
     }
     addArtifact(sourceJar) {
         displayName = sourceJar.archiveName.replace(".jar", "")
