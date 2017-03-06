@@ -40,7 +40,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Marker;
 import the_fireplace.overlord.augments.*;
 import the_fireplace.overlord.blocks.BlockBabySkeletonMaker;
 import the_fireplace.overlord.blocks.BlockSkeletonMaker;
@@ -66,7 +65,7 @@ import java.util.ArrayList;
 /**
  * @author The_Fireplace
  */
-@Mod(modid= Overlord.MODID, name= Overlord.MODNAME, guiFactory = "the_fireplace.overlord.client.gui.OverlordConfigGuiFactory", updateJSON = "http://thefireplace.bitnamiapp.com/jsons/overlord.json", acceptedMinecraftVersions = "[1.11,)")
+@Mod(modid= Overlord.MODID, name= Overlord.MODNAME, guiFactory = "the_fireplace.overlord.client.gui.OverlordConfigGuiFactory", updateJSON = "http://thefireplace.bitnamiapp.com/jsons/overlord.json", acceptedMinecraftVersions = "[1.11.2,)", dependencies = "before:guideapi")
 public class Overlord {
     public static final String MODNAME = "Overlord";
     public static final String MODID = "overlord";

@@ -28,7 +28,7 @@ public class AugmentWither extends Augment {
 
     @Override
     public void onEntityTick(@Nonnull EntityArmyMember entity) {
-        if(entity.isBurning() && entity.getActivePotionEffect(MobEffects.FIRE_RESISTANCE) == null)
+        if(entity.getActivePotionEffect(MobEffects.FIRE_RESISTANCE) == null)
             entity.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 120));
     }
 }
