@@ -27,6 +27,7 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.client.config.GuiConfigEntries;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -39,7 +40,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Level;
 import the_fireplace.overlord.augments.*;
 import the_fireplace.overlord.blocks.BlockBabySkeletonMaker;
 import the_fireplace.overlord.blocks.BlockSkeletonMaker;
@@ -85,8 +86,6 @@ public class Overlord {
     @SidedProxy(clientSide = "the_fireplace."+MODID+".client.ClientProxy", serverSide = "the_fireplace."+MODID+".CommonProxy")
     public static CommonProxy proxy;
 
-    private static Logger logger;
-
     public static final CreativeTabs tabOverlord = new CreativeTabs(MODID) {
         @Nonnull
         @Override
@@ -125,7 +124,6 @@ public class Overlord {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
-        logger = event.getModLog();
         PacketDispatcher.registerPackets();
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new OverlordGuiHandler());
         config = new Configuration(event.getSuggestedConfigurationFile());
@@ -308,23 +306,23 @@ public class Overlord {
                 firstBaby, firstSkeleton, converter, secondSkeleton, firstLevel, firstMilk, armedSkeleton, sally, crusader, milk256, milk9001, nmyi, alliance, breakalliance, warmonger, forgiver, wardog, heya));
     }
 
-    public static void logInfo(Object log){
-        logger.info(log);
+    public static void logInfo(String log, Object... params){
+        FMLLog.log(MODNAME, Level.INFO,  log, params);
     }
 
-    public static void logDebug(Object log){
-        logger.debug(log);
+    public static void logDebug(String log, Object... params){
+        FMLLog.log(MODNAME, Level.DEBUG,  log, params);
     }
 
-    public static void logError(Object log){
-        logger.error(log);
+    public static void logError(String log, Object... params){
+        FMLLog.log(MODNAME, Level.ERROR,  log, params);
     }
 
-    public static void logTrace(Object log){
-        logger.trace(log);
+    public static void logTrace(String log, Object... params){
+        FMLLog.log(MODNAME, Level.TRACE,  log, params);
     }
 
-    public static void logWarn(Object log){
-        logger.warn(log);
+    public static void logWarn(String log, Object... params){
+        FMLLog.log(MODNAME, Level.WARN,  log, params);
     }
 }
