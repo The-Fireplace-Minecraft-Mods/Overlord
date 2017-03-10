@@ -101,6 +101,7 @@ public class CommonEvents {
     public void onLogin(PlayerEvent.PlayerLoggedInEvent event){
         if(FMLCommonHandler.instance().getMinecraftServerInstance() != null)
             if(FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer() && event.player instanceof EntityPlayerMP){
+                Overlord.logDebug("Sending "+event.player.getName()+" client their squads.");
                 PacketDispatcher.sendTo(new SetSquadsMessage(Squads.getInstance().getSquadsFor(event.player.getUniqueID())), (EntityPlayerMP)event.player);
             }
     }

@@ -1,5 +1,6 @@
 package the_fireplace.overlord.tools;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.DimensionManager;
@@ -31,7 +32,15 @@ public class Squads implements Serializable {
     @SideOnly(Side.CLIENT)
     public static void makeClientInstance(EntityPlayer player, ArrayList<String> squadNames){
         instance = new Squads();
-        instance.setPlayerSquadNames(player.getUniqueID(), squadNames);
+        if(player != null) {
+            instance.setPlayerSquadNames(player.getUniqueID(), squadNames);
+            Overlord.logDebug("Setting client squad names "+squadNames+" to player "+player.getName());
+        }else if(Minecraft.getMinecraft().player != null) {
+            instance.setPlayerSquadNames(Minecraft.getMinecraft().player.getUniqueID(), squadNames);
+            Overlord.logInfo("Passed player was null, setting client player squad names to "+squadNames);
+        }else{
+            Overlord.logError("Unable to set client squads.");
+        }
     }
 
     private Squads(){
@@ -91,7 +100,7 @@ public class Squads implements Serializable {
         if(saveDir == null)
             saveDir = DimensionManager.getCurrentSaveRootDirectory();
         if(saveDir == null) {
-            Overlord.logError("Could not get save directory. Squads will not load properly.");
+            Overlord.logError("Could not get save directory. Either you are connected to a server or Squads will not load properly.");
             instance = new Squads();
             return;
         }
@@ -116,7 +125,7 @@ public class Squads implements Serializable {
             if(saveDir == null)
                 saveDir = DimensionManager.getCurrentSaveRootDirectory();
             if(saveDir == null)
-                Overlord.logError("Could not get save directory. Squads will not save properly.");
+                Overlord.logError("Could not get save directory. Either you are connected to a server or Squads will not save properly.");
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(new File(saveDir, dataFileName)));
             out.writeObject(instance);
             out.close();

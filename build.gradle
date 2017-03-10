@@ -24,7 +24,7 @@ apply plugin: 'net.cazzar.gradle.modsio'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
-version = "2.2.0"
+version = "2.2.1"
 group= "the_fireplace.overlord"
 archivesBaseName = "Overlord-1.11.2"
 
@@ -34,10 +34,10 @@ allprojects {
 }
 
 minecraft {
-    version = "1.11.2-13.20.0.2233"
+    version = "1.11.2-13.20.0.2255"
     runDir = "run"
     replace '${version}', project.version
-    mappings = "snapshot_20170219"
+    mappings = "snapshot_20170308"
     useDepAts = true
 }
 
