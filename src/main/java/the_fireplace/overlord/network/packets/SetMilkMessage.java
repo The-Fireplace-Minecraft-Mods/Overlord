@@ -1,6 +1,7 @@
 package the_fireplace.overlord.network.packets;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -40,9 +41,10 @@ public class SetMilkMessage implements IMessage {
     public static class Handler extends AbstractClientMessageHandler<SetMilkMessage> {
         @Override
         public IMessage handleClientMessage(EntityPlayer player, SetMilkMessage message, MessageContext ctx) {
-            if(player.world.getTileEntity(message.pos) instanceof TileEntitySkeletonMaker){
-                ((TileEntitySkeletonMaker) player.world.getTileEntity(message.pos)).setMilk(message.milk);
-            }
+            Minecraft.getMinecraft().addScheduledTask(() -> {
+                if (player.world.getTileEntity(message.pos) instanceof TileEntitySkeletonMaker)
+                    ((TileEntitySkeletonMaker) player.world.getTileEntity(message.pos)).setMilk(message.milk);
+            });
             return null;
         }
     }

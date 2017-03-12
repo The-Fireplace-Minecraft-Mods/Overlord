@@ -3,6 +3,7 @@ package the_fireplace.overlord.network.packets;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import the_fireplace.overlord.tileentity.ISkeletonMaker;
@@ -36,9 +37,11 @@ public class CreateSkeletonMessage implements IMessage {
     public static class Handler extends AbstractServerMessageHandler<CreateSkeletonMessage> {
         @Override
         public IMessage handleServerMessage(EntityPlayer player, CreateSkeletonMessage message, MessageContext ctx) {
-            if(player.world.getTileEntity(message.pos) instanceof ISkeletonMaker){
-                ((ISkeletonMaker) player.world.getTileEntity(message.pos)).spawnSkeleton();
-            }
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
+                if(player.world.getTileEntity(message.pos) instanceof ISkeletonMaker){
+                    ((ISkeletonMaker) player.world.getTileEntity(message.pos)).spawnSkeleton();
+                }
+            });
             return null;
         }
     }
