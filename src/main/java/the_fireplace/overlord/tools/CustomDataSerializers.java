@@ -11,7 +11,7 @@ import java.util.UUID;
 /**
  * @author The_Fireplace
  */
-public class CustomDataSerializers {
+public final class CustomDataSerializers {
     @ParametersAreNonnullByDefault
     public static final DataSerializer<UUID> UNIQUE_ID = new DataSerializer<UUID>()
     {

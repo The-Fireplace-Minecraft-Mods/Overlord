@@ -2,6 +2,7 @@ package the_fireplace.overlord.network.packets;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -39,15 +40,15 @@ public class SetSquadMessage implements IMessage {
     public static class Handler extends AbstractServerMessageHandler<SetSquadMessage> {
         @Override
         public IMessage handleServerMessage(EntityPlayer player, SetSquadMessage message, MessageContext ctx) {
-            if(player.world.getEntityByID(message.warrior) != null){
-                if(player.world.getEntityByID(message.warrior) instanceof EntityArmyMember){
-                    ((EntityArmyMember) player.world.getEntityByID(message.warrior)).setSquad(message.squad);
-                }else{
-                    Overlord.logError("Entity is not an Army Member. It is "+player.world.getEntityByID(message.warrior).toString());
-                }
-            }else{
-                Overlord.logError("Error 404: Army Member not found: "+message.warrior);
-            }
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
+                if (player.world.getEntityByID(message.warrior) != null){
+                    if (player.world.getEntityByID(message.warrior) instanceof EntityArmyMember)
+                        ((EntityArmyMember) player.world.getEntityByID(message.warrior)).setSquad(message.squad);
+                    else
+                        Overlord.logError("Entity is not an Army Member. It is " + player.world.getEntityByID(message.warrior).toString());
+                }else
+                    Overlord.logError("Error 404: Army Member not found: " + message.warrior);
+            });
             return null;
         }
     }

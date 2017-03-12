@@ -1,1 +1,1 @@
-Should fix a crash when connecting to servers
+Fixed multithreading.
