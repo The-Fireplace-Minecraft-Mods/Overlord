@@ -1,6 +1,7 @@
 package the_fireplace.overlord.network.packets;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -38,8 +39,10 @@ public class SetAugmentMessage implements IMessage {
     public static class Handler extends AbstractClientMessageHandler<SetAugmentMessage> {
         @Override
         public IMessage handleClientMessage(EntityPlayer player, SetAugmentMessage message, MessageContext ctx) {
-            if(player.world.getEntityByID(message.skeleton) != null && player.world.getEntityByID(message.skeleton) instanceof EntitySkeletonWarrior)
-                ((EntitySkeletonWarrior)player.world.getEntityByID(message.skeleton)).setAugment(message.augment);
+            Minecraft.getMinecraft().addScheduledTask(() -> {
+                if (player.world.getEntityByID(message.skeleton) != null && player.world.getEntityByID(message.skeleton) instanceof EntitySkeletonWarrior)
+                    ((EntitySkeletonWarrior) player.world.getEntityByID(message.skeleton)).setAugment(message.augment);
+            });
             return null;
         }
     }
