@@ -10,6 +10,7 @@ import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -20,6 +21,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import the_fireplace.overlord.entity.*;
+import the_fireplace.overlord.items.ItemOverlordsSeal;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.SetSquadsMessage;
 import the_fireplace.overlord.tools.Squads;
@@ -132,6 +134,18 @@ public final class CommonEvents {
                             }
                     }
                 }
+            }
+        }
+    }
+    @SubscribeEvent
+    public void itemCrafted(PlayerEvent.ItemCraftedEvent event){
+        ItemStack stack = event.crafting;
+        if(stack.getItem() instanceof ItemOverlordsSeal && event.player != null){
+            if(stack.getTagCompound() == null)
+                stack.setTagCompound(new NBTTagCompound());
+            if (!stack.getTagCompound().hasKey("Owner")) {
+                stack.getTagCompound().setString("Owner", event.player.getUniqueID().toString());
+                stack.getTagCompound().setString("OwnerName", event.player.getDisplayNameString());
             }
         }
     }
