@@ -1,1 +1,2 @@
 Fixed multithreading.
+Seals and Stamps are now claimed when crafted.
