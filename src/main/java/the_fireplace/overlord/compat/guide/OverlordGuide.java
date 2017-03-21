@@ -107,7 +107,15 @@ public class OverlordGuide implements IGuideBook {
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.3.3.2")));
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.3.3.3")));
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.3.3.4")));
+        pages.add(new PageText(proxy.translateToLocal("overlord.guide.3.3.5")));
         entries.put(new ResourceLocation(Overlord.MODID, "3.3"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.3.3"), new ItemStack(Items.SKULL, 1, 1)));
+
+        pages = Lists.newArrayList();
+        pages.add(new PageText(proxy.translateToLocal("overlord.guide.3.4.1")));
+        pages.add(new PageIRecipe(new ShapelessOreRecipe(Overlord.squad_editor, Items.BOOK, "dyeBlack", "bone")));
+        pages.add(new PageText(proxy.translateToLocal("overlord.guide.3.4.2")));
+        entries.put(new ResourceLocation(Overlord.MODID, "3.4"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.3.4"), new ItemStack(Overlord.squad_editor)));
+
 
         categories.add(new CategoryItemStack(entries, proxy.translateToLocal("overlord.guide.3"), new ItemStack(Items.LEAD)));
 
@@ -127,6 +135,22 @@ public class OverlordGuide implements IGuideBook {
         entries.put(new ResourceLocation(Overlord.MODID, "4.2"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.4.2"), new ItemStack(Items.CHAINMAIL_CHESTPLATE)));
 
         categories.add(new CategoryItemStack(entries, proxy.translateToLocal("overlord.guide.4"), new ItemStack(Blocks.BEACON)));
+
+        //Section 5
+        entries = Maps.newLinkedHashMap();
+
+        pages = Lists.newArrayList();
+        pages.add(new PageText(proxy.translateToLocal("overlord.guide.5.1.1")));
+        pages.add(new PageText(proxy.translateToLocal("overlord.guide.5.1.2")));
+        pages.add(new PageText(proxy.translateToLocal("overlord.guide.5.1.3")));
+        entries.put(new ResourceLocation(Overlord.MODID, "5.1"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.5.1"), new ItemStack(Items.CAKE)));
+
+        pages = Lists.newArrayList();
+        pages.add(new PageText(proxy.translateToLocal("overlord.guide.5.2.1")));
+        pages.add(new PageText(proxy.translateToLocal("overlord.guide.5.2.2")));
+        entries.put(new ResourceLocation(Overlord.MODID, "5.2"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.5.2"), new ItemStack(Items.IRON_SWORD)));
+
+        categories.add(new CategoryItemStack(entries, proxy.translateToLocal("overlord.guide.5"), new ItemStack(Items.SKULL, 1, 3)));
 
 
         // Setup the book's base information
