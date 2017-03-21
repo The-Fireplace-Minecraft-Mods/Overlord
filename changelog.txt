@@ -1,2 +1,3 @@
-Fixed multithreading.
-Seals and Stamps are now claimed when crafted.
+Seals and Stamps are now always claimed when crafted.
+The guide now explains Alliances, Enemies, and Squads.
+Commands should no longer require op.
