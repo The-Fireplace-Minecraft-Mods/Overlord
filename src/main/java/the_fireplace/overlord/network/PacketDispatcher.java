@@ -13,7 +13,7 @@ import the_fireplace.overlord.network.packets.*;
  * @author coolAlias
  * @author The_Fireplace
  */
-public class PacketDispatcher {
+public final class PacketDispatcher {
     private static byte packetId = 0;
 
     private static final SimpleNetworkWrapper dispatcher = NetworkRegistry.INSTANCE.newSimpleChannel(Overlord.MODID);

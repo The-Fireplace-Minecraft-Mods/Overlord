@@ -1,6 +1,5 @@
 package the_fireplace.overlord.command;
 
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -15,14 +14,13 @@ import the_fireplace.overlord.tools.Alliances;
 import the_fireplace.overlord.tools.Enemies;
 import the_fireplace.overlord.tools.StringPair;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.Nonnull;
 
 /**
  * @author The_Fireplace
  */
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class CommandEnemy extends CommandBase {
+    @Nonnull
     @Override
     public String getName() {
         return "enemy";
@@ -34,7 +32,12 @@ public class CommandEnemy extends CommandBase {
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+        return sender instanceof EntityPlayer;
+    }
+
+    @Override
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException {
         if (sender instanceof EntityPlayer) {
             if(args.length == 1){
                 EntityPlayer player = server.getEntityWorld().getPlayerEntityByName(args[0]);
@@ -70,8 +73,9 @@ public class CommandEnemy extends CommandBase {
         }
     }
 
+    @Nonnull
     @Override
-    public String getUsage(ICommandSender icommandsender) {
+    public String getUsage(@Nonnull ICommandSender icommandsender) {
         return "/enemy <PlayerName>";
     }
 }

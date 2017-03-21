@@ -1,6 +1,5 @@
 package the_fireplace.overlord.command;
 
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -12,15 +11,14 @@ import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.tools.Alliance;
 import the_fireplace.overlord.tools.Alliances;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.Nonnull;
 import java.util.UUID;
 
 /**
  * @author The_Fireplace
  */
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
 public class CommandAllyAccept extends CommandBase {
+    @Nonnull
     @Override
     public String getName() {
         return "allyaccept";
@@ -32,7 +30,12 @@ public class CommandAllyAccept extends CommandBase {
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+        return sender instanceof EntityPlayer;
+    }
+
+    @Override
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException {
         if (sender instanceof EntityPlayer) {
             for(Alliance alliance:Overlord.instance.pendingAlliances){
                 if(alliance.getUser2().getUUID().equals(((EntityPlayer) sender).getUniqueID().toString())){
@@ -56,8 +59,9 @@ public class CommandAllyAccept extends CommandBase {
         }
     }
 
+    @Nonnull
     @Override
-    public String getUsage(ICommandSender icommandsender) {
+    public String getUsage(@Nonnull ICommandSender icommandsender) {
         return "/allyaccept";
     }
 }

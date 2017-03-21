@@ -1,6 +1,5 @@
 package the_fireplace.overlord.command;
 
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -13,18 +12,17 @@ import net.minecraft.util.text.TextFormatting;
 import the_fireplace.overlord.tools.Enemies;
 import the_fireplace.overlord.tools.StringPair;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 /**
  * @author The_Fireplace
  */
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class CommandEnemyList extends CommandBase {
     private static final Style blue = new Style().setColor(TextFormatting.BLUE);
     private static final Style purple = new Style().setColor(TextFormatting.LIGHT_PURPLE);
     private static final Style red = new Style().setColor(TextFormatting.RED);
+    @Nonnull
     @Override
     public String getName() {
         return "enemylist";
@@ -36,7 +34,12 @@ public class CommandEnemyList extends CommandBase {
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+        return sender instanceof EntityPlayer;
+    }
+
+    @Override
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException {
         if (sender instanceof EntityPlayer) {
             if(!Enemies.getInstance().getAllEnemies(((EntityPlayer) sender).getUniqueID()).isEmpty()) {
                 sender.sendMessage(new TextComponentTranslation("overlord.enemylist"));
@@ -56,8 +59,9 @@ public class CommandEnemyList extends CommandBase {
         }
     }
 
+    @Nonnull
     @Override
-    public String getUsage(ICommandSender icommandsender) {
+    public String getUsage(@Nonnull ICommandSender icommandsender) {
         return "/enemylist";
     }
 }
