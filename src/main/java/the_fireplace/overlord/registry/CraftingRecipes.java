@@ -10,7 +10,7 @@ import the_fireplace.overlord.Overlord;
 /**
  * @author The_Fireplace
  */
-public class CraftingRecipes {
+public final class CraftingRecipes {
     public static ItemStack skeleton_maker = new ItemStack(Overlord.skeleton_maker);
     public static ItemStack baby_skeleton_maker = new ItemStack(Overlord.baby_skeleton_maker);
     public static ItemStack overlords_seal = new ItemStack(Overlord.overlords_seal);
@@ -21,18 +21,43 @@ public class CraftingRecipes {
     public static void addRecipes(){
         addRecipe(skeleton_maker, "bgb", "ihi", 'b', Items.BUCKET, 'g', "blockGlass", 'i', "ingotIron", 'h', Items.GLASS_BOTTLE);
         addRecipe(baby_skeleton_maker, "bgb", "b b", 'b', "stone", 'g', "blockGlass");
-        addRecipe(overlords_seal, "nin", "i i", "nin", 'n', "nuggetGold", 'i', "nuggetIron");
-        addRecipe(overlords_stamp, " s", "sp", " d", 's', "stickWood", 'p', "paper", 'd', "dye");
-        addRecipe(overlords_stamp, "s ", "ps", "d ", 's', "stickWood", 'p', "paper", 'd', "dye");
+        addSealRecipe(overlords_seal, "nin", "i i", "nin", 'n', "nuggetGold", 'i', "nuggetIron");
+        addSealRecipe(overlords_stamp, " s", "sp", " d", 's', "stickWood", 'p', "paper", 'd', "dye");
+        addSealRecipe(overlords_stamp, "s ", "ps", "d ", 's', "stickWood", 'p', "paper", 'd', "dye");
         addRecipe(new ItemStack(Items.CAKE), "mmm", "ses", "www", 'm', Overlord.milk_bottle, 's', Items.SUGAR, 'e', "egg", 'w', "cropWheat");
         addShapelessRecipe(skinsuit, Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, Items.LEATHER_LEGGINGS, Items.LEATHER_BOOTS, Items.ROTTEN_FLESH, Items.ROTTEN_FLESH, "dyeGreen", "dyeBlue", "dyeRed");
         addShapelessRecipe(squad_editor, Items.BOOK, "dyeBlack", "bone");
     }
 
+    /**
+     * Adds a shaped OreDictionary recipe
+     * @param output
+     * The recipe output
+     * @param input
+     * The recipe input information
+     */
     public static void addRecipe(ItemStack output, Object... input){
         GameRegistry.addRecipe(new ShapedOreRecipe(output, input));
     }
 
+    /**
+     * Adds a recipe for an item which will have the Owner and OwnerName NBT Tags. Uses OreDictionary.
+     * @param output
+     * The recipe output
+     * @param input
+     * The recipe input information
+     */
+    public static void addSealRecipe(ItemStack output, Object... input){
+        GameRegistry.addRecipe(new SealRecipe(output, input));
+    }
+
+    /**
+     * Adds a shapeless OreDictionary recipe
+     * @param output
+     * The recipe output
+     * @param input
+     * The recipe input information
+     */
     public static void addShapelessRecipe(ItemStack output, Object... input){
         GameRegistry.addRecipe(new ShapelessOreRecipe(output, input));
     }
