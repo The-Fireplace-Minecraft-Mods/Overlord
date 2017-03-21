@@ -41,7 +41,7 @@ public final class CraftingRecipes {
     }
 
     /**
-     * Adds a recipe for an item which will have the Owner and OwnerName NBT Tags. Uses OreDictionary.
+     * Adds a recipe for an item which will have the Owner and OwnerName NBT Tags. Uses Ore
      * @param output
      * The recipe output
      * @param input
