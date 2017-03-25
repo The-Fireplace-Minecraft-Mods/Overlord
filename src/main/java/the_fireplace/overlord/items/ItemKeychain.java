@@ -72,29 +72,33 @@ public class ItemKeychain extends Item {
 
             EntityArmyMember entity;
             NBTTagCompound entNbt = stack.getTagCompound();
-            if(entNbt.getString("SkeletonType").equals("skeleton_warrior"))
-                entity = new EntitySkeletonWarrior(worldIn);
-            else if(entNbt.getString("SkeletonType").equals("skeleton_converted"))
-                entity = new EntityConvertedSkeleton(worldIn);
-            else {
-                entity = new EntityBabySkeleton(worldIn);
-                if(!entNbt.getString("SkeletonType").equals("skeleton_baby"))
-                    Overlord.logError("Skeleton Type for keychain was "+entNbt.getString("SkeletonType"));
+            if(entNbt != null) {
+                if (entNbt.getString("SkeletonType").equals("skeleton_warrior"))
+                    entity = new EntitySkeletonWarrior(worldIn);
+                else if (entNbt.getString("SkeletonType").equals("skeleton_converted"))
+                    entity = new EntityConvertedSkeleton(worldIn);
+                else {
+                    entity = new EntityBabySkeleton(worldIn);
+                    if (!entNbt.getString("SkeletonType").equals("skeleton_baby"))
+                        Overlord.logError("Skeleton Type for keychain was " + entNbt.getString("SkeletonType"));
+                }
+                entity.readFromNBT(entNbt);
+
+                entity.setLocationAndAngles(pos.getX() + 0.5D, pos.getY() + offsetY, pos.getZ() + 0.5D, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
+                entity.rotationYawHead = entity.rotationYaw;
+                entity.renderYawOffset = entity.rotationYaw;
+                worldIn.spawnEntity(entity);
+                entity.playLivingSound();
+
+                entity.setLocationAndAngles(pos.getX() + 0.5D, pos.getY() + offsetY, pos.getZ() + 0.5D, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
+
+                stack.shrink(1);
+                playerIn.inventory.addItemStackToInventory(new ItemStack(Overlord.keychain));
+
+                return EnumActionResult.SUCCESS;
+            }else{
+                return EnumActionResult.FAIL;
             }
-            entity.readFromNBT(entNbt);
-
-            entity.setLocationAndAngles(pos.getX()+0.5D, pos.getY() + offsetY, pos.getZ()+0.5D, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
-            entity.rotationYawHead = entity.rotationYaw;
-            entity.renderYawOffset = entity.rotationYaw;
-            worldIn.spawnEntity(entity);
-            entity.playLivingSound();
-
-            entity.setLocationAndAngles(pos.getX()+0.5D, pos.getY() + offsetY, pos.getZ()+0.5D, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
-
-            stack.shrink(1);
-            playerIn.inventory.addItemStackToInventory(new ItemStack(Overlord.keychain));
-
-            return EnumActionResult.SUCCESS;
         }
     }
 
