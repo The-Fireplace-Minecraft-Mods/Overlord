@@ -14,6 +14,7 @@ import the_fireplace.overlord.entity.EntityCuringSkeleton;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.entity.projectile.EntityMilkBottle;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 
 /**
@@ -21,7 +22,7 @@ import java.io.File;
  */
 public class ClientProxy extends CommonProxy {
     @Override
-    public String translateToLocal(String u, Object... args){
+    public String translateToLocal(@Nonnull String u, Object... args){
         return I18n.format(u, args);
     }
 

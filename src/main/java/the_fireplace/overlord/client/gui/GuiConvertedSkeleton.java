@@ -16,6 +16,7 @@ import the_fireplace.overlord.network.packets.AttackModeMessage;
 import the_fireplace.overlord.network.packets.MovementModeMessage;
 import the_fireplace.overlord.network.packets.RequestAugmentMessage;
 import the_fireplace.overlord.network.packets.SetSquadMessage;
+import the_fireplace.overlord.tools.ArmyUtils;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -132,33 +133,11 @@ public class GuiConvertedSkeleton extends GuiContainer {
     }
 
     public void setAttackModeText(){
-        byte b=entity.getAttackMode();
-        switch(b){
-            case 0:
-                attackMode.displayString=I18n.format("skeleton.mode.passive");
-                break;
-            case 2:
-                attackMode.displayString=I18n.format("skeleton.mode.aggressive");
-                break;
-            case 1:
-            default:
-                attackMode.displayString=I18n.format("skeleton.mode.defensive");
-        }
+        attackMode.displayString = ArmyUtils.getAttackModeString(entity.getAttackMode());
     }
 
     public void setMovementModeText(){
-        byte b=entity.getMovementMode();
-        switch(b){
-            case 0:
-                movementMode.displayString=I18n.format("skeleton.mode.stationed");
-                break;
-            case 2:
-                movementMode.displayString=I18n.format("skeleton.mode.base");
-                break;
-            case 1:
-            default:
-                movementMode.displayString=I18n.format("skeleton.mode.follower");
-        }
+        movementMode.displayString = ArmyUtils.getMovementModeString(entity.getMovementMode());
     }
 
     public void scheduleAttackModeTextUpdate(){

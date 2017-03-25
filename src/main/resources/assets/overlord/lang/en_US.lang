@@ -14,6 +14,8 @@ item.baby_spawner.name=Baby Skeleton Placer
 item.converted_spawner.name=Converted Skeleton Placer
 item.milk_bottle.name=Milk Bottle
 item.overlord_guide.name=Overlord Guide Book
+item.keychain_empty.name=Keychain
+item.keychain_occupied.name=§bKeychain§f
 itemGroup.overlord=Overlord
 skeleton_maker.create=Create!
 skeleton_maker.warning.unclaimed=Warning: This skeleton will not be claimed.
@@ -26,6 +28,15 @@ entity.overlord.skeleton_curing.name=Skeleton
 
 tooltip.placeclone=Shift+Right Click another skeleton to replace your current copy.
 tooltip.copyclone=Shift+Right Click a skeleton to copy it.
+
+tooltip.skin=Skinsuit:
+tooltip.level=Level:
+tooltip.equipment=Equipment:
+tooltip.name=Name:
+tooltip.attack_mode=Attack Mode:
+tooltip.movement_mode=Movement Mode:
+tooltip.squad=Squad:
+tooltip.type=Type:
 
 skeleton.mode.aggressive=Aggressive
 skeleton.mode.defensive=Defensive
