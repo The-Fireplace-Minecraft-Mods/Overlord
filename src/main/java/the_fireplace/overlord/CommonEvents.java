@@ -61,6 +61,10 @@ public final class CommonEvents {
                     newSkelly.copyLocationAndAnglesFrom(oldSkelly);
                     newSkelly.setHeldItem(EnumHand.MAIN_HAND, oldSkelly.getHeldItemMainhand());
                     newSkelly.setHeldItem(EnumHand.OFF_HAND, oldSkelly.getHeldItemOffhand());
+                    newSkelly.setItemStackToSlot(EntityEquipmentSlot.HEAD, oldSkelly.getItemStackFromSlot(EntityEquipmentSlot.HEAD));
+                    newSkelly.setItemStackToSlot(EntityEquipmentSlot.CHEST, oldSkelly.getItemStackFromSlot(EntityEquipmentSlot.CHEST));
+                    newSkelly.setItemStackToSlot(EntityEquipmentSlot.LEGS, oldSkelly.getItemStackFromSlot(EntityEquipmentSlot.LEGS));
+                    newSkelly.setItemStackToSlot(EntityEquipmentSlot.FEET, oldSkelly.getItemStackFromSlot(EntityEquipmentSlot.FEET));
                     event.getWorld().removeEntity(oldSkelly);
                     event.getWorld().spawnEntity(newSkelly);
                     newSkelly.startConverting(event.getWorld().rand.nextInt(4802) + 3600);

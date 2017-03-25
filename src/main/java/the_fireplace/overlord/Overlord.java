@@ -109,6 +109,8 @@ public final class Overlord {
     public static final Item baby_spawner = new ItemBabySpawner().setUnlocalizedName("baby_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item converted_spawner = new ItemConvertedSpawner().setUnlocalizedName("converted_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item milk_bottle = new ItemMilkBottle().setMaxStackSize(16);
+    public static final Item keychain = new ItemKeychain(false).setUnlocalizedName("keychain_empty");
+    public static final Item keychain_occupied = new ItemKeychain(true).setUnlocalizedName("keychain_occupied");
 
     public static void syncConfig() {
         ConfigValues.HELMETDAMAGE = HELMETDAMAGE_PROPERTY.getBoolean();
@@ -155,6 +157,8 @@ public final class Overlord {
         registerItem(baby_spawner);
         registerItem(converted_spawner);
         registerItem(milk_bottle);
+        registerItem(keychain);
+        registerItem(keychain_occupied);
         OreDictionary.registerOre("book", squad_editor);
         GameRegistry.registerTileEntity(TileEntitySkeletonMaker.class, "skeleton_maker");
         GameRegistry.registerTileEntity(TileEntityBabySkeletonMaker.class, "baby_skeleton_maker");
@@ -218,6 +222,8 @@ public final class Overlord {
         rmm(baby_spawner);
         rmm(converted_spawner);
         rmm(milk_bottle);
+        rmm(keychain);
+        rmm(keychain_occupied);
     }
 
     @SideOnly(Side.CLIENT)
