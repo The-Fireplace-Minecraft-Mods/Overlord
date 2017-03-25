@@ -13,7 +13,7 @@ import java.util.HashMap;
  * @author The_Fireplace
  */
 @ParametersAreNonnullByDefault
-public abstract class AugmentRegistry {
+public final class AugmentRegistry {
     private static HashMap<ItemStack, String> augments = Maps.newHashMap();
     private static HashMap<String, Augment> augmentIDs = Maps.newHashMap();
 
