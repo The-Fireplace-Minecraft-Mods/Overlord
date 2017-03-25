@@ -1,6 +1,7 @@
 package the_fireplace.overlord;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDispenser;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
@@ -51,6 +52,7 @@ import the_fireplace.overlord.entity.EntityConvertedSkeleton;
 import the_fireplace.overlord.entity.EntityCuringSkeleton;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.entity.projectile.EntityMilkBottle;
+import the_fireplace.overlord.handlers.DispenseBehaviorKeychain;
 import the_fireplace.overlord.items.*;
 import the_fireplace.overlord.network.OverlordGuiHandler;
 import the_fireplace.overlord.network.PacketDispatcher;
@@ -183,6 +185,8 @@ public final class Overlord {
         AugmentRegistry.registerAugment(new ItemStack(Blocks.OBSIDIAN), new AugmentObsidian());
         AugmentRegistry.registerAugment(new ItemStack(Blocks.ANVIL), new AugmentAnvil());
         AugmentRegistry.registerAugment(new ItemStack(Items.SKULL, 1, 1), new AugmentWither());
+
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(keychain_occupied, new DispenseBehaviorKeychain());
     }
 
     @Mod.EventHandler
