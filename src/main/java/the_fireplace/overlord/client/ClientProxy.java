@@ -13,6 +13,7 @@ import the_fireplace.overlord.entity.EntityConvertedSkeleton;
 import the_fireplace.overlord.entity.EntityCuringSkeleton;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.entity.projectile.EntityMilkBottle;
+import the_fireplace.overlord.tools.SkinTools;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -39,11 +40,11 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntityMilkBottle.class, new MilkBottleRenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(EntityConvertedSkeleton.class, new ConvertedSkeletonRenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(EntityCuringSkeleton.class, new CuringSkeletonRenderFactory());
-        if(LayerSkinsuit.cachedir.exists()){
-            if(LayerSkinsuit.cachedir.listFiles().length > 0)
-            for(File file:LayerSkinsuit.cachedir.listFiles()){
+        if(SkinTools.cachedir.exists()){
+            if(SkinTools.cachedir.listFiles().length > 0)
+            for(File file:SkinTools.cachedir.listFiles()){
                 if(file.getName().contains(".png"))
-                    LayerSkinsuit.cacheSkin(file.getName().replace(".png",""));
+                    SkinTools.cacheSkin(file.getName().replace(".png",""));
             }
         }
     }
