@@ -1,6 +1,8 @@
 package the_fireplace.overlord.augments;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.init.MobEffects;
+import net.minecraft.potion.PotionEffect;
 import the_fireplace.overlord.entity.EntityArmyMember;
 import the_fireplace.overlord.tools.Augment;
 
@@ -26,5 +28,9 @@ public class AugmentJitters extends Augment {
         if(entity.motionY < 0 && entity.onGround){
             entity.motionY = -entity.motionY;
         }
+        if(entity.getActivePotionEffect(MobEffects.SPEED) == null)
+            entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 120, 3));
+        if(entity.getActivePotionEffect(MobEffects.MINING_FATIGUE) == null)
+            entity.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 120));
     }
 }
