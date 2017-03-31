@@ -27,7 +27,6 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.client.config.GuiConfigEntries;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -185,13 +184,14 @@ public final class Overlord {
         AugmentRegistry.registerAugment(new ItemStack(Blocks.OBSIDIAN), new AugmentObsidian());
         AugmentRegistry.registerAugment(new ItemStack(Blocks.ANVIL), new AugmentAnvil());
         AugmentRegistry.registerAugment(new ItemStack(Items.SKULL, 1, 1), new AugmentWither());
+        AugmentRegistry.registerAugment(new ItemStack(Items.SUGAR), new AugmentJitters());
 
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(keychain_occupied, new DispenseBehaviorKeychain());
     }
 
     @Mod.EventHandler
     public void serverStart(FMLServerStartingEvent event) {
-        MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+        MinecraftServer server = event.getServer();
         ICommandManager command = server.getCommandManager();
 
         ServerCommandManager serverCommand = (ServerCommandManager) command;

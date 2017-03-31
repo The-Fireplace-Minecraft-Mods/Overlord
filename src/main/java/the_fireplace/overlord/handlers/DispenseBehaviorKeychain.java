@@ -1,5 +1,6 @@
 package the_fireplace.overlord.handlers;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
@@ -16,6 +17,7 @@ import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 /**
  * @author The_Fireplace
  */
+@MethodsReturnNonnullByDefault
 public class DispenseBehaviorKeychain extends BehaviorDefaultDispenseItem {
     @Override
     public ItemStack dispenseStack(IBlockSource source, ItemStack stack)
