@@ -216,6 +216,7 @@ overlord.guide.4.1.3=To apply the skinsuit to a Skeleton, Shift+Right Click it w
 overlord.guide.4.2=Augments
 overlord.guide.4.2.1=Augments are items that give your army members special bonuses. Baby Skeletons cannot equip augments.\nList of augments in the base mod:\n*Iron Ingot - Gives the unit Resistance\n*Obsidian - Gives the unit Resistance, Slowness, and Fire Resistance
 overlord.guide.4.2.2=*Anvil - Makes the unit fall quickly, and injure anything it lands on. Also grants Resistance.\n*Golden Apple - Slow health Regen\n*Enchanted Golden Apple - Fast Health Regen\n*Wither Skeleton Skull - Gives attacks the Wither effect, and adds Fire Resistance
+overlord.guide.4.2.3=*Sugar - Makes the unit move faster, but attack slightly slower.
 overlord.guide.5=Other Players
 overlord.guide.5.1=Alliances
 overlord.guide.5.1.1=Alliances allows you to make other players your friends. When you are allied to a player, your skeletons will not attack that player, and theirs will not attack you.
