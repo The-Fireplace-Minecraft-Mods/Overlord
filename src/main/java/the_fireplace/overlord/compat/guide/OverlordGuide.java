@@ -132,6 +132,7 @@ public class OverlordGuide implements IGuideBook {
         pages = Lists.newArrayList();
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.4.2.1")));
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.4.2.2")));
+        pages.add(new PageText(proxy.translateToLocal("overlord.guide.4.2.3")));
         entries.put(new ResourceLocation(Overlord.MODID, "4.2"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.4.2"), new ItemStack(Items.CHAINMAIL_CHESTPLATE)));
 
         categories.add(new CategoryItemStack(entries, proxy.translateToLocal("overlord.guide.4"), new ItemStack(Blocks.BEACON)));
