@@ -6,6 +6,9 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.dispenser.BehaviorProjectileDispense;
+import net.minecraft.dispenser.IPosition;
+import net.minecraft.entity.IProjectile;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
@@ -20,6 +23,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.stats.Achievement;
 import net.minecraft.stats.AchievementList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
@@ -187,6 +191,13 @@ public final class Overlord {
         AugmentRegistry.registerAugment(new ItemStack(Items.SUGAR), new AugmentJitters());
 
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(keychain_occupied, new DispenseBehaviorKeychain());
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(milk_bottle, new BehaviorProjectileDispense() {
+            @Override
+            @Nonnull
+            protected IProjectile getProjectileEntity(@Nonnull World worldIn, @Nonnull IPosition position, @Nonnull ItemStack stackIn) {
+                return new EntityMilkBottle(worldIn, position.getX(), position.getY(), position.getZ());
+            }
+        });
     }
 
     @Mod.EventHandler
