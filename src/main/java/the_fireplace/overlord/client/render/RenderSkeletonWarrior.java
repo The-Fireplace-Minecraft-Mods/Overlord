@@ -76,9 +76,8 @@ public class RenderSkeletonWarrior extends RenderBiped<EntitySkeletonWarrior>
     {
         super.doRender(entitySkeletonWarrior, x, y, z, entityYaw, partialTicks);
 
-        //Render item
         if(!entitySkeletonWarrior.cachedClientAugment)
             PacketDispatcher.sendToServer(new RequestAugmentMessage(entitySkeletonWarrior));
-        RenderTools.renderItemStackOverEntity(entitySkeletonWarrior, entitySkeletonWarrior.getAugmentDisplayStack(), this, partialTicks);
+        RenderTools.renderItemStackOverEntity(entitySkeletonWarrior, entitySkeletonWarrior.getAugmentDisplayStack(), this, partialTicks, x, y, z);
     }
 }

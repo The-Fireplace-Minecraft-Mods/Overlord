@@ -24,12 +24,12 @@ import java.util.Random;
 public final class RenderTools {
     private static Random random = new Random();
     private static EntityItem entityItem;
-    public static void renderItemStackOverEntity(Entity targetEntity, ItemStack stack, Render render, float partialTicks){
+    public static void renderItemStackOverEntity(Entity targetEntity, ItemStack stack, Render render, float partialTicks, double x, double y, double z){
         if(entityItem == null || entityItem.world != targetEntity.world) {
-            entityItem = new EntityItem(targetEntity.world);
+            entityItem = new EntityItem(targetEntity.world, x, y, z, stack);
             entityItem.setNoDespawn();
         }
-        entityItem.setLocationAndAngles(targetEntity.posX, targetEntity.posY, targetEntity.posZ, 0, 0);
+        entityItem.setLocationAndAngles(x, y, z, targetEntity.rotationYaw, targetEntity.rotationPitch);
         entityItem.setEntityItemStack(stack);
 
         ItemStack itemstack = entityItem.getEntityItem();
@@ -46,7 +46,7 @@ public final class RenderTools {
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.pushMatrix();
         IBakedModel ibakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(itemstack, entityItem.world, null);
-        int j = transformModelCount(entityItem, targetEntity.posX, targetEntity.posY, targetEntity.posZ, partialTicks, ibakedmodel, render.getRenderManager());
+        int j = transformModelCount(entityItem, x, y, z, partialTicks, ibakedmodel, render.getRenderManager());
         boolean flag1 = ibakedmodel.isGui3d();
 
         if (!flag1)

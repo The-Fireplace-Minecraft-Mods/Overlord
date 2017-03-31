@@ -31,8 +31,8 @@ public class RenderConvertedSkeleton extends RenderBiped<EntityConvertedSkeleton
             @Override
             protected void initArmor()
             {
-                this.modelLeggings = new ModelSkeletonWarrior(0.5F, true, false, 1);
-                this.modelArmor = new ModelSkeletonWarrior(1.0F, true, false, 1);
+                this.modelLeggings = new ModelConvertedSkeleton(0.5F, true, false, 1);
+                this.modelArmor = new ModelConvertedSkeleton(1.0F, true, false, 1);
             }
         });
     }
@@ -73,6 +73,6 @@ public class RenderConvertedSkeleton extends RenderBiped<EntityConvertedSkeleton
         //Render item
         if(!entityConvertedSkeleton.cachedClientAugment)
             PacketDispatcher.sendToServer(new RequestAugmentMessage(entityConvertedSkeleton));
-        RenderTools.renderItemStackOverEntity(entityConvertedSkeleton, entityConvertedSkeleton.getAugmentDisplayStack(), this, partialTicks);
+        RenderTools.renderItemStackOverEntity(entityConvertedSkeleton, entityConvertedSkeleton.getAugmentDisplayStack(), this, partialTicks, x, y, z);
     }
 }
