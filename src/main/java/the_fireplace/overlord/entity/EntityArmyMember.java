@@ -32,6 +32,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.ai.*;
+import the_fireplace.overlord.registry.AugmentRegistry;
 import the_fireplace.overlord.tools.Alliances;
 import the_fireplace.overlord.tools.Augment;
 import the_fireplace.overlord.tools.CustomDataSerializers;
@@ -59,6 +60,13 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(EntityArmyMember.class, DataSerializers.BOOLEAN);
 
     protected EntityAIAttackMelee aiAttackOnCollide = null;
+
+    @SideOnly(Side.CLIENT)
+    private ItemStack augmentDisplayStack = ItemStack.EMPTY;
+    @SideOnly(Side.CLIENT)
+    private Augment clientAugment = null;
+    @SideOnly(Side.CLIENT)
+    public boolean cachedClientAugment=false;
 
     public EntityArmyMember(World world, @Nullable UUID owner){
         super(world);
@@ -423,6 +431,37 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 
     public Augment getAugment(){
         return null;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void setClientAugment(@Nullable String augment){
+        clientAugment = AugmentRegistry.getAugment(augment);
+        if(!cachedClientAugment)
+            cachedClientAugment=true;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Nullable
+    public Augment getClientAugment() {
+        return clientAugment;
+    }
+
+    @Nonnull
+    public ItemStack getAugmentStack(){
+        return ItemStack.EMPTY;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Nonnull
+    public ItemStack getAugmentDisplayStack(){
+        return augmentDisplayStack;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void setAugmentDisplayStack(@Nonnull ItemStack stack){
+        augmentDisplayStack = stack;
+        if(!cachedClientAugment)
+            cachedClientAugment=true;
     }
 
     @Override
