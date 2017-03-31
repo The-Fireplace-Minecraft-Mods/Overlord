@@ -36,8 +36,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.ai.EntityAIArmyBow;
@@ -65,9 +63,6 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
 
     public final InventoryBasic inventory;
     public final InventoryBasic equipInventory;
-
-    public boolean cachedClientAugment = false;
-    public Augment clientAugment = null;
 
     public EntitySkeletonWarrior instance;
 
@@ -251,9 +246,9 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     public Augment getAugment(){
         if(equipInventory == null)
             return null;
-        if(AugmentRegistry.getAugment(equipInventory.getStackInSlot(6)) == null && world.isRemote)
-            return clientAugment;
-        return AugmentRegistry.getAugment(equipInventory.getStackInSlot(6));
+        if(AugmentRegistry.getAugment(getAugmentStack()) == null && world.isRemote)
+            return getClientAugment();
+        return AugmentRegistry.getAugment(getAugmentStack());
     }
 
     @Override
@@ -714,6 +709,12 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     }
 
     @Override
+    @Nonnull
+    public ItemStack getAugmentStack(){
+        return equipInventory.getStackInSlot(6);
+    }
+
+    @Override
     public void setItemStackToSlot(EntityEquipmentSlot slotIn, @Nonnull ItemStack stack)
     {
         if (slotIn == EntityEquipmentSlot.MAINHAND)
@@ -769,12 +770,6 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     @Override
     public boolean isPlayer(){
         return true;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void setAugment(@Nullable String augment){
-        clientAugment = AugmentRegistry.getAugment(augment);
-        cachedClientAugment = true;
     }
 
     @Override
