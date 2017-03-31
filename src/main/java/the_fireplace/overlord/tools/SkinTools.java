@@ -5,6 +5,8 @@ import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.Overlord;
 
 import javax.imageio.ImageIO;
@@ -19,6 +21,7 @@ import java.util.HashMap;
 /**
  * @author The_Fireplace
  */
+@SideOnly(Side.CLIENT)
 public final class SkinTools {
     public static final File cachedir = new File(Minecraft.getMinecraft().mcDataDir, "cachedImages/skins/");
     public static final ResourceLocation STEVE = new ResourceLocation("textures/entity/steve.png");
