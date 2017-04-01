@@ -18,6 +18,7 @@ public final class CraftingRecipes {
     public static ItemStack skinsuit = new ItemStack(Overlord.skinsuit);
     public static ItemStack squad_editor = new ItemStack(Overlord.squad_editor);
     public static ItemStack keychain = new ItemStack(Overlord.keychain);
+    public static ItemStack crown = new ItemStack(Overlord.crown);
 
     public static void addRecipes(){
         addRecipe(skeleton_maker, "bgb", "ihi", 'b', Items.BUCKET, 'g', "blockGlass", 'i', "ingotIron", 'h', Items.GLASS_BOTTLE);
@@ -29,6 +30,7 @@ public final class CraftingRecipes {
         addShapelessRecipe(skinsuit, Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, Items.LEATHER_LEGGINGS, Items.LEATHER_BOOTS, Items.ROTTEN_FLESH, Items.ROTTEN_FLESH, "dyeGreen", "dyeBlue", "dyeRed");
         addShapelessRecipe(squad_editor, Items.BOOK, "dyeBlack", "bone");
         addRecipe(keychain, "ii ", "i i", " i ", 'i', "nuggetIron");
+        addRecipe(crown, "i i", "iii", " i ", 'i', "nuggetGold");
     }
 
     /**

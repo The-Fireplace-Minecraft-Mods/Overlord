@@ -42,14 +42,12 @@ public class OverlordGuide implements IGuideBook {
     public Book buildBook() {
         Map<ResourceLocation, EntryAbstract> entries = Maps.newLinkedHashMap();
 
-        // Creation of our first entry.
         List<IPage> pages = Lists.newArrayList();
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.1.1.1")));
         pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.overlords_stamp, " s", "sp", " d", 's', "stickWood", 'p', "paper", 'd', "dye")));
         pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.overlords_seal, "nin", "i i", "nin", 'n', "nuggetGold", 'i', "nuggetIron")));
         entries.put(new ResourceLocation(Overlord.MODID, "1.1"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.1.1"), new ItemStack(Overlord.skeleton_maker)));
 
-        // Creation of our second entry.
         pages = Lists.newArrayList();
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.1.2.1")));
         pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.baby_skeleton_maker, "bgb", "b b", 'b', "stone", 'g', "blockGlass")));
@@ -69,7 +67,6 @@ public class OverlordGuide implements IGuideBook {
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.1.4.4")));
         entries.put(new ResourceLocation(Overlord.MODID, "1.4"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.1.4"), new ItemStack(Overlord.skeleton_maker)));
 
-        // Setup the list of categories and add our entries to it.
         List<CategoryAbstract> categories = Lists.newArrayList();
         categories.add(new CategoryItemStack(entries, proxy.translateToLocal("overlord.guide.1"), new ItemStack(Overlord.skeleton_maker)));
 
@@ -87,7 +84,7 @@ public class OverlordGuide implements IGuideBook {
         pages = Lists.newArrayList();
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.2.3.1")));
         entries.put(new ResourceLocation(Overlord.MODID, "2.3"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.2.3"), new ItemStack(Blocks.BONE_BLOCK)));
-        // Setup the list of categories and add our entries to it.
+
         categories.add(new CategoryItemStack(entries, proxy.translateToLocal("overlord.guide.2"), new ItemStack(Items.SKULL)));
 
         //Section 3
@@ -153,6 +150,18 @@ public class OverlordGuide implements IGuideBook {
 
         categories.add(new CategoryItemStack(entries, proxy.translateToLocal("overlord.guide.5"), new ItemStack(Items.SKULL, 1, 3)));
 
+        //Section 6
+        entries = Maps.newLinkedHashMap();
+
+        pages = Lists.newArrayList();
+        pages.add(new PageText(proxy.translateToLocal("overlord.guide.6.1.1")));
+        entries.put(new ResourceLocation(Overlord.MODID, "6.1"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.6.1"), new ItemStack(Overlord.overlords_seal)));
+
+        pages = Lists.newArrayList();
+        pages.add(new PageText(proxy.translateToLocal("overlord.guide.6.2.1")));
+        entries.put(new ResourceLocation(Overlord.MODID, "6.2"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.6.2"), new ItemStack(Overlord.crown)));
+
+        categories.add(new CategoryItemStack(entries, proxy.translateToLocal("overlord.guide.6"), new ItemStack(Overlord.crown)));
 
         // Setup the book's base information
         myGuide = new Book();
@@ -160,7 +169,7 @@ public class OverlordGuide implements IGuideBook {
         myGuide.setDisplayName(proxy.translateToLocal("item.overlord_guide.name"));
         myGuide.setWelcomeMessage(proxy.translateToLocal("overlord.guide.welcome"));
         myGuide.setAuthor("The_Fireplace");
-        myGuide.setColor(Color.WHITE);
+        myGuide.setColor(Color.RED);
         myGuide.setCategoryList(categories);
         myGuide.setRegistryName(new ResourceLocation(Overlord.MODID, "overlord_guide"));
         myGuide.setSpawnWithBook(true);

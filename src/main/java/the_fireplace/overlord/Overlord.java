@@ -116,6 +116,7 @@ public final class Overlord {
     public static final Item milk_bottle = new ItemMilkBottle().setMaxStackSize(16);
     public static final Item keychain = new ItemKeychain(false).setUnlocalizedName("keychain_empty");
     public static final Item keychain_occupied = new ItemKeychain(true).setUnlocalizedName("keychain_occupied");
+    public static final Item crown = new ItemCrown(ItemArmor.ArmorMaterial.GOLD);
 
     public static void syncConfig() {
         ConfigValues.HELMETDAMAGE = HELMETDAMAGE_PROPERTY.getBoolean();
@@ -164,6 +165,7 @@ public final class Overlord {
         registerItem(milk_bottle);
         registerItem(keychain);
         registerItem(keychain_occupied);
+        registerItem(crown);
         OreDictionary.registerOre("book", squad_editor);
         GameRegistry.registerTileEntity(TileEntitySkeletonMaker.class, "skeleton_maker");
         GameRegistry.registerTileEntity(TileEntityBabySkeletonMaker.class, "baby_skeleton_maker");
@@ -239,6 +241,7 @@ public final class Overlord {
         rmm(milk_bottle);
         rmm(keychain);
         rmm(keychain_occupied);
+        rmm(crown);
     }
 
     @SideOnly(Side.CLIENT)

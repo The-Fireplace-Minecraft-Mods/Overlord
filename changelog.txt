@@ -1,3 +1,5 @@
-Seals and Stamps are now always claimed when crafted.
-The guide now explains Alliances, Enemies, and Squads.
-Commands should no longer require op.
+Added the Sugar augment
+Milk Bottles now dispense from dispensers
+Added the keychain
+Added the Overlord's Crown
+Updated the Overlord's Seal texture
