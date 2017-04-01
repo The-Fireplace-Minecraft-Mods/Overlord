@@ -3,3 +3,5 @@ Milk Bottles now dispense from dispensers
 Added the keychain
 Added the Overlord's Crown
 Updated the Overlord's Seal texture
+Skeletons now keep their armor when you convert them
+Updated the guide book
