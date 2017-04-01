@@ -5,6 +5,7 @@ import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
@@ -104,6 +105,10 @@ public class EntityCuringSkeleton extends EntitySkeleton {
         entityConvertedSkeleton.copyLocationAndAnglesFrom(this);
         entityConvertedSkeleton.setHeldItem(EnumHand.MAIN_HAND, this.getHeldItemMainhand());
         entityConvertedSkeleton.setHeldItem(EnumHand.OFF_HAND, this.getHeldItemOffhand());
+        entityConvertedSkeleton.setItemStackToSlot(EntityEquipmentSlot.HEAD, getItemStackFromSlot(EntityEquipmentSlot.HEAD));
+        entityConvertedSkeleton.setItemStackToSlot(EntityEquipmentSlot.CHEST, getItemStackFromSlot(EntityEquipmentSlot.CHEST));
+        entityConvertedSkeleton.setItemStackToSlot(EntityEquipmentSlot.LEGS, getItemStackFromSlot(EntityEquipmentSlot.LEGS));
+        entityConvertedSkeleton.setItemStackToSlot(EntityEquipmentSlot.FEET, getItemStackFromSlot(EntityEquipmentSlot.FEET));
 
         this.world.removeEntity(this);
         entityConvertedSkeleton.setNoAI(this.isAIDisabled());
