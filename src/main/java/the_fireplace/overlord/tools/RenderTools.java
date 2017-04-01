@@ -24,7 +24,8 @@ import java.util.Random;
 public final class RenderTools {
     private static Random random = new Random();
     private static EntityItem entityItem;
-    public static void renderItemStackOverEntity(Entity targetEntity, ItemStack stack, Render render, float partialTicks, double x, double y, double z){
+
+    public static void renderItemStackOnEntity(Entity targetEntity, ItemStack stack, Render render, float partialTicks, double x, double y, double z, double offsetX, double offsetY, double offsetZ){
         if(entityItem == null || entityItem.world != targetEntity.world) {
             entityItem = new EntityItem(targetEntity.world, x, y, z, stack);
             entityItem.setNoDespawn();
@@ -57,7 +58,7 @@ public final class RenderTools {
             GlStateManager.translate(f3, f4, f5);
         }
 
-        GlStateManager.translate(0, targetEntity.height+0.1F, 0);
+        GlStateManager.translate(offsetX, offsetY, offsetZ);
 
         for (int k = 0; k < j; ++k)
         {
@@ -101,6 +102,10 @@ public final class RenderTools {
         render.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
         render.getRenderManager().renderEngine.getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
+    }
+
+    public static void renderItemStackOverEntity(Entity targetEntity, ItemStack stack, Render render, float partialTicks, double x, double y, double z){
+        renderItemStackOnEntity(targetEntity, stack, render, partialTicks, x, y, z, 0, targetEntity.height+0.1F, 0);
     }
 
     private static int transformModelCount(EntityItem itemIn, double trX, double trY, double trZ, float partialTicks, IBakedModel model, RenderManager rm)
