@@ -1,9 +1,11 @@
 package the_fireplace.overlord.client.render;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -76,8 +78,10 @@ public class RenderSkeletonWarrior extends RenderBiped<EntitySkeletonWarrior>
     {
         super.doRender(entitySkeletonWarrior, x, y, z, entityYaw, partialTicks);
 
-        if(!entitySkeletonWarrior.cachedClientAugment)
-            PacketDispatcher.sendToServer(new RequestAugmentMessage(entitySkeletonWarrior));
-        RenderTools.renderItemStackOverEntity(entitySkeletonWarrior, entitySkeletonWarrior.getAugmentDisplayStack(), this, partialTicks, x, y, z);
+        if(Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == Overlord.crown){
+            if(!entitySkeletonWarrior.cachedClientAugment)
+                PacketDispatcher.sendToServer(new RequestAugmentMessage(entitySkeletonWarrior));
+            RenderTools.renderItemStackOverEntity(entitySkeletonWarrior, entitySkeletonWarrior.getAugmentDisplayStack(), this, partialTicks, x, y, z);
+        }
     }
 }

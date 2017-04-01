@@ -1,12 +1,15 @@
 package the_fireplace.overlord.client.render;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.entity.EntityConvertedSkeleton;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.RequestAugmentMessage;
@@ -70,9 +73,10 @@ public class RenderConvertedSkeleton extends RenderBiped<EntityConvertedSkeleton
     {
         super.doRender(entityConvertedSkeleton, x, y, z, entityYaw, partialTicks);
 
-        //Render item
-        if(!entityConvertedSkeleton.cachedClientAugment)
-            PacketDispatcher.sendToServer(new RequestAugmentMessage(entityConvertedSkeleton));
-        RenderTools.renderItemStackOverEntity(entityConvertedSkeleton, entityConvertedSkeleton.getAugmentDisplayStack(), this, partialTicks, x, y, z);
+        if(Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == Overlord.crown){
+            if(!entityConvertedSkeleton.cachedClientAugment)
+                PacketDispatcher.sendToServer(new RequestAugmentMessage(entityConvertedSkeleton));
+            RenderTools.renderItemStackOverEntity(entityConvertedSkeleton, entityConvertedSkeleton.getAugmentDisplayStack(), this, partialTicks, x, y, z);
+        }
     }
 }
