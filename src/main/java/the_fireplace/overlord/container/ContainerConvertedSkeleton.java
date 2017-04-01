@@ -13,6 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.entity.EntityConvertedSkeleton;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.RequestAugmentMessage;
+import the_fireplace.overlord.registry.AugmentRegistry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -106,6 +107,8 @@ public class ContainerConvertedSkeleton extends Container {
                 if (!mergeItemStack(is, 0, 36, false)) {
                     return null;
                 }
+            } else if (AugmentRegistry.getAugment(is) != null && !mergeItemStack(is, 36+6, 36 + entity.inventory.getSizeInventory() + entity.equipInventory.getSizeInventory(), false)) {
+                return ItemStack.EMPTY;
             } else if (!mergeItemStack(is, 36, 36 + entity.inventory.getSizeInventory() + entity.equipInventory.getSizeInventory(), false)) {
                 return null;
             }
