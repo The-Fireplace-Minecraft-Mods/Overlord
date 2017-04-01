@@ -155,11 +155,18 @@ public class OverlordGuide implements IGuideBook {
 
         pages = Lists.newArrayList();
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.6.1.1")));
+        pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.overlords_seal, "nin", "i i", "nin", 'n', "nuggetGold", 'i', "nuggetIron")));
         entries.put(new ResourceLocation(Overlord.MODID, "6.1"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.6.1"), new ItemStack(Overlord.overlords_seal)));
 
         pages = Lists.newArrayList();
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.6.2.1")));
+        pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.crown, "n n", "nnn", 'n', "nuggetGold")));
         entries.put(new ResourceLocation(Overlord.MODID, "6.2"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.6.2"), new ItemStack(Overlord.crown)));
+
+        pages = Lists.newArrayList();
+        pages.add(new PageText(proxy.translateToLocal("overlord.guide.6.3.1")));
+        pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.keychain, "ii ", "i i", " i ", 'i', "nuggetIron")));
+        entries.put(new ResourceLocation(Overlord.MODID, "6.3"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.6.3"), new ItemStack(Overlord.keychain)));
 
         categories.add(new CategoryItemStack(entries, proxy.translateToLocal("overlord.guide.6"), new ItemStack(Overlord.crown)));
 
