@@ -5,3 +5,4 @@ Added the Overlord's Crown
 Updated the Overlord's Seal texture
 Skeletons now keep their armor when you convert them
 Updated the guide book
+Shift+Clicking Augments into Converted Skeletons and Skeleton Warriors inventories now works correctly
