@@ -1,1 +1,11 @@
-Cake can now be crafted with Milk Bottles
+Added the Sugar augment
+Milk Bottles now dispense from dispensers
+Added the keychain
+Added the Overlord's Crown
+Updated the Overlord's Seal texture
+Skeletons now keep their armor when you convert them
+Updated the guide book
+Shift+Clicking Augments into Converted Skeletons and Skeleton Warriors inventories now works correctly
+Fixed a crash related to Converted Skeletons using bows
+Updated the Skeleton Maker and Baby Skeleton Maker models(Thanks to Possible Triangle @pssbletrngle on Twitter) and recipes
+Fixed army members attempting to fire bows when no arrows are present
