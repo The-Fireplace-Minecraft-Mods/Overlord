@@ -44,6 +44,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.RecipeSorter;
 import org.apache.logging.log4j.Level;
 import the_fireplace.overlord.augments.*;
 import the_fireplace.overlord.blocks.BlockBabySkeletonMaker;
@@ -61,6 +62,7 @@ import the_fireplace.overlord.network.OverlordGuiHandler;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.registry.AugmentRegistry;
 import the_fireplace.overlord.registry.CraftingRecipes;
+import the_fireplace.overlord.registry.SealRecipe;
 import the_fireplace.overlord.tileentity.TileEntityBabySkeletonMaker;
 import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
 import the_fireplace.overlord.tools.*;
@@ -183,6 +185,7 @@ public final class Overlord {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
         addAchievements();
+        RecipeSorter.register("overlord:seal", SealRecipe.class, RecipeSorter.Category.SHAPED, "after:forge:shapedore");
         CraftingRecipes.addRecipes();
         AugmentRegistry.registerAugment(new ItemStack(Items.GOLDEN_APPLE), new AugmentSlowRegen());
         AugmentRegistry.registerAugment(new ItemStack(Items.GOLDEN_APPLE, 1, 1), new AugmentFastRegen());
