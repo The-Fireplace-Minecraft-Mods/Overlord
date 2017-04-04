@@ -2,6 +2,7 @@ package the_fireplace.overlord.entity.ai;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemBow;
 import net.minecraft.util.EnumHand;
 import the_fireplace.overlord.entity.EntityArmyMember;
@@ -9,7 +10,7 @@ import the_fireplace.overlord.entity.EntityArmyMember;
 /**
  * @author The_Fireplace
  */
-public class EntityAIWarriorBow extends EntityAIBase
+public class EntityAIArmyBow extends EntityAIBase
 {
     private final EntityArmyMember entity;
     private final double moveSpeedAmp;
@@ -21,7 +22,7 @@ public class EntityAIWarriorBow extends EntityAIBase
     private boolean strafingBackwards;
     private int strafingTime = -1;
 
-    public EntityAIWarriorBow(EntityArmyMember skeleton, double speedAmplifier, int delay, float maxDistance)
+    public EntityAIArmyBow(EntityArmyMember skeleton, double speedAmplifier, int delay, float maxDistance)
     {
         this.entity = skeleton;
         this.moveSpeedAmp = speedAmplifier;
@@ -36,12 +37,17 @@ public class EntityAIWarriorBow extends EntityAIBase
     @Override
     public boolean shouldExecute()
     {
-        return this.entity.getAttackTarget() != null && this.isBowInMainhand();
+        return this.entity.getAttackTarget() != null && this.isBowInMainhand() && this.isArrowInOffhand();
     }
 
     protected boolean isBowInMainhand()
     {
         return this.entity.getHeldItemMainhand() != null && this.entity.getHeldItemMainhand().getItem() instanceof ItemBow;
+    }
+
+    protected boolean isArrowInOffhand()
+    {
+        return !this.entity.getHeldItemOffhand().isEmpty() && this.entity.getHeldItemOffhand().getItem() instanceof ItemArrow;
     }
 
     /**
@@ -50,7 +56,7 @@ public class EntityAIWarriorBow extends EntityAIBase
     @Override
     public boolean continueExecuting()
     {
-        return (this.shouldExecute() || !this.entity.getNavigator().noPath()) && this.isBowInMainhand();
+        return (this.shouldExecute() || !this.entity.getNavigator().noPath()) && this.isBowInMainhand() && this.isArrowInOffhand();
     }
 
     /**

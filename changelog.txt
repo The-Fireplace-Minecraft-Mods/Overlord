@@ -1,10 +1,11 @@
-Added the Overlord's Stamp
-Improved army member death messages
-Added the ability to convert Skeletons into members of your army
-Cake can now be crafted with Milk Bottles
-Equipped skinsuits now drop when your skeletons die
-Obsidian augment now protects from lava
-Milk Bottles can now be put in to Skeleton Makers using their GUIs
-Skeleton Makers now drop their contents when broken
-Shift Clicking a stack of augment items no longer puts the whole stack in the augment slot
-Fixed Baby Skeleton held item rendering
+Added the Sugar augment
+Milk Bottles now dispense from dispensers
+Added the keychain
+Added the Overlord's Crown
+Updated the Overlord's Seal texture
+Skeletons now keep their armor when you convert them
+Updated the guide book
+Shift+Clicking Augments into Converted Skeletons and Skeleton Warriors inventories now works correctly
+Fixed a crash related to Converted Skeletons using bows
+Updated the Skeleton Maker and Baby Skeleton Maker models(Thanks to Possible Triangle @pssbletrngle on Twitter) and recipes
+Fixed army members attempting to fire bows when no arrows are present
