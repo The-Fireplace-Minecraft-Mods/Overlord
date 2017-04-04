@@ -59,12 +59,9 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 
     protected EntityAIAttackMelee aiAttackOnCollide = null;
 
-    @SideOnly(Side.CLIENT)
     private ItemStack augmentDisplayStack = ItemStack.EMPTY;
-    @SideOnly(Side.CLIENT)
     private Augment clientAugment = null;
-    @SideOnly(Side.CLIENT)
-    public boolean cachedClientAugment=false;
+    public boolean cachedClientAugment = false;
 
     public EntityArmyMember(World world, @Nullable UUID owner){
         super(world);
