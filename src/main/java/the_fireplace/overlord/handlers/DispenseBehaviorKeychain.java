@@ -49,8 +49,9 @@ public class DispenseBehaviorKeychain extends BehaviorDefaultDispenseItem {
 
             entity.setLocationAndAngles(d0+0.5D, d1, d2+0.5D, MathHelper.wrapDegrees(source.getWorld().rand.nextFloat() * 360.0F), 0.0F);
 
-
             stack.shrink(1);
+            if(stack.isEmpty())
+                return new ItemStack(Overlord.keychain);
         }
         return stack;
     }
