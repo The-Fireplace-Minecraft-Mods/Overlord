@@ -49,11 +49,11 @@ public class GuiSquadEditor extends GuiScreen {
         this.buttonList.clear();
         this.buttonList.add(new GuiButton(0, guiLeft+8, guiTop+144, 60, 20, I18n.format("gui.cancel")));
         this.buttonList.add(new GuiButton(1, guiLeft+73, guiTop+144, 60, 20, I18n.format("gui.save")));
-        one = new GuiTextField(2, fontRendererObj, guiLeft+15, guiTop+20, 120, 20);
-        two = new GuiTextField(3, fontRendererObj, guiLeft+15, guiTop+43, 120, 20);
-        three = new GuiTextField(4, fontRendererObj, guiLeft+15, guiTop+66, 120, 20);
-        four = new GuiTextField(5, fontRendererObj, guiLeft+15, guiTop+89, 120, 20);
-        five = new GuiTextField(6, fontRendererObj, guiLeft+15, guiTop+112, 120, 20);
+        one = new GuiTextField(2, fontRenderer, guiLeft+15, guiTop+20, 120, 20);
+        two = new GuiTextField(3, fontRenderer, guiLeft+15, guiTop+43, 120, 20);
+        three = new GuiTextField(4, fontRenderer, guiLeft+15, guiTop+66, 120, 20);
+        four = new GuiTextField(5, fontRenderer, guiLeft+15, guiTop+89, 120, 20);
+        five = new GuiTextField(6, fontRenderer, guiLeft+15, guiTop+112, 120, 20);
         ArrayList<String> squads = Squads.getInstance().getSquadsFor(UUID.fromString(uuid));
         if(!squads.isEmpty()){
             if(squads.size() > 0)
@@ -78,7 +78,7 @@ public class GuiSquadEditor extends GuiScreen {
         int k = (this.width - this.xSize) / 2;
         int l = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(k, l, 20, 1, this.xSize, this.ySize);
-        this.drawCenteredString(fontRendererObj, I18n.format("overlord.squad_editor"), guiLeft+xSize/2, guiTop+8, 0);
+        this.drawCenteredString(fontRenderer, I18n.format("overlord.squad_editor"), guiLeft+xSize/2, guiTop+8, 0);
         one.drawTextBox();
         two.drawTextBox();
         three.drawTextBox();
