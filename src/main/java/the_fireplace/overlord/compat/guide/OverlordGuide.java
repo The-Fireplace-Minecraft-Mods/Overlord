@@ -45,7 +45,7 @@ public class OverlordGuide implements IGuideBook {
         List<IPage> pages = Lists.newArrayList();
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.1.1.1")));
         pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.overlords_stamp, " s", "sp", " d", 's', "stickWood", 'p', "paper", 'd', "dye")));
-        pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.overlords_seal, "nin", "i i", "nin", 'n', "nuggetGold", 'i', "nuggetIron")));
+        pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.overlords_seal, "nin", "i i", "nin", 'n', "nuggetGold", 'i', "ingotIron")));
         entries.put(new ResourceLocation(Overlord.MODID, "1.1"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.1.1"), new ItemStack(Overlord.skeleton_maker)));
 
         pages = Lists.newArrayList();
@@ -155,7 +155,7 @@ public class OverlordGuide implements IGuideBook {
 
         pages = Lists.newArrayList();
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.6.1.1")));
-        pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.overlords_seal, "nin", "i i", "nin", 'n', "nuggetGold", 'i', "nuggetIron")));
+        pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.overlords_seal, "nin", "i i", "nin", 'n', "nuggetGold", 'i', "ingotIron")));
         entries.put(new ResourceLocation(Overlord.MODID, "6.1"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.6.1"), new ItemStack(Overlord.overlords_seal)));
 
         pages = Lists.newArrayList();
@@ -165,7 +165,7 @@ public class OverlordGuide implements IGuideBook {
 
         pages = Lists.newArrayList();
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.6.3.1")));
-        pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.keychain, "ii ", "i i", " i ", 'i', "nuggetIron")));
+        pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.keychain, "ji ", "i i", " i ", 'i', "ingotIron", 'j', "nuggetGold")));
         entries.put(new ResourceLocation(Overlord.MODID, "6.3"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.6.3"), new ItemStack(Overlord.keychain)));
 
         categories.add(new CategoryItemStack(entries, proxy.translateToLocal("overlord.guide.6"), new ItemStack(Overlord.crown)));
