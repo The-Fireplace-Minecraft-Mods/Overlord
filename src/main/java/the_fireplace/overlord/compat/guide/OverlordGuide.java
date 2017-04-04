@@ -50,7 +50,7 @@ public class OverlordGuide implements IGuideBook {
 
         pages = Lists.newArrayList();
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.1.2.1")));
-        pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.baby_skeleton_maker, "bgb", "b b", 'b', "stone", 'g', "blockGlass")));
+        pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.baby_skeleton_maker, "b b", "bgb", "sss", 'b', "stone", 'g', "blockGlass", 's', Blocks.STONEBRICK)));
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.1.2.2")));
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.1.2.3")));
         entries.put(new ResourceLocation(Overlord.MODID, "1.2"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.1.2"), new ItemStack(Overlord.baby_skeleton_maker)));
@@ -61,7 +61,7 @@ public class OverlordGuide implements IGuideBook {
 
         pages = Lists.newArrayList();
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.1.4.1")));
-        pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.skeleton_maker, "bgb", "ihi", 'b', Items.BUCKET, 'g', "blockGlass", 'i', "ingotIron", 'h', Items.GLASS_BOTTLE)));
+        pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.skeleton_maker, "BgB", "BBB", 'b', "ingotBrickNether", 'g', "blockGlass", 'B', Blocks.NETHER_BRICK)));
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.1.4.2")));
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.1.4.3")));
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.1.4.4")));

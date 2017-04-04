@@ -1,5 +1,6 @@
 package the_fireplace.overlord.registry;
 
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -21,8 +22,8 @@ public final class CraftingRecipes {
     public static ItemStack crown = new ItemStack(Overlord.crown);
 
     public static void addRecipes(){
-        addRecipe(skeleton_maker, "bgb", "ihi", 'b', Items.BUCKET, 'g', "blockGlass", 'i', "ingotIron", 'h', Items.GLASS_BOTTLE);
-        addRecipe(baby_skeleton_maker, "bgb", "b b", 'b', "stone", 'g', "blockGlass");
+        addRecipe(skeleton_maker, "b b", "BgB", "BBB", 'b', "ingotBrickNether", 'g', "blockGlass", 'B', Blocks.NETHER_BRICK);
+        addRecipe(baby_skeleton_maker, "b b", "bgb", "sss", 'b', "stone", 'g', "blockGlass", 's', Blocks.STONEBRICK);
         addSealRecipe(overlords_seal, "nin", "i i", "nin", 'n', "nuggetGold", 'i', "nuggetIron");
         addSealRecipe(overlords_stamp, " s", "sp", " d", 's', "stickWood", 'p', "paper", 'd', "dye");
         addSealRecipe(overlords_stamp, "s ", "ps", "d ", 's', "stickWood", 'p', "paper", 'd', "dye");
