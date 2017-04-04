@@ -33,7 +33,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.config.ConfigValues;
-import the_fireplace.overlord.entity.ai.EntityAIWarriorBow;
+import the_fireplace.overlord.entity.ai.EntityAIArmyBow;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.RequestAugmentMessage;
 import the_fireplace.overlord.registry.AugmentRegistry;
@@ -50,7 +50,7 @@ import java.util.UUID;
 public class EntityConvertedSkeleton extends EntityArmyMember {
     private static final DataParameter<String> SKINSUIT_NAME = EntityDataManager.createKey(EntityConvertedSkeleton.class, DataSerializers.STRING);
     private static final DataParameter<Boolean> HAS_SKINSUIT = EntityDataManager.createKey(EntityConvertedSkeleton.class, DataSerializers.BOOLEAN);
-    private EntityAIWarriorBow aiArrowAttack = null;
+    private EntityAIArmyBow aiArrowAttack = null;
 
     public final InventoryBasic inventory;
     public final InventoryBasic equipInventory;
@@ -136,7 +136,7 @@ public class EntityConvertedSkeleton extends EntityArmyMember {
             };
         }
         if(aiArrowAttack == null){
-            aiArrowAttack = new EntityAIWarriorBow(this, 0.8D, 20, 30.0F);
+            aiArrowAttack = new EntityAIArmyBow(this, 0.8D, 20, 30.0F);
         }
         if(!this.getHeldItemMainhand().isEmpty())
             if(this.getHeldItemMainhand().getItem() instanceof ItemBow){
