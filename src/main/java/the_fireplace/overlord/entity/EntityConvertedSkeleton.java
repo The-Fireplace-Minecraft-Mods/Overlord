@@ -127,7 +127,7 @@ public class EntityConvertedSkeleton extends EntityArmyMember {
                 @Override
                 public void updateTask(){
                     if(!this.attacker.getHeldItemMainhand().isEmpty() && !this.attacker.getHeldItemOffhand().isEmpty() && this.attacker.getHeldItemMainhand().getItem() instanceof ItemBow && this.attacker.getHeldItemOffhand().getItem() instanceof ItemArrow) {
-                        ((EntitySkeletonWarrior) this.attacker).initEntityAI();
+                        ((EntityArmyMember) this.attacker).initEntityAI();
                         return;
                     }
                     if(continueExecuting())
