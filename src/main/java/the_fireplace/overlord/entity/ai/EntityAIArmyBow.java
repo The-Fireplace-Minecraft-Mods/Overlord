@@ -47,7 +47,7 @@ public class EntityAIArmyBow extends EntityAIBase
 
     protected boolean isArrowInOffhand()
     {
-        return !this.entity.getHeldItemOffhand().isEmpty() && this.entity.getHeldItemOffhand().getItem() instanceof ItemArrow;
+        return this.entity.getHeldItemOffhand() != null && this.entity.getHeldItemOffhand().getItem() instanceof ItemArrow;
     }
 
     /**

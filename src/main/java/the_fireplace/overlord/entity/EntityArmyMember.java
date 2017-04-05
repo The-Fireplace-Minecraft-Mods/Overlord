@@ -61,7 +61,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 
     protected EntityAIAttackMelee aiAttackOnCollide = null;
 
-    private ItemStack augmentDisplayStack = ItemStack.EMPTY;
+    private ItemStack augmentDisplayStack = null;
     private Augment clientAugment = null;
     public boolean cachedClientAugment = false;
 
@@ -426,6 +426,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
         this.dataManager.set(SQUAD, String.valueOf(s));
     }
 
+    @Nullable
     public Augment getAugment(){
         return null;
     }
@@ -443,19 +444,19 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
         return clientAugment;
     }
 
-    @Nonnull
+    @Nullable
     public ItemStack getAugmentStack(){
-        return ItemStack.EMPTY;
+        return null;
     }
 
     @SideOnly(Side.CLIENT)
-    @Nonnull
+    @Nullable
     public ItemStack getAugmentDisplayStack(){
         return augmentDisplayStack;
     }
 
     @SideOnly(Side.CLIENT)
-    public void setAugmentDisplayStack(@Nonnull ItemStack stack){
+    public void setAugmentDisplayStack(@Nullable ItemStack stack){
         augmentDisplayStack = stack;
         if(!cachedClientAugment)
             cachedClientAugment=true;

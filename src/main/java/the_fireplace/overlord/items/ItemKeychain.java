@@ -47,9 +47,8 @@ public class ItemKeychain extends Item {
 
     @Override
     @Nonnull
-    public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
-        ItemStack stack = playerIn.getHeldItem(hand);
         if (worldIn.isRemote)
         {
             return EnumActionResult.SUCCESS;
@@ -92,7 +91,9 @@ public class ItemKeychain extends Item {
 
                 entity.setLocationAndAngles(pos.getX() + 0.5D, pos.getY() + offsetY, pos.getZ() + 0.5D, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
 
-                stack.shrink(1);
+                stack.stackSize--;
+                if(stack.stackSize <= 0)
+                    playerIn.setHeldItem(hand, null);
                 playerIn.inventory.addItemStackToInventory(new ItemStack(Overlord.keychain));
 
                 return EnumActionResult.SUCCESS;
@@ -128,7 +129,7 @@ public class ItemKeychain extends Item {
                 tooltip.add(proxy.translateToLocal("tooltip.equipment"));
                 for (int i = 0; i < armorInv.tagCount(); i++) {
                     NBTTagCompound item = (NBTTagCompound) armorInv.get(i);
-                    tooltip.add(new ItemStack(item).getDisplayName());
+                    tooltip.add(ItemStack.loadItemStackFromNBT(item).getDisplayName());
                 }
             }
         }
@@ -150,7 +151,11 @@ public class ItemKeychain extends Item {
                     return false;
                 }
                 occupiedItem.setTagCompound(entNbt);
-                playerIn.getHeldItem(hand).shrink(1);
+                if(playerIn.getHeldItem(hand) != null) {
+                    playerIn.getHeldItem(hand).stackSize--;
+                    if(playerIn.getHeldItem(hand).stackSize <= 0)
+                        playerIn.setHeldItem(hand, null);
+                }
                 playerIn.inventory.addItemStackToInventory(occupiedItem);
                 target.world.removeEntity(target);
                 return true;

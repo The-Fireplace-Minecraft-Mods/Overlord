@@ -26,7 +26,7 @@ apply plugin: 'maven-publish'
 
 version = "2.3.0"
 group= "the_fireplace.overlord"
-archivesBaseName = "Overlord-1.11"
+archivesBaseName = "Overlord-1.10.2"
 
 allprojects {
     sourceCompatibility = 1.8
@@ -34,16 +34,16 @@ allprojects {
 }
 
 minecraft {
-    version = "1.11-13.19.1.2199"
+    version = "1.10.2-12.18.3.2185"
     runDir = "run"
     replace '${version}', project.version
-    mappings = "snapshot_20170308"
+    mappings = "stable_29"
     useDepAts = true
 }
 
 dependencies {
-	deobfCompile group: "mezz.jei", name: "jei_1.11", version: "4.0.1.193"
-	deobfCompile "info.amerifrance.guideapi:Guide-API:1.11-2.1.0-51"
+	deobfCompile group: "mezz.jei", name: "jei_1.10.2", version: "3.13.6.389"
+	deobfCompile "info.amerifrance.guideapi:Guide-API:1.10.2-2.0.3-46"
 }
 
 repositories{
@@ -106,7 +106,8 @@ curseforge {
     id = '251732'
     changelog = file('changelog.txt')
     releaseType = 'release'
-    addGameVersion '1.11'
+    addGameVersion '1.10.2'
+    addGameVersion '1.10'
 	addGameVersion 'Java 8'
     mainArtifact(jar) {
         displayName = jar.archiveName.replace(".jar", "")
@@ -130,7 +131,7 @@ modsIO {
     project{
 		artifact = new File(jar.destinationDir, archivesBaseName+"-"+version+".jar")
 		modid = "1239"
-		minecraft = "1.11"
+		minecraft = "1.10.2"
 		try{changelog = file('changelog.txt').text}catch(Exception e){changelog=""}
 		tag = ""
 		current = false

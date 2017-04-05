@@ -34,7 +34,7 @@ public final class RenderTools {
         entityItem.setEntityItemStack(stack);
 
         ItemStack itemstack = entityItem.getEntityItem();
-        int i = itemstack.isEmpty() ? 187 : Item.getIdFromItem(itemstack.getItem()) + itemstack.getMetadata();
+        int i = itemstack == null ? 187 : Item.getIdFromItem(itemstack.getItem()) + itemstack.getMetadata();
         random.setSeed((long)i);
 
         render.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);

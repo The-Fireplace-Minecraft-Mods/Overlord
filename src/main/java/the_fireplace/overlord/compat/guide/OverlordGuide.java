@@ -1,8 +1,6 @@
 package the_fireplace.overlord.compat.guide;
 
 import amerifrance.guideapi.api.GuideAPI;
-import amerifrance.guideapi.api.GuideBook;
-import amerifrance.guideapi.api.IGuideBook;
 import amerifrance.guideapi.api.IPage;
 import amerifrance.guideapi.api.impl.Book;
 import amerifrance.guideapi.api.impl.abstraction.CategoryAbstract;
@@ -17,12 +15,14 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.registry.CraftingRecipes;
 
-import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
@@ -32,14 +32,12 @@ import static the_fireplace.overlord.Overlord.proxy;
 /**
  * @author The_Fireplace
  */
-@GuideBook
-public class OverlordGuide implements IGuideBook {
+public class OverlordGuide implements IGuideCompat {
 
     public static Book myGuide;
 
-    @Nullable
     @Override
-    public Book buildBook() {
+    public void buildBook() {
         Map<ResourceLocation, EntryAbstract> entries = Maps.newLinkedHashMap();
 
         List<IPage> pages = Lists.newArrayList();
@@ -180,19 +178,13 @@ public class OverlordGuide implements IGuideBook {
         myGuide.setCategoryList(categories);
         myGuide.setRegistryName(new ResourceLocation(Overlord.MODID, "overlord_guide"));
         myGuide.setSpawnWithBook(true);
-        return myGuide;
-    }
+        GameRegistry.register(myGuide);
 
-    @Override
-    public void handleModel(ItemStack bookStack) {
-        GuideAPI.setModel(myGuide);
-    }
-
-    @Override
-    public void handlePost(ItemStack bookStack) {
-        CraftingRecipes.addShapelessRecipe(bookStack, Items.BOOK, "bone", Items.MILK_BUCKET);
-        CraftingRecipes.addShapelessRecipe(bookStack, Items.BOOK, "bone", Overlord.milk_bottle);
-        CraftingRecipes.addShapelessRecipe(bookStack, "book", "bone", Items.MILK_BUCKET);
-        CraftingRecipes.addShapelessRecipe(bookStack, "book", "bone", Overlord.milk_bottle);
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+            GuideAPI.setModel(myGuide);
+        CraftingRecipes.addShapelessRecipe(GuideAPI.getStackFromBook(myGuide), Items.BOOK, "bone", Items.MILK_BUCKET);
+        CraftingRecipes.addShapelessRecipe(GuideAPI.getStackFromBook(myGuide), Items.BOOK, "bone", Overlord.milk_bottle);
+        CraftingRecipes.addShapelessRecipe(GuideAPI.getStackFromBook(myGuide), "book", "bone", Items.MILK_BUCKET);
+        CraftingRecipes.addShapelessRecipe(GuideAPI.getStackFromBook(myGuide), "book", "bone", Overlord.milk_bottle);
     }
 }

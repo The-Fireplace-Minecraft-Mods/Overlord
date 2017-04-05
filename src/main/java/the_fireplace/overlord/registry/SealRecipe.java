@@ -31,11 +31,11 @@ public class SealRecipe extends ShapedOreRecipe {
         super(result, recipe);
     }
 
-    @Nonnull
     @Override
     public ItemStack getCraftingResult(@Nonnull InventoryCrafting inv) {
         ItemStack output = super.getCraftingResult(inv);
         EntityPlayer user = findPlayer(inv);
+        if(output != null)
         if(output.getItem() instanceof ItemOverlordsSeal && user != null){
             if(output.getTagCompound() == null)
                 output.setTagCompound(new NBTTagCompound());

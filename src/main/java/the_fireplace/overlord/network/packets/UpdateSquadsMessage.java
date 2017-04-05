@@ -1,5 +1,6 @@
 package the_fireplace.overlord.network.packets;
 
+import com.google.common.collect.Lists;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -25,7 +26,7 @@ public class UpdateSquadsMessage implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        names = new ArrayList();
+        names = Lists.newArrayList();
         names.add(ByteBufUtils.readUTF8String(buf));
         names.add(ByteBufUtils.readUTF8String(buf));
         names.add(ByteBufUtils.readUTF8String(buf));

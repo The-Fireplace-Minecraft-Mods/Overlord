@@ -108,7 +108,7 @@ public class ContainerConvertedSkeleton extends Container {
                     return null;
                 }
             } else if (AugmentRegistry.getAugment(is) != null && !mergeItemStack(is, 36+6, 36 + entity.inventory.getSizeInventory() + entity.equipInventory.getSizeInventory(), false)) {
-                return ItemStack.EMPTY;
+                return null;
             } else if (!mergeItemStack(is, 36, 36 + entity.inventory.getSizeInventory() + entity.equipInventory.getSizeInventory(), false)) {
                 return null;
             }

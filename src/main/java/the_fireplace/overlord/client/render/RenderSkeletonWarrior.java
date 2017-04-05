@@ -78,10 +78,11 @@ public class RenderSkeletonWarrior extends RenderBiped<EntitySkeletonWarrior>
     {
         super.doRender(entitySkeletonWarrior, x, y, z, entityYaw, partialTicks);
 
-        if(Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == Overlord.crown){
-            if(!entitySkeletonWarrior.cachedClientAugment)
-                PacketDispatcher.sendToServer(new RequestAugmentMessage(entitySkeletonWarrior));
-            RenderTools.renderItemStackOverEntity(entitySkeletonWarrior, entitySkeletonWarrior.getAugmentDisplayStack(), this, partialTicks, x, y, z);
-        }
+        if(Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD) != null)
+            if(Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == Overlord.crown){
+                if(!entitySkeletonWarrior.cachedClientAugment)
+                    PacketDispatcher.sendToServer(new RequestAugmentMessage(entitySkeletonWarrior));
+                RenderTools.renderItemStackOverEntity(entitySkeletonWarrior, entitySkeletonWarrior.getAugmentDisplayStack(), this, partialTicks, x, y, z);
+            }
     }
 }

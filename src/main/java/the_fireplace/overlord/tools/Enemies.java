@@ -46,6 +46,10 @@ public class Enemies implements Serializable {
         return false;
     }
 
+    public boolean isNotEnemiesWith(UUID uuid, UUID uuid1){
+        return !isEnemiesWith(uuid, uuid1);
+    }
+
     public ArrayList<StringPair> getAllEnemies(UUID player){
         ArrayList<StringPair> enemies = new ArrayList<>();
         for(Alliance playerPair: this.enemies){

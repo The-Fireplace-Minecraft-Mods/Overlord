@@ -73,10 +73,11 @@ public class RenderConvertedSkeleton extends RenderBiped<EntityConvertedSkeleton
     {
         super.doRender(entityConvertedSkeleton, x, y, z, entityYaw, partialTicks);
 
-        if(Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == Overlord.crown){
-            if(!entityConvertedSkeleton.cachedClientAugment)
-                PacketDispatcher.sendToServer(new RequestAugmentMessage(entityConvertedSkeleton));
-            RenderTools.renderItemStackOverEntity(entityConvertedSkeleton, entityConvertedSkeleton.getAugmentDisplayStack(), this, partialTicks, x, y, z);
-        }
+        if(Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD) != null)
+            if(Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == Overlord.crown){
+                if(!entityConvertedSkeleton.cachedClientAugment)
+                    PacketDispatcher.sendToServer(new RequestAugmentMessage(entityConvertedSkeleton));
+                RenderTools.renderItemStackOverEntity(entityConvertedSkeleton, entityConvertedSkeleton.getAugmentDisplayStack(), this, partialTicks, x, y, z);
+            }
     }
 }

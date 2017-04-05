@@ -36,7 +36,7 @@ public class RequestAugmentMessage implements IMessage {
         @Override
         public IMessage handleServerMessage(EntityPlayer player, RequestAugmentMessage message, MessageContext ctx) {
             String augmentID = "";
-            ItemStack stack = ItemStack.EMPTY;
+            ItemStack stack = null;
             if(player.world.getEntityByID(message.warrior) != null){
                 if(player.world.getEntityByID(message.warrior) instanceof EntityArmyMember){
                     if(((EntityArmyMember) player.world.getEntityByID(message.warrior)).getAugment() != null) {

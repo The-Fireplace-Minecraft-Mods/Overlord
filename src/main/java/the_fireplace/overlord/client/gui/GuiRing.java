@@ -60,8 +60,8 @@ public class GuiRing extends GuiScreen {
         int k = (this.width - this.xSize) / 2;
         int l = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
-        this.drawCenteredString(fontRenderer, I18n.format("overlords_seal.warning"), guiLeft+(xSize/2), guiTop-10, Color.PINK.getRGB());
-        this.drawCenteredString(fontRenderer, squadIndex != -1 ? squads.get(squadIndex) : I18n.format("overlord.all_squads"), guiLeft + xSize/2, guiTop+10, -1);
+        this.drawCenteredString(fontRendererObj, I18n.format("overlords_seal.warning"), guiLeft+(xSize/2), guiTop-10, Color.PINK.getRGB());
+        this.drawCenteredString(fontRendererObj, squadIndex != -1 ? squads.get(squadIndex) : I18n.format("overlord.all_squads"), guiLeft + xSize/2, guiTop+10, -1);
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
