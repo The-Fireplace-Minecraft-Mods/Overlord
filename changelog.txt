@@ -1,18 +1,1 @@
-Added the Sugar augment
-Added the Keychain
-Added the Overlord's Crown
-Added a Guide Book, using Guide-API.
-Milk Bottles now dispense from dispensers
-Updated the Overlord's Seal texture
-Skeletons now keep their armor when you convert them
-Shift+Clicking Augments into Converted Skeletons and Skeleton Warriors inventories now works correctly
-Fixed a crash related to Converted Skeletons using bows
-Updated the Skeleton Maker and Baby Skeleton Maker models(Thanks to Possible Triangle @pssbletrngle on Twitter) and recipes
-Fixed army members attempting to fire bows when no arrows are present
-Seals and Stamps are now claimed when crafted.
-Commands should no longer require op.
-Fixed multithreading.
-Fixed a crash when connecting to servers
-Fixed crash when opening Army Member GUIs in Multiplayer
-Updated mappings
-Fixed issues related to loading/saving squads, alliances, and enemies
+Fixed GUIs using Squads crashing clients of LAN games
