@@ -136,7 +136,7 @@ public class EntityConvertedSkeleton extends EntityArmyMember {
             };
         }
         if(aiArrowAttack == null){
-            aiArrowAttack = new EntityAIArmyBow(this, 0.8D, 20, 30.0F);
+            aiArrowAttack = new EntityAIArmyBow(this, 1.0D, 20, 15.0F);
         }
         if(!this.getHeldItemMainhand().isEmpty())
             if(this.getHeldItemMainhand().getItem() instanceof ItemBow){
