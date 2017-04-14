@@ -1,3 +1,4 @@
 Fixed GUIs using Squads crashing clients of LAN games
 Added a config option to control the max distance Skeleton Warriors can shoot bows
 Converted Skeletons now shoot bows as far and fast as regular Skeletons
+Spawn Eggs for Overlord entities are now called Spawn Eggs
