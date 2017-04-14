@@ -31,7 +31,10 @@ public class Squads implements Serializable {
 
     @SideOnly(Side.CLIENT)
     public static void makeClientInstance(EntityPlayer player, ArrayList<String> squadNames){
-        instance = new Squads();
+        if(instance == null){
+            instance = new Squads();
+            Overlord.logDebug("Created a new client instance for squads. If you are not on a server, this is an issue.");
+        }
         if(player != null) {
             instance.setPlayerSquadNames(player.getUniqueID(), squadNames);
             Overlord.logDebug("Setting client squad names "+squadNames+" to player "+player.getName());
@@ -74,8 +77,7 @@ public class Squads implements Serializable {
         squads.add(new SquadData(player.toString(), names));
         save();
 
-        if(FMLCommonHandler.instance().getMinecraftServerInstance() != null)
-        if(FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer()){
+        if(FMLCommonHandler.instance().getMinecraftServerInstance() != null){
             EntityPlayer playerMp = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld().getPlayerEntityByUUID(player);
             if(playerMp != null){
                 if(!playerMp.world.isRemote && playerMp instanceof EntityPlayerMP)
