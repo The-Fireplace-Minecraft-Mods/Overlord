@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.items.ItemOverlordsSeal;
 
 import javax.annotation.Nonnull;
@@ -60,7 +61,7 @@ public class SealRecipe extends ShapedOreRecipe {
             } else if (container instanceof ContainerWorkbench) {
                 return (EntityPlayer) slotCraftingPlayerField.get(container.getSlot(0));
             } else {
-                // don't know the player
+                Overlord.logWarn("Unable to find player for crafting inventory: "+inv.getName());
                 return null;
             }
         } catch (Exception e) {
