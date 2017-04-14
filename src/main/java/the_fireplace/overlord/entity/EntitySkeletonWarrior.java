@@ -152,7 +152,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
             };
         }
         if(aiArrowAttack == null){
-            aiArrowAttack = new EntityAIArmyBow(this, 0.8D, 20, 30.0F);
+            aiArrowAttack = new EntityAIArmyBow(this, 0.8D, 20, (float)ConfigValues.MAXARROWDISTANCE);
         }
         if(this.getHeldItemMainhand() != null)
             if(this.getHeldItemMainhand().getItem() instanceof ItemBow){

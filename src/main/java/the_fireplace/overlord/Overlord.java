@@ -91,6 +91,7 @@ public final class Overlord {
     public static Property SUFFOCATIONWARNING_PROPERTY;
     public static Property BONEREQ_WARRIOR_PROPERTY;
     public static Property BONEREQ_BABY_PROPERTY;
+    public static Property MAXARROWDISTANCE_PROPERTY;
 
     @SidedProxy(clientSide = "the_fireplace."+MODID+".client.ClientProxy", serverSide = "the_fireplace."+MODID+".CommonProxy")
     public static CommonProxy proxy;
@@ -130,6 +131,7 @@ public final class Overlord {
         ConfigValues.SUFFOCATIONWARNING = SUFFOCATIONWARNING_PROPERTY.getBoolean();
         ConfigValues.BONEREQ_WARRIOR = BONEREQ_WARRIOR_PROPERTY.getInt();
         ConfigValues.BONEREQ_BABY = BONEREQ_BABY_PROPERTY.getInt();
+        ConfigValues.MAXARROWDISTANCE = MAXARROWDISTANCE_PROPERTY.getDouble();
         if (config.hasChanged())
             config.save();
     }
@@ -147,13 +149,17 @@ public final class Overlord {
         SUFFOCATIONWARNING_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.SUFFOCATIONWARNING_NAME, ConfigValues.SUFFOCATIONWARNING_DEFAULT, proxy.translateToLocal(ConfigValues.SUFFOCATIONWARNING_NAME + ".tooltip"));
         BONEREQ_WARRIOR_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.BONEREQ_WARRIOR_NAME, ConfigValues.BONEREQ_WARRIOR_DEFAULT, proxy.translateToLocal(ConfigValues.BONEREQ_WARRIOR_NAME + ".tooltip"));
         BONEREQ_BABY_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.BONEREQ_BABY_NAME, ConfigValues.BONEREQ_BABY_DEFAULT, proxy.translateToLocal(ConfigValues.BONEREQ_BABY_NAME + ".tooltip"));
+        MAXARROWDISTANCE_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.MAXARROWDISTANCE_NAME, ConfigValues.MAXARROWDISTANCE_DEFAULT, proxy.translateToLocal(ConfigValues.MAXARROWDISTANCE_NAME + ".tooltip"));
         BONEREQ_WARRIOR_PROPERTY.setMinValue(2);
         BONEREQ_BABY_PROPERTY.setMinValue(1);
         BONEREQ_WARRIOR_PROPERTY.setMaxValue(128);
         BONEREQ_BABY_PROPERTY.setMaxValue(64);
+        MAXARROWDISTANCE_PROPERTY.setMinValue(2);
+        MAXARROWDISTANCE_PROPERTY.setMaxValue(256);
         if(event.getSide().isClient()){
             BONEREQ_WARRIOR_PROPERTY.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
             BONEREQ_BABY_PROPERTY.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
+            MAXARROWDISTANCE_PROPERTY.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
         }
         syncConfig();
         registerBlock(skeleton_maker);

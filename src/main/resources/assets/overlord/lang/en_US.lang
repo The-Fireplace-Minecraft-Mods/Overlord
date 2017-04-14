@@ -109,6 +109,9 @@ cfg.bonereq_warrior.tooltip=How many bones does it take to make a Skeleton Warri
 cfg.bonereq_baby=Baby Skeleton Bone Requirement
 cfg.bonereq_baby.tooltip=How many bones does it take to make a Baby Skeleton?
 
+cfg.max_arrow_distance=Max Bow Use Distance
+cfg.max_arrow_distance.tooltip=Controls how far your Skeleton Warriors can shoot their bows.
+
 achievement.firstbaby=Makin' Babies
 achievement.firstbaby.desc=Summon a Baby Skeleton
 

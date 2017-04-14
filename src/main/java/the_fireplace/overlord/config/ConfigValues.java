@@ -33,4 +33,8 @@ public class ConfigValues {
     public static int BONEREQ_BABY;
     public static int SERVER_BONEREQ_BABY;
     public static final String BONEREQ_BABY_NAME = "cfg.bonereq_baby";
+
+    public static final double MAXARROWDISTANCE_DEFAULT = 30.0D;
+    public static double MAXARROWDISTANCE;
+    public static final String MAXARROWDISTANCE_NAME = "cfg.max_arrow_distance";
 }
