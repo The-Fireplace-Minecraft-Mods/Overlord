@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -73,13 +74,16 @@ public final class CommonEvents {
         }else if(event.getTarget() instanceof EntityCow){
             if(!event.getItemStack().isEmpty())
                 if(event.getItemStack().getItem() == Items.GLASS_BOTTLE){
-                    if (!event.getEntityPlayer().isCreative()) {
-                        if (event.getItemStack().getCount() > 1)
-                            event.getItemStack().shrink(1);
-                        else
-                            event.getEntityPlayer().setItemStackToSlot(event.getHand() == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, ItemStack.EMPTY);
+                    if(!event.getWorld().isRemote) {
+                        if (!event.getEntityPlayer().isCreative()) {
+                            if (event.getItemStack().getCount() > 1)
+                                event.getItemStack().shrink(1);
+                            else
+                                event.getEntityPlayer().setItemStackToSlot(event.getHand() == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, ItemStack.EMPTY);
+                        }
+                        event.getEntityPlayer().inventory.addItemStackToInventory(new ItemStack(Overlord.milk_bottle));
                     }
-                    event.getEntityPlayer().inventory.addItemStackToInventory(new ItemStack(Overlord.milk_bottle));
+                    event.getEntityPlayer().playSound(SoundEvents.ENTITY_COW_MILK, 1.0F, 1.0F+event.getWorld().rand.nextFloat());
                 }
         }
     }
