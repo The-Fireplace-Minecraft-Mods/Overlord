@@ -160,7 +160,7 @@ public class OverlordGuide implements IGuideBook {
 
         pages = Lists.newArrayList();
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.6.2.1")));
-        pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.crown, "n n", "nnn", 'n', "nuggetGold")));
+        pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.crown, "i i", "iii", " i ", 'i', "nuggetGold")));
         entries.put(new ResourceLocation(Overlord.MODID, "6.2"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.6.2"), new ItemStack(Overlord.crown)));
 
         pages = Lists.newArrayList();
