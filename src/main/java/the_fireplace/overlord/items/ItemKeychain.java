@@ -5,6 +5,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -93,7 +94,8 @@ public class ItemKeychain extends Item {
                 entity.setLocationAndAngles(pos.getX() + 0.5D, pos.getY() + offsetY, pos.getZ() + 0.5D, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
 
                 stack.shrink(1);
-                playerIn.inventory.addItemStackToInventory(new ItemStack(Overlord.keychain));
+                if(!playerIn.inventory.addItemStackToInventory(new ItemStack(Overlord.keychain)))
+                    playerIn.dropItem(Overlord.keychain, 1);
 
                 return EnumActionResult.SUCCESS;
             }else{
@@ -137,7 +139,7 @@ public class ItemKeychain extends Item {
     @Override
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand)
     {
-        if(!getIsOccupied() && target instanceof EntityArmyMember && (((EntityArmyMember)target).getOwnerId() == null || ((EntityArmyMember)target).getOwnerId().equals(playerIn.getUniqueID()))){
+        if(!getIsOccupied() && !playerIn.world.isRemote && target instanceof EntityArmyMember && (((EntityArmyMember)target).getOwnerId() == null || ((EntityArmyMember)target).getOwnerId().equals(playerIn.getUniqueID()))){
             if(target instanceof EntityBabySkeleton|| target instanceof EntityConvertedSkeleton || target instanceof EntitySkeletonWarrior){
                 ItemStack occupiedItem = new ItemStack(Overlord.keychain_occupied);
                 NBTTagCompound entNbt = new NBTTagCompound();
@@ -150,8 +152,12 @@ public class ItemKeychain extends Item {
                     return false;
                 }
                 occupiedItem.setTagCompound(entNbt);
-                playerIn.getHeldItem(hand).shrink(1);
-                playerIn.inventory.addItemStackToInventory(occupiedItem);
+                if (playerIn.getHeldItem(hand).getCount() > 1)
+                    playerIn.getHeldItem(hand).shrink(1);
+                else
+                    playerIn.setItemStackToSlot(hand == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, ItemStack.EMPTY);
+                if(!playerIn.inventory.addItemStackToInventory(occupiedItem))
+                    playerIn.dropItem(occupiedItem, false);
                 target.world.removeEntity(target);
                 return true;
             }

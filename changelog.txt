@@ -1,3 +1,4 @@
 Fixed crashing if number of squads is not 0 or 5.
 Bottles now play the sound when milking cows.
 Fixed the recipe for the crown showing incorrectly in the guide book.
+Fixed keychains and the skeletons they are used on vanishing in Survival Mode.
