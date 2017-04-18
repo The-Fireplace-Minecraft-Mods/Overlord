@@ -27,11 +27,8 @@ public class UpdateClientSquadsMessage implements IMessage {
     @Override
     public void fromBytes(ByteBuf buf) {
         names = new ArrayList();
-        names.add(ByteBufUtils.readUTF8String(buf));
-        names.add(ByteBufUtils.readUTF8String(buf));
-        names.add(ByteBufUtils.readUTF8String(buf));
-        names.add(ByteBufUtils.readUTF8String(buf));
-        names.add(ByteBufUtils.readUTF8String(buf));
+        while(buf.isReadable())
+            names.add(ByteBufUtils.readUTF8String(buf));
     }
 
     @Override
