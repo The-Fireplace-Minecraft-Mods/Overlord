@@ -1,1 +1,2 @@
 Fixed crashing if number of squads is not 0 or 5.
+Bottles now play the sound when milking cows.
