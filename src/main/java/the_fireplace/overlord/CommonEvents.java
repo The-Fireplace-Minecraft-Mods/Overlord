@@ -3,7 +3,6 @@ package the_fireplace.overlord;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.passive.EntityCow;
-import net.minecraft.entity.passive.EntitySkeletonHorse;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -34,16 +33,16 @@ import java.util.Random;
 public final class CommonEvents {
     @SubscribeEvent
     public void rightClickEntity(PlayerInteractEvent.EntityInteract event){
-        if(event.getTarget() instanceof EntitySkeleton || ((event.getTarget() instanceof EntitySkeletonWarrior || event.getTarget() instanceof EntityBabySkeleton || event.getTarget() instanceof EntitySkeletonHorse) && event.getEntityPlayer().isSneaking())) {
+        if(event.getTarget() instanceof EntitySkeleton || ((event.getTarget() instanceof EntitySkeletonWarrior || event.getTarget() instanceof EntityBabySkeleton) && event.getEntityPlayer().isSneaking())) {
             if (((EntityLivingBase) event.getTarget()).getHealth() < ((EntityLivingBase) event.getTarget()).getMaxHealth())
-                if (!event.getItemStack().isEmpty())
+                if (event.getItemStack() != null)
                     if (event.getItemStack().getItem() == Items.MILK_BUCKET) {
                         ((EntityLivingBase) event.getTarget()).heal(1);
                         if (!event.getEntityPlayer().isCreative()) {
-                            if (event.getItemStack().getCount() > 1)
-                                event.getItemStack().shrink(1);
+                            if (event.getItemStack().stackSize > 1)
+                                event.getItemStack().stackSize--;
                             else
-                                event.getEntityPlayer().setItemStackToSlot(event.getHand() == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, ItemStack.EMPTY);
+                                event.getEntityPlayer().setItemStackToSlot(event.getHand() == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, null);
                             event.getEntityPlayer().inventory.addItemStackToInventory(new ItemStack(Items.BUCKET));
                         }
                         if (event.getTarget() instanceof EntitySkeletonWarrior)
@@ -52,7 +51,7 @@ public final class CommonEvents {
             if(event.getTarget() instanceof EntitySkeleton && ((EntitySkeleton) event.getTarget()).isPotionActive(MobEffects.WEAKNESS) && !(event.getTarget() instanceof EntityCuringSkeleton) && event.getItemStack().getItem() == Items.GOLDEN_APPLE && event.getItemStack().getMetadata() == 0){
                 if (!event.getEntityPlayer().capabilities.isCreativeMode)
                 {
-                    event.getItemStack().shrink(1);
+                    event.getItemStack().stackSize--;
                 }
 
                 if (!event.getWorld().isRemote)
@@ -72,14 +71,14 @@ public final class CommonEvents {
                 }
             }
         }else if(event.getTarget() instanceof EntityCow){
-            if(!event.getItemStack().isEmpty())
+            if(event.getItemStack() != null)
                 if(event.getItemStack().getItem() == Items.GLASS_BOTTLE){
                     if(!event.getWorld().isRemote) {
                         if (!event.getEntityPlayer().isCreative()) {
-                            if (event.getItemStack().getCount() > 1)
-                                event.getItemStack().shrink(1);
+                            if (event.getItemStack().stackSize > 1)
+                                event.getItemStack().stackSize--;
                             else
-                                event.getEntityPlayer().setItemStackToSlot(event.getHand() == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, ItemStack.EMPTY);
+                                event.getEntityPlayer().setItemStackToSlot(event.getHand() == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, null);
                         }
                         event.getEntityPlayer().inventory.addItemStackToInventory(new ItemStack(Overlord.milk_bottle));
                     }
@@ -92,7 +91,7 @@ public final class CommonEvents {
         if(!event.getEntityLiving().world.isRemote){
             if(event.getEntityLiving() instanceof EntitySkeleton || event.getEntityLiving() instanceof EntitySkeletonWarrior || event.getEntityLiving() instanceof EntityBabySkeleton || event.getEntityLiving() instanceof EntityConvertedSkeleton){
                 if(event.getEntityLiving().ticksExisted < 5){
-                    if(event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty()){
+                    if(event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.HEAD) == null){
                         Random random = new Random();
                         if(random.nextInt(1200) == 0)
                             event.getEntityLiving().setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(Overlord.sans_mask));

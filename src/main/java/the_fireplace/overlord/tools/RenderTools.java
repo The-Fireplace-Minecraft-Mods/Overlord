@@ -26,6 +26,9 @@ public final class RenderTools {
     private static EntityItem entityItem;
 
     public static void renderItemStackOnEntity(Entity targetEntity, ItemStack stack, Render render, float partialTicks, double x, double y, double z, double offsetX, double offsetY, double offsetZ){
+        if(stack == null)
+            return;
+
         if(entityItem == null || entityItem.world != targetEntity.world) {
             entityItem = new EntityItem(targetEntity.world, x, y, z, stack);
             entityItem.setNoDespawn();

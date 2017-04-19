@@ -48,9 +48,8 @@ public class ItemKeychain extends Item {
 
     @Override
     @Nonnull
-    public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
-        ItemStack stack = playerIn.getHeldItem(hand);
         if (worldIn.isRemote)
         {
             return EnumActionResult.SUCCESS;
@@ -93,7 +92,7 @@ public class ItemKeychain extends Item {
 
                 entity.setLocationAndAngles(pos.getX() + 0.5D, pos.getY() + offsetY, pos.getZ() + 0.5D, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
 
-                stack.shrink(1);
+                stack.stackSize--;
                 if(!playerIn.inventory.addItemStackToInventory(new ItemStack(Overlord.keychain)))
                     playerIn.dropItem(Overlord.keychain, 1);
 
@@ -130,7 +129,7 @@ public class ItemKeychain extends Item {
                 tooltip.add(proxy.translateToLocal("tooltip.equipment"));
                 for (int i = 0; i < armorInv.tagCount(); i++) {
                     NBTTagCompound item = (NBTTagCompound) armorInv.get(i);
-                    tooltip.add(new ItemStack(item).getDisplayName());
+                    tooltip.add(ItemStack.loadItemStackFromNBT(item).getDisplayName());
                 }
             }
         }
@@ -152,10 +151,10 @@ public class ItemKeychain extends Item {
                     return false;
                 }
                 occupiedItem.setTagCompound(entNbt);
-                if (playerIn.getHeldItem(hand).getCount() > 1)
-                    playerIn.getHeldItem(hand).shrink(1);
+                if (playerIn.getHeldItem(hand).stackSize > 1)
+                    playerIn.getHeldItem(hand).stackSize--;
                 else
-                    playerIn.setItemStackToSlot(hand == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, ItemStack.EMPTY);
+                    playerIn.setItemStackToSlot(hand == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, null);
                 if(!playerIn.inventory.addItemStackToInventory(occupiedItem))
                     playerIn.dropItem(occupiedItem, false);
                 target.world.removeEntity(target);
