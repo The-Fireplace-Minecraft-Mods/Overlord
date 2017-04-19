@@ -35,7 +35,7 @@ public final class PacketDispatcher {
     }
 
     @SuppressWarnings("unchecked")
-    private static final void registerMessage(Class handlerClass, Class messageClass, Side side) {
+    private static void registerMessage(Class handlerClass, Class messageClass, Side side) {
         PacketDispatcher.dispatcher.registerMessage(handlerClass, messageClass, packetId++, side);
     }
 

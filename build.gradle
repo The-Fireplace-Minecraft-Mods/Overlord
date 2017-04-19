@@ -80,10 +80,11 @@ task showVersion {
     extractMcpMappings.dependsOn showVersion
   
     doLast {
-        def versionFile = new File(buildDir, '.version');
+        //noinspection GroovyAssignabilityCheck
+        def versionFile = new File(buildDir, '.version')
     
-        versionFile.getParentFile().mkdirs();
-        versionFile.text = version;
+        versionFile.getParentFile().mkdirs()
+        versionFile.text = version
     }
     
     outputs.upToDateWhen { false }
@@ -129,10 +130,12 @@ curseforge {
 modsIO {
     key = project.hasProperty("modsioApiKey")? project.modsioApiKey : "empty"
     project{
-		artifact = new File(jar.destinationDir, archivesBaseName+"-"+version+".jar")
+		//noinspection GroovyAssignabilityCheck
+        artifact = new File(jar.destinationDir, archivesBaseName+"-"+version+".jar")
 		modid = "1239"
 		minecraft = "1.10.2"
-		try{changelog = file('changelog.txt').text}catch(Exception e){changelog=""}
+        //noinspection GroovyUnusedCatchParameter
+        try{changelog = file('changelog.txt').text}catch(Exception e){changelog=""}
 		tag = ""
 		current = false
     }

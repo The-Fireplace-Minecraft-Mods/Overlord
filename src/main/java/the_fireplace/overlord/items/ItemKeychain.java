@@ -4,6 +4,7 @@ import net.minecraft.block.BlockFence;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -141,7 +142,7 @@ public class ItemKeychain extends Item {
     @Override
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand)
     {
-        if(!getIsOccupied() && !playerIn.world.isRemote && target instanceof EntityArmyMember && (((EntityArmyMember)target).getOwnerId() == null || ((EntityArmyMember)target).getOwnerId().equals(playerIn.getUniqueID()))){
+        if(!getIsOccupied() && !playerIn.world.isRemote && target instanceof EntityArmyMember && (((IEntityOwnable) target).getOwnerId() == null || ((IEntityOwnable) target).getOwnerId().equals(playerIn.getUniqueID()))){
             if(target instanceof EntityBabySkeleton|| target instanceof EntityConvertedSkeleton || target instanceof EntitySkeletonWarrior){
                 ItemStack occupiedItem = new ItemStack(Overlord.keychain_occupied);
                 NBTTagCompound entNbt = new NBTTagCompound();

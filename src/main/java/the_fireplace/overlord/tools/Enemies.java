@@ -30,12 +30,12 @@ public class Enemies implements Serializable {
         return enemies;
     }
 
-    public boolean isEnemiesWith(UUID uuid1, UUID uuid2){
+    public boolean isNotEnemiesWith(UUID uuid1, UUID uuid2){
         for(Alliance playerPair: enemies){
             if((UUID.fromString(playerPair.getUser1().getUUID()).equals(uuid1) && UUID.fromString(playerPair.getUser2().getUUID()).equals(uuid2)) || (UUID.fromString(playerPair.getUser1().getUUID()).equals(uuid2) && UUID.fromString(playerPair.getUser2().getUUID()).equals(uuid1)))
-                return true;
+                return false;
         }
-        return false;
+        return true;
     }
 
     public boolean considersPlayerEnemy(UUID main, UUID other){
@@ -44,10 +44,6 @@ public class Enemies implements Serializable {
                 return true;
         }
         return false;
-    }
-
-    public boolean isNotEnemiesWith(UUID uuid, UUID uuid1){
-        return !isEnemiesWith(uuid, uuid1);
     }
 
     public ArrayList<StringPair> getAllEnemies(UUID player){

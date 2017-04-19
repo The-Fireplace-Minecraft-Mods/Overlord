@@ -19,7 +19,7 @@ import java.io.File;
 public class LayerBabySkinsuit implements LayerRenderer<EntityBabySkeleton> {
     private final RenderLivingBase<?> renderer;
     private ModelBabySkeleton model;
-    private boolean nospam = false;
+    private boolean printErr = true;
 
     public LayerBabySkinsuit(RenderLivingBase<?> renderer)
     {
@@ -39,17 +39,17 @@ public class LayerBabySkinsuit implements LayerRenderer<EntityBabySkeleton> {
                         if(!SkinTools.cachedir.mkdirs())
                             Overlord.logError("Skin cache directory creation failed.");
                     File skinFile = new File(SkinTools.cachedir, skeleton.getSkinsuitName() + ".png");
-                    boolean flag = false;
+                    boolean skinExists = true;
                     if(!skinFile.exists())
                         if(!SkinTools.nonexistants.contains(skinFile)) {
                             if (!SkinTools.cacheSkin(skeleton.getSkinsuitName())) {
                                 SkinTools.nonexistants.add(skinFile);
-                                flag = true;
+                                skinExists = false;
                             }
                         }else{
-                            flag = true;
+                            skinExists = false;
                         }
-                    if(!flag) {
+                    if(skinExists) {
                         BufferedImage img;
                         if (SkinTools.skins.get(skeleton.getSkinsuitName()) != null)
                             img = SkinTools.skins.get(skeleton.getSkinsuitName());
@@ -72,11 +72,11 @@ public class LayerBabySkinsuit implements LayerRenderer<EntityBabySkeleton> {
                     }
                 }catch(Exception e){
                     this.renderer.bindTexture(SkinTools.STEVE);
-                    if(!nospam) {
+                    if(printErr) {
                         Overlord.logInfo("Spammy error:");
                         Overlord.logError(e.getLocalizedMessage());
                         Overlord.logInfo("This is most likely repeatedly happening, but has only been logged once.");
-                        nospam = true;
+                        printErr = false;
                     }
                 }
             }else

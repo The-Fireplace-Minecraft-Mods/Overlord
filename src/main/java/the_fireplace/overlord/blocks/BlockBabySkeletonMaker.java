@@ -5,6 +5,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -86,7 +87,7 @@ public class BlockBabySkeletonMaker extends BlockContainer {
 
         if (tileentity instanceof TileEntityBabySkeletonMaker)
         {
-            InventoryHelper.dropInventoryItems(worldIn, pos, (TileEntityBabySkeletonMaker)tileentity);
+            InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tileentity);
             worldIn.updateComparatorOutputLevel(pos, this);
         }
 

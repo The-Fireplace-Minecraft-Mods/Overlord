@@ -76,7 +76,7 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
             }
             else
             {
-                Collections.sort(list, this.theNearestAttackableTargetSorter);
+                list.sort(this.theNearestAttackableTargetSorter);
                 if(!((EntityArmyMember)this.taskOwner).shouldAttackEntity(list.get(0), ((EntityArmyMember)this.taskOwner).getOwner()))
                     return false;
                 this.targetEntity = list.get(0);
@@ -126,24 +126,24 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
             double d0 = this.theEntity.getDistanceSqToEntity(p_compare_1_);
             double d1 = this.theEntity.getDistanceSqToEntity(p_compare_2_);
             boolean b0 = false;
-            boolean b1 = false;
+            boolean b1i = true;
             if(p_compare_1_ instanceof EntityArmyMember){
                 b0 = ((EntityArmyMember) p_compare_1_).getOwnerId().equals(theEntity.getUniqueID());
                 if(!b0)
                     b0 = Alliances.getInstance().isAlliedTo(((EntityArmyMember) p_compare_1_).getOwnerId(), theEntity.getUniqueID());
             }
             if(p_compare_2_ instanceof EntityArmyMember){
-                b1 = ((EntityArmyMember) p_compare_2_).getOwnerId().equals(theEntity.getUniqueID());
-                if(!b1)
-                    b1 = Alliances.getInstance().isAlliedTo(((EntityArmyMember) p_compare_2_).getOwnerId(), theEntity.getUniqueID());
+                b1i = !((EntityArmyMember) p_compare_2_).getOwnerId().equals(theEntity.getUniqueID());
+                if(b1i)
+                    b1i = !Alliances.getInstance().isAlliedTo(((EntityArmyMember) p_compare_2_).getOwnerId(), theEntity.getUniqueID());
             }
             if(!ConfigValues.HUNTCREEPERS && p_compare_1_ instanceof EntityCreeper)
                 b0 = true;
             if(!ConfigValues.HUNTCREEPERS && p_compare_2_ instanceof EntityCreeper)
-                b1 = true;
-            if (!b0 && !b1) {
+                b1i = false;
+            if (!b0 && b1i) {
                 return d0 < d1 ? -1 : (d0 > d1 ? 1 : 0);
-            } else if (b0 && !b1){
+            } else if (b0 && b1i){
                 return 1;
             } else if (!b0) {
                 return -1;
@@ -164,7 +164,7 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
             EntityPlayer entityplayer1 = world.playerEntities.get(i);
             if(entityplayer1.getUniqueID() == ((EntityArmyMember)this.taskOwner).getOwnerId() || Alliances.getInstance().isAlliedTo(entityplayer1.getUniqueID(), ((EntityArmyMember)this.taskOwner).getOwnerId()))
                 continue;//Skip the owner
-            if(((EntityArmyMember)taskOwner).getAttackMode() < 2 && !Enemies.getInstance().isEnemiesWith(((EntityArmyMember)taskOwner).getOwnerId(), entityplayer1.getUniqueID()))
+            if(((EntityArmyMember)taskOwner).getAttackMode() < 2 && Enemies.getInstance().isNotEnemiesWith(((EntityArmyMember)taskOwner).getOwnerId(), entityplayer1.getUniqueID()))
                 continue;
 
             if (!entityplayer1.capabilities.disableDamage && entityplayer1.isEntityAlive() && !entityplayer1.isSpectator() && (p_184150_12_ == null || p_184150_12_.apply(entityplayer1)))
@@ -212,14 +212,12 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
     public static <T> List<T> getEntitiesWithinAABB(World world, Class<T> clazz, AxisAlignedBB aabb, Predicate<? super T> predicate) {
         List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, aabb);
         List<T> found = Lists.newArrayList();
-        Iterator<Entity> iterator = entities.iterator();
-        while (iterator.hasNext()) {
-            Entity e = iterator.next();
+        for (Entity e : entities) {
             if (clazz.isAssignableFrom(e.getClass())) {
                 found.add((T) e);
             }
         }
-        found = new ArrayList<T>(Collections2.filter(found, predicate));
+        found = new ArrayList<>(Collections2.filter(found, predicate));
         return found;
     }
 }

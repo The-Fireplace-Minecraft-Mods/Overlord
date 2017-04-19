@@ -12,6 +12,7 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import the_fireplace.overlord.entity.EntityArmyMember;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 
 /**
@@ -130,7 +131,7 @@ public class ModelSkeletonWarrior extends ModelBiped
         this.leftArmPose = ModelBiped.ArmPose.EMPTY;
         ItemStack itemstack = entitylivingbaseIn.getHeldItem(EnumHand.MAIN_HAND);
 
-        if (itemstack != null && itemstack.getItem() == Items.BOW && ((EntitySkeletonWarrior)entitylivingbaseIn).isSwingingArms())
+        if (itemstack != null && itemstack.getItem() == Items.BOW && ((EntityArmyMember) entitylivingbaseIn).isSwingingArms())
         {
             if (entitylivingbaseIn.getPrimaryHand() == EnumHandSide.RIGHT)
             {

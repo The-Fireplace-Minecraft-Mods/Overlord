@@ -10,7 +10,7 @@ import the_fireplace.overlord.entity.EntityBabySkeleton;
  */
 public class BabySkeletonRenderFactory implements IRenderFactory<EntityBabySkeleton> {
     @Override
-    public Render createRenderFor(RenderManager manager) {
+    public Render<EntityBabySkeleton> createRenderFor(RenderManager manager) {
         return new RenderBabySkeleton(manager);
     }
 }

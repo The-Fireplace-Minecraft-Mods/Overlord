@@ -41,6 +41,6 @@ public class ItemMilkBottle extends Item {
             worldIn.spawnEntity(bottle);
         }
 
-        return new ActionResult(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
+        return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
     }
 }

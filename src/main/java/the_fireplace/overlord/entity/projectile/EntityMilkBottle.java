@@ -34,7 +34,7 @@ public class EntityMilkBottle extends EntityThrowable {
     protected void onImpact(@Nonnull RayTraceResult mop) {
         if (!this.world.isRemote) {
             AxisAlignedBB axisalignedbb = this.getEntityBoundingBox().expand(4.0D, 2.0D, 4.0D);
-            List<EntityLivingBase> list = this.world.<EntityLivingBase>getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
+            List<EntityLivingBase> list = this.world.getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
 
             if (!list.isEmpty())
             {

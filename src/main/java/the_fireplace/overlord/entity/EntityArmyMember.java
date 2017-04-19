@@ -571,13 +571,13 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
             }
 
             if(target instanceof EntityArmyMember){
-                if((getAttackMode() < 2 && !Enemies.getInstance().isEnemiesWith(((EntityArmyMember) target).getOwnerId(), getOwnerId())) || ((EntityArmyMember) target).getOwnerId().equals(getOwnerId()))
+                if((getAttackMode() < 2 && Enemies.getInstance().isNotEnemiesWith(((EntityArmyMember) target).getOwnerId(), getOwnerId())) || ((EntityArmyMember) target).getOwnerId().equals(getOwnerId()))
                     return false;
                 if(Alliances.getInstance().isAlliedTo(((EntityArmyMember) target).getOwnerId(), getOwnerId()))
                     return false;
             }
 
-            return target instanceof EntityPlayer && owner instanceof EntityPlayer && !((EntityPlayer)owner).canAttackPlayer((EntityPlayer)target) ? false : !(target instanceof EntityHorse) || !((EntityHorse)target).isTame();
+            return !(target instanceof EntityPlayer && owner instanceof EntityPlayer && !((EntityPlayer) owner).canAttackPlayer((EntityPlayer) target)) && (!(target instanceof EntityHorse) || !((EntityHorse) target).isTame());
         }
         else
         {
