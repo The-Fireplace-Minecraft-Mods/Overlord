@@ -9,6 +9,7 @@ import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.EntityBabySkeleton;
 import the_fireplace.overlord.tools.SkinTools;
 
+import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -19,7 +20,7 @@ import java.io.File;
 public class LayerBabySkinsuit implements LayerRenderer<EntityBabySkeleton> {
     private final RenderLivingBase<?> renderer;
     private ModelBabySkeleton model;
-    private boolean printErr = true;
+    private boolean logErr = true;
 
     public LayerBabySkinsuit(RenderLivingBase<?> renderer)
     {
@@ -28,7 +29,7 @@ public class LayerBabySkinsuit implements LayerRenderer<EntityBabySkeleton> {
     }
 
     @Override
-    public void doRenderLayer(EntityBabySkeleton skeleton, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void doRenderLayer(@Nonnull EntityBabySkeleton skeleton, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         if(skeleton.hasSkinsuit()){
             GlStateManager.enableBlendProfile(GlStateManager.Profile.PLAYER_SKIN);
             this.model.setModelAttributes(this.renderer.getMainModel());
@@ -72,11 +73,11 @@ public class LayerBabySkinsuit implements LayerRenderer<EntityBabySkeleton> {
                     }
                 }catch(Exception e){
                     this.renderer.bindTexture(SkinTools.STEVE);
-                    if(printErr) {
+                    if(logErr) {
                         Overlord.logInfo("Spammy error:");
                         Overlord.logError(e.getLocalizedMessage());
                         Overlord.logInfo("This is most likely repeatedly happening, but has only been logged once.");
-                        printErr = false;
+                        logErr = false;
                     }
                 }
             }else
