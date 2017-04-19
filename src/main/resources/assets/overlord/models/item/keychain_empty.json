@@ -2,5 +2,27 @@
     "parent": "item/generated",
     "textures": {
         "layer0": "overlord:items/keychain_empty"
+    },
+    "display": {
+        "thirdperson_righthand": {
+            "rotation": [ 90, 90, 0 ],
+            "translation": [ 0.00, 3.00, -2.75 ],
+            "scale": [ 1.00, 1.00, 1.00 ]
+        },
+        "thirdperson_lefthand": {
+            "rotation": [ 90, 270, 0 ],
+            "translation": [ 0.00, 3.00, -2.75 ],
+            "scale": [ 1.00, 1.00, 1.00 ]
+        },
+        "firstperson_righthand": {
+            "rotation": [ 30, 90, 0 ],
+            "translation": [ 0.00, 3.00, 0.00 ],
+            "scale": [ 1.00, 1.00, 1.00 ]
+        },
+        "firstperson_lefthand": {
+            "rotation": [ 30, 270, 0 ],
+            "translation": [ 0.00, 3.00, 0.00 ],
+            "scale": [ 1.00, 1.00, 1.00 ]
+        }
     }
 }
