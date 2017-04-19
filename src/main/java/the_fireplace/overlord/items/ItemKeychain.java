@@ -92,7 +92,10 @@ public class ItemKeychain extends Item {
 
                 entity.setLocationAndAngles(pos.getX() + 0.5D, pos.getY() + offsetY, pos.getZ() + 0.5D, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
 
-                stack.stackSize--;
+                if (stack.stackSize > 1)
+                    stack.stackSize--;
+                else
+                    playerIn.setItemStackToSlot(hand == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, null);
                 if(!playerIn.inventory.addItemStackToInventory(new ItemStack(Overlord.keychain)))
                     playerIn.dropItem(Overlord.keychain, 1);
 
@@ -151,8 +154,8 @@ public class ItemKeychain extends Item {
                     return false;
                 }
                 occupiedItem.setTagCompound(entNbt);
-                if (playerIn.getHeldItem(hand).stackSize > 1)
-                    playerIn.getHeldItem(hand).stackSize--;
+                if (stack.stackSize > 1)
+                    stack.stackSize--;
                 else
                     playerIn.setItemStackToSlot(hand == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, null);
                 if(!playerIn.inventory.addItemStackToInventory(occupiedItem))
