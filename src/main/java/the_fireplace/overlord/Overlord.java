@@ -47,7 +47,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.RecipeSorter;
 import org.apache.logging.log4j.Level;
 import the_fireplace.overlord.augments.*;
-import the_fireplace.overlord.blocks.BlockBabySkeletonMaker;
 import the_fireplace.overlord.blocks.BlockSkeletonMaker;
 import the_fireplace.overlord.command.*;
 import the_fireplace.overlord.config.ConfigValues;
@@ -106,8 +105,8 @@ public final class Overlord {
 
     public static ItemArmor.ArmorMaterial sans = EnumHelper.addArmorMaterial("SANS", "sans_mask", 20, new int[]{0,0,0,0}, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
 
-    public static final Block skeleton_maker = new BlockSkeletonMaker();
-    public static final Block baby_skeleton_maker = new BlockBabySkeletonMaker();
+    public static final Block skeleton_maker = new BlockSkeletonMaker("skeleton_maker").setHardness(5F).setResistance(15F);
+    public static final Block baby_skeleton_maker = new BlockSkeletonMaker("baby_skeleton_maker").setHardness(4F).setResistance(10F);
     public static final Item overlords_seal = new ItemOverlordsSeal().setUnlocalizedName("overlords_seal").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item overlords_stamp = new ItemOverlordsSeal(false, true).setUnlocalizedName("overlords_stamp").setCreativeTab(tabOverlord);
     public static final Item squad_editor = new ItemSquadEditor().setUnlocalizedName("squad_editor").setCreativeTab(tabOverlord).setMaxStackSize(1);

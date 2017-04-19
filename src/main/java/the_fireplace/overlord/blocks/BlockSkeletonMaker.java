@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.Overlord;
+import the_fireplace.overlord.tileentity.TileEntityBabySkeletonMaker;
 import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
 
 import javax.annotation.Nonnull;
@@ -26,12 +27,10 @@ import javax.annotation.Nonnull;
  * @author The_Fireplace
  */
 public class BlockSkeletonMaker extends BlockContainer {
-    public BlockSkeletonMaker() {
-        super(Material.IRON);
-        setUnlocalizedName("skeleton_maker");
+    public BlockSkeletonMaker(String name) {
+        super(Material.ROCK);
+        setUnlocalizedName(name);
         setCreativeTab(Overlord.tabOverlord);
-        setHardness(5F);
-        setResistance(15F);
         setHarvestLevel("pickaxe", 0);
     }
 
@@ -61,7 +60,7 @@ public class BlockSkeletonMaker extends BlockContainer {
 
     @Override
     public TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
-        return new TileEntitySkeletonMaker();
+        return getUnlocalizedName().substring(5).equals("baby_skeleton_maker") ? new TileEntityBabySkeletonMaker() : new TileEntitySkeletonMaker();
     }
 
     @Override
@@ -71,7 +70,7 @@ public class BlockSkeletonMaker extends BlockContainer {
         else if (!playerIn.isSneaking()) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
 
-            if (tileentity instanceof TileEntitySkeletonMaker) {
+            if (tileentity instanceof TileEntitySkeletonMaker || tileentity instanceof TileEntityBabySkeletonMaker) {
                 FMLNetworkHandler.openGui(playerIn, Overlord.MODID, 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
             }
             return true;
@@ -84,7 +83,7 @@ public class BlockSkeletonMaker extends BlockContainer {
     {
         TileEntity tileentity = worldIn.getTileEntity(pos);
 
-        if (tileentity instanceof TileEntitySkeletonMaker)
+        if (tileentity instanceof TileEntitySkeletonMaker || tileentity instanceof TileEntityBabySkeletonMaker)
         {
             InventoryHelper.dropInventoryItems(worldIn, pos, (TileEntitySkeletonMaker)tileentity);
             worldIn.updateComparatorOutputLevel(pos, this);

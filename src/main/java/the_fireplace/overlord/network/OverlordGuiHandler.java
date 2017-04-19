@@ -2,6 +2,7 @@ package the_fireplace.overlord.network;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -26,22 +27,18 @@ public final class OverlordGuiHandler implements IGuiHandler {
         TileEntity entity = world.getTileEntity(new BlockPos(x, y, z));
         switch (ID) {
             case 0:
-                if (entity != null && entity instanceof TileEntitySkeletonMaker) {
+                if (entity != null && (entity instanceof TileEntitySkeletonMaker || entity instanceof TileEntityBabySkeletonMaker)) {
                     PacketDispatcher.sendTo(new SetConfigsMessage((byte)ConfigValues.BONEREQ_WARRIOR, (byte)ConfigValues.BONEREQ_BABY), (EntityPlayerMP)player);
-                    return new ContainerSkeletonMaker(player.inventory, (TileEntitySkeletonMaker) entity);
+                    if(entity instanceof TileEntitySkeletonMaker)
+                        return new ContainerSkeletonMaker(player.inventory, (IInventory)entity);
+                    else
+                        return new ContainerBabySkeletonMaker(player.inventory, (IInventory)entity);
                 } else {
                     return null;
                 }
             case -1:
             case -2:
                 return null;
-            case -3:
-                if (entity != null && entity instanceof TileEntityBabySkeletonMaker) {
-                    PacketDispatcher.sendTo(new SetConfigsMessage((byte)ConfigValues.BONEREQ_WARRIOR, (byte)ConfigValues.BONEREQ_BABY), (EntityPlayerMP)player);
-                    return new ContainerBabySkeletonMaker(player.inventory, (TileEntityBabySkeletonMaker) entity);
-                } else {
-                    return null;
-                }
             default:
                 if(world.getEntityByID(ID) != null){
                     if(world.getEntityByID(ID) instanceof EntitySkeletonWarrior){
