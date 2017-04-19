@@ -43,16 +43,14 @@ public class UpdateArmyMessage implements IMessage {
     public static class Handler extends AbstractServerMessageHandler<UpdateArmyMessage> {
         @Override
         public IMessage handleServerMessage(EntityPlayer player, UpdateArmyMessage message, MessageContext ctx) {
-            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                player.world.getEntities(EntityArmyMember.class, x -> true).stream().filter(skeleton -> skeleton.getOwnerId().equals(player.getUniqueID())).forEach(skeleton -> {
-                    if (message.squad.isEmpty() || skeleton.getSquad().equals(message.squad))
-                        if (message.buttonId < 3) {
-                            skeleton.setAttackMode((byte) message.buttonId);
-                        } else {
-                            skeleton.setMovementMode((byte) (message.buttonId - 3));
-                        }
-                });
-            });
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> player.world.getEntities(EntityArmyMember.class, x -> true).stream().filter(skeleton -> skeleton.getOwnerId().equals(player.getUniqueID())).forEach(skeleton -> {
+                if (message.squad.isEmpty() || skeleton.getSquad().equals(message.squad))
+                    if (message.buttonId < 3) {
+                        skeleton.setAttackMode((byte) message.buttonId);
+                    } else {
+                        skeleton.setMovementMode((byte) (message.buttonId - 3));
+                    }
+            }));
             return null;
         }
     }

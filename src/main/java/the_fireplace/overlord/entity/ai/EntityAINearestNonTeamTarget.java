@@ -126,24 +126,24 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
             double d0 = this.theEntity.getDistanceSqToEntity(p_compare_1_);
             double d1 = this.theEntity.getDistanceSqToEntity(p_compare_2_);
             boolean b0 = false;
-            boolean b1 = false;
+            boolean b1i = true;
             if(p_compare_1_ instanceof EntityArmyMember){
                 b0 = ((EntityArmyMember) p_compare_1_).getOwnerId().equals(theEntity.getUniqueID());
                 if(!b0)
                     b0 = Alliances.getInstance().isAlliedTo(((EntityArmyMember) p_compare_1_).getOwnerId(), theEntity.getUniqueID());
             }
             if(p_compare_2_ instanceof EntityArmyMember){
-                b1 = ((EntityArmyMember) p_compare_2_).getOwnerId().equals(theEntity.getUniqueID());
-                if(!b1)
-                    b1 = Alliances.getInstance().isAlliedTo(((EntityArmyMember) p_compare_2_).getOwnerId(), theEntity.getUniqueID());
+                b1i = !((EntityArmyMember) p_compare_2_).getOwnerId().equals(theEntity.getUniqueID());
+                if(b1i)
+                    b1i = !Alliances.getInstance().isAlliedTo(((EntityArmyMember) p_compare_2_).getOwnerId(), theEntity.getUniqueID());
             }
             if(!ConfigValues.HUNTCREEPERS && p_compare_1_ instanceof EntityCreeper)
                 b0 = true;
             if(!ConfigValues.HUNTCREEPERS && p_compare_2_ instanceof EntityCreeper)
-                b1 = true;
-            if (!b0 && !b1) {
+                b1i = false;
+            if (!b0 && b1i) {
                 return d0 < d1 ? -1 : (d0 > d1 ? 1 : 0);
-            } else if (b0 && !b1){
+            } else if (b0 && b1i){
                 return 1;
             } else if (!b0) {
                 return -1;

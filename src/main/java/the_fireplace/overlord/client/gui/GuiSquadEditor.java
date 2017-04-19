@@ -56,7 +56,7 @@ public class GuiSquadEditor extends GuiScreen {
         five = new GuiTextField(6, fontRenderer, guiLeft+15, guiTop+112, 120, 20);
         ArrayList<String> squads = Squads.getInstance().getSquadsFor(UUID.fromString(uuid));
         if(!squads.isEmpty()){
-            if(squads.size() > 0)
+            if(!squads.isEmpty())
                 one.setText(squads.get(0));
             if(squads.size() > 1)
                 two.setText(squads.get(1));
@@ -148,15 +148,15 @@ public class GuiSquadEditor extends GuiScreen {
     @Override
     protected void keyTyped(char character, int keyIndex) {
          if (keyIndex == Keyboard.KEY_BACK) {
-            if (one.isFocused() && one.getText().length() > 0) {
+            if (one.isFocused() && !one.getText().isEmpty()) {
                 one.setText(one.getText().substring(0, one.getText().length() - 1));
-            } else if (two.isFocused() && two.getText().length() > 0) {
+            } else if (two.isFocused() && !two.getText().isEmpty()) {
                 two.setText(two.getText().substring(0, two.getText().length() - 1));
-            } else if (three.isFocused() && three.getText().length() > 0) {
+            } else if (three.isFocused() && !three.getText().isEmpty()) {
                 three.setText(three.getText().substring(0, three.getText().length() - 1));
-            } else if (four.isFocused() && four.getText().length() > 0) {
+            } else if (four.isFocused() && !four.getText().isEmpty()) {
                 four.setText(four.getText().substring(0, four.getText().length() - 1));
-            } else if (five.isFocused() && five.getText().length() > 0) {
+            } else if (five.isFocused() && !five.getText().isEmpty()) {
                 five.setText(five.getText().substring(0, five.getText().length() - 1));
             }
         } else if (character != 0 && Character.isLetter(character)) {

@@ -15,7 +15,7 @@ public class EntityAIWanderBase extends EntityAIBase {
     private double zPosition;
     private final double speed;
     private int executionChance;
-    private boolean mustUpdate;
+    private boolean mayNotUpdate = true;
 
     public EntityAIWanderBase(EntityArmyMember creatureIn, double speedIn)
     {
@@ -36,7 +36,7 @@ public class EntityAIWanderBase extends EntityAIBase {
     @Override
     public boolean shouldExecute()
     {
-        if (!this.mustUpdate)
+        if (this.mayNotUpdate)
         {
             if (this.entity.getRNG().nextInt(this.executionChance) != 0)
             {
@@ -60,7 +60,7 @@ public class EntityAIWanderBase extends EntityAIBase {
             this.xPosition = vec3d.xCoord;
             this.yPosition = vec3d.yCoord;
             this.zPosition = vec3d.zCoord;
-            this.mustUpdate = false;
+            this.mayNotUpdate = true;
             return true;
         }
     }

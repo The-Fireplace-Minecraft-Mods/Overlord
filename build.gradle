@@ -80,10 +80,10 @@ task showVersion {
     extractMcpMappings.dependsOn showVersion
   
     doLast {
-        def versionFile = new File(buildDir, '.version');
+        def versionFile = new File(buildDir, '.version')
     
-        versionFile.getParentFile().mkdirs();
-        versionFile.text = version;
+        versionFile.getParentFile().mkdirs()
+        versionFile.text = version
     }
     
     outputs.upToDateWhen { false }
