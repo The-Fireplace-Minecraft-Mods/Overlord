@@ -4,13 +4,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.Overlord;
-import the_fireplace.overlord.tileentity.TileEntityBabySkeletonMaker;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -20,10 +20,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
  */
 @ParametersAreNonnullByDefault
 public class ContainerBabySkeletonMaker extends Container {
-    private TileEntityBabySkeletonMaker te;
+    private IInventory te;
     private static final EntityEquipmentSlot[] EQUIPMENT_SLOTS = new EntityEquipmentSlot[] {EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
 
-    public ContainerBabySkeletonMaker(InventoryPlayer invPlayer, TileEntityBabySkeletonMaker entity) {
+    public ContainerBabySkeletonMaker(InventoryPlayer invPlayer, IInventory entity) {
         this.te = entity;
 
         for (int x = 0; x < 9; x++) {
