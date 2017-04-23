@@ -275,16 +275,16 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
     {
         if(!this.world.isRemote) {
             for(int i=0;i<this.inventory.getSizeInventory();i++){
-                if(inventory.getStackInSlot(i) != null && this.getHealth() < this.getMaxHealth()) {
+                if (inventory.getStackInSlot(i) != null) {
                     if (inventory.getStackInSlot(i).getItem() == Items.MILK_BUCKET) {
-                        this.heal(1);
+                        this.increaseMilkLevel(true);
                         if (inventory.getStackInSlot(i).stackSize > 1)
                             inventory.getStackInSlot(i).stackSize--;
                         else
                             inventory.setInventorySlotContents(i, null);
                         inventory.addItem(bucket);
                     }else if(inventory.getStackInSlot(i).getItem() == Overlord.milk_bottle){
-                        this.heal(1);
+                        this.increaseMilkLevel(true);
                         if(inventory.getStackInSlot(i).stackSize > 1)
                             inventory.getStackInSlot(i).stackSize--;
                         else

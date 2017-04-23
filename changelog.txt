@@ -1,3 +1,5 @@
 The Mending enchantment should now work properly on Skeleton Warriors
 Skeleton Warrior kills now drop XP
 Mobs now think Skeletons in Skinsuits look like players.
+Skeleton Warriors drink milk for XP again
+Keychains now spawn the correct army member type
