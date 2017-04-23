@@ -137,7 +137,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                 public void startExecuting()
                 {
                     super.startExecuting();
-                    EntitySkeletonWarrior.this.setSwingingArms(true);
+                    raiseArmTicks = 0;
                 }
 
                 @Override
@@ -146,8 +146,19 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                         ((EntityArmyMember) this.attacker).initEntityAI();
                         return;
                     }
-                    if(continueExecuting())
+                    if(continueExecuting()){
+                        ++raiseArmTicks;
+
+                        if (raiseArmTicks >= 5 && this.attackTick < 10)
+                        {
+                            EntitySkeletonWarrior.this.setSwingingArms(true);
+                        }
+                        else
+                        {
+                            EntitySkeletonWarrior.this.setSwingingArms(false);
+                        }
                         super.updateTask();
+                    }
                 }
             };
         }

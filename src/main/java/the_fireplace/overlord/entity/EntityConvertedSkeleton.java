@@ -122,7 +122,7 @@ public class EntityConvertedSkeleton extends EntityArmyMember {
                 public void startExecuting()
                 {
                     super.startExecuting();
-                    EntityConvertedSkeleton.this.setSwingingArms(true);
+                    raiseArmTicks = 0;
                 }
 
                 @Override
@@ -131,8 +131,19 @@ public class EntityConvertedSkeleton extends EntityArmyMember {
                         ((EntityArmyMember) this.attacker).initEntityAI();
                         return;
                     }
-                    if(continueExecuting())
+                    if(continueExecuting()){
+                        ++raiseArmTicks;
+
+                        if (raiseArmTicks >= 5 && this.attackTick < 10)
+                        {
+                            EntityConvertedSkeleton.this.setSwingingArms(true);
+                        }
+                        else
+                        {
+                            EntityConvertedSkeleton.this.setSwingingArms(false);
+                        }
                         super.updateTask();
+                    }
                 }
             };
         }
