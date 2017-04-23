@@ -490,22 +490,22 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
     public boolean attackEntityAsMob(Entity entityIn){
         if(getHeldItemMainhand() != null && getHeldItemMainhand().stackSize <= 0)
             setHeldItem(EnumHand.MAIN_HAND, null);
-        float f = (float)this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
-        int i = 0;
+        float attackDamage = (float)this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
+        int knockback = 0;
 
         if (entityIn instanceof EntityLivingBase)
         {
-            f += EnchantmentHelper.getModifierForCreature(this.getHeldItemMainhand(), ((EntityLivingBase)entityIn).getCreatureAttribute());
-            i += EnchantmentHelper.getKnockbackModifier(this);
+            attackDamage += EnchantmentHelper.getModifierForCreature(this.getHeldItemMainhand(), ((EntityLivingBase)entityIn).getCreatureAttribute());
+            knockback += EnchantmentHelper.getKnockbackModifier(this);
         }
 
-        boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), f);
+        boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), attackDamage);
 
         if (flag)
         {
-            if (i > 0)
+            if (knockback > 0)
             {
-                ((EntityLivingBase)entityIn).knockBack(this, (float)i * 0.5F, (double) MathHelper.sin(this.rotationYaw * 0.017453292F), (double)(-MathHelper.cos(this.rotationYaw * 0.017453292F)));
+                ((EntityLivingBase)entityIn).knockBack(this, (float)knockback * 0.5F, (double) MathHelper.sin(this.rotationYaw * 0.017453292F), (double)(-MathHelper.cos(this.rotationYaw * 0.017453292F)));
                 this.motionX *= 0.6D;
                 this.motionZ *= 0.6D;
             }

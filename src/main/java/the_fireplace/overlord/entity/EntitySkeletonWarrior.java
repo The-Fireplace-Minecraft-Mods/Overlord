@@ -380,7 +380,17 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                 }
             }
             world.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox()).stream().filter(xp -> xp.delayBeforeCanPickup <= 0).forEach(xp -> {
-                this.addXP(xp.getXpValue());
+                ItemStack itemstack = EnchantmentHelper.getEnchantedItem(Enchantments.MENDING, this);
+
+                int xpValue = xp.getXpValue();
+                if (itemstack != null && itemstack.isItemDamaged())
+                {
+                    int i = Math.min(xpValue*2, itemstack.getItemDamage());
+                    xpValue -= i/2;
+                    itemstack.setItemDamage(itemstack.getItemDamage() - i);
+                }
+                if(xpValue > 0)
+                    this.addXP(xpValue);
                 xp.setDead();
             });
             //Bow stuffs
