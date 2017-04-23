@@ -113,6 +113,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
                 this.tasks.addTask(7, new EntityAIWanderBase(this, 1.0D));
         }
     }
+    protected int raiseArmTicks;
 
     /**
      * Register attack tasks here
@@ -132,13 +133,24 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
                 public void startExecuting()
                 {
                     super.startExecuting();
-                    EntityArmyMember.this.setSwingingArms(true);
+                    raiseArmTicks = 0;
                 }
 
                 @Override
                 public void updateTask(){
-                    if(continueExecuting())
+                    if(continueExecuting()){
+                        ++raiseArmTicks;
+
+                        if (raiseArmTicks >= 5 && this.attackTick < 10)
+                        {
+                            EntityArmyMember.this.setSwingingArms(true);
+                        }
+                        else
+                        {
+                            EntityArmyMember.this.setSwingingArms(false);
+                        }
                         super.updateTask();
+                    }
                 }
             };
         }

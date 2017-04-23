@@ -137,17 +137,28 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                 public void startExecuting()
                 {
                     super.startExecuting();
-                    EntitySkeletonWarrior.this.setSwingingArms(true);
+                    raiseArmTicks = 0;
                 }
 
                 @Override
                 public void updateTask(){
                     if(!this.attacker.getHeldItemMainhand().isEmpty() && !this.attacker.getHeldItemOffhand().isEmpty() && this.attacker.getHeldItemMainhand().getItem() instanceof ItemBow && this.attacker.getHeldItemOffhand().getItem() instanceof ItemArrow) {
-                        ((EntitySkeletonWarrior) this.attacker).initEntityAI();
+                        ((EntityArmyMember) this.attacker).initEntityAI();
                         return;
                     }
-                    if(continueExecuting())
+                    if(continueExecuting()){
+                        ++raiseArmTicks;
+
+                        if (raiseArmTicks >= 5 && this.attackTick < 10)
+                        {
+                            EntitySkeletonWarrior.this.setSwingingArms(true);
+                        }
+                        else
+                        {
+                            EntitySkeletonWarrior.this.setSwingingArms(false);
+                        }
                         super.updateTask();
+                    }
                 }
             };
         }
