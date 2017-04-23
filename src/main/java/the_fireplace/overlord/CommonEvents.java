@@ -1,6 +1,8 @@
 package the_fireplace.overlord;
 
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntitySkeletonHorse;
@@ -13,6 +15,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -21,6 +24,7 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import the_fireplace.overlord.entity.*;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.SetSquadsMessage;
@@ -132,6 +136,16 @@ public final class CommonEvents {
     @SubscribeEvent
     public void livingDeath(LivingDeathEvent event){
         if(!event.getEntityLiving().world.isRemote){
+            if(event.getSource().getEntity() instanceof EntitySkeletonWarrior && event.getEntityLiving() instanceof EntityLiving){
+                int i = getExperiencePoints((EntityLiving)event.getEntityLiving());
+                while (i > 0)
+                {
+                    int j = EntityXPOrb.getXPSplit(i);
+                    i -= j;
+                    event.getEntityLiving().world.spawnEntity(new EntityXPOrb(event.getEntityLiving().world, event.getEntityLiving().posX, event.getEntityLiving().posY, event.getEntityLiving().posZ, j));
+                }
+            }
+
             if(event.getSource().getEntity() instanceof EntityWolf && event.getEntityLiving() instanceof EntityArmyMember){
                 if(((EntityWolf) event.getSource().getEntity()).getOwnerId() != null){
                     EntityPlayer wolfOwner = ((EntityArmyMember) event.getEntityLiving()).world.getPlayerEntityByUUID(((EntityWolf) event.getSource().getEntity()).getOwnerId());
@@ -143,6 +157,29 @@ public final class CommonEvents {
                     }
                 }
             }
+        }
+    }
+
+    protected int getExperiencePoints(EntityLiving entity)
+    {
+        int experienceValue = ReflectionHelper.getPrivateValue(EntityLiving.class, entity, "experienceValue", "field_70728_aV");
+        if (experienceValue > 0)
+        {
+            int i = experienceValue;
+
+            for (int j = 0; j < entity.getEquipmentAndArmor().spliterator().getExactSizeIfKnown(); ++j)
+            {
+                if (!(((NonNullList<ItemStack>)entity.getEquipmentAndArmor()).get(j)).isEmpty())
+                {
+                    i += 1 + entity.world.rand.nextInt(3);
+                }
+            }
+
+            return i;
+        }
+        else
+        {
+            return experienceValue;
         }
     }
 }
