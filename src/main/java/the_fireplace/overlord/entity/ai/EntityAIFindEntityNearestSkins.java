@@ -9,6 +9,7 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.scoreboard.Team;
+import net.minecraft.util.DamageSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import the_fireplace.overlord.entity.EntityArmyMember;
@@ -51,7 +52,7 @@ public class EntityAIFindEntityNearestSkins extends EntityAIBase
                 {
                     return false;
                 }
-                else if (p_apply_1_.getIsInvulnerable())
+                else if (p_apply_1_.isEntityInvulnerable(DamageSource.causeMobDamage(entityLiving)))
                 {
                     return false;
                 }
