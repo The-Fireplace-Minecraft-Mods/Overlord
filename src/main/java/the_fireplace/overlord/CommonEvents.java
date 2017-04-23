@@ -1,7 +1,11 @@
 package the_fireplace.overlord;
 
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.EntityAIFindEntityNearestPlayer;
+import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.passive.EntityCow;
@@ -24,6 +28,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import the_fireplace.overlord.entity.*;
+import the_fireplace.overlord.entity.ai.EntityAIFindEntityNearestSkins;
+import the_fireplace.overlord.entity.ai.EntityAITargetSkins;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.SetSquadsMessage;
 import the_fireplace.overlord.tools.Squads;
@@ -102,6 +108,33 @@ public final class CommonEvents {
                     }
                 }
             }
+            if(event.getEntityLiving() instanceof EntityLiving && event.getEntityLiving().ticksExisted > 5 && event.getEntityLiving().ticksExisted < 10){
+                boolean canTargetSkins = false;
+                boolean canFindSkins = false;
+                for(EntityAITasks.EntityAITaskEntry entry:((EntityLiving)event.getEntityLiving()).targetTasks.taskEntries){
+                    if(entry.action instanceof EntityAITargetSkins)
+                        canTargetSkins = true;
+                    if(entry.action instanceof EntityAIFindEntityNearestSkins)
+                        canFindSkins = true;
+                }
+                if(!canTargetSkins && event.getEntityLiving() instanceof EntityCreature)
+                    for(EntityAITasks.EntityAITaskEntry entry:((EntityLiving)event.getEntityLiving()).targetTasks.taskEntries){
+                        if(entry.action instanceof EntityAINearestAttackableTarget){
+                            Class target = ReflectionHelper.getPrivateValue(EntityAINearestAttackableTarget.class, (EntityAINearestAttackableTarget)entry.action, "targetClass", "field_75307_b");
+                            if(target == EntityPlayer.class){
+                                ((EntityLiving)event.getEntityLiving()).targetTasks.addTask(entry.priority, new EntityAITargetSkins((EntityCreature)event.getEntityLiving(), EntityArmyMember.class, true));
+                                break;
+                            }
+                        }
+                    }
+                if(!canFindSkins)
+                    for(EntityAITasks.EntityAITaskEntry entry:((EntityLiving)event.getEntityLiving()).targetTasks.taskEntries){
+                        if(entry.action instanceof EntityAIFindEntityNearestPlayer){
+                            ((EntityLiving)event.getEntityLiving()).targetTasks.addTask(entry.priority, new EntityAIFindEntityNearestSkins((EntityLiving)event.getEntityLiving()));
+                            break;
+                        }
+                    }
+            }
         }
     }
     @SubscribeEvent
@@ -121,16 +154,16 @@ public final class CommonEvents {
     @SubscribeEvent
     public void livingHurt(LivingHurtEvent event){
         if(!event.getEntity().world.isRemote)
-        if(event.getSource().isProjectile()){
-            if(event.getEntityLiving() instanceof EntityPlayerMP){
-                if(event.getSource().getEntity() instanceof EntitySkeletonWarrior){
-                    if(((EntitySkeletonWarrior) event.getSource().getEntity()).getOwnerId().equals(event.getEntityLiving().getUniqueID())){
-                        if(((EntityPlayerMP) event.getEntityLiving()).getStatFile().canUnlockAchievement(Overlord.nmyi))
-                            ((EntityPlayerMP) event.getEntityLiving()).addStat(Overlord.nmyi);
+            if(event.getSource().isProjectile()){
+                if(event.getEntityLiving() instanceof EntityPlayerMP){
+                    if(event.getSource().getEntity() instanceof EntitySkeletonWarrior){
+                        if(((EntitySkeletonWarrior) event.getSource().getEntity()).getOwnerId().equals(event.getEntityLiving().getUniqueID())){
+                            if(((EntityPlayerMP) event.getEntityLiving()).getStatFile().canUnlockAchievement(Overlord.nmyi))
+                                ((EntityPlayerMP) event.getEntityLiving()).addStat(Overlord.nmyi);
+                        }
                     }
                 }
             }
-        }
     }
     @SubscribeEvent
     public void livingDeath(LivingDeathEvent event){
