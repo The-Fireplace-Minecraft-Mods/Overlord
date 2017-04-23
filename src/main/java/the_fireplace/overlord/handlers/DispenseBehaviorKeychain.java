@@ -30,13 +30,13 @@ public class DispenseBehaviorKeychain extends BehaviorDefaultDispenseItem {
         EntityArmyMember entity;
         NBTTagCompound entNbt = stack.getTagCompound();
         if (entNbt != null) {
-            if(entNbt.getString("SkeletonType").equals("skeleton_warrior"))
+            if(entNbt.getString("SkeletonType").equals("overlord.skeleton_warrior"))
                 entity = new EntitySkeletonWarrior(source.getWorld());
-            else if(entNbt.getString("SkeletonType").equals("skeleton_converted"))
+            else if(entNbt.getString("SkeletonType").equals("overlord.skeleton_converted"))
                 entity = new EntityConvertedSkeleton(source.getWorld());
             else {
                 entity = new EntityBabySkeleton(source.getWorld());
-                if(!entNbt.getString("SkeletonType").equals("skeleton_baby"))
+                if(!entNbt.getString("SkeletonType").equals("overlord.skeleton_baby"))
                     Overlord.logError("Skeleton Type for keychain was "+entNbt.getString("SkeletonType"));
             }
             entity.readFromNBT(entNbt);

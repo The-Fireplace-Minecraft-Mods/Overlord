@@ -74,13 +74,13 @@ public class ItemKeychain extends Item {
             EntityArmyMember entity;
             NBTTagCompound entNbt = stack.getTagCompound();
             if(entNbt != null) {
-                if (entNbt.getString("SkeletonType").equals("skeleton_warrior"))
+                if (entNbt.getString("SkeletonType").equals("overlord.skeleton_warrior"))
                     entity = new EntitySkeletonWarrior(worldIn);
-                else if (entNbt.getString("SkeletonType").equals("skeleton_converted"))
+                else if (entNbt.getString("SkeletonType").equals("overlord.skeleton_converted"))
                     entity = new EntityConvertedSkeleton(worldIn);
                 else {
                     entity = new EntityBabySkeleton(worldIn);
-                    if (!entNbt.getString("SkeletonType").equals("skeleton_baby"))
+                    if (!entNbt.getString("SkeletonType").equals("overlord.skeleton_baby"))
                         Overlord.logError("Skeleton Type for keychain was " + entNbt.getString("SkeletonType"));
                 }
                 entity.readFromNBT(entNbt);
