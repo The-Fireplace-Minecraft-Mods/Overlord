@@ -2,6 +2,7 @@ package the_fireplace.overlord.entity;
 
 import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityBoat;
@@ -410,5 +411,10 @@ public class EntityBabySkeleton extends EntityArmyMember {
             return 0.5F - this.world.getLightBrightness(pos);
         else
             return super.getBlockPathWeight(pos);
+    }
+
+    @Override
+    public boolean shouldMobAttack(@Nonnull EntityLiving mob) {
+        return this.hasSkinsuit() && (getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty() || getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() != Items.SKULL || getItemStackFromSlot(EntityEquipmentSlot.HEAD).getMetadata() == 3);
     }
 }

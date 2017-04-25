@@ -605,4 +605,8 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
     {
 
     }
+
+    public boolean shouldMobAttack(EntityLiving mob){
+        return false;
+    }
 }

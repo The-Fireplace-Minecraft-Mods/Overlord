@@ -16,8 +16,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.AxisAlignedBB;
-import the_fireplace.overlord.entity.EntityBabySkeleton;
-import the_fireplace.overlord.entity.EntityConvertedSkeleton;
+import the_fireplace.overlord.entity.EntityArmyMember;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 
 import javax.annotation.Nullable;
@@ -34,30 +33,12 @@ public class EntityAITargetSkins<T extends EntityLivingBase> extends EntityAITar
     protected final Predicate <? super T > targetEntitySelector;
     protected T targetEntity;
 
-    public static final Predicate<EntitySkeletonWarrior> WARRIOR_HAS_SKINSUIT = new Predicate<EntitySkeletonWarrior>()
+    public final Predicate<EntityArmyMember> CAN_ATTACK_ARMY_MEMBER = new Predicate<EntityArmyMember>()
     {
         @Override
-        public boolean apply(@Nullable EntitySkeletonWarrior p_apply_1_)
+        public boolean apply(@Nullable EntityArmyMember p_apply_1_)
         {
-            return p_apply_1_ != null && p_apply_1_.hasSkinsuit();
-        }
-    };
-
-    public static final Predicate<EntityBabySkeleton> BABY_HAS_SKINSUIT = new Predicate<EntityBabySkeleton>()
-    {
-        @Override
-        public boolean apply(@Nullable EntityBabySkeleton p_apply_1_)
-        {
-            return p_apply_1_ != null && p_apply_1_.hasSkinsuit();
-        }
-    };
-
-    public static final Predicate<EntityConvertedSkeleton> CONV_HAS_SKINSUIT = new Predicate<EntityConvertedSkeleton>()
-    {
-        @Override
-        public boolean apply(@Nullable EntityConvertedSkeleton p_apply_1_)
-        {
-            return p_apply_1_ != null && p_apply_1_.hasSkinsuit();
+            return p_apply_1_ != null && p_apply_1_.shouldMobAttack(taskOwner);
         }
     };
 
@@ -83,10 +64,7 @@ public class EntityAITargetSkins<T extends EntityLivingBase> extends EntityAITar
             @Override
             public boolean apply(@Nullable T p_apply_1_)
             {
-                return p_apply_1_ != null && EntitySelectors.NOT_SPECTATING.apply(p_apply_1_) && EntityAITargetSkins.this.isSuitableTarget(p_apply_1_, false) && (
-                                (p_apply_1_ instanceof EntitySkeletonWarrior && WARRIOR_HAS_SKINSUIT.apply((EntitySkeletonWarrior) p_apply_1_)) ||
-                                (p_apply_1_ instanceof EntityBabySkeleton && BABY_HAS_SKINSUIT.apply((EntityBabySkeleton) p_apply_1_)) ||
-                                (p_apply_1_ instanceof EntityConvertedSkeleton && CONV_HAS_SKINSUIT.apply((EntityConvertedSkeleton) p_apply_1_)));
+                return p_apply_1_ != null && EntitySelectors.NOT_SPECTATING.apply(p_apply_1_) && EntityAITargetSkins.this.isSuitableTarget(p_apply_1_, false) && CAN_ATTACK_ARMY_MEMBER.apply((EntitySkeletonWarrior) p_apply_1_);
             }
         };
     }
