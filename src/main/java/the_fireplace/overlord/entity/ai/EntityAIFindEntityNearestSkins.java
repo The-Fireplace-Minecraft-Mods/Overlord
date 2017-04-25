@@ -13,30 +13,34 @@ import net.minecraft.util.DamageSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import the_fireplace.overlord.entity.EntityArmyMember;
-import the_fireplace.overlord.entity.EntityBabySkeleton;
-import the_fireplace.overlord.entity.EntityConvertedSkeleton;
-import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-import static the_fireplace.overlord.entity.ai.EntityAITargetSkins.*;
-
 public class EntityAIFindEntityNearestSkins extends EntityAIBase
 {
     private static final Logger LOGGER = LogManager.getLogger();
     /** The entity that use this AI */
-    private final EntityLiving entityLiving;
+    private final EntityLiving taskOwner;
     private final Predicate<Entity> predicate;
     /** Used to compare two entities */
     private final EntityAINearestAttackableTarget.Sorter sorter;
     /** The current target */
     private EntityLivingBase entityTarget;
 
+    public final Predicate<EntityArmyMember> CAN_ATTACK_ARMY_MEMBER = new Predicate<EntityArmyMember>()
+    {
+        @Override
+        public boolean apply(@Nullable EntityArmyMember p_apply_1_)
+        {
+            return p_apply_1_ != null && p_apply_1_.shouldMobAttack(taskOwner);
+        }
+    };
+
     public EntityAIFindEntityNearestSkins(EntityLiving entityLivingIn)
     {
-        this.entityLiving = entityLivingIn;
+        this.taskOwner = entityLivingIn;
 
         if (entityLivingIn instanceof EntityCreature)
         {
@@ -52,7 +56,7 @@ public class EntityAIFindEntityNearestSkins extends EntityAIBase
                 {
                     return false;
                 }
-                else if (p_apply_1_.isEntityInvulnerable(DamageSource.causeMobDamage(entityLiving)))
+                else if (p_apply_1_.isEntityInvulnerable(DamageSource.causeMobDamage(taskOwner)))
                 {
                     return false;
                 }
@@ -60,10 +64,7 @@ public class EntityAIFindEntityNearestSkins extends EntityAIBase
                 {
                     double d0 = EntityAIFindEntityNearestSkins.this.maxTargetRange();
 
-                    return !((double) p_apply_1_.getDistanceToEntity(EntityAIFindEntityNearestSkins.this.entityLiving) > d0) && (EntityAITarget.isSuitableTarget(EntityAIFindEntityNearestSkins.this.entityLiving, (EntityLivingBase) p_apply_1_, false, true) && (
-                                (p_apply_1_ instanceof EntitySkeletonWarrior && WARRIOR_HAS_SKINSUIT.apply((EntitySkeletonWarrior) p_apply_1_)) ||
-                                    (p_apply_1_ instanceof EntityBabySkeleton && BABY_HAS_SKINSUIT.apply((EntityBabySkeleton) p_apply_1_)) ||
-                                    (p_apply_1_ instanceof EntityConvertedSkeleton && CONV_HAS_SKINSUIT.apply((EntityConvertedSkeleton) p_apply_1_))));
+                    return !((double) p_apply_1_.getDistanceToEntity(EntityAIFindEntityNearestSkins.this.taskOwner) > d0) && (EntityAITarget.isSuitableTarget(EntityAIFindEntityNearestSkins.this.taskOwner, (EntityLivingBase) p_apply_1_, false, true) && CAN_ATTACK_ARMY_MEMBER.apply((EntityArmyMember) p_apply_1_));
                 }
             }
         };
@@ -77,7 +78,7 @@ public class EntityAIFindEntityNearestSkins extends EntityAIBase
     public boolean shouldExecute()
     {
         double d0 = this.maxTargetRange();
-        List<EntityPlayer> list = this.entityLiving.world.getEntitiesWithinAABB(EntityPlayer.class, this.entityLiving.getEntityBoundingBox().expand(d0, 4.0D, d0), this.predicate);
+        List<EntityPlayer> list = this.taskOwner.world.getEntitiesWithinAABB(EntityPlayer.class, this.taskOwner.getEntityBoundingBox().expand(d0, 4.0D, d0), this.predicate);
         Collections.sort(list, this.sorter);
 
         if (list.isEmpty())
@@ -97,7 +98,7 @@ public class EntityAIFindEntityNearestSkins extends EntityAIBase
     @Override
     public boolean continueExecuting()
     {
-        EntityLivingBase entitylivingbase = this.entityLiving.getAttackTarget();
+        EntityLivingBase entitylivingbase = this.taskOwner.getAttackTarget();
 
         if (entitylivingbase == null)
         {
@@ -113,7 +114,7 @@ public class EntityAIFindEntityNearestSkins extends EntityAIBase
         }
         else
         {
-            Team team = this.entityLiving.getTeam();
+            Team team = this.taskOwner.getTeam();
             Team team1 = entitylivingbase.getTeam();
 
             if (team != null && team1 == team)
@@ -123,7 +124,7 @@ public class EntityAIFindEntityNearestSkins extends EntityAIBase
             else
             {
                 double d0 = this.maxTargetRange();
-                return !(this.entityLiving.getDistanceSqToEntity(entitylivingbase) > d0 * d0) && (!(entitylivingbase instanceof EntityPlayerMP) || !((EntityPlayerMP) entitylivingbase).interactionManager.isCreative());
+                return !(this.taskOwner.getDistanceSqToEntity(entitylivingbase) > d0 * d0) && (!(entitylivingbase instanceof EntityPlayerMP) || !((EntityPlayerMP) entitylivingbase).interactionManager.isCreative());
             }
         }
     }
@@ -134,7 +135,7 @@ public class EntityAIFindEntityNearestSkins extends EntityAIBase
     @Override
     public void startExecuting()
     {
-        this.entityLiving.setAttackTarget(this.entityTarget);
+        this.taskOwner.setAttackTarget(this.entityTarget);
         super.startExecuting();
     }
 
@@ -144,7 +145,7 @@ public class EntityAIFindEntityNearestSkins extends EntityAIBase
     @Override
     public void resetTask()
     {
-        this.entityLiving.setAttackTarget(null);
+        this.taskOwner.setAttackTarget(null);
         super.startExecuting();
     }
 
@@ -153,7 +154,7 @@ public class EntityAIFindEntityNearestSkins extends EntityAIBase
      */
     protected double maxTargetRange()
     {
-        IAttributeInstance iattributeinstance = this.entityLiving.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE);
+        IAttributeInstance iattributeinstance = this.taskOwner.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE);
         return iattributeinstance == null ? 16.0D : iattributeinstance.getAttributeValue();
     }
 }

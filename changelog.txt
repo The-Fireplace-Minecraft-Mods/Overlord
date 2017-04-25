@@ -1,5 +1,2 @@
-The Mending enchantment should now work properly on Skeleton Warriors
-Skeleton Warrior kills now drop XP
-Mobs now think Skeletons in Skinsuits look like players.
-Skeleton Warriors drink milk for XP again
-Keychains now spawn the correct army member type
+Addon makers: You can now choose whether or not your army members are targeted by mobs, and under what conditions.
+Army Members wearing Skinsuits are no longer targeted if they have a mob skull on their head
