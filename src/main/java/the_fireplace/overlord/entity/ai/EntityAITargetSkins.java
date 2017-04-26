@@ -17,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.AxisAlignedBB;
 import the_fireplace.overlord.entity.EntityArmyMember;
-import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -64,7 +63,7 @@ public class EntityAITargetSkins<T extends EntityLivingBase> extends EntityAITar
             @Override
             public boolean apply(@Nullable T p_apply_1_)
             {
-                return p_apply_1_ != null && EntitySelectors.NOT_SPECTATING.apply(p_apply_1_) && EntityAITargetSkins.this.isSuitableTarget(p_apply_1_, false) && CAN_ATTACK_ARMY_MEMBER.apply((EntitySkeletonWarrior) p_apply_1_);
+                return p_apply_1_ != null && EntitySelectors.NOT_SPECTATING.apply(p_apply_1_) && EntityAITargetSkins.this.isSuitableTarget(p_apply_1_, false) && CAN_ATTACK_ARMY_MEMBER.apply((EntityArmyMember) p_apply_1_);
             }
         };
     }
