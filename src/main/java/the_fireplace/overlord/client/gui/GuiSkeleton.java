@@ -109,7 +109,7 @@ public class GuiSkeleton extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        this.drawCenteredString(fontRenderer, Math.round(entity.getHealth())+"/"+Math.round(entity.getMaxHealth()), 90, 4, Color.RED.getRGB());
+        this.drawCenteredString(fontRenderer, (int)Math.ceil(entity.getHealth())+"/"+(int)Math.ceil(entity.getMaxHealth()), 90, 4, Color.RED.getRGB());
         this.drawCenteredString(fontRenderer, String.valueOf(entity.getLevel()), 90, 20, Color.GREEN.getRGB());
         this.drawCenteredString(fontRenderer, squadIndex != -1 ? squads.get(squadIndex) : I18n.format("overlord.no_squad"), 70, 30, -1);
     }
