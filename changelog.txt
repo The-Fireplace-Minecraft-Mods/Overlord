@@ -1,2 +1,4 @@
 Addon makers: You can now choose whether or not your army members are targeted by mobs, and under what conditions.
 Army Members wearing Skinsuits are no longer targeted if they have a mob skull on their head
+Army Members now avoid creepers if they can be attacked by them.
+Bug fixes
