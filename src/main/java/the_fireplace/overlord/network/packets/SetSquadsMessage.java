@@ -27,7 +27,7 @@ public class SetSquadsMessage implements IMessage {
     @Override
     public void fromBytes(ByteBuf buf) {
         squads = Lists.newArrayList();
-        for(int i=0;i<buf.readByte(); i++)
+        while(buf.isReadable())
             squads.add(ByteBufUtils.readUTF8String(buf));
     }
 
