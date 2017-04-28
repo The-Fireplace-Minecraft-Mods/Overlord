@@ -1,2 +1,1 @@
-Fixed crashing/disconnection from servers due to squads
-Added splash text 🐱👤
+Hotfix disconect error
