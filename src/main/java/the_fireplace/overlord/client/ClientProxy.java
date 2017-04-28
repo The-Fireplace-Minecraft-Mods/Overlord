@@ -3,6 +3,7 @@ package the_fireplace.overlord.client;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import the_fireplace.overlord.CommonProxy;
@@ -47,5 +48,6 @@ public class ClientProxy extends CommonProxy {
                     SkinTools.cacheSkin(file.getName().replace(".png",""));
             }
         }
+        MinecraftForge.EVENT_BUS.register(new ClientEvents());
     }
 }
