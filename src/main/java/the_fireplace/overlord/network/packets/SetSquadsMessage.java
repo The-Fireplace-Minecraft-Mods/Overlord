@@ -33,7 +33,6 @@ public class SetSquadsMessage implements IMessage {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeByte(squads.size());
         for(String s:squads)
             ByteBufUtils.writeUTF8String(buf, s);
     }
