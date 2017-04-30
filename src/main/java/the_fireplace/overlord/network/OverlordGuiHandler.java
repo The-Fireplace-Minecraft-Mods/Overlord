@@ -60,6 +60,8 @@ public final class OverlordGuiHandler implements IGuiHandler {
             case 0:
                 if (entity != null && entity instanceof TileEntitySkeletonMaker) {
                     return new GuiSkeletonMaker(player.inventory, (TileEntitySkeletonMaker) entity);
+                } else if(entity != null && entity instanceof TileEntityBabySkeletonMaker){
+                    return new GuiBabySkeletonMaker(player.inventory, (TileEntityBabySkeletonMaker)entity);
                 } else {
                     return null;
                 }
@@ -67,12 +69,6 @@ public final class OverlordGuiHandler implements IGuiHandler {
                 return new GuiRing(Squads.getInstance().getSquadsFor(player.getUniqueID()));
             case -2:
                 return new GuiSquadEditor(player.getUniqueID().toString());
-            case -3:
-                if (entity != null && entity instanceof TileEntityBabySkeletonMaker) {
-                    return new GuiBabySkeletonMaker(player.inventory, (TileEntityBabySkeletonMaker) entity);
-                } else {
-                    return null;
-                }
             default:
                 if(world.getEntityByID(ID) != null){
                     if(world.getEntityByID(ID) instanceof EntitySkeletonWarrior){
