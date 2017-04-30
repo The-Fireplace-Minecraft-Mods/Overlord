@@ -27,6 +27,7 @@ import the_fireplace.overlord.items.ItemOverlordsSeal;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.SetMilkMessage;
 import the_fireplace.overlord.registry.AugmentRegistry;
+import the_fireplace.overlord.registry.MilkRegistry;
 
 import java.util.UUID;
 
@@ -46,8 +47,8 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
     @Override
     public void update()
     {
-        if(getStackInSlot(4) != null && getStackInSlot(4).getItem() == Items.MILK_BUCKET && getMilk() < 2){
-            if(getStackInSlot(5) != null && getStackInSlot(5).getItem() == Items.BUCKET && getStackInSlot(5).stackSize < getStackInSlot(5).getMaxStackSize()) {
+        if(getStackInSlot(4) != null && MilkRegistry.getInstance().isMilk(getStackInSlot(4)) && getMilk() < 2){
+            if(getStackInSlot(5) != null && MilkRegistry.getInstance().getEmptiedStack(getStackInSlot(4)) != null && getStackInSlot(5).getItem() == MilkRegistry.getInstance().getEmptiedStack(getStackInSlot(4)).getItem() && getStackInSlot(5).stackSize < getStackInSlot(5).getMaxStackSize()) {
                 setMilk((byte) (getMilk() + 1));
                 getStackInSlot(5).stackSize++;
                 if(getStackInSlot(4).stackSize > 1)
@@ -56,27 +57,11 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
                     setInventorySlotContents(4, null);
             }else if(getStackInSlot(5) == null){
                 setMilk((byte) (getMilk() + 1));
+                setInventorySlotContents(5, MilkRegistry.getInstance().getEmptiedStack(getStackInSlot(4)));
                 if(getStackInSlot(4).stackSize > 1)
                     getStackInSlot(4).stackSize--;
                 else
                     setInventorySlotContents(4, null);
-                setInventorySlotContents(5, new ItemStack(Items.BUCKET));
-            }
-        }else if(getStackInSlot(4) != null && getStackInSlot(4).getItem() == Overlord.milk_bottle && getMilk() < 2){
-            if(getStackInSlot(5) != null && getStackInSlot(5).getItem() == Items.GLASS_BOTTLE && getStackInSlot(5).stackSize < getStackInSlot(5).getMaxStackSize()) {
-                setMilk((byte) (getMilk() + 1));
-                getStackInSlot(5).stackSize++;
-                if(getStackInSlot(4).stackSize > 1)
-                    getStackInSlot(4).stackSize--;
-                else
-                    setInventorySlotContents(4, null);
-            }else if(getStackInSlot(5) == null){
-                setMilk((byte) (getMilk() + 1));
-                if(getStackInSlot(4).stackSize > 1)
-                    getStackInSlot(4).stackSize--;
-                else
-                    setInventorySlotContents(4, null);
-                setInventorySlotContents(5, new ItemStack(Items.GLASS_BOTTLE));
             }
         }
     }
