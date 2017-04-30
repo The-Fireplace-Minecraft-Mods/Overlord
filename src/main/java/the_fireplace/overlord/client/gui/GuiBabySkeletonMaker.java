@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import the_fireplace.overlord.Overlord;
@@ -17,6 +16,7 @@ import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.container.ContainerBabySkeletonMaker;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.CreateSkeletonMessage;
+import the_fireplace.overlord.registry.MilkRegistry;
 import the_fireplace.overlord.tileentity.TileEntityBabySkeletonMaker;
 
 import java.awt.*;
@@ -118,7 +118,7 @@ public class GuiBabySkeletonMaker extends GuiContainer {
     }
 
     private boolean isButtonEnabled() {
-        return !(te.getStackInSlot(1).isEmpty() || te.getStackInSlot(2).isEmpty()) && (te.getStackInSlot(2).getItem() == Items.MILK_BUCKET || te.getStackInSlot(2).getItem() == Overlord.milk_bottle) && te.getStackInSlot(1).getCount() >= ConfigValues.SERVER_BONEREQ_BABY;
+        return !(te.getStackInSlot(1).isEmpty() || te.getStackInSlot(2).isEmpty()) && MilkRegistry.getInstance().isMilk(te.getStackInSlot(2)) && te.getStackInSlot(1).getCount() >= ConfigValues.SERVER_BONEREQ_BABY;
     }
 
     private String getWarning(){

@@ -1,1 +1,1 @@
-Hotfix disconect error
+Added a Milk Registry, so other mods can add their Milk to Skeleton Makers

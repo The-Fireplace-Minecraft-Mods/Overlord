@@ -1,5 +1,6 @@
 package the_fireplace.overlord.tileentity;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
@@ -27,6 +28,7 @@ import the_fireplace.overlord.items.ItemOverlordsSeal;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.SetMilkMessage;
 import the_fireplace.overlord.registry.AugmentRegistry;
+import the_fireplace.overlord.registry.MilkRegistry;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -34,8 +36,10 @@ import java.util.UUID;
 /**
  * @author The_Fireplace
  */
+@MethodsReturnNonnullByDefault
 public class TileEntitySkeletonMaker extends TileEntity implements ITickable, ISidedInventory, ISkeletonMaker {
     private ItemStack[] inventory;
+    public static final String PROP_NAME = "TileEntitySkeletonMaker";
     byte milk = 0;
     public static final int[] clearslots = new int[]{6,7,8,9,10,11,12};
 
@@ -46,8 +50,8 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
     @Override
     public void update()
     {
-        if(!getStackInSlot(4).isEmpty() && getStackInSlot(4).getItem() == Items.MILK_BUCKET && getMilk() < 2){
-            if(!getStackInSlot(5).isEmpty() && getStackInSlot(5).getItem() == Items.BUCKET && getStackInSlot(5).getCount() < getStackInSlot(5).getMaxStackSize()) {
+        if(!getStackInSlot(4).isEmpty() && MilkRegistry.getInstance().isMilk(getStackInSlot(4)) && getMilk() < 2){
+            if(!getStackInSlot(5).isEmpty() && !MilkRegistry.getInstance().getEmptiedStack(getStackInSlot(4)).isEmpty() && getStackInSlot(5).getItem() == MilkRegistry.getInstance().getEmptiedStack(getStackInSlot(4)).getItem() && getStackInSlot(5).getCount() < getStackInSlot(5).getMaxStackSize()) {
                 setMilk((byte) (getMilk() + 1));
                 getStackInSlot(5).grow(1);
                 if(getStackInSlot(4).getCount() > 1)
@@ -56,27 +60,11 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
                     setInventorySlotContents(4, ItemStack.EMPTY);
             }else if(getStackInSlot(5).isEmpty()){
                 setMilk((byte) (getMilk() + 1));
+                setInventorySlotContents(5, MilkRegistry.getInstance().getEmptiedStack(getStackInSlot(4)));
                 if(getStackInSlot(4).getCount() > 1)
                     getStackInSlot(4).shrink(1);
                 else
                     setInventorySlotContents(4, ItemStack.EMPTY);
-                setInventorySlotContents(5, new ItemStack(Items.BUCKET));
-            }
-        }else if(!getStackInSlot(4).isEmpty() && getStackInSlot(4).getItem() == Overlord.milk_bottle && getMilk() < 2){
-            if(!getStackInSlot(5).isEmpty() && getStackInSlot(5).getItem() == Items.GLASS_BOTTLE && getStackInSlot(5).getCount() < getStackInSlot(5).getMaxStackSize()) {
-                setMilk((byte) (getMilk() + 1));
-                getStackInSlot(5).grow(1);
-                if(getStackInSlot(4).getCount() > 1)
-                    getStackInSlot(4).shrink(1);
-                else
-                    setInventorySlotContents(4, ItemStack.EMPTY);
-            }else if(getStackInSlot(5).isEmpty()){
-                setMilk((byte) (getMilk() + 1));
-                if(getStackInSlot(4).getCount() > 1)
-                    getStackInSlot(4).shrink(1);
-                else
-                    setInventorySlotContents(4, ItemStack.EMPTY);
-                setInventorySlotContents(5, new ItemStack(Items.GLASS_BOTTLE));
             }
         }
     }
@@ -145,7 +133,6 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
     }
 
     @Override
-    @Nonnull
     public NBTTagCompound getUpdateTag(){
         return writeToNBT(new NBTTagCompound());
     }
@@ -156,7 +143,6 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
     }
 
     @Override
-    @Nonnull
     public String getName() {
         return Overlord.proxy.translateToLocal("tile.skeleton_maker.name");
     }
@@ -167,7 +153,6 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
     }
 
     @Override
-    @Nonnull
     public ITextComponent getDisplayName() {
         return new TextComponentTranslation("tile.skeleton_maker.name");
     }

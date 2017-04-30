@@ -61,6 +61,7 @@ import the_fireplace.overlord.network.OverlordGuiHandler;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.registry.AugmentRegistry;
 import the_fireplace.overlord.registry.CraftingRecipes;
+import the_fireplace.overlord.registry.MilkRegistry;
 import the_fireplace.overlord.registry.SealRecipe;
 import the_fireplace.overlord.tileentity.TileEntityBabySkeletonMaker;
 import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
@@ -199,6 +200,9 @@ public final class Overlord {
         AugmentRegistry.registerAugment(new ItemStack(Blocks.ANVIL), new AugmentAnvil());
         AugmentRegistry.registerAugment(new ItemStack(Items.SKULL, 1, 1), new AugmentWither());
         AugmentRegistry.registerAugment(new ItemStack(Items.SUGAR), new AugmentJitters());
+
+        MilkRegistry.getInstance().registerMilk(new ItemStack(Items.MILK_BUCKET), new ItemStack(Items.BUCKET));
+        MilkRegistry.getInstance().registerMilk(new ItemStack(milk_bottle), new ItemStack(Items.GLASS_BOTTLE));
 
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(keychain_occupied, new DispenseBehaviorKeychain());
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(milk_bottle, new BehaviorProjectileDispense() {

@@ -21,6 +21,7 @@ import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.EntityBabySkeleton;
 import the_fireplace.overlord.items.ItemOverlordsSeal;
+import the_fireplace.overlord.registry.MilkRegistry;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -61,23 +62,14 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
         for(int i:clearslots){
             setInventorySlotContents(i, ItemStack.EMPTY);
         }
-        if(getStackInSlot(2).getItem() == Items.MILK_BUCKET) {
-            if (!getStackInSlot(3).isEmpty()) {
-                if (getStackInSlot(3).getItem() == Items.BUCKET && getStackInSlot(3).getCount() < getStackInSlot(3).getMaxStackSize())
+        if(MilkRegistry.getInstance().isMilk(getStackInSlot(2))) {
+            if (!getStackInSlot(3).isEmpty() && !MilkRegistry.getInstance().getEmptiedStack(getStackInSlot(2)).isEmpty()) {
+                if (getStackInSlot(3).getItem() == MilkRegistry.getInstance().getEmptiedStack(getStackInSlot(2)).getItem() && getStackInSlot(3).getCount() < getStackInSlot(3).getMaxStackSize())
                     getStackInSlot(3).grow(1);
                 else
-                    babySkeleton.entityDropItem(new ItemStack(Items.BUCKET), 0.1F);
-            } else {
-                setInventorySlotContents(3, new ItemStack(Items.BUCKET));
-            }
-        }else if(getStackInSlot(2).getItem() == Overlord.milk_bottle) {
-            if (!getStackInSlot(3).isEmpty()) {
-                if (getStackInSlot(3).getItem() == Items.GLASS_BOTTLE && getStackInSlot(3).getCount() < getStackInSlot(3).getMaxStackSize())
-                    getStackInSlot(3).grow(1);
-                else
-                    babySkeleton.entityDropItem(new ItemStack(Items.GLASS_BOTTLE), 0.1F);
-            } else {
-                setInventorySlotContents(3, new ItemStack(Items.GLASS_BOTTLE));
+                    babySkeleton.entityDropItem(MilkRegistry.getInstance().getEmptiedStack(getStackInSlot(2)), 0.1F);
+            } else if(getStackInSlot(3).isEmpty()) {
+                setInventorySlotContents(3, MilkRegistry.getInstance().getEmptiedStack(getStackInSlot(2)));
             }
         }
         getStackInSlot(2).shrink(1);
