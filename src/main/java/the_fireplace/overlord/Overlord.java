@@ -73,7 +73,7 @@ import java.util.ArrayList;
 /**
  * @author The_Fireplace
  */
-@Mod(modid= Overlord.MODID, name= Overlord.MODNAME, guiFactory = "the_fireplace.overlord.client.gui.OverlordConfigGuiFactory", updateJSON = "http://thefireplace.bitnamiapp.com/jsons/overlord.json", acceptedMinecraftVersions = "[1.11.2,)", dependencies = "before:guideapi")
+@Mod(modid= Overlord.MODID, name= Overlord.MODNAME, guiFactory = "the_fireplace.overlord.client.gui.OverlordConfigGuiFactory", updateJSON = "http://thefireplace.bitnamiapp.com/jsons/overlord.json", acceptedMinecraftVersions = "[1.11.2,)", dependencies = "before:guideapi", version = "${version}")
 public final class Overlord {
     public static final String MODNAME = "Overlord";
     public static final String MODID = "overlord";
@@ -112,7 +112,8 @@ public final class Overlord {
     public static final Item overlords_stamp = new ItemOverlordsSeal(false, true).setUnlocalizedName("overlords_stamp").setCreativeTab(tabOverlord);
     public static final Item squad_editor = new ItemSquadEditor().setUnlocalizedName("squad_editor").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item sans_mask = new ItemSansMask(sans);
-    public static final Item skinsuit = new Item().setUnlocalizedName("skinsuit").setCreativeTab(tabOverlord).setMaxStackSize(1);
+    public static final Item skinsuit = new ItemSkinsuit(SkinType.PLAYER).setUnlocalizedName("skinsuit").setCreativeTab(tabOverlord).setMaxStackSize(1);
+    public static final Item skinsuit_mummy = new ItemSkinsuit(SkinType.MUMMY).setUnlocalizedName("skinsuit_mummy").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item warrior_spawner = new ItemWarriorSpawner().setUnlocalizedName("warrior_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item baby_spawner = new ItemBabySpawner().setUnlocalizedName("baby_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
     public static final Item converted_spawner = new ItemConvertedSpawner().setUnlocalizedName("converted_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
@@ -167,6 +168,7 @@ public final class Overlord {
         registerItem(squad_editor);
         registerItem(sans_mask);
         registerItem(skinsuit);
+        registerItem(skinsuit_mummy);
         registerItem(warrior_spawner);
         registerItem(baby_spawner);
         registerItem(converted_spawner);
@@ -247,6 +249,7 @@ public final class Overlord {
         rmm(squad_editor);
         rmm(sans_mask);
         rmm(skinsuit);
+        rmm(skinsuit_mummy);
         rmm(warrior_spawner);
         rmm(baby_spawner);
         rmm(converted_spawner);

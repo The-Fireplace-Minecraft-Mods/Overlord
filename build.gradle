@@ -24,7 +24,7 @@ apply plugin: 'net.cazzar.gradle.modsio'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
-version = "2.3.7"
+version = "2.4.0"
 group= "the_fireplace.overlord"
 archivesBaseName = "Overlord-1.11.2"
 
