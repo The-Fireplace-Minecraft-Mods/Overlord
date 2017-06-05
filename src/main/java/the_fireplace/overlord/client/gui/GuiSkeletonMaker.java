@@ -142,7 +142,8 @@ public class GuiSkeletonMaker extends GuiContainer {
                 if(te.getStackInSlot(0).getTagCompound().getString("Owner").isEmpty()){
                     return I18n.format("skeleton_maker.warning.unclaimed");
                 }else{
-                    if(te.getWorld().getPlayerEntityByUUID(UUID.fromString(te.getStackInSlot(0).getTagCompound().getString("Owner"))).equals(playerUsing)){
+                    EntityPlayer player =  te.getWorld().getPlayerEntityByUUID(UUID.fromString(te.getStackInSlot(0).getTagCompound().getString("Owner")));
+                    if(player != null && player.equals(playerUsing)){
                         return "";
                     }else{
                         return I18n.format("skeleton_maker.warning.notmine", te.getStackInSlot(0).getTagCompound().getString("OwnerName"));
