@@ -24,11 +24,14 @@ public class EntityAIHurtByNonAllied extends EntityAIHurtByTarget {
                 return false;
             else if(Alliances.getInstance().isAlliedTo(((EntityArmyMember) entitylivingbase).getOwnerId(), this.owner.getOwnerId()))
                 return false;
-        if(entitylivingbase instanceof EntityPlayer)
-            if(entitylivingbase.getUniqueID().equals(this.owner.getOwnerId()))
+        if(entitylivingbase instanceof EntityPlayer) {
+            if (entitylivingbase.getUniqueID().equals(this.owner.getOwnerId()))
                 return false;
-            else if(Alliances.getInstance().isAlliedTo(entitylivingbase.getUniqueID(), this.owner.getOwnerId()))
+            else if (Alliances.getInstance().isAlliedTo(entitylivingbase.getUniqueID(), this.owner.getOwnerId()))
                 return false;
+            if(((EntityPlayer)entitylivingbase).isCreative())
+                return false;
+        }
         return super.shouldExecute();
     }
 }
