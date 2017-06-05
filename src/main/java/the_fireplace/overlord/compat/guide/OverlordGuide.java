@@ -122,6 +122,7 @@ public class OverlordGuide implements IGuideBook {
         pages = Lists.newArrayList();
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.4.1.1")));
         pages.add(new PageIRecipe(new ShapelessOreRecipe(Overlord.skinsuit, Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, Items.LEATHER_LEGGINGS, Items.LEATHER_BOOTS, Items.ROTTEN_FLESH, Items.ROTTEN_FLESH, "dyeGreen", "dyeBlue", "dyeRed")));
+        pages.add(new PageIRecipe(new ShapelessOreRecipe(Overlord.skinsuit_mummy, Items.ROTTEN_FLESH, Items.ROTTEN_FLESH, Items.ROTTEN_FLESH, Items.ROTTEN_FLESH, Items.ROTTEN_FLESH, "paper", "paper", "paper", "paper")));
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.4.1.2")));
         pages.add(new PageText(proxy.translateToLocal("overlord.guide.4.1.3")));
         entries.put(new ResourceLocation(Overlord.MODID, "4.1"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.4.1"), new ItemStack(Overlord.skinsuit)));

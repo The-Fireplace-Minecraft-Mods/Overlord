@@ -202,6 +202,7 @@ public final class Overlord {
         AugmentRegistry.registerAugment(new ItemStack(Blocks.ANVIL), new AugmentAnvil());
         AugmentRegistry.registerAugment(new ItemStack(Items.SKULL, 1, 1), new AugmentWither());
         AugmentRegistry.registerAugment(new ItemStack(Items.SUGAR), new AugmentJitters());
+        AugmentRegistry.registerAugment(CraftingRecipes.skinsuit_mummy, new AugmentMummy());
 
         MilkRegistry.getInstance().registerMilk(new ItemStack(Items.MILK_BUCKET), new ItemStack(Items.BUCKET));
         MilkRegistry.getInstance().registerMilk(new ItemStack(milk_bottle), new ItemStack(Items.GLASS_BOTTLE));
