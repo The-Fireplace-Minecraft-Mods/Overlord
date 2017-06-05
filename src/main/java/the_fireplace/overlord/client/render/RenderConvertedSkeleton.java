@@ -28,7 +28,7 @@ public class RenderConvertedSkeleton extends RenderBiped<EntityConvertedSkeleton
     public RenderConvertedSkeleton(RenderManager renderManagerIn)
     {
         super(renderManagerIn, new ModelConvertedSkeleton(), 0.5F);
-        this.addLayer(new LayerConvertedSkinsuit(this));
+        this.addLayer(new LayerSkinsuit(this, new ModelConvertedSkeleton(0.0F, true, true, 2)));
         this.addLayer(new LayerBipedArmor(this)
         {
             @Override

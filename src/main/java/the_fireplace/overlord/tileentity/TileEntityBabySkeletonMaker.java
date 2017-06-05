@@ -22,6 +22,7 @@ import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.EntityBabySkeleton;
 import the_fireplace.overlord.items.ItemOverlordsSeal;
 import the_fireplace.overlord.registry.MilkRegistry;
+import the_fireplace.overlord.tools.SkinType;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -58,7 +59,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 
         world.spawnEntity(babySkeleton);
         if(!getStackInSlot(9).isEmpty())
-            babySkeleton.applySkinsuit(getStackInSlot(9));
+            babySkeleton.setSkinsuit(getStackInSlot(9), SkinType.getSkinTypeFromStack(getStackInSlot(9)));
         for(int i:clearslots){
             setInventorySlotContents(i, ItemStack.EMPTY);
         }

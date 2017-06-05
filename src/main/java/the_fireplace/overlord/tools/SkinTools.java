@@ -25,9 +25,9 @@ import java.util.HashMap;
 public final class SkinTools {
     public static final File cachedir = new File(Minecraft.getMinecraft().mcDataDir, "cachedImages/skins/");
     public static final ResourceLocation STEVE = new ResourceLocation("textures/entity/steve.png");
-    public static HashMap<String, BufferedImage> skins = Maps.newHashMap();
-    public static HashMap<BufferedImage, DynamicTexture> skintextures = Maps.newHashMap();
-    public static ArrayList<File> nonexistants = Lists.newArrayList();
+    public static final HashMap<String, BufferedImage> skins = Maps.newHashMap();
+    public static final HashMap<BufferedImage, DynamicTexture> skintextures = Maps.newHashMap();
+    public static final ArrayList<File> nonexistants = Lists.newArrayList();
     public static boolean cacheSkin(String username) {
         Overlord.logTrace("Attempting to cache skin for "+username);
         try{

@@ -44,6 +44,8 @@ import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.RequestAugmentMessage;
 import the_fireplace.overlord.registry.AugmentRegistry;
 import the_fireplace.overlord.tools.Augment;
+import the_fireplace.overlord.tools.SkinType;
+import the_fireplace.overlord.tools.ISkinsuitWearer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,13 +55,13 @@ import java.util.UUID;
 /**
  * @author The_Fireplace
  */
-public class EntitySkeletonWarrior extends EntityArmyMember {
+public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuitWearer {
 
     private static final DataParameter<Integer> SKELETON_POWER_LEVEL = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> TOTAL_MILK_LEVEL = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> XP = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.VARINT);
     private static final DataParameter<String> SKINSUIT_NAME = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.STRING);
-    private static final DataParameter<Boolean> HAS_SKINSUIT = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Byte> SKINSUIT_TYPE = EntityDataManager.createKey(EntitySkeletonWarrior.class, DataSerializers.BYTE);
     private EntityAIArmyBow aiArrowAttack = null;
 
     public final InventoryBasic inventory;
@@ -198,22 +200,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                     if (!world.isRemote){
                         ItemStack stack = player.getHeldItem(hand);
                         if (!stack.isEmpty()) {
-                            if (stack.getItem() == Overlord.skinsuit && !this.hasSkinsuit()) {
-                                applySkinsuit(stack);
-                                if (!player.isCreative())
-                                    stack.shrink(1);
-                            } else if (stack.getItem() == Items.SHEARS && this.hasSkinsuit()) {
-                                if (!player.isCreative()) {
-                                    stack.damageItem(1, player);
-                                    entityDropItem(new ItemStack(Overlord.skinsuit).setStackDisplayName(getSkinsuitName()), 0.1F);
-                                }
-                                if (ConfigValues.SKINSUITNAMETAGS && this.hasCustomName()) {
-                                    if (this.getCustomNameTag().equals(getSkinsuitName()))
-                                        this.setCustomNameTag("");
-                                }
-                                this.dataManager.set(HAS_SKINSUIT, Boolean.valueOf(false));
-                                this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
-                            } else if (stack.getItem() == Overlord.warrior_spawner) {
+                            if (stack.getItem() == Overlord.warrior_spawner) {
                                 NBTTagCompound compound = new NBTTagCompound();
                                 this.writeEntityToNBT(compound);
                                 stack.setTagCompound(compound);
@@ -226,23 +213,13 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
         return super.processInteract(player, hand);
     }
 
-    public void applySkinsuit(@Nonnull ItemStack stack){
-        this.dataManager.set(HAS_SKINSUIT, Boolean.valueOf(true));
-        if(stack.hasDisplayName()) {
-            this.dataManager.set(SKINSUIT_NAME, String.valueOf(stack.getDisplayName()));
-            if(ConfigValues.SKINSUITNAMETAGS && !this.hasCustomName())
-                setCustomNameTag(stack.getDisplayName());
-        }else
-            this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
-    }
-
     @Override
     protected void entityInit()
     {
         super.entityInit();
         this.dataManager.register(SKELETON_POWER_LEVEL, Integer.valueOf(1));
         this.dataManager.register(TOTAL_MILK_LEVEL, Integer.valueOf(0));
-        this.dataManager.register(HAS_SKINSUIT, Boolean.valueOf(false));
+        this.dataManager.register(SKINSUIT_TYPE, Byte.valueOf((byte) SkinType.NONE.ordinal()));
         this.dataManager.register(SKINSUIT_NAME, String.valueOf(""));
         this.dataManager.register(XP, Integer.valueOf(0));
     }
@@ -301,29 +278,28 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                 float f = this.getBrightness(1.0F);
                 BlockPos blockpos = this.getRidingEntity() instanceof EntityBoat ? (new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ)).up() : new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ);
 
-                if(!hasSkinsuit())
-                if (f > 0.5F && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.world.canSeeSky(blockpos)) {
-                    boolean flag = true;
-                    ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+                if(!getSkinType().protectsFromSun())
+                    if (f > 0.5F && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.world.canSeeSky(blockpos)) {
+                        boolean flag = true;
+                        ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
-                    if (!itemstack.isEmpty()) {
-                        if(ConfigValues.HELMETDAMAGE)
-                            if (itemstack.isItemStackDamageable()) {
-                                itemstack.setItemDamage(itemstack.getItemDamage() + this.rand.nextInt(2));
+                        if (!itemstack.isEmpty()) {
+                            if(ConfigValues.HELMETDAMAGE)
+                                if (itemstack.isItemStackDamageable()) {
+                                    itemstack.setItemDamage(itemstack.getItemDamage() + this.rand.nextInt(2));
 
-                                if (itemstack.getItemDamage() >= itemstack.getMaxDamage()) {
-                                    this.renderBrokenItemStack(itemstack);
-                                    this.setItemStackToSlot(EntityEquipmentSlot.HEAD, ItemStack.EMPTY);
+                                    if (itemstack.getItemDamage() >= itemstack.getMaxDamage()) {
+                                        this.renderBrokenItemStack(itemstack);
+                                        this.setItemStackToSlot(EntityEquipmentSlot.HEAD, ItemStack.EMPTY);
+                                    }
                                 }
-                            }
 
-                        flag = false;
-                    }
+                            flag = false;
+                        }
 
-                    if (flag) {
-                        this.setFire(6);
+                        if (flag)
+                            this.setFire(6);
                     }
-                }
             }
 
             this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D)).stream().filter(entityitem -> !entityitem.isDead && !entityitem.getEntityItem().isEmpty() && !entityitem.cannotPickup()).forEach(entityitem -> {
@@ -348,9 +324,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
 
             for(EntityXPOrb xp:world.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox().expand(8, 5, 8))){
                 if (!xp.hasNoGravity())
-                {
                     xp.motionY -= 0.029999999329447746D;
-                }
 
                 if (xp.world.getBlockState(new BlockPos(this)).getMaterial() == Material.LAVA)
                 {
@@ -379,18 +353,14 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                 float f = 0.98F;
 
                 if (this.onGround)
-                {
                     f = xp.world.getBlockState(new BlockPos(MathHelper.floor(xp.posX), MathHelper.floor(xp.getEntityBoundingBox().minY) - 1, MathHelper.floor(xp.posZ))).getBlock().slipperiness * 0.98F;
-                }
 
                 xp.motionX *= (double)f;
                 xp.motionY *= 0.9800000190734863D;
                 xp.motionZ *= (double)f;
 
                 if (xp.onGround)
-                {
                     xp.motionY *= -0.8999999761581421D;
-                }
             }
             world.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox()).stream().filter(xp -> xp.delayBeforeCanPickup <= 0).forEach(xp -> {
                 ItemStack itemstack = EnchantmentHelper.getEnchantedItem(Enchantments.MENDING, this);
@@ -443,7 +413,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                         }
                 }
             }
-            if(hasSkinsuit()){
+            if(getSkinType().equals(SkinType.PLAYER)){
                 if(getOwner() != null){
                     if(getOwner() instanceof EntityPlayerMP)
                         if(((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.sally)) {
@@ -470,10 +440,8 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
 
         float f = this.getBrightness(1.0F);
 
-        if (f > 0.5F && !this.hasSkinsuit())
-        {
+        if (f > 0.5F && !getSkinType().protectsFromSun())
             this.entityAge += 1;
-        }
         super.onLivingUpdate();
     }
 
@@ -546,14 +514,6 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
                     world.spawnEntity(entityitem);
                 }
             }
-            if(hasSkinsuit()){
-                ItemStack stack = new ItemStack(Overlord.skinsuit);
-                if(!getSkinsuitName().isEmpty())
-                    stack.setStackDisplayName(getSkinsuitName());
-                EntityItem entityitem = new EntityItem(world, posX, posY, posZ, stack);
-                entityitem.setDefaultPickupDelay();
-                world.spawnEntity(entityitem);
-            }
         }
     }
 
@@ -593,7 +553,11 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
         }
         if(compound.hasKey("HasSkinsuit")){
             boolean b = compound.getBoolean("HasSkinsuit");
-            this.dataManager.set(HAS_SKINSUIT, b);
+            this.dataManager.set(SKINSUIT_TYPE, Byte.valueOf((byte)(b ? 1 : 0)));
+        }
+        if(compound.hasKey("SkinsuitType")){
+            byte b = compound.getByte("SkinsuitType");
+            this.dataManager.set(SKINSUIT_TYPE, Byte.valueOf(b));
         }
         NBTTagList mainInv = (NBTTagList) compound.getTag("SkeletonInventory");
         if (mainInv != null) {
@@ -628,7 +592,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
         compound.setInteger("SkeletonPowerLevel", this.dataManager.get(SKELETON_POWER_LEVEL));
         updateEntityAttributes();
         compound.setInteger("TotalMilkLevel", this.dataManager.get(TOTAL_MILK_LEVEL));
-        compound.setBoolean("HasSkinsuit", this.dataManager.get(HAS_SKINSUIT));
+        compound.setByte("SkinsuitType", this.dataManager.get(SKINSUIT_TYPE));
         compound.setString("SkinsuitName", this.dataManager.get(SKINSUIT_NAME));
         compound.setInteger("XP", this.dataManager.get(XP));
 
@@ -852,18 +816,10 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
         return dataManager.get(SKELETON_POWER_LEVEL);
     }
 
-    public boolean hasSkinsuit(){
-        return this.dataManager.get(HAS_SKINSUIT);
-    }
-
-    public String getSkinsuitName(){
-        return this.dataManager.get(SKINSUIT_NAME);
-    }
-
     @Override
     public float getBlockPathWeight(BlockPos pos)
     {
-        if(!this.hasSkinsuit())
+        if(!this.getSkinType().protectsFromSun())
             return 0.5F - this.world.getLightBrightness(pos);
         else
             return super.getBlockPathWeight(pos);
@@ -871,6 +827,40 @@ public class EntitySkeletonWarrior extends EntityArmyMember {
 
     @Override
     public boolean shouldMobAttack(@Nonnull EntityLiving mob) {
-        return this.hasSkinsuit() && (getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty() || getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() != Items.SKULL || getItemStackFromSlot(EntityEquipmentSlot.HEAD).getMetadata() == 3);
+        return this.getSkinType().equals(SkinType.PLAYER) && (getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty() || getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() != Items.SKULL || getItemStackFromSlot(EntityEquipmentSlot.HEAD).getMetadata() == 3);
+    }
+
+    @Override
+    @Nonnull
+    public SkinType getSkinType() {
+        return SkinType.get(this.dataManager.get(SKINSUIT_TYPE));
+    }
+
+    @Override
+    @Nonnull
+    public String getSkinName() {
+        return this.dataManager.get(SKINSUIT_NAME);
+    }
+
+    @SuppressWarnings("UnnecessaryBoxing")
+    @Override
+    public void setSkinsuit(@Nonnull ItemStack stack, @Nonnull SkinType type) {
+        if(type.isNone()){
+            ItemStack dropStack = getSkinType().equals(SkinType.PLAYER) ? new ItemStack(Overlord.skinsuit) : new ItemStack(Overlord.skinsuit_mummy);
+            if (ConfigValues.SKINSUITNAMETAGS && this.hasCustomName())
+                if (this.getCustomNameTag().equals(getSkinName())) {
+                    dropStack.setStackDisplayName(getSkinName());
+                    this.setCustomNameTag("");
+                }
+            entityDropItem(dropStack, 0.1F);
+        }
+
+        this.dataManager.set(SKINSUIT_TYPE, Byte.valueOf((byte)type.ordinal()));
+        if(stack.hasDisplayName() && !type.isNone()) {
+            this.dataManager.set(SKINSUIT_NAME, String.valueOf(stack.getDisplayName()));
+            if(ConfigValues.SKINSUITNAMETAGS && !this.hasCustomName())
+                setCustomNameTag(stack.getDisplayName());
+        }else
+            this.dataManager.set(SKINSUIT_NAME, String.valueOf(""));
     }
 }

@@ -6,6 +6,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIFindEntityNearestPlayer;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAITasks;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.passive.EntityCow;
@@ -34,6 +35,8 @@ import the_fireplace.overlord.entity.ai.EntityAIFindEntityNearestSkins;
 import the_fireplace.overlord.entity.ai.EntityAITargetSkins;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.SetSquadsMessage;
+import the_fireplace.overlord.tools.SkinType;
+import the_fireplace.overlord.tools.ISkinsuitWearer;
 import the_fireplace.overlord.tools.Squads;
 
 import java.util.Random;
@@ -95,6 +98,15 @@ public final class CommonEvents {
                     }
                     event.getEntityPlayer().playSound(SoundEvents.ENTITY_COW_MILK, 1.0F, 1.0F+event.getWorld().rand.nextFloat());
                 }
+        }
+
+        if(event.getTarget() instanceof ISkinsuitWearer && event.getItemStack().getItem() == Items.SHEARS){
+            ISkinsuitWearer skin = (ISkinsuitWearer)event.getTarget();
+            if(!skin.getSkinType().isNone()){
+                skin.setSkinsuit(ItemStack.EMPTY, SkinType.NONE);
+                if(!event.getEntityPlayer().isCreative())
+                    event.getItemStack().damageItem(1, event.getEntityPlayer());
+            }
         }
     }
     @SubscribeEvent
@@ -188,6 +200,25 @@ public final class CommonEvents {
                                 wolfOwner.addStat(Overlord.wardog);
                             }
                     }
+                }
+            }
+            if(event.getEntity() instanceof ISkinsuitWearer){
+                ISkinsuitWearer skin = (ISkinsuitWearer)event.getEntity();
+                if(skin.getSkinType().equals(SkinType.PLAYER)){
+                    ItemStack stack = new ItemStack(Overlord.skinsuit);
+                    if(!skin.getSkinName().isEmpty())
+                        stack.setStackDisplayName(skin.getSkinName());
+                    EntityItem entityitem = new EntityItem(event.getEntity().getEntityWorld(), event.getEntity().posX, event.getEntity().posY, event.getEntity().posZ, stack);
+                    entityitem.setDefaultPickupDelay();
+                    event.getEntity().getEntityWorld().spawnEntity(entityitem);
+                }
+                if(skin.getSkinType().equals(SkinType.MUMMY)){
+                    ItemStack stack = new ItemStack(Overlord.skinsuit_mummy);
+                    if(!skin.getSkinName().isEmpty())
+                        stack.setStackDisplayName(skin.getSkinName());
+                    EntityItem entityitem = new EntityItem(event.getEntity().getEntityWorld(), event.getEntity().posX, event.getEntity().posY, event.getEntity().posZ, stack);
+                    entityitem.setDefaultPickupDelay();
+                    event.getEntity().getEntityWorld().spawnEntity(entityitem);
                 }
             }
         }

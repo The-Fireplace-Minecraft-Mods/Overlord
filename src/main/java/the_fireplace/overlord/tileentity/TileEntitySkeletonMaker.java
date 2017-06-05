@@ -29,6 +29,7 @@ import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.SetMilkMessage;
 import the_fireplace.overlord.registry.AugmentRegistry;
 import the_fireplace.overlord.registry.MilkRegistry;
+import the_fireplace.overlord.tools.SkinType;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -39,7 +40,6 @@ import java.util.UUID;
 @MethodsReturnNonnullByDefault
 public class TileEntitySkeletonMaker extends TileEntity implements ITickable, ISidedInventory, ISkeletonMaker {
     private ItemStack[] inventory;
-    public static final String PROP_NAME = "TileEntitySkeletonMaker";
     byte milk = 0;
     public static final int[] clearslots = new int[]{6,7,8,9,10,11,12};
 
@@ -101,7 +101,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 
         world.spawnEntity(skeletonWarrior);
         if(!getStackInSlot(12).isEmpty())
-            skeletonWarrior.applySkinsuit(getStackInSlot(12));
+            skeletonWarrior.setSkinsuit(getStackInSlot(12), SkinType.getSkinTypeFromStack(getStackInSlot(12)));
         setMilk((byte)0);
         for(int i:clearslots){
             setInventorySlotContents(i, ItemStack.EMPTY);

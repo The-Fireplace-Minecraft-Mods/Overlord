@@ -42,7 +42,7 @@ public class Squads implements Serializable {
             instance.setPlayerSquadNames(Minecraft.getMinecraft().player.getUniqueID(), squadNames);
             Overlord.logInfo("Passed player was null, setting client player squad names to "+squadNames);
         }else{
-            Overlord.logError("Unable to set client squads.");
+            Overlord.logError("Unable to set client squads due to null client player.");//TODO: Find out why this ever gets reached
         }
     }
 

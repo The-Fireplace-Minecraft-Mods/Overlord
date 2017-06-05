@@ -27,7 +27,7 @@ public class RenderBabySkeleton extends RenderLiving<EntityBabySkeleton>
         this.addLayer(new LayerCustomHead(modelBipedIn.bipedHead));
         this.addLayer(new LayerElytra(this));
         this.addLayer(new LayerBabyHeldItem(this));
-        this.addLayer(new LayerBabySkinsuit(this));
+        this.addLayer(new LayerSkinsuit(this, new ModelBabySkeleton(0.0F, true, true, 2)));
         this.addLayer(new LayerBipedArmor(this)
         {
             @Override
