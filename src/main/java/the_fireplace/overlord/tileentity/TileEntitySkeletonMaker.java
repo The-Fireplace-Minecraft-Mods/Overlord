@@ -25,8 +25,6 @@ import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.items.ItemOverlordsSeal;
-import the_fireplace.overlord.network.PacketDispatcher;
-import the_fireplace.overlord.network.packets.SetMilkMessage;
 import the_fireplace.overlord.registry.AugmentRegistry;
 import the_fireplace.overlord.registry.MilkRegistry;
 import the_fireplace.overlord.tools.SkinType;
@@ -250,17 +248,34 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
     }
 
     @Override
-    public int getField(int id) {
-        return 0;
+    public int getField(int id)
+    {
+        switch (id)
+        {
+            case 0:
+                return this.milk;
+            default:
+                return 0;
+        }
     }
 
     @Override
-    public void setField(int id, int value) {
+    public void setField(int id, int value)
+    {
+        switch (id)
+        {
+            case 0:
+                this.milk = (byte)value;
+                break;
+            default:
+
+        }
     }
 
     @Override
-    public int getFieldCount() {
-        return 0;
+    public int getFieldCount()
+    {
+        return 1;
     }
 
     @Override
@@ -366,9 +381,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
     public void setMilk(byte milk){
         this.milk = milk;
         markDirty();
-        if(!world.isRemote) {
-            PacketDispatcher.sendToAllAround(new SetMilkMessage(pos, milk), world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 16);
+        if(!world.isRemote)
             world.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
-        }
     }
 }

@@ -20,7 +20,6 @@ public final class PacketDispatcher {
 
     public static void registerPackets() {
         PacketDispatcher.registerMessage(CreateSkeletonMessage.Handler.class, CreateSkeletonMessage.class, Side.SERVER);
-        PacketDispatcher.registerMessage(SetMilkMessage.Handler.class, SetMilkMessage.class, Side.CLIENT);
         PacketDispatcher.registerMessage(DebugSkeletonMessage.Handler.class, DebugSkeletonMessage.class, Side.SERVER);
         PacketDispatcher.registerMessage(AttackModeMessage.Handler.class, AttackModeMessage.class, Side.SERVER);
         PacketDispatcher.registerMessage(MovementModeMessage.Handler.class, MovementModeMessage.class, Side.SERVER);

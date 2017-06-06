@@ -1,4 +1,6 @@
 Internal improvements
 Added the Mummy Skinsuit
+Added the Rallying Horn
 Changed the Iron augmented Skeleton texture
 Bug fixes
+Optimizations

@@ -2,10 +2,7 @@ package the_fireplace.overlord.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -19,6 +16,9 @@ import javax.annotation.Nonnull;
  */
 public class ContainerSkeletonMaker extends Container {
     private IInventory te;
+
+    private int milk;
+
     private static final EntityEquipmentSlot[] EQUIPMENT_SLOTS = new EntityEquipmentSlot[] {EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
 
     public ContainerSkeletonMaker(InventoryPlayer invPlayer, IInventory entity) {
@@ -83,6 +83,37 @@ public class ContainerSkeletonMaker extends Container {
         });//tile entity ID 11
 
         this.addSlotToContainer(new SlotSkinsuit(entity, 12, 6, 6));//tile entity ID 12
+    }
+
+    @Override
+    public void addListener(IContainerListener listener)
+    {
+        super.addListener(listener);
+        listener.sendAllWindowProperties(this, te);
+    }
+
+    @Override
+    public void detectAndSendChanges()
+    {
+        super.detectAndSendChanges();
+
+        for (int i = 0; i < this.listeners.size(); ++i)
+        {
+            IContainerListener icontainerlistener = this.listeners.get(i);
+
+            if (this.milk != te.getField(0))
+            {
+                icontainerlistener.sendProgressBarUpdate(this, 0, te.getField(0));
+            }
+        }
+
+        this.milk = te.getField(0);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void updateProgressBar(int id, int data)
+    {
+        this.te.setField(id, data);
     }
 
     @Override
