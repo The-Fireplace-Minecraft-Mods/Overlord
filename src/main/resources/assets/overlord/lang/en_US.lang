@@ -33,8 +33,8 @@ entity.skeleton_baby.name=Baby Skeleton
 entity.skeleton_converted.name=Converted Skeleton
 entity.skeleton_curing.name=Skeleton
 
-tooltip.placeclone=Shift+Right Click another skeleton to replace your current copy.
-tooltip.copyclone=Shift+Right Click a skeleton to copy it.
+tooltip.placeclone=Sneak+Right Click another skeleton to replace your current copy.
+tooltip.copyclone=Sneak+Right Click a skeleton to copy it.
 
 tooltip.skin=Skinsuit:
 tooltip.level=Level:
@@ -237,6 +237,6 @@ overlord.guide.6.1.1=The Overlord's Seal allows you to claim your skeletons. In 
 overlord.guide.6.2=Overlord's Crown
 overlord.guide.6.2.1=The Overlord's Crown allows you to see what augments your army members have equipped without having to open their GUIs one by one. When equipped, you see their augment items hovering over their heads.
 overlord.guide.6.3=Keychain
-overlord.guide.6.3.1=The keychain allows you to transport your army members. To attach an army member to a keychain, Sneak+Right Click the skeleton with the empty keychain. To place your skeleton, right click the block to place it on.
+overlord.guide.6.3.1=The Keychain allows you to transport your army members. To attach an army member to a keychain, Sneak+Right Click the skeleton with the empty keychain. To place your skeleton, right click the block to place it on.
 overlord.guide.6.4=Rallying Horn
 overlord.guide.6.4.1=The Rallying Horn allows you to summon all of your loaded army members.
