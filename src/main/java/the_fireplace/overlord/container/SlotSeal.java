@@ -9,16 +9,16 @@ import the_fireplace.overlord.items.ItemOverlordsSeal;
  * @author The_Fireplace
  */
 public class SlotSeal extends Slot {
-    IInventory inv;
+	IInventory inv;
 
-    public SlotSeal(IInventory inventoryIn, int index, int xPosition,
-                    int yPosition) {
-        super(inventoryIn, index, xPosition, yPosition);
-        inv = inventoryIn;
-    }
+	public SlotSeal(IInventory inventoryIn, int index, int xPosition,
+	                int yPosition) {
+		super(inventoryIn, index, xPosition, yPosition);
+		inv = inventoryIn;
+	}
 
-    @Override
-    public boolean isItemValid(ItemStack stack) {
-        return stack.getItem() instanceof ItemOverlordsSeal;
-    }
+	@Override
+	public boolean isItemValid(ItemStack stack) {
+		return stack.getItem() instanceof ItemOverlordsSeal;
+	}
 }

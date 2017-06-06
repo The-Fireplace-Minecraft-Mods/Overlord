@@ -19,49 +19,50 @@ import java.util.ArrayList;
  * @author The_Fireplace
  */
 public class CommandEnemyList extends CommandBase {
-    private static final Style blue = new Style().setColor(TextFormatting.BLUE);
-    private static final Style purple = new Style().setColor(TextFormatting.LIGHT_PURPLE);
-    private static final Style red = new Style().setColor(TextFormatting.RED);
-    @Nonnull
-    @Override
-    public String getName() {
-        return "enemylist";
-    }
+	private static final Style blue = new Style().setColor(TextFormatting.BLUE);
+	private static final Style purple = new Style().setColor(TextFormatting.LIGHT_PURPLE);
+	private static final Style red = new Style().setColor(TextFormatting.RED);
 
-    @Override
-    public int getRequiredPermissionLevel() {
-        return 0;
-    }
+	@Nonnull
+	@Override
+	public String getName() {
+		return "enemylist";
+	}
 
-    @Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
-        return sender instanceof EntityPlayer;
-    }
+	@Override
+	public int getRequiredPermissionLevel() {
+		return 0;
+	}
 
-    @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException {
-        if (sender instanceof EntityPlayer) {
-            if(!Enemies.getInstance().getAllEnemies(((EntityPlayer) sender).getUniqueID()).isEmpty()) {
-                sender.sendMessage(new TextComponentTranslation("overlord.enemylist"));
-                ArrayList<StringPair> myenemies = Enemies.getInstance().getMyEnemies(((EntityPlayer) sender).getUniqueID());
-                ArrayList<StringPair> enemiedme = Enemies.getInstance().getWhoEnemied(((EntityPlayer) sender).getUniqueID());
-                for(StringPair enemy:Enemies.getInstance().getAllEnemies(((EntityPlayer) sender).getUniqueID())){
-                    if(myenemies.contains(enemy) && !enemiedme.contains(enemy))
-                        sender.sendMessage(new TextComponentString(enemy.getPlayerName()).setStyle(blue));
-                    else if(myenemies.contains(enemy) && enemiedme.contains(enemy))
-                        sender.sendMessage(new TextComponentString(enemy.getPlayerName()).setStyle(purple));
-                    else
-                        sender.sendMessage(new TextComponentString(enemy.getPlayerName()).setStyle(red));
-                }
-            }else{
-                sender.sendMessage(new TextComponentTranslation("overlord.noenemies"));
-            }
-        }
-    }
+	@Override
+	public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+		return sender instanceof EntityPlayer;
+	}
 
-    @Nonnull
-    @Override
-    public String getUsage(@Nonnull ICommandSender icommandsender) {
-        return "/enemylist";
-    }
+	@Override
+	public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException {
+		if (sender instanceof EntityPlayer) {
+			if (!Enemies.getInstance().getAllEnemies(((EntityPlayer) sender).getUniqueID()).isEmpty()) {
+				sender.sendMessage(new TextComponentTranslation("overlord.enemylist"));
+				ArrayList<StringPair> myenemies = Enemies.getInstance().getMyEnemies(((EntityPlayer) sender).getUniqueID());
+				ArrayList<StringPair> enemiedme = Enemies.getInstance().getWhoEnemied(((EntityPlayer) sender).getUniqueID());
+				for (StringPair enemy : Enemies.getInstance().getAllEnemies(((EntityPlayer) sender).getUniqueID())) {
+					if (myenemies.contains(enemy) && !enemiedme.contains(enemy))
+						sender.sendMessage(new TextComponentString(enemy.getPlayerName()).setStyle(blue));
+					else if (myenemies.contains(enemy) && enemiedme.contains(enemy))
+						sender.sendMessage(new TextComponentString(enemy.getPlayerName()).setStyle(purple));
+					else
+						sender.sendMessage(new TextComponentString(enemy.getPlayerName()).setStyle(red));
+				}
+			} else {
+				sender.sendMessage(new TextComponentTranslation("overlord.noenemies"));
+			}
+		}
+	}
+
+	@Nonnull
+	@Override
+	public String getUsage(@Nonnull ICommandSender icommandsender) {
+		return "/enemylist";
+	}
 }

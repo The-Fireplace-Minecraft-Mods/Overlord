@@ -18,29 +18,29 @@ import javax.annotation.Nonnull;
  * @author The_Fireplace
  */
 public class ItemMilkBottle extends Item {
-    public ItemMilkBottle() {
-        setCreativeTab(Overlord.tabOverlord);
-        setUnlocalizedName("milk_bottle");
-    }
+	public ItemMilkBottle() {
+		setCreativeTab(Overlord.tabOverlord);
+		setUnlocalizedName("milk_bottle");
+	}
 
-    /**
-     * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
-     */
-    @Override
-    @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand hand) {
-        if (!playerIn.capabilities.isCreativeMode) {
-            playerIn.getHeldItem(hand).shrink(1);
-        }
+	/**
+	 * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
+	 */
+	@Override
+	@Nonnull
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand hand) {
+		if (!playerIn.capabilities.isCreativeMode) {
+			playerIn.getHeldItem(hand).shrink(1);
+		}
 
-        worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+		worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
-        if (!worldIn.isRemote) {
-            EntityMilkBottle bottle = new EntityMilkBottle(worldIn, playerIn);
-            bottle.setHeadingFromThrower(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
-            worldIn.spawnEntity(bottle);
-        }
+		if (!worldIn.isRemote) {
+			EntityMilkBottle bottle = new EntityMilkBottle(worldIn, playerIn);
+			bottle.setHeadingFromThrower(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
+			worldIn.spawnEntity(bottle);
+		}
 
-        return new ActionResult(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
-    }
+		return new ActionResult(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
+	}
 }

@@ -14,34 +14,34 @@ import java.util.ArrayList;
  */
 public class UpdateSquadsMessage implements IMessage {
 
-    public ArrayList<String> names;
+	public ArrayList<String> names;
 
-    public UpdateSquadsMessage() {
-    }
+	public UpdateSquadsMessage() {
+	}
 
-    public UpdateSquadsMessage(ArrayList<String> names){
-        this.names=names;
-    }
+	public UpdateSquadsMessage(ArrayList<String> names) {
+		this.names = names;
+	}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        names = new ArrayList();
-        while(buf.isReadable())
-            names.add(ByteBufUtils.readUTF8String(buf));
-    }
+	@SuppressWarnings("unchecked")
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		names = new ArrayList();
+		while (buf.isReadable())
+			names.add(ByteBufUtils.readUTF8String(buf));
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        for(String name:names)
-            ByteBufUtils.writeUTF8String(buf, name);
-    }
+	@Override
+	public void toBytes(ByteBuf buf) {
+		for (String name : names)
+			ByteBufUtils.writeUTF8String(buf, name);
+	}
 
-    public static class Handler extends AbstractServerMessageHandler<UpdateSquadsMessage> {
-        @Override
-        public IMessage handleServerMessage(EntityPlayer player, UpdateSquadsMessage message, MessageContext ctx) {
-            Squads.getInstance().setPlayerSquadNames(player.getUniqueID(), message.names);
-            return new UpdateClientSquadsMessage(message.names);
-        }
-    }
+	public static class Handler extends AbstractServerMessageHandler<UpdateSquadsMessage> {
+		@Override
+		public IMessage handleServerMessage(EntityPlayer player, UpdateSquadsMessage message, MessageContext ctx) {
+			Squads.getInstance().setPlayerSquadNames(player.getUniqueID(), message.names);
+			return new UpdateClientSquadsMessage(message.names);
+		}
+	}
 }

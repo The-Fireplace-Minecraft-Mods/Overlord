@@ -9,22 +9,21 @@ import the_fireplace.overlord.registry.AugmentRegistry;
  * @author The_Fireplace
  */
 public class SlotAugment extends Slot {
-    IInventory inv;
+	IInventory inv;
 
-    public SlotAugment(IInventory inventoryIn, int index, int xPosition,
-                       int yPosition) {
-        super(inventoryIn, index, xPosition, yPosition);
-        inv = inventoryIn;
-    }
+	public SlotAugment(IInventory inventoryIn, int index, int xPosition,
+	                   int yPosition) {
+		super(inventoryIn, index, xPosition, yPosition);
+		inv = inventoryIn;
+	}
 
-    @Override
-    public boolean isItemValid(ItemStack stack) {
-        return AugmentRegistry.getAugment(stack) != null;
-    }
+	@Override
+	public boolean isItemValid(ItemStack stack) {
+		return AugmentRegistry.getAugment(stack) != null;
+	}
 
-    @Override
-    public int getSlotStackLimit()
-    {
-        return 1;
-    }
+	@Override
+	public int getSlotStackLimit() {
+		return 1;
+	}
 }

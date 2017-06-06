@@ -21,111 +21,106 @@ import javax.annotation.Nonnull;
  * @author The_Fireplace
  */
 public class ContainerSkeleton extends Container {
-    private EntitySkeletonWarrior entity;
-    private static final EntityEquipmentSlot[] EQUIPMENT_SLOTS = new EntityEquipmentSlot[] {EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
+	private EntitySkeletonWarrior entity;
+	private static final EntityEquipmentSlot[] EQUIPMENT_SLOTS = new EntityEquipmentSlot[]{EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
 
-    public ContainerSkeleton(InventoryPlayer invPlayer, EntitySkeletonWarrior entity){
-        this.entity=entity;
-        InventoryBasic entityInv = entity.inventory;
-        InventoryBasic armorInv = entity.equipInventory;
-        for (int x = 0; x < 9; x++) {
-            this.addSlotToContainer(new Slot(invPlayer, x, 8 + x * 18, 142));//player inventory IDs 0 to 8
-        }
+	public ContainerSkeleton(InventoryPlayer invPlayer, EntitySkeletonWarrior entity) {
+		this.entity = entity;
+		InventoryBasic entityInv = entity.inventory;
+		InventoryBasic armorInv = entity.equipInventory;
+		for (int x = 0; x < 9; x++) {
+			this.addSlotToContainer(new Slot(invPlayer, x, 8 + x * 18, 142));//player inventory IDs 0 to 8
+		}
 
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 9; x++) {
-                this.addSlotToContainer(new Slot(invPlayer, 9 + x + y * 9, 8 + x * 18, 84 + y * 18));//player inventory IDs 9 to 35
-            }
-        }
+		for (int y = 0; y < 3; y++) {
+			for (int x = 0; x < 9; x++) {
+				this.addSlotToContainer(new Slot(invPlayer, 9 + x + y * 9, 8 + x * 18, 84 + y * 18));//player inventory IDs 9 to 35
+			}
+		}
 
-        for (int x = 0; x < 4; ++x)
-        {
-            final EntityEquipmentSlot entityequipmentslot = EQUIPMENT_SLOTS[x];
-            this.addSlotToContainer(new Slot(armorInv, (3 - x), 8, 8 + x * 18)//Entity Equipment IDs 0 to 3
-            {
-                @Override
-                public int getSlotStackLimit()
-                {
-                    return 1;
-                }
+		for (int x = 0; x < 4; ++x) {
+			final EntityEquipmentSlot entityequipmentslot = EQUIPMENT_SLOTS[x];
+			this.addSlotToContainer(new Slot(armorInv, (3 - x), 8, 8 + x * 18)//Entity Equipment IDs 0 to 3
+			{
+				@Override
+				public int getSlotStackLimit() {
+					return 1;
+				}
 
-                @Override
-                public boolean isItemValid(ItemStack stack)
-                {
-                    return stack != null && stack.getItem().isValidArmor(stack, entityequipmentslot, null);
-                }
-                @Override
-                @SideOnly(Side.CLIENT)
-                public String getSlotTexture()
-                {
-                    return ItemArmor.EMPTY_SLOT_NAMES[entityequipmentslot.getIndex()];
-                }
-            });
-        }
+				@Override
+				public boolean isItemValid(ItemStack stack) {
+					return stack != null && stack.getItem().isValidArmor(stack, entityequipmentslot, null);
+				}
 
-        this.addSlotToContainer(new Slot(armorInv, 4, 28, 44));//Entity Equipment ID 4
+				@Override
+				@SideOnly(Side.CLIENT)
+				public String getSlotTexture() {
+					return ItemArmor.EMPTY_SLOT_NAMES[entityequipmentslot.getIndex()];
+				}
+			});
+		}
 
-        this.addSlotToContainer(new Slot(armorInv, 5, 28, 62){//Entity Equipment ID 5
-            @Override
-            @SideOnly(Side.CLIENT)
-            public String getSlotTexture()
-            {
-                return "minecraft:items/empty_armor_slot_shield";
-            }
-        });
+		this.addSlotToContainer(new Slot(armorInv, 4, 28, 44));//Entity Equipment ID 4
 
-        this.addSlotToContainer(new SlotAugment(armorInv, 6, 152, 5){
-            @Override
-            public int getSlotStackLimit()
-            {
-                return 1;
-            }
-        });//Entity Equipment ID 6
+		this.addSlotToContainer(new Slot(armorInv, 5, 28, 62) {//Entity Equipment ID 5
+			@Override
+			@SideOnly(Side.CLIENT)
+			public String getSlotTexture() {
+				return "minecraft:items/empty_armor_slot_shield";
+			}
+		});
 
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 3; x++) {
-                this.addSlotToContainer(new Slot(entityInv, x + y * 3, 116 + x * 18, 25 + y * 18));//Entity Inventory 0 to 8
-            }
-        }
-    }
+		this.addSlotToContainer(new SlotAugment(armorInv, 6, 152, 5) {
+			@Override
+			public int getSlotStackLimit() {
+				return 1;
+			}
+		});//Entity Equipment ID 6
 
-    @Override
-    public boolean canInteractWith(@Nonnull EntityPlayer playerIn) {
-        return entity.getOwner() != null && entity.getOwner().equals(playerIn);
-    }
+		for (int y = 0; y < 3; y++) {
+			for (int x = 0; x < 3; x++) {
+				this.addSlotToContainer(new Slot(entityInv, x + y * 3, 116 + x * 18, 25 + y * 18));//Entity Inventory 0 to 8
+			}
+		}
+	}
 
-    @Override
-    @Nonnull
-    public ItemStack transferStackInSlot(EntityPlayer player, int i) {
-        Slot slot = getSlot(i);
-        if (slot != null && slot.getHasStack()) {
-            ItemStack is = slot.getStack();
-            ItemStack result = is.copy();
+	@Override
+	public boolean canInteractWith(@Nonnull EntityPlayer playerIn) {
+		return entity.getOwner() != null && entity.getOwner().equals(playerIn);
+	}
 
-            if (i >= 36) {
-                if (!mergeItemStack(is, 0, 36, false)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (AugmentRegistry.getAugment(is) != null && !mergeItemStack(is, 36+6, 36 + entity.inventory.getSizeInventory() + entity.equipInventory.getSizeInventory(), false)) {
-                return ItemStack.EMPTY;
-            } else if (!mergeItemStack(is, 36, 36 + entity.inventory.getSizeInventory() + entity.equipInventory.getSizeInventory(), false)) {
-                return ItemStack.EMPTY;
-            }
-            if (is.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
-            } else {
-                slot.onSlotChanged();
-            }
-            slot.onTake(player, is);
-            return result;
-        }
-        return ItemStack.EMPTY;
-    }
+	@Override
+	@Nonnull
+	public ItemStack transferStackInSlot(EntityPlayer player, int i) {
+		Slot slot = getSlot(i);
+		if (slot != null && slot.getHasStack()) {
+			ItemStack is = slot.getStack();
+			ItemStack result = is.copy();
 
-    @Override
-    public void onContainerClosed(EntityPlayer player){
-        super.onContainerClosed(player);
-        if(entity.world.isRemote)
-            PacketDispatcher.sendToServer(new RequestAugmentMessage(entity));
-    }
+			if (i >= 36) {
+				if (!mergeItemStack(is, 0, 36, false)) {
+					return ItemStack.EMPTY;
+				}
+			} else if (AugmentRegistry.getAugment(is) != null && !mergeItemStack(is, 36 + 6, 36 + entity.inventory.getSizeInventory() + entity.equipInventory.getSizeInventory(), false)) {
+				return ItemStack.EMPTY;
+			} else if (!mergeItemStack(is, 36, 36 + entity.inventory.getSizeInventory() + entity.equipInventory.getSizeInventory(), false)) {
+				return ItemStack.EMPTY;
+			}
+			if (is.isEmpty()) {
+				slot.putStack(ItemStack.EMPTY);
+			} else {
+				slot.onSlotChanged();
+			}
+			slot.onTake(player, is);
+			return result;
+		}
+		return ItemStack.EMPTY;
+	}
+
+	@Override
+	public void onContainerClosed(EntityPlayer player) {
+		super.onContainerClosed(player);
+		if (entity.world.isRemote)
+			PacketDispatcher.sendToServer(new RequestAugmentMessage(entity));
+	}
 }

@@ -16,12 +16,11 @@ import javax.annotation.Nonnull;
  * @author The_Fireplace
  */
 public class ItemSquadEditor extends Item {
-    @SuppressWarnings("unchecked")
-    @Override
-    @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand hand)
-    {
-        FMLNetworkHandler.openGui(playerIn, Overlord.instance, -2, worldIn, (int)playerIn.posX, (int)playerIn.posY, (int)playerIn.posZ);
-        return new ActionResult(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
-    }
+	@SuppressWarnings("unchecked")
+	@Override
+	@Nonnull
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand hand) {
+		FMLNetworkHandler.openGui(playerIn, Overlord.instance, -2, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
+		return new ActionResult(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
+	}
 }

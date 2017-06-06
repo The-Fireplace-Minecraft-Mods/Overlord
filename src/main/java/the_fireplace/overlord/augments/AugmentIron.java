@@ -12,20 +12,20 @@ import javax.annotation.Nonnull;
  * @author The_Fireplace
  */
 public class AugmentIron extends Augment {
-    @Nonnull
-    @Override
-    public String augmentId() {
-        return "iron";
-    }
+	@Nonnull
+	@Override
+	public String augmentId() {
+		return "iron";
+	}
 
-    @Override
-    public void onEntityTick(@Nonnull EntityArmyMember entity) {
-        if(entity.getActivePotionEffect(MobEffects.RESISTANCE) == null)
-            entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 120));
-    }
+	@Override
+	public void onEntityTick(@Nonnull EntityArmyMember entity) {
+		if (entity.getActivePotionEffect(MobEffects.RESISTANCE) == null)
+			entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 120));
+	}
 
-    @Override
-    public void onStrike(@Nonnull EntityArmyMember attacker, @Nonnull Entity entityAttacked) {
+	@Override
+	public void onStrike(@Nonnull EntityArmyMember attacker, @Nonnull Entity entityAttacked) {
 
-    }
+	}
 }

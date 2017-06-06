@@ -12,23 +12,23 @@ import javax.annotation.Nonnull;
  */
 @JEIPlugin
 public class OverlordJEIPlugin implements IModPlugin {
-    @Override
-    public void registerItemSubtypes(@Nonnull ISubtypeRegistry subtypeRegistry) {
+	@Override
+	public void registerItemSubtypes(@Nonnull ISubtypeRegistry subtypeRegistry) {
 
-    }
+	}
 
-    @Override
-    public void registerIngredients(@Nonnull IModIngredientRegistration registry) {
+	@Override
+	public void registerIngredients(@Nonnull IModIngredientRegistration registry) {
 
-    }
+	}
 
-    @Override
-    public void register(@Nonnull IModRegistry registry) {
-        registry.getJeiHelpers().getItemBlacklist().addItemToBlacklist(new ItemStack(Overlord.sans_mask));
-    }
+	@Override
+	public void register(@Nonnull IModRegistry registry) {
+		registry.getJeiHelpers().getItemBlacklist().addItemToBlacklist(new ItemStack(Overlord.sans_mask));
+	}
 
-    @Override
-    public void onRuntimeAvailable(@Nonnull IJeiRuntime jeiRuntime) {
+	@Override
+	public void onRuntimeAvailable(@Nonnull IJeiRuntime jeiRuntime) {
 
-    }
+	}
 }

@@ -27,68 +27,66 @@ import javax.annotation.Nonnull;
  * @author The_Fireplace
  */
 public class BlockSkeletonMaker extends BlockContainer {
-    public BlockSkeletonMaker(String name) {
-        super(Material.ROCK);
-        setUnlocalizedName(name);
-        setCreativeTab(Overlord.tabOverlord);
-        setHarvestLevel("pickaxe", 0);
-    }
+	public BlockSkeletonMaker(String name) {
+		super(Material.ROCK);
+		setUnlocalizedName(name);
+		setCreativeTab(Overlord.tabOverlord);
+		setHarvestLevel("pickaxe", 0);
+	}
 
-    @Nonnull
-    @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        return new AxisAlignedBB(0.04F, 0F, 0.04F, 0.96F, 0.65F, 0.96F);
-    }
+	@Nonnull
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+		return new AxisAlignedBB(0.04F, 0F, 0.04F, 0.96F, 0.65F, 0.96F);
+	}
 
-    @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
 
-    @Nonnull
-    @Override
-    @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
+	@Nonnull
+	@Override
+	@SideOnly(Side.CLIENT)
+	public BlockRenderLayer getBlockLayer() {
+		return BlockRenderLayer.CUTOUT;
+	}
 
-    @Nonnull
-    @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.MODEL;
-    }
+	@Nonnull
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		return EnumBlockRenderType.MODEL;
+	}
 
-    @Override
-    public TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
-        return getUnlocalizedName().substring(5).equals("baby_skeleton_maker") ? new TileEntityBabySkeletonMaker() : new TileEntitySkeletonMaker();
-    }
+	@Override
+	public TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
+		return getUnlocalizedName().substring(5).equals("baby_skeleton_maker") ? new TileEntityBabySkeletonMaker() : new TileEntitySkeletonMaker();
+	}
 
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (worldIn.isRemote)
-            return true;
-        else if (!playerIn.isSneaking()) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if (worldIn.isRemote)
+			return true;
+		else if (!playerIn.isSneaking()) {
+			TileEntity tileentity = worldIn.getTileEntity(pos);
 
-            if (tileentity instanceof TileEntitySkeletonMaker || tileentity instanceof TileEntityBabySkeletonMaker) {
-                FMLNetworkHandler.openGui(playerIn, Overlord.MODID, 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
-            }
-            return true;
-        } else
-            return false;
-    }
+			if (tileentity instanceof TileEntitySkeletonMaker || tileentity instanceof TileEntityBabySkeletonMaker) {
+				FMLNetworkHandler.openGui(playerIn, Overlord.MODID, 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			}
+			return true;
+		} else
+			return false;
+	}
 
-    @Override
-    public void breakBlock(World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state)
-    {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+	@Override
+	public void breakBlock(World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
+		TileEntity tileentity = worldIn.getTileEntity(pos);
 
-        if (tileentity instanceof TileEntitySkeletonMaker || tileentity instanceof TileEntityBabySkeletonMaker)
-        {
-            InventoryHelper.dropInventoryItems(worldIn, pos, (TileEntitySkeletonMaker)tileentity);
-            worldIn.updateComparatorOutputLevel(pos, this);
-        }
+		if (tileentity instanceof TileEntitySkeletonMaker || tileentity instanceof TileEntityBabySkeletonMaker) {
+			InventoryHelper.dropInventoryItems(worldIn, pos, (TileEntitySkeletonMaker) tileentity);
+			worldIn.updateComparatorOutputLevel(pos, this);
+		}
 
-        super.breakBlock(worldIn, pos, state);
-    }
+		super.breakBlock(worldIn, pos, state);
+	}
 }

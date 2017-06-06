@@ -13,36 +13,36 @@ import the_fireplace.overlord.tileentity.ISkeletonMaker;
  */
 public class CreateSkeletonMessage implements IMessage {
 
-    public BlockPos pos;
+	public BlockPos pos;
 
-    public CreateSkeletonMessage() {
-    }
+	public CreateSkeletonMessage() {
+	}
 
-    public CreateSkeletonMessage(BlockPos pos){
-        this.pos=pos;
-    }
+	public CreateSkeletonMessage(BlockPos pos) {
+		this.pos = pos;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        pos = new BlockPos(buf.readInt(), buf.readShort(), buf.readInt());
-    }
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		pos = new BlockPos(buf.readInt(), buf.readShort(), buf.readInt());
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        buf.writeInt(pos.getX());
-        buf.writeShort(pos.getY());
-        buf.writeInt(pos.getZ());
-    }
+	@Override
+	public void toBytes(ByteBuf buf) {
+		buf.writeInt(pos.getX());
+		buf.writeShort(pos.getY());
+		buf.writeInt(pos.getZ());
+	}
 
-    public static class Handler extends AbstractServerMessageHandler<CreateSkeletonMessage> {
-        @Override
-        public IMessage handleServerMessage(EntityPlayer player, CreateSkeletonMessage message, MessageContext ctx) {
-            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                if(player.world.getTileEntity(message.pos) instanceof ISkeletonMaker){
-                    ((ISkeletonMaker) player.world.getTileEntity(message.pos)).spawnSkeleton();
-                }
-            });
-            return null;
-        }
-    }
+	public static class Handler extends AbstractServerMessageHandler<CreateSkeletonMessage> {
+		@Override
+		public IMessage handleServerMessage(EntityPlayer player, CreateSkeletonMessage message, MessageContext ctx) {
+			FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
+				if (player.world.getTileEntity(message.pos) instanceof ISkeletonMaker) {
+					((ISkeletonMaker) player.world.getTileEntity(message.pos)).spawnSkeleton();
+				}
+			});
+			return null;
+		}
+	}
 }

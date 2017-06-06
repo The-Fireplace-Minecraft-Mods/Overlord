@@ -21,30 +21,30 @@ import javax.annotation.Nonnull;
  */
 @SideOnly(Side.CLIENT)
 public class RenderMilkBottle extends Render {
-    private final RenderItem ri;
+	private final RenderItem ri;
 
-    public RenderMilkBottle(RenderManager manager) {
-        super(manager);
-        this.ri = Minecraft.getMinecraft().getRenderItem();
-    }
+	public RenderMilkBottle(RenderManager manager) {
+		super(manager);
+		this.ri = Minecraft.getMinecraft().getRenderItem();
+	}
 
-    @Override
-    public void doRender(@Nonnull Entity entity, double x, double y, double z, float f, float partialTicks) {
-        GlStateManager.pushMatrix();
-        GlStateManager.translate((float) x, (float) y, (float) z);
-        GlStateManager.enableRescaleNormal();
-        GlStateManager.scale(0.5F, 0.5F, 0.5F);
-        GlStateManager.rotate(-this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotate(this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
-        this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        this.ri.renderItem(new ItemStack(Overlord.milk_bottle), ItemCameraTransforms.TransformType.GROUND);
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.popMatrix();
-        super.doRender(entity, x, y, z, f, partialTicks);
-    }
+	@Override
+	public void doRender(@Nonnull Entity entity, double x, double y, double z, float f, float partialTicks) {
+		GlStateManager.pushMatrix();
+		GlStateManager.translate((float) x, (float) y, (float) z);
+		GlStateManager.enableRescaleNormal();
+		GlStateManager.scale(0.5F, 0.5F, 0.5F);
+		GlStateManager.rotate(-this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+		this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		this.ri.renderItem(new ItemStack(Overlord.milk_bottle), ItemCameraTransforms.TransformType.GROUND);
+		GlStateManager.disableRescaleNormal();
+		GlStateManager.popMatrix();
+		super.doRender(entity, x, y, z, f, partialTicks);
+	}
 
-    @Override
-    protected ResourceLocation getEntityTexture(@Nonnull Entity entity) {
-        return new ResourceLocation(Overlord.MODID+":items/milk_bottle");
-    }
+	@Override
+	protected ResourceLocation getEntityTexture(@Nonnull Entity entity) {
+		return new ResourceLocation(Overlord.MODID + ":items/milk_bottle");
+	}
 }

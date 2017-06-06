@@ -9,16 +9,16 @@ import the_fireplace.overlord.items.ItemSkinsuit;
  * @author The_Fireplace
  */
 public class SlotSkinsuit extends Slot {
-    IInventory inv;
+	IInventory inv;
 
-    public SlotSkinsuit(IInventory inventoryIn, int index, int xPosition,
-                        int yPosition) {
-        super(inventoryIn, index, xPosition, yPosition);
-        inv = inventoryIn;
-    }
+	public SlotSkinsuit(IInventory inventoryIn, int index, int xPosition,
+	                    int yPosition) {
+		super(inventoryIn, index, xPosition, yPosition);
+		inv = inventoryIn;
+	}
 
-    @Override
-    public boolean isItemValid(ItemStack stack) {
-        return stack.getItem() instanceof ItemSkinsuit;
-    }
+	@Override
+	public boolean isItemValid(ItemStack stack) {
+		return stack.getItem() instanceof ItemSkinsuit;
+	}
 }

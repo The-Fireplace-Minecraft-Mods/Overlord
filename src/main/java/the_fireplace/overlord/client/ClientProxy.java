@@ -23,31 +23,31 @@ import java.io.File;
  * @author The_Fireplace
  */
 public class ClientProxy extends CommonProxy {
-    @Override
-    public String translateToLocal(@Nonnull String u, Object... args){
-        return I18n.format(u, args);
-    }
+	@Override
+	public String translateToLocal(@Nonnull String u, Object... args) {
+		return I18n.format(u, args);
+	}
 
-    @Override
-    public EntityPlayer getPlayerEntity(MessageContext ctx) {
-        return (ctx.side.isClient() ? Minecraft.getMinecraft().player : super.getPlayerEntity(ctx));
-    }
+	@Override
+	public EntityPlayer getPlayerEntity(MessageContext ctx) {
+		return (ctx.side.isClient() ? Minecraft.getMinecraft().player : super.getPlayerEntity(ctx));
+	}
 
-    @Override
-    public void registerClient(){
-        Overlord.instance.registerItemRenders();
-        RenderingRegistry.registerEntityRenderingHandler(EntitySkeletonWarrior.class, new SkeletonWarriorRenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityBabySkeleton.class, new BabySkeletonRenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityMilkBottle.class, new MilkBottleRenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityConvertedSkeleton.class, new ConvertedSkeletonRenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityCuringSkeleton.class, new CuringSkeletonRenderFactory());
-        if(SkinTools.cachedir.exists()){
-            if(SkinTools.cachedir.listFiles().length > 0)
-            for(File file:SkinTools.cachedir.listFiles()){
-                if(file.getName().contains(".png"))
-                    SkinTools.cacheSkin(file.getName().replace(".png",""));
-            }
-        }
-        MinecraftForge.EVENT_BUS.register(new ClientEvents());
-    }
+	@Override
+	public void registerClient() {
+		Overlord.instance.registerItemRenders();
+		RenderingRegistry.registerEntityRenderingHandler(EntitySkeletonWarrior.class, new SkeletonWarriorRenderFactory());
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabySkeleton.class, new BabySkeletonRenderFactory());
+		RenderingRegistry.registerEntityRenderingHandler(EntityMilkBottle.class, new MilkBottleRenderFactory());
+		RenderingRegistry.registerEntityRenderingHandler(EntityConvertedSkeleton.class, new ConvertedSkeletonRenderFactory());
+		RenderingRegistry.registerEntityRenderingHandler(EntityCuringSkeleton.class, new CuringSkeletonRenderFactory());
+		if (SkinTools.cachedir.exists()) {
+			if (SkinTools.cachedir.listFiles().length > 0)
+				for (File file : SkinTools.cachedir.listFiles()) {
+					if (file.getName().contains(".png"))
+						SkinTools.cacheSkin(file.getName().replace(".png", ""));
+				}
+		}
+		MinecraftForge.EVENT_BUS.register(new ClientEvents());
+	}
 }

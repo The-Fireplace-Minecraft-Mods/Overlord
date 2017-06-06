@@ -12,24 +12,24 @@ import javax.annotation.Nonnull;
  * @author The_Fireplace
  */
 public class AugmentObsidian extends Augment {
-    @Nonnull
-    @Override
-    public String augmentId() {
-        return "obsidian";
-    }
+	@Nonnull
+	@Override
+	public String augmentId() {
+		return "obsidian";
+	}
 
-    @Override
-    public void onStrike(@Nonnull EntityArmyMember attacker, @Nonnull Entity entityAttacked) {
+	@Override
+	public void onStrike(@Nonnull EntityArmyMember attacker, @Nonnull Entity entityAttacked) {
 
-    }
+	}
 
-    @Override
-    public void onEntityTick(@Nonnull EntityArmyMember entity) {
-        if(entity.getActivePotionEffect(MobEffects.FIRE_RESISTANCE) == null)
-            entity.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 120));
-        if(entity.getActivePotionEffect(MobEffects.SLOWNESS) == null)
-            entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 120));
-        if(entity.getActivePotionEffect(MobEffects.RESISTANCE) == null)
-            entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 120));
-    }
+	@Override
+	public void onEntityTick(@Nonnull EntityArmyMember entity) {
+		if (entity.getActivePotionEffect(MobEffects.FIRE_RESISTANCE) == null)
+			entity.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 120));
+		if (entity.getActivePotionEffect(MobEffects.SLOWNESS) == null)
+			entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 120));
+		if (entity.getActivePotionEffect(MobEffects.RESISTANCE) == null)
+			entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 120));
+	}
 }

@@ -11,9 +11,9 @@ import the_fireplace.overlord.Overlord;
 @SideOnly(Side.CLIENT)
 public class OverlordConfigGui extends GuiConfig {
 
-    public OverlordConfigGui(GuiScreen parentScreen) {
-        super(parentScreen, new ConfigElement(Overlord.config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements(), Overlord.MODID, false,
-                false, GuiConfig.getAbridgedConfigPath(Overlord.config.toString()));
-    }
+	public OverlordConfigGui(GuiScreen parentScreen) {
+		super(parentScreen, new ConfigElement(Overlord.config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements(), Overlord.MODID, false,
+				false, GuiConfig.getAbridgedConfigPath(Overlord.config.toString()));
+	}
 
 }

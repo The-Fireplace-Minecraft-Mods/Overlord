@@ -15,33 +15,33 @@ import java.util.ArrayList;
  */
 public class SetSquadsMessage implements IMessage {
 
-    public ArrayList<String> squads;
+	public ArrayList<String> squads;
 
-    public SetSquadsMessage() {
-    }
+	public SetSquadsMessage() {
+	}
 
-    public SetSquadsMessage(ArrayList<String> squadData){
-        this.squads=squadData;
-    }
+	public SetSquadsMessage(ArrayList<String> squadData) {
+		this.squads = squadData;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        squads = Lists.newArrayList();
-        while(buf.isReadable())
-            squads.add(ByteBufUtils.readUTF8String(buf));
-    }
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		squads = Lists.newArrayList();
+		while (buf.isReadable())
+			squads.add(ByteBufUtils.readUTF8String(buf));
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        for(String s:squads)
-            ByteBufUtils.writeUTF8String(buf, s);
-    }
+	@Override
+	public void toBytes(ByteBuf buf) {
+		for (String s : squads)
+			ByteBufUtils.writeUTF8String(buf, s);
+	}
 
-    public static class Handler extends AbstractClientMessageHandler<SetSquadsMessage> {
-        @Override
-        public IMessage handleClientMessage(EntityPlayer player, SetSquadsMessage message, MessageContext ctx) {
-            Squads.makeClientInstance(player, message.squads);
-            return null;
-        }
-    }
+	public static class Handler extends AbstractClientMessageHandler<SetSquadsMessage> {
+		@Override
+		public IMessage handleClientMessage(EntityPlayer player, SetSquadsMessage message, MessageContext ctx) {
+			Squads.makeClientInstance(player, message.squads);
+			return null;
+		}
+	}
 }

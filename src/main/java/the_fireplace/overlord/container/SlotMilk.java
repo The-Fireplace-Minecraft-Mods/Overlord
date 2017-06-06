@@ -9,16 +9,16 @@ import the_fireplace.overlord.registry.MilkRegistry;
  * @author The_Fireplace
  */
 public class SlotMilk extends Slot {
-    IInventory inv;
+	IInventory inv;
 
-    public SlotMilk(IInventory inventoryIn, int index, int xPosition,
-                    int yPosition) {
-        super(inventoryIn, index, xPosition, yPosition);
-        inv = inventoryIn;
-    }
+	public SlotMilk(IInventory inventoryIn, int index, int xPosition,
+	                int yPosition) {
+		super(inventoryIn, index, xPosition, yPosition);
+		inv = inventoryIn;
+	}
 
-    @Override
-    public boolean isItemValid(ItemStack stack) {
-        return MilkRegistry.getInstance().isMilk(stack);
-    }
+	@Override
+	public boolean isItemValid(ItemStack stack) {
+		return MilkRegistry.getInstance().isMilk(stack);
+	}
 }

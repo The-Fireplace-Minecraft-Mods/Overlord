@@ -12,22 +12,22 @@ import javax.annotation.Nonnull;
  * @author The_Fireplace
  */
 public class AugmentOverclock extends Augment {
-    @Nonnull
-    @Override
-    public String augmentId() {
-        return "overclock";
-    }
+	@Nonnull
+	@Override
+	public String augmentId() {
+		return "overclock";
+	}
 
-    @Override
-    public void onStrike(@Nonnull EntityArmyMember attacker, @Nonnull Entity entityAttacked) {
+	@Override
+	public void onStrike(@Nonnull EntityArmyMember attacker, @Nonnull Entity entityAttacked) {
 
-    }
+	}
 
-    @Override
-    public void onEntityTick(@Nonnull EntityArmyMember entity) {
-        if(entity.getActivePotionEffect(MobEffects.HASTE) == null)
-            entity.addPotionEffect(new PotionEffect(MobEffects.HASTE, 120));
-        if(entity.getActivePotionEffect(MobEffects.WEAKNESS) == null)
-            entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 120));
-    }
+	@Override
+	public void onEntityTick(@Nonnull EntityArmyMember entity) {
+		if (entity.getActivePotionEffect(MobEffects.HASTE) == null)
+			entity.addPotionEffect(new PotionEffect(MobEffects.HASTE, 120));
+		if (entity.getActivePotionEffect(MobEffects.WEAKNESS) == null)
+			entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 120));
+	}
 }

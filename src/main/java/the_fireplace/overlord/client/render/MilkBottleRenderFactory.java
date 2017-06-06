@@ -9,8 +9,8 @@ import the_fireplace.overlord.entity.projectile.EntityMilkBottle;
  * @author The_Fireplace
  */
 public class MilkBottleRenderFactory implements IRenderFactory<EntityMilkBottle> {
-    @Override
-    public Render<? super EntityMilkBottle> createRenderFor(RenderManager manager) {
-        return new RenderMilkBottle(manager);
-    }
+	@Override
+	public Render<? super EntityMilkBottle> createRenderFor(RenderManager manager) {
+		return new RenderMilkBottle(manager);
+	}
 }

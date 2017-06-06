@@ -13,38 +13,38 @@ import the_fireplace.overlord.entity.EntityArmyMember;
  */
 public class AttackModeMessage implements IMessage {
 
-    public int warrior;
+	public int warrior;
 
-    public AttackModeMessage() {
-    }
+	public AttackModeMessage() {
+	}
 
-    public AttackModeMessage(EntityArmyMember skeleton){
-        this.warrior = skeleton.hashCode();
-    }
+	public AttackModeMessage(EntityArmyMember skeleton) {
+		this.warrior = skeleton.hashCode();
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        warrior = buf.readInt();
-    }
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		warrior = buf.readInt();
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        buf.writeInt(warrior);
-    }
+	@Override
+	public void toBytes(ByteBuf buf) {
+		buf.writeInt(warrior);
+	}
 
-    public static class Handler extends AbstractServerMessageHandler<AttackModeMessage> {
-        @Override
-        public IMessage handleServerMessage(EntityPlayer player, AttackModeMessage message, MessageContext ctx) {
-            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                if(player.world.getEntityByID(message.warrior) != null){
-                    if(player.world.getEntityByID(message.warrior) instanceof EntityArmyMember)
-                        ((EntityArmyMember) player.world.getEntityByID(message.warrior)).cycleAttackMode();
-                    else
-                        Overlord.logError("Entity is not an Army Member. It is "+player.world.getEntityByID(message.warrior).toString());
-                }else
-                    Overlord.logError("Error 404: Army Member not found: "+message.warrior);
-            });
-            return null;
-        }
-    }
+	public static class Handler extends AbstractServerMessageHandler<AttackModeMessage> {
+		@Override
+		public IMessage handleServerMessage(EntityPlayer player, AttackModeMessage message, MessageContext ctx) {
+			FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
+				if (player.world.getEntityByID(message.warrior) != null) {
+					if (player.world.getEntityByID(message.warrior) instanceof EntityArmyMember)
+						((EntityArmyMember) player.world.getEntityByID(message.warrior)).cycleAttackMode();
+					else
+						Overlord.logError("Entity is not an Army Member. It is " + player.world.getEntityByID(message.warrior).toString());
+				} else
+					Overlord.logError("Error 404: Army Member not found: " + message.warrior);
+			});
+			return null;
+		}
+	}
 }

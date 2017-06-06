@@ -9,9 +9,9 @@ import the_fireplace.overlord.entity.EntitySkeletonWarrior;
  * @author The_Fireplace
  */
 public class SkeletonWarriorRenderFactory implements IRenderFactory<EntitySkeletonWarrior> {
-    @SuppressWarnings("unchecked")
-    @Override
-    public Render createRenderFor(RenderManager manager) {
-        return new RenderSkeletonWarrior(manager);
-    }
+	@SuppressWarnings("unchecked")
+	@Override
+	public Render createRenderFor(RenderManager manager) {
+		return new RenderSkeletonWarrior(manager);
+	}
 }

@@ -11,35 +11,35 @@ import the_fireplace.overlord.config.ConfigValues;
  */
 public class SetConfigsMessage implements IMessage {
 
-    public byte warrior;
-    public byte baby;
+	public byte warrior;
+	public byte baby;
 
-    public SetConfigsMessage() {
-    }
+	public SetConfigsMessage() {
+	}
 
-    public SetConfigsMessage(byte warrior, byte baby){
-        this.warrior=warrior;
-        this.baby=baby;
-    }
+	public SetConfigsMessage(byte warrior, byte baby) {
+		this.warrior = warrior;
+		this.baby = baby;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        warrior = buf.readByte();
-        baby = buf.readByte();
-    }
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		warrior = buf.readByte();
+		baby = buf.readByte();
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        buf.writeByte(warrior);
-        buf.writeByte(baby);
-    }
+	@Override
+	public void toBytes(ByteBuf buf) {
+		buf.writeByte(warrior);
+		buf.writeByte(baby);
+	}
 
-    public static class Handler extends AbstractClientMessageHandler<SetConfigsMessage> {
-        @Override
-        public IMessage handleClientMessage(EntityPlayer player, SetConfigsMessage message, MessageContext ctx) {
-            ConfigValues.SERVER_BONEREQ_WARRIOR=message.warrior;
-            ConfigValues.SERVER_BONEREQ_BABY=message.baby;
-            return null;
-        }
-    }
+	public static class Handler extends AbstractClientMessageHandler<SetConfigsMessage> {
+		@Override
+		public IMessage handleClientMessage(EntityPlayer player, SetConfigsMessage message, MessageContext ctx) {
+			ConfigValues.SERVER_BONEREQ_WARRIOR = message.warrior;
+			ConfigValues.SERVER_BONEREQ_BABY = message.baby;
+			return null;
+		}
+	}
 }

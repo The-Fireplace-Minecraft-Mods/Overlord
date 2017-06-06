@@ -11,13 +11,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
  */
 @ParametersAreNonnullByDefault
 public abstract class Augment {
-    public abstract void onEntityTick(EntityArmyMember entity);
+	public abstract void onEntityTick(EntityArmyMember entity);
 
-    public abstract void onStrike(EntityArmyMember attacker, Entity entityAttacked);
+	public abstract void onStrike(EntityArmyMember attacker, Entity entityAttacked);
 
-    /**
-     * To be used for easy cross-mod compatibility. Rather than having to check for a specific augment, you can check the augment's ID.
-     */
-    @Nonnull
-    public abstract String augmentId();
+	/**
+	 * To be used for easy cross-mod compatibility. Rather than having to check for a specific augment, you can check the augment's ID.
+	 */
+	@Nonnull
+	public abstract String augmentId();
 }

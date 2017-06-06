@@ -12,17 +12,17 @@ import the_fireplace.overlord.Overlord;
  * @author The_Fireplace
  */
 public abstract class AbstractMessageHandler<T extends IMessage> implements IMessageHandler<T, IMessage> {
-    @SideOnly(Side.CLIENT)
-    public abstract IMessage handleClientMessage(EntityPlayer player, T message, MessageContext ctx);
+	@SideOnly(Side.CLIENT)
+	public abstract IMessage handleClientMessage(EntityPlayer player, T message, MessageContext ctx);
 
-    public abstract IMessage handleServerMessage(EntityPlayer player, T message, MessageContext ctx);
+	public abstract IMessage handleServerMessage(EntityPlayer player, T message, MessageContext ctx);
 
-    @Override
-    public IMessage onMessage(T message, MessageContext ctx) {
-        if (ctx.side.isClient()) {
-            return handleClientMessage(Overlord.proxy.getPlayerEntity(ctx), message, ctx);
-        } else {
-            return handleServerMessage(Overlord.proxy.getPlayerEntity(ctx), message, ctx);
-        }
-    }
+	@Override
+	public IMessage onMessage(T message, MessageContext ctx) {
+		if (ctx.side.isClient()) {
+			return handleClientMessage(Overlord.proxy.getPlayerEntity(ctx), message, ctx);
+		} else {
+			return handleServerMessage(Overlord.proxy.getPlayerEntity(ctx), message, ctx);
+		}
+	}
 }

@@ -15,20 +15,20 @@ import javax.annotation.Nonnull;
  * @author The_Fireplace
  */
 public class ItemCrown extends ItemArmor {
-    public ItemCrown(ArmorMaterial materialIn) {
-        super(materialIn, -1, EntityEquipmentSlot.HEAD);
-        setUnlocalizedName("crown");
-    }
+	public ItemCrown(ArmorMaterial materialIn) {
+		super(materialIn, -1, EntityEquipmentSlot.HEAD);
+		setUnlocalizedName("crown");
+	}
 
-    @Override
-    @Nonnull
-    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-        return Overlord.MODID+":textures/armor/crown.png";
-    }
+	@Override
+	@Nonnull
+	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+		return Overlord.MODID + ":textures/armor/crown.png";
+	}
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public CreativeTabs getCreativeTab(){
-        return Overlord.tabOverlord;
-    }
+	@SideOnly(Side.CLIENT)
+	@Override
+	public CreativeTabs getCreativeTab() {
+		return Overlord.tabOverlord;
+	}
 }

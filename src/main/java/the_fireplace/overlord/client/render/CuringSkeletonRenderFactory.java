@@ -10,9 +10,9 @@ import the_fireplace.overlord.entity.EntityCuringSkeleton;
  * @author The_Fireplace
  */
 public class CuringSkeletonRenderFactory implements IRenderFactory<EntityCuringSkeleton> {
-    @SuppressWarnings("unchecked")
-    @Override
-    public Render createRenderFor(RenderManager manager) {
-        return new RenderSkeleton(manager);
-    }
+	@SuppressWarnings("unchecked")
+	@Override
+	public Render createRenderFor(RenderManager manager) {
+		return new RenderSkeleton(manager);
+	}
 }

@@ -19,40 +19,39 @@ import the_fireplace.overlord.entity.EntitySkeletonWarrior;
  */
 @MethodsReturnNonnullByDefault
 public class DispenseBehaviorKeychain extends BehaviorDefaultDispenseItem {
-    @Override
-    public ItemStack dispenseStack(IBlockSource source, ItemStack stack)
-    {
-        EnumFacing enumfacing = source.getBlockState().getValue(BlockDispenser.FACING);
-        double d0 = source.getX() + (double)enumfacing.getFrontOffsetX();
-        double d1 = (double)((float)(source.getBlockPos().getY() + enumfacing.getFrontOffsetY()) + 0.2F);
-        double d2 = source.getZ() + (double)enumfacing.getFrontOffsetZ();
+	@Override
+	public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
+		EnumFacing enumfacing = source.getBlockState().getValue(BlockDispenser.FACING);
+		double d0 = source.getX() + (double) enumfacing.getFrontOffsetX();
+		double d1 = (double) ((float) (source.getBlockPos().getY() + enumfacing.getFrontOffsetY()) + 0.2F);
+		double d2 = source.getZ() + (double) enumfacing.getFrontOffsetZ();
 
-        EntityArmyMember entity;
-        NBTTagCompound entNbt = stack.getTagCompound();
-        if (entNbt != null) {
-            if(entNbt.getString("SkeletonType").equals("skeleton_warrior"))
-                entity = new EntitySkeletonWarrior(source.getWorld());
-            else if(entNbt.getString("SkeletonType").equals("skeleton_converted"))
-                entity = new EntityConvertedSkeleton(source.getWorld());
-            else {
-                entity = new EntityBabySkeleton(source.getWorld());
-                if(!entNbt.getString("SkeletonType").equals("skeleton_baby"))
-                    Overlord.logError("Skeleton Type for keychain was "+entNbt.getString("SkeletonType"));
-            }
-            entity.readFromNBT(entNbt);
+		EntityArmyMember entity;
+		NBTTagCompound entNbt = stack.getTagCompound();
+		if (entNbt != null) {
+			if (entNbt.getString("SkeletonType").equals("skeleton_warrior"))
+				entity = new EntitySkeletonWarrior(source.getWorld());
+			else if (entNbt.getString("SkeletonType").equals("skeleton_converted"))
+				entity = new EntityConvertedSkeleton(source.getWorld());
+			else {
+				entity = new EntityBabySkeleton(source.getWorld());
+				if (!entNbt.getString("SkeletonType").equals("skeleton_baby"))
+					Overlord.logError("Skeleton Type for keychain was " + entNbt.getString("SkeletonType"));
+			}
+			entity.readFromNBT(entNbt);
 
-            entity.setLocationAndAngles(d0+0.5D, d1, d2+0.5D, MathHelper.wrapDegrees(source.getWorld().rand.nextFloat() * 360.0F), 0.0F);
-            entity.rotationYawHead = entity.rotationYaw;
-            entity.renderYawOffset = entity.rotationYaw;
-            source.getWorld().spawnEntity(entity);
-            entity.playLivingSound();
+			entity.setLocationAndAngles(d0 + 0.5D, d1, d2 + 0.5D, MathHelper.wrapDegrees(source.getWorld().rand.nextFloat() * 360.0F), 0.0F);
+			entity.rotationYawHead = entity.rotationYaw;
+			entity.renderYawOffset = entity.rotationYaw;
+			source.getWorld().spawnEntity(entity);
+			entity.playLivingSound();
 
-            entity.setLocationAndAngles(d0+0.5D, d1, d2+0.5D, MathHelper.wrapDegrees(source.getWorld().rand.nextFloat() * 360.0F), 0.0F);
+			entity.setLocationAndAngles(d0 + 0.5D, d1, d2 + 0.5D, MathHelper.wrapDegrees(source.getWorld().rand.nextFloat() * 360.0F), 0.0F);
 
-            stack.shrink(1);
-            if(stack.isEmpty())
-                return new ItemStack(Overlord.keychain);
-        }
-        return stack;
-    }
+			stack.shrink(1);
+			if (stack.isEmpty())
+				return new ItemStack(Overlord.keychain);
+		}
+		return stack;
+	}
 }

@@ -19,41 +19,37 @@ import java.util.List;
  * @author The_Fireplace
  */
 public class EntityMilkBottle extends EntityThrowable {
-    public EntityMilkBottle(World worldIn) {
-        super(worldIn);
-    }
+	public EntityMilkBottle(World worldIn) {
+		super(worldIn);
+	}
 
-    public EntityMilkBottle(World worldIn, EntityLivingBase entity) {
-        super(worldIn, entity);
-    }
+	public EntityMilkBottle(World worldIn, EntityLivingBase entity) {
+		super(worldIn, entity);
+	}
 
-    public EntityMilkBottle(World worldIn, double x, double y, double z) {
-        super(worldIn, x, y, z);
-    }
+	public EntityMilkBottle(World worldIn, double x, double y, double z) {
+		super(worldIn, x, y, z);
+	}
 
-    @Override
-    protected void onImpact(@Nonnull RayTraceResult mop) {
-        if (!this.world.isRemote) {
-            AxisAlignedBB axisalignedbb = this.getEntityBoundingBox().expand(4.0D, 2.0D, 4.0D);
-            List<EntityLivingBase> list = this.world.<EntityLivingBase>getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
+	@Override
+	protected void onImpact(@Nonnull RayTraceResult mop) {
+		if (!this.world.isRemote) {
+			AxisAlignedBB axisalignedbb = this.getEntityBoundingBox().expand(4.0D, 2.0D, 4.0D);
+			List<EntityLivingBase> list = this.world.<EntityLivingBase>getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
 
-            if (!list.isEmpty())
-            {
-                for (EntityLivingBase entitylivingbase : list)
-                {
-                    if (entitylivingbase instanceof EntitySkeletonWarrior || entitylivingbase instanceof EntityBabySkeleton || entitylivingbase instanceof EntitySkeleton || entitylivingbase instanceof EntitySkeletonHorse)
-                    {
-                        double d0 = this.getDistanceSqToEntity(entitylivingbase);
+			if (!list.isEmpty()) {
+				for (EntityLivingBase entitylivingbase : list) {
+					if (entitylivingbase instanceof EntitySkeletonWarrior || entitylivingbase instanceof EntityBabySkeleton || entitylivingbase instanceof EntitySkeleton || entitylivingbase instanceof EntitySkeletonHorse) {
+						double d0 = this.getDistanceSqToEntity(entitylivingbase);
 
-                        if (d0 < 16.0D)
-                        {
-                            entitylivingbase.heal(1);
-                        }
-                    }
-                }
-            }
-            world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.NEUTRAL, 0.5F, 0.8F / (rand.nextFloat() * 0.4F + 0.8F));
-            this.setDead();
-        }
-    }
+						if (d0 < 16.0D) {
+							entitylivingbase.heal(1);
+						}
+					}
+				}
+			}
+			world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.NEUTRAL, 0.5F, 0.8F / (rand.nextFloat() * 0.4F + 0.8F));
+			this.setDead();
+		}
+	}
 }

@@ -11,22 +11,22 @@ import java.util.Set;
 @SideOnly(Side.CLIENT)
 public class OverlordConfigGuiFactory implements IModGuiFactory {
 
-    @Override
-    public void initialize(Minecraft minecraftInstance) {
-    }
+	@Override
+	public void initialize(Minecraft minecraftInstance) {
+	}
 
-    @Override
-    public Class<? extends GuiScreen> mainConfigGuiClass() {
-        return OverlordConfigGui.class;
-    }
+	@Override
+	public Class<? extends GuiScreen> mainConfigGuiClass() {
+		return OverlordConfigGui.class;
+	}
 
-    @Override
-    public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() {
-        return null;
-    }
+	@Override
+	public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() {
+		return null;
+	}
 
-    @Override
-    public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
-        return null;
-    }
+	@Override
+	public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
+		return null;
+	}
 }

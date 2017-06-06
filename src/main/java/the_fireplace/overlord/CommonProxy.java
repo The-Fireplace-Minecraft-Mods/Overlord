@@ -10,13 +10,14 @@ import javax.annotation.Nonnull;
  * @author The_Fireplace
  */
 public class CommonProxy {
-    public String translateToLocal(@Nonnull String key, Object... args){
-        return I18n.translateToLocal(key);
-    }
+	public String translateToLocal(@Nonnull String key, Object... args) {
+		return I18n.translateToLocal(key);
+	}
 
-    public EntityPlayer getPlayerEntity(MessageContext ctx) {
-        return ctx.getServerHandler().player;
-    }
+	public EntityPlayer getPlayerEntity(MessageContext ctx) {
+		return ctx.getServerHandler().player;
+	}
 
-    public void registerClient(){}
+	public void registerClient() {
+	}
 }

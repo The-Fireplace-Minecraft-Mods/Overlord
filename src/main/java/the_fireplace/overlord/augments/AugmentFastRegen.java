@@ -10,21 +10,21 @@ import javax.annotation.Nonnull;
  * @author The_Fireplace
  */
 public class AugmentFastRegen extends Augment {
-    @Override
-    public void onStrike(@Nonnull EntityArmyMember attacker, @Nonnull Entity entityAttacked) {
+	@Override
+	public void onStrike(@Nonnull EntityArmyMember attacker, @Nonnull Entity entityAttacked) {
 
-    }
+	}
 
-    @Nonnull
-    @Override
-    public String augmentId() {
-        return "fast_regen";
-    }
+	@Nonnull
+	@Override
+	public String augmentId() {
+		return "fast_regen";
+	}
 
-    @Override
-    public void onEntityTick(@Nonnull EntityArmyMember entity) {
-        if(entity.getHealth() < entity.getMaxHealth() && entity.ticksExisted % 100 == 0){
-            entity.heal(1.0F);
-        }
-    }
+	@Override
+	public void onEntityTick(@Nonnull EntityArmyMember entity) {
+		if (entity.getHealth() < entity.getMaxHealth() && entity.ticksExisted % 100 == 0) {
+			entity.heal(1.0F);
+		}
+	}
 }
