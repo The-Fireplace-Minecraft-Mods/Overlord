@@ -17,7 +17,7 @@ public class SkinType {
     private static final LinkedHashMap<SkinType, ResourceLocation> skintypes = Maps.newLinkedHashMap();
 
     public static final SkinType NONE = new SkinType(new ResourceLocation("missing"));
-    public static final SkinType PLAYER = new SkinType(SkinTools.STEVE);
+    public static final SkinType PLAYER = new SkinType(new ResourceLocation("textures/entity/steve.png"));
     public static final SkinType MUMMY = new SkinType(new ResourceLocation("textures/entity/zombie/husk.png"));
 
     public SkinType(ResourceLocation texLoc){

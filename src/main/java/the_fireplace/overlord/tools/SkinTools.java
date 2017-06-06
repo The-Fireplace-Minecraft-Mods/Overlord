@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import the_fireplace.overlord.Overlord;
@@ -24,7 +23,6 @@ import java.util.HashMap;
 @SideOnly(Side.CLIENT)
 public final class SkinTools {
     public static final File cachedir = new File(Minecraft.getMinecraft().mcDataDir, "cachedImages/skins/");
-    public static final ResourceLocation STEVE = new ResourceLocation("textures/entity/steve.png");
     public static final HashMap<String, BufferedImage> skins = Maps.newHashMap();
     public static final HashMap<BufferedImage, DynamicTexture> skintextures = Maps.newHashMap();
     public static final ArrayList<File> nonexistants = Lists.newArrayList();
