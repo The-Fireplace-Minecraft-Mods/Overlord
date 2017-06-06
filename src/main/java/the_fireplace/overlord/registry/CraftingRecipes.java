@@ -21,6 +21,7 @@ public final class CraftingRecipes {
     public static ItemStack squad_editor = new ItemStack(Overlord.squad_editor);
     public static ItemStack keychain = new ItemStack(Overlord.keychain);
     public static ItemStack crown = new ItemStack(Overlord.crown);
+    public static ItemStack rallying_horn = new ItemStack(Overlord.rallying_horn);
 
     public static void addRecipes(){
         addRecipe(skeleton_maker, "b b", "BgB", "BBB", 'b', "ingotBrickNether", 'g', "blockGlass", 'B', Blocks.NETHER_BRICK);
@@ -34,6 +35,7 @@ public final class CraftingRecipes {
         addShapelessRecipe(squad_editor, Items.BOOK, "dyeBlack", "bone");
         addRecipe(keychain, "ii ", "i i", " i ", 'i', "nuggetIron");
         addRecipe(crown, "i i", "iii", " i ", 'i', "nuggetGold");
+        addRecipe(rallying_horn, "p p", "pp ", " pp", 'p', "plankWood");
     }
 
     /**

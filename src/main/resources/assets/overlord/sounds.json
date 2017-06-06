@@ -1,0 +1,11 @@
+{
+  "horn": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "overlord:horn",
+        "stream": false
+      }
+    ]
+  }
+}

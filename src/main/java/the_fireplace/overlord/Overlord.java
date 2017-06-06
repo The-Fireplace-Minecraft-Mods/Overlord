@@ -23,6 +23,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.stats.Achievement;
 import net.minecraft.stats.AchievementList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.AchievementPage;
@@ -56,6 +57,7 @@ import the_fireplace.overlord.entity.EntityCuringSkeleton;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.entity.projectile.EntityMilkBottle;
 import the_fireplace.overlord.handlers.DispenseBehaviorKeychain;
+import the_fireplace.overlord.handlers.OverlordFuelHandler;
 import the_fireplace.overlord.items.*;
 import the_fireplace.overlord.network.OverlordGuiHandler;
 import the_fireplace.overlord.network.PacketDispatcher;
@@ -104,6 +106,9 @@ public final class Overlord {
 
     public ArrayList<Alliance> pendingAlliances = new ArrayList<>();
 
+    public static final ResourceLocation hornSoundLoc = new ResourceLocation(MODID, "horn");
+    public static final SoundEvent HORN_SOUND = new SoundEvent(hornSoundLoc);
+
     public static ItemArmor.ArmorMaterial sans = EnumHelper.addArmorMaterial("SANS", "sans_mask", 20, new int[]{0,0,0,0}, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
 
     public static final Block skeleton_maker = new BlockSkeletonMaker("skeleton_maker").setHardness(5F).setResistance(15F);
@@ -121,6 +126,7 @@ public final class Overlord {
     public static final Item keychain = new ItemKeychain(false).setUnlocalizedName("keychain_empty");
     public static final Item keychain_occupied = new ItemKeychain(true).setUnlocalizedName("keychain_occupied");
     public static final Item crown = new ItemCrown(ItemArmor.ArmorMaterial.GOLD);
+    public static final Item rallying_horn = new ItemRallyingHorn().setUnlocalizedName("rallying_horn").setMaxStackSize(1).setCreativeTab(tabOverlord);
 
     public static void syncConfig() {
         ConfigValues.HELMETDAMAGE = HELMETDAMAGE_PROPERTY.getBoolean();
@@ -176,6 +182,8 @@ public final class Overlord {
         registerItem(keychain);
         registerItem(keychain_occupied);
         registerItem(crown);
+        registerItem(rallying_horn);
+        GameRegistry.register(HORN_SOUND, hornSoundLoc);
         OreDictionary.registerOre("book", squad_editor);
         GameRegistry.registerTileEntity(TileEntitySkeletonMaker.class, "skeleton_maker");
         GameRegistry.registerTileEntity(TileEntityBabySkeletonMaker.class, "baby_skeleton_maker");
@@ -185,6 +193,7 @@ public final class Overlord {
         EntityRegistry.registerModEntity(new ResourceLocation(MODID+":milk_bottle"), EntityMilkBottle.class, "milk_bottle", ++eid, instance, 32, 10, true);
         EntityRegistry.registerModEntity(new ResourceLocation(MODID+":skeleton_converted"), EntityConvertedSkeleton.class, "skeleton_converted", ++eid, instance, 116, 2, false);
         EntityRegistry.registerModEntity(new ResourceLocation(MODID+":skeleton_curing"), EntityCuringSkeleton.class, "skeleton_curing", ++eid, instance, 48, 2, false);
+        GameRegistry.registerFuelHandler(new OverlordFuelHandler());
         proxy.registerClient();
         MinecraftForge.EVENT_BUS.register(new CommonEvents());
         DataSerializers.registerSerializer(CustomDataSerializers.UNIQUE_ID);
@@ -258,6 +267,7 @@ public final class Overlord {
         rmm(keychain);
         rmm(keychain_occupied);
         rmm(crown);
+        rmm(rallying_horn);
     }
 
     @SideOnly(Side.CLIENT)

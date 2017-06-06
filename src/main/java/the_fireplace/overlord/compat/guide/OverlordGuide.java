@@ -169,6 +169,11 @@ public class OverlordGuide implements IGuideBook {
         pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.keychain, "ii ", "i i", " i ", 'i', "nuggetIron")));
         entries.put(new ResourceLocation(Overlord.MODID, "6.3"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.6.3"), new ItemStack(Overlord.keychain)));
 
+        pages = Lists.newArrayList();
+        pages.add(new PageText(proxy.translateToLocal("overlord.guide.6.4.1")));
+        pages.add(new PageIRecipe(new ShapedOreRecipe(Overlord.rallying_horn, "p p", "pp ", " pp", 'p', "plankWood")));
+        entries.put(new ResourceLocation(Overlord.MODID, "6.4"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.6.4"), new ItemStack(Overlord.rallying_horn)));
+
         categories.add(new CategoryItemStack(entries, proxy.translateToLocal("overlord.guide.6"), new ItemStack(Overlord.crown)));
 
         // Setup the book's base information
