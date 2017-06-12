@@ -25,6 +25,8 @@ public class AugmentOverclock extends Augment {
 
 	@Override
 	public void onEntityTick(@Nonnull EntityArmyMember entity) {
+		if (entity.getActivePotionEffect(MobEffects.SPEED) == null)
+			entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 120, 1));
 		if (entity.getActivePotionEffect(MobEffects.HASTE) == null)
 			entity.addPotionEffect(new PotionEffect(MobEffects.HASTE, 120));
 		if (entity.getActivePotionEffect(MobEffects.WEAKNESS) == null)

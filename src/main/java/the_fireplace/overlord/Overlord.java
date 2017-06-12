@@ -33,6 +33,7 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.client.config.GuiConfigEntries;
 import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -50,6 +51,8 @@ import org.apache.logging.log4j.Level;
 import the_fireplace.overlord.augments.*;
 import the_fireplace.overlord.blocks.BlockSkeletonMaker;
 import the_fireplace.overlord.command.*;
+import the_fireplace.overlord.compat.ICompat;
+import the_fireplace.overlord.compat.ic2.IC2Compat;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.EntityBabySkeleton;
 import the_fireplace.overlord.entity.EntityConvertedSkeleton;
@@ -95,6 +98,8 @@ public final class Overlord {
 
 	@SidedProxy(clientSide = "the_fireplace." + MODID + ".client.ClientProxy", serverSide = "the_fireplace." + MODID + ".CommonProxy")
 	public static CommonProxy proxy;
+
+	private static ICompat modCompat;
 
 	public static final CreativeTabs tabOverlord = new CreativeTabs(MODID) {
 		@Nonnull
@@ -224,6 +229,11 @@ public final class Overlord {
 				return new EntityMilkBottle(worldIn, position.getX(), position.getY(), position.getZ());
 			}
 		});
+
+		if(Loader.isModLoaded("ic2")){
+			modCompat = new IC2Compat();
+			modCompat.init(event);
+		}
 	}
 
 	@Mod.EventHandler

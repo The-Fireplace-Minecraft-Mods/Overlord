@@ -17,6 +17,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import the_fireplace.overlord.Overlord;
@@ -129,7 +130,7 @@ public class OverlordGuide implements IGuideBook {
 		pages = Lists.newArrayList();
 		pages.add(new PageText(proxy.translateToLocal("overlord.guide.4.2.1")));
 		pages.add(new PageText(proxy.translateToLocal("overlord.guide.4.2.2")));
-		pages.add(new PageText(proxy.translateToLocal("overlord.guide.4.2.3")));
+		pages.add(new PageText(proxy.translateToLocal("overlord.guide.4.2.3") + (Loader.isModLoaded("ic2") ? "\n"+proxy.translateToLocal("overlord.guide.4.2.ic2") : "")));
 		entries.put(new ResourceLocation(Overlord.MODID, "4.2"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.4.2"), new ItemStack(Items.CHAINMAIL_CHESTPLATE)));
 
 		categories.add(new CategoryItemStack(entries, proxy.translateToLocal("overlord.guide.4"), new ItemStack(Blocks.BEACON)));

@@ -46,9 +46,12 @@ dependencies {
 	deobfCompile "info.amerifrance.guideapi:Guide-API:1.11.2-2.1.1-52"
 	deobfCompile("codechicken:NotEnoughItems:1.11.2-2.3.0.223:universal") {
         exclude module: "jei_1.11.2"
+		//Old mappings
 		exclude module: "CodeChickenLib"
     }
-	deobfCompile "codechicken:CodeChickenLib:1.11.2-2.7.0.268:universal"//Manually do CCL so the game doesn't crash
+	//Manually do CCL so the game doesn't crash
+	deobfCompile "codechicken:CodeChickenLib:1.11.2-2.7.0.268:universal"
+	deobfCompile "net.industrial-craft:industrialcraft-2:2.7.9-ex111"
 }
 
 repositories{
@@ -60,6 +63,9 @@ repositories{
 	}
 	maven { //Chicken Bones
 		url "http://chickenbones.net/maven/"
+	}
+	maven { //IC2, Forestry
+		url = "http://maven.ic2.player.to/"
 	}
 }
 
@@ -120,6 +126,7 @@ curseforge {
         displayName = jar.archiveName.replace(".jar", "")
         relations{
 			requiredLibrary 'guide-api'
+			optionalLibrary 'industrial-craft'
 		}
     }
     addArtifact(sourceJar) {
