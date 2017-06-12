@@ -16,6 +16,16 @@ public class OverlordConfigGuiFactory implements IModGuiFactory {
 	}
 
 	@Override
+	public boolean hasConfigGui() {
+		return true;
+	}
+
+	@Override
+	public GuiScreen createConfigGui(GuiScreen parentScreen) {
+		return new OverlordConfigGui(parentScreen);
+	}
+
+	@Override
 	public Class<? extends GuiScreen> mainConfigGuiClass() {
 		return OverlordConfigGui.class;
 	}

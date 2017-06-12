@@ -95,7 +95,7 @@ public class ContainerSkeletonMaker extends Container {
 			IContainerListener icontainerlistener = this.listeners.get(i);
 
 			if (this.milk != te.getField(0)) {
-				icontainerlistener.sendProgressBarUpdate(this, 0, te.getField(0));
+				icontainerlistener.sendWindowProperty(this, 0, te.getField(0));
 			}
 		}
 

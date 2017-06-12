@@ -41,7 +41,7 @@ public class EntityAIWanderBase extends EntityAIBase {
 
 		Vec3d vec3d = RandomPositionGenerator.findRandomTarget(this.entity, 10, 7);
 		int attempts = 0;
-		while (attempts < 10 && entity.getHomePosition().getDistance(vec3d != null ? (int) vec3d.xCoord : (int) entity.posX, vec3d != null ? (int) vec3d.yCoord : (int) entity.posY, vec3d != null ? (int) vec3d.zCoord : (int) entity.posZ) > entity.getMaximumHomeDistance()) {
+		while (attempts < 10 && entity.getHomePosition().getDistance(vec3d != null ? (int) vec3d.x: (int) entity.posX, vec3d != null ? (int) vec3d.y : (int) entity.posY, vec3d != null ? (int) vec3d.z : (int) entity.posZ) > entity.getMaximumHomeDistance()) {
 			vec3d = RandomPositionGenerator.findRandomTarget(this.entity, 12, 8);
 			attempts++;
 		}
@@ -49,9 +49,9 @@ public class EntityAIWanderBase extends EntityAIBase {
 		if (vec3d == null || attempts >= 10) {
 			return false;
 		} else {
-			this.xPosition = vec3d.xCoord;
-			this.yPosition = vec3d.yCoord;
-			this.zPosition = vec3d.zCoord;
+			this.xPosition = vec3d.x;
+			this.yPosition = vec3d.y;
+			this.zPosition = vec3d.z;
 			this.mayNotUpdate = true;
 			return true;
 		}
@@ -61,7 +61,7 @@ public class EntityAIWanderBase extends EntityAIBase {
 	 * Returns whether an in-progress EntityAIBase should continue executing
 	 */
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		return !this.entity.getNavigator().noPath();
 	}
 

@@ -171,8 +171,8 @@ public final class CommonEvents {
 		if (!event.getEntity().world.isRemote)
 			if (event.getSource().isProjectile()) {
 				if (event.getEntityLiving() instanceof EntityPlayerMP) {
-					if (event.getSource().getEntity() instanceof EntitySkeletonWarrior) {
-						if (((EntitySkeletonWarrior) event.getSource().getEntity()).getOwnerId().equals(event.getEntityLiving().getUniqueID())) {
+					if (event.getSource().getTrueSource() instanceof EntitySkeletonWarrior) {
+						if (((EntitySkeletonWarrior) event.getSource().getTrueSource()).getOwnerId().equals(event.getEntityLiving().getUniqueID())) {
 							if (((EntityPlayerMP) event.getEntityLiving()).getStatFile().canUnlockAchievement(Overlord.nmyi))
 								((EntityPlayerMP) event.getEntityLiving()).addStat(Overlord.nmyi);
 						}
@@ -184,7 +184,7 @@ public final class CommonEvents {
 	@SubscribeEvent
 	public void livingDeath(LivingDeathEvent event) {
 		if (!event.getEntityLiving().world.isRemote) {
-			if (event.getSource().getEntity() instanceof EntitySkeletonWarrior && event.getEntityLiving() instanceof EntityLiving) {
+			if (event.getSource().getTrueSource() instanceof EntitySkeletonWarrior && event.getEntityLiving() instanceof EntityLiving) {
 				int i = getExperiencePoints((EntityLiving) event.getEntityLiving());
 				while (i > 0) {
 					int j = EntityXPOrb.getXPSplit(i);
@@ -193,9 +193,9 @@ public final class CommonEvents {
 				}
 			}
 
-			if (event.getSource().getEntity() instanceof EntityWolf && event.getEntityLiving() instanceof EntityArmyMember) {
-				if (((EntityWolf) event.getSource().getEntity()).getOwnerId() != null) {
-					EntityPlayer wolfOwner = ((EntityArmyMember) event.getEntityLiving()).world.getPlayerEntityByUUID(((EntityWolf) event.getSource().getEntity()).getOwnerId());
+			if (event.getSource().getTrueSource() instanceof EntityWolf && event.getEntityLiving() instanceof EntityArmyMember) {
+				if (((EntityWolf) event.getSource().getTrueSource()).getOwnerId() != null) {
+					EntityPlayer wolfOwner = ((EntityArmyMember) event.getEntityLiving()).world.getPlayerEntityByUUID(((EntityWolf) event.getSource().getTrueSource()).getOwnerId());
 					if (wolfOwner != null) {
 						if (wolfOwner instanceof EntityPlayerMP)
 							if (((EntityPlayerMP) wolfOwner).getStatFile().canUnlockAchievement(Overlord.wardog)) {

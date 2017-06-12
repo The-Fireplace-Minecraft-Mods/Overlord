@@ -142,7 +142,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 						((EntityArmyMember) this.attacker).initEntityAI();
 						return;
 					}
-					if (continueExecuting()) {
+					if (shouldContinueExecuting()) {
 						++raiseArmTicks;
 
 						if (raiseArmTicks >= 5 && this.attackTick < 10) {
@@ -287,12 +287,12 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 					}
 			}
 
-			this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D)).stream().filter(entityitem -> !entityitem.isDead && !entityitem.getEntityItem().isEmpty() && !entityitem.cannotPickup()).forEach(entityitem -> {
-				ItemStack stack2 = inventory.addItem(entityitem.getEntityItem());
+			this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D)).stream().filter(entityitem -> !entityitem.isDead && !entityitem.getItem().isEmpty() && !entityitem.cannotPickup()).forEach(entityitem -> {
+				ItemStack stack2 = inventory.addItem(entityitem.getItem());
 				if (!stack2.isEmpty()) {
-					if (stack2.getCount() != entityitem.getEntityItem().getCount())
+					if (stack2.getCount() != entityitem.getItem().getCount())
 						playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
-					entityitem.getEntityItem().setCount(stack2.getCount());
+					entityitem.getItem().setCount(stack2.getCount());
 					if (stack2.getItem() == Items.MILK_BUCKET || stack2.getItem() == Overlord.milk_bottle) {
 						for (int i = 0; i < inventory.getSizeInventory(); i++) {
 							if (!inventory.getStackInSlot(i).isEmpty() && (inventory.getStackInSlot(i).getItem() == Items.BUCKET || inventory.getStackInSlot(i).getItem() == Items.GLASS_BOTTLE)) {
@@ -423,7 +423,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 		float f = this.getBrightness(1.0F);
 
 		if (f > 0.5F && !getSkinType().protectsFromSun())
-			this.entityAge += 1;
+			this.idleTime += 1;
 		super.onLivingUpdate();
 	}
 
@@ -474,8 +474,8 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 	public void onDeath(@Nonnull DamageSource cause) {
 		super.onDeath(cause);
 
-		if (cause.getEntity() instanceof EntityCreeper && ((EntityCreeper) cause.getEntity()).getPowered() && ((EntityCreeper) cause.getEntity()).isAIEnabled()) {
-			((EntityCreeper) cause.getEntity()).incrementDroppedSkulls();
+		if (cause.getTrueSource() instanceof EntityCreeper && ((EntityCreeper) cause.getTrueSource()).getPowered() && ((EntityCreeper) cause.getTrueSource()).isAIEnabled()) {
+			((EntityCreeper) cause.getTrueSource()).incrementDroppedSkulls();
 			this.entityDropItem(new ItemStack(Items.SKULL), 0.0F);
 		}
 

@@ -24,7 +24,7 @@ apply plugin: 'net.cazzar.gradle.modsio'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
-version = "2.4.0"
+version = "2.4.1"
 group= "the_fireplace.overlord"
 archivesBaseName = "Overlord-1.11.2"
 
@@ -34,16 +34,21 @@ allprojects {
 }
 
 minecraft {
-    version = "1.11.2-13.20.0.2255"
+    version = "1.11.2-13.20.0.2315"
     runDir = "run"
     replace '${version}', project.version
-    mappings = "snapshot_20170308"
+    mappings = "stable_31"
     useDepAts = true
 }
 
 dependencies {
-	deobfCompile group: "mezz.jei", name: "jei_1.11.2", version: "4.2.3.223"
-	deobfCompile "info.amerifrance.guideapi:Guide-API:1.11-2.1.0-50"
+	deobfCompile group: "mezz.jei", name: "jei_1.11.2", version: "4.5.0.287"
+	deobfCompile "info.amerifrance.guideapi:Guide-API:1.11.2-2.1.1-52"
+	deobfCompile("codechicken:NotEnoughItems:1.11.2-2.3.0.223:universal") {
+        exclude module: "jei_1.11.2"
+		exclude module: "CodeChickenLib"
+    }
+	deobfCompile "codechicken:CodeChickenLib:1.11.2-2.7.0.268:universal"//Manually do CCL so the game doesn't crash
 }
 
 repositories{
@@ -52,6 +57,9 @@ repositories{
     }
     maven { //Guide API
 		url "http://tehnut.info/maven/"
+	}
+	maven { //Chicken Bones
+		url "http://chickenbones.net/maven/"
 	}
 }
 

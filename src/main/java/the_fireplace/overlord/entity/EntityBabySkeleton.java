@@ -186,7 +186,7 @@ public class EntityBabySkeleton extends EntityArmyMember implements ISkinsuitWea
 		float f = this.getBrightness(1.0F);
 
 		if (f > 0.5F && !getSkinType().protectsFromSun())
-			this.entityAge += 1;
+			this.idleTime += 1;
 		super.onLivingUpdate();
 	}
 
@@ -199,8 +199,8 @@ public class EntityBabySkeleton extends EntityArmyMember implements ISkinsuitWea
 	public void onDeath(@Nonnull DamageSource cause) {
 		super.onDeath(cause);
 
-		if (cause.getEntity() instanceof EntityCreeper && ((EntityCreeper) cause.getEntity()).getPowered() && ((EntityCreeper) cause.getEntity()).isAIEnabled()) {
-			((EntityCreeper) cause.getEntity()).incrementDroppedSkulls();
+		if (cause.getTrueSource() instanceof EntityCreeper && ((EntityCreeper) cause.getTrueSource()).getPowered() && ((EntityCreeper) cause.getTrueSource()).isAIEnabled()) {
+			((EntityCreeper) cause.getTrueSource()).incrementDroppedSkulls();
 			this.entityDropItem(new ItemStack(Items.SKULL), 0.0F);
 		}
 

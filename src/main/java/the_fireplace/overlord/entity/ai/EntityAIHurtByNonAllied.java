@@ -19,7 +19,7 @@ public class EntityAIHurtByNonAllied extends EntityAIHurtByTarget {
 
 	@Override
 	public boolean shouldExecute() {
-		EntityLivingBase entitylivingbase = this.taskOwner.getAITarget();
+		EntityLivingBase entitylivingbase = this.taskOwner.getRevengeTarget();
 		if (entitylivingbase instanceof EntityArmyMember)
 			if (((EntityArmyMember) entitylivingbase).getOwnerId().equals(this.owner.getOwnerId()))
 				return false;

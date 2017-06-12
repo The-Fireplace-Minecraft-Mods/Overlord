@@ -49,7 +49,7 @@ public class EntityAIArmyBow extends EntityAIBase {
 	 * Returns whether an in-progress EntityAIBase should continue executing
 	 */
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		return (this.shouldExecute() || !this.entity.getNavigator().noPath()) && this.isBowInMainhand() && this.isArrowInOffhand();
 	}
 

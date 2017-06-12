@@ -31,9 +31,9 @@ public final class RenderTools {
 			entityItem.setNoDespawn();
 		}
 		entityItem.setLocationAndAngles(x, y, z, targetEntity.rotationYaw, targetEntity.rotationPitch);
-		entityItem.setEntityItemStack(stack);
+		entityItem.setItem(stack);
 
-		ItemStack itemstack = entityItem.getEntityItem();
+		ItemStack itemstack = entityItem.getItem();
 		int i = itemstack.isEmpty() ? 187 : Item.getIdFromItem(itemstack.getItem()) + itemstack.getMetadata();
 		random.setSeed((long) i);
 
@@ -102,7 +102,7 @@ public final class RenderTools {
 	}
 
 	private static int transformModelCount(EntityItem itemIn, double trX, double trY, double trZ, float partialTicks, IBakedModel model, RenderManager rm) {
-		ItemStack itemstack = itemIn.getEntityItem();
+		ItemStack itemstack = itemIn.getItem();
 		Item item = itemstack.getItem();
 
 		if (item == null) {

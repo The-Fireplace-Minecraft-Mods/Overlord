@@ -35,7 +35,7 @@ public class EntityAIMasterHurtByTarget extends EntityAITarget {
 		if (entitylivingbase == null) {
 			return false;
 		} else {
-			this.theOwnerAttacker = entitylivingbase.getAITarget();
+			this.theOwnerAttacker = entitylivingbase.getRevengeTarget();
 			int i = entitylivingbase.getRevengeTimer();
 			return i != this.timestamp && this.isSuitableTarget(this.theOwnerAttacker, false) && this.theDefendingTameable.shouldAttackEntity(this.theOwnerAttacker, entitylivingbase);
 		}

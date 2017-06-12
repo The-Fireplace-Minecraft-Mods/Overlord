@@ -30,7 +30,7 @@ public class AugmentMummy extends Augment {
 
 	@Override
 	public void onEntityTick(@Nonnull EntityArmyMember armyMember) {
-		for (Entity entity : armyMember.world.getEntitiesWithinAABBExcludingEntity(armyMember, armyMember.getEntityBoundingBox().expandXyz(5)))
+		for (Entity entity : armyMember.world.getEntitiesWithinAABBExcludingEntity(armyMember, armyMember.getEntityBoundingBox().grow(5)))
 			if (entity instanceof EntityLivingBase && entity instanceof IEntityOwnable && ((IEntityOwnable) entity).getOwnerId() != null && ((IEntityOwnable) entity).getOwnerId().equals(armyMember.getOwnerId()) && ((EntityLivingBase) entity).getActivePotionEffect(MobEffects.RESISTANCE) == null)
 				((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 120));
 	}

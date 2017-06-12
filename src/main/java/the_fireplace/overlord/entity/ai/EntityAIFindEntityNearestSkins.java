@@ -85,7 +85,7 @@ public class EntityAIFindEntityNearestSkins extends EntityAIBase {
 	 * Returns whether an in-progress EntityAIBase should continue executing
 	 */
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		EntityLivingBase entitylivingbase = this.taskOwner.getAttackTarget();
 
 		if (entitylivingbase == null) {
