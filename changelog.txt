@@ -1,2 +1,1 @@
-Added NEI integration
-IC2's Overclocker is now an Augment
+Bug fixes
