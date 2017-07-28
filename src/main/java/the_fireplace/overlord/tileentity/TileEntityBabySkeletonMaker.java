@@ -1,6 +1,7 @@
 package the_fireplace.overlord.tileentity;
 
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
@@ -13,8 +14,11 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -42,6 +46,8 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 
 	@Override
 	public void spawnSkeleton(EntityPlayer player) {
+		if(!canSpawnSkeleton() || world.isRemote)
+			return;
 		UUID owner = null;
 		if (!getStackInSlot(0).isEmpty()) {
 			if (getStackInSlot(0).getTagCompound() != null) {
@@ -64,6 +70,8 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 		if(player != null && player instanceof EntityPlayerMP){
 			CriteriaTriggers.SUMMONED_ENTITY.trigger((EntityPlayerMP)player, babySkeleton);
 		}
+
+		world.playSound(null, pos, Overlord.CREATE_SKELETON_SOUND, SoundCategory.BLOCKS, 1.0f, 0.5f + world.rand.nextFloat());
 
 		if (!getStackInSlot(9).isEmpty())
 			babySkeleton.setSkinsuit(getStackInSlot(9), SkinType.getSkinTypeFromStack(getStackInSlot(9)));
@@ -321,5 +329,16 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 			else
 				return (T) handlerSide;
 		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public boolean canSpawnSkeleton() {
+		return !(getStackInSlot(1).isEmpty() || getStackInSlot(2).isEmpty()) && MilkRegistry.getInstance().isMilk(getStackInSlot(2)) && getStackInSlot(1).getCount() >= ConfigValues.SERVER_BONEREQ_BABY;
+	}
+
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
+	{
+		return oldState.getBlock() != newState.getBlock();
 	}
 }

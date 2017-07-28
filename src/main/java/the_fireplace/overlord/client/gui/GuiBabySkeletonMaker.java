@@ -16,7 +16,6 @@ import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.container.ContainerBabySkeletonMaker;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.CreateSkeletonMessage;
-import the_fireplace.overlord.registry.MilkRegistry;
 import the_fireplace.overlord.tileentity.TileEntityBabySkeletonMaker;
 
 import java.awt.*;
@@ -112,7 +111,7 @@ public class GuiBabySkeletonMaker extends GuiContainer {
 
 	@Override
 	public void updateScreen() {
-		createSkeleton.enabled = isButtonEnabled();
+		createSkeleton.enabled = te.canSpawnSkeleton();
 	}
 
 	@Override
@@ -122,10 +121,6 @@ public class GuiBabySkeletonMaker extends GuiContainer {
 				PacketDispatcher.sendToServer(new CreateSkeletonMessage(te.getPos()));
 			}
 		}
-	}
-
-	private boolean isButtonEnabled() {
-		return !(te.getStackInSlot(1).isEmpty() || te.getStackInSlot(2).isEmpty()) && MilkRegistry.getInstance().isMilk(te.getStackInSlot(2)) && te.getStackInSlot(1).getCount() >= ConfigValues.SERVER_BONEREQ_BABY;
 	}
 
 	private String getWarning() {

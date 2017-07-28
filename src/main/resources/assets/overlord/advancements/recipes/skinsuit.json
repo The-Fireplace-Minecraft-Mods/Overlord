@@ -85,9 +85,9 @@
   },
   "requirements": [
     [
-      "has_skeleton_warrior",
-      "has_skeleton_baby",
-      "has_skeleton_converted",
+      "summoned_skeleton_warrior",
+      "summoned_skeleton_baby",
+      "summoned_skeleton_converted",
       "has_the_ingredients",
       "has_the_ingredients_b",
       "has_the_recipe",

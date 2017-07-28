@@ -2,6 +2,7 @@ package the_fireplace.overlord.tileentity;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
@@ -17,8 +18,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -70,6 +73,8 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 
 	@Override
 	public void spawnSkeleton(EntityPlayer player) {
+		if(!canSpawnSkeleton() || world.isRemote)
+			return;
 		UUID owner = null;
 		if (!getStackInSlot(0).isEmpty()) {
 			if (getStackInSlot(0).getTagCompound() != null) {
@@ -104,6 +109,8 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 			CriteriaTriggers.SUMMONED_ENTITY.trigger((EntityPlayerMP)player, skeletonWarrior);
 		}
 
+		world.playSound(null, pos, Overlord.CREATE_SKELETON_SOUND, SoundCategory.BLOCKS, 1.0f, 0.5f + world.rand.nextFloat());
+
 		if (!getStackInSlot(12).isEmpty())
 			skeletonWarrior.setSkinsuit(getStackInSlot(12), SkinType.getSkinTypeFromStack(getStackInSlot(12)));
 		setMilk((byte) 0);
@@ -129,6 +136,19 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 				else
 					getStackInSlot(2).shrink(ConfigValues.BONEREQ_WARRIOR);
 		}
+	}
+
+	@Override
+	public boolean canSpawnSkeleton() {
+		if (getStackInSlot(1).isEmpty() && getStackInSlot(2).isEmpty())
+			return false;
+		int s1 = 0;
+		int s2 = 0;
+		if (!getStackInSlot(1).isEmpty())
+			s1 = getStackInSlot(1).getCount();
+		if (!getStackInSlot(2).isEmpty())
+			s2 = getStackInSlot(2).getCount();
+		return getMilk() >= 2 && s1 + s2 >= ConfigValues.SERVER_BONEREQ_WARRIOR;
 	}
 
 	@Override
@@ -383,5 +403,11 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 		markDirty();
 		if (!world.isRemote)
 			world.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
+	}
+
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
+	{
+		return oldState.getBlock() != newState.getBlock();
 	}
 }

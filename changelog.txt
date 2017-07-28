@@ -1,1 +1,4 @@
 Updated to 1.12
+Added new Advancements
+Skeleton Makers now attempt to "Create" when they recieve a redstone signal.
+Added a Skeleton Creation sound effect

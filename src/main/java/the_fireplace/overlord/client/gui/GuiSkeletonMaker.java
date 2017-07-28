@@ -115,7 +115,7 @@ public class GuiSkeletonMaker extends GuiContainer {
 
 	@Override
 	public void updateScreen() {
-		createSkeleton.enabled = isButtonEnabled();
+		createSkeleton.enabled = te.canSpawnSkeleton();
 	}
 
 	@Override
@@ -125,18 +125,6 @@ public class GuiSkeletonMaker extends GuiContainer {
 				PacketDispatcher.sendToServer(new CreateSkeletonMessage(te.getPos()));
 			}
 		}
-	}
-
-	private boolean isButtonEnabled() {
-		if (te.getStackInSlot(1).isEmpty() && te.getStackInSlot(2).isEmpty())
-			return false;
-		int s1 = 0;
-		int s2 = 0;
-		if (!te.getStackInSlot(1).isEmpty())
-			s1 = te.getStackInSlot(1).getCount();
-		if (!te.getStackInSlot(2).isEmpty())
-			s2 = te.getStackInSlot(2).getCount();
-		return te.getMilk() >= 2 && s1 + s2 >= ConfigValues.SERVER_BONEREQ_WARRIOR;
 	}
 
 	private String getWarning() {

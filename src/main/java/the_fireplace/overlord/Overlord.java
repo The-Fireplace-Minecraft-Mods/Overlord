@@ -3,6 +3,8 @@ package the_fireplace.overlord;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.IStateMapper;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.creativetab.CreativeTabs;
@@ -110,6 +112,10 @@ public final class Overlord {
 
 	public static final ResourceLocation hornSoundLoc = new ResourceLocation(MODID, "horn");
 	public static final SoundEvent HORN_SOUND = new SoundEvent(hornSoundLoc);
+	public static final ResourceLocation createSkeletonSoundLoc = new ResourceLocation(MODID, "skeleton_construct");
+	public static final SoundEvent CREATE_SKELETON_SOUND = new SoundEvent(createSkeletonSoundLoc);
+	public static final ResourceLocation createSkeleton2SoundLoc = new ResourceLocation(MODID, "skeleton_construct_2");
+	public static final SoundEvent CREATE_SKELETON_2_SOUND = new SoundEvent(createSkeleton2SoundLoc);
 
 	public static ItemArmor.ArmorMaterial sans = EnumHelper.addArmorMaterial("SANS", "sans_mask", 20, new int[]{0, 0, 0, 0}, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
 
@@ -320,6 +326,9 @@ public final class Overlord {
 		rmm(keychain_occupied);
 		rmm(crown);
 		rmm(rallying_horn);
+		IStateMapper skeleton_maker_mapper = new StateMap.Builder().ignore(BlockSkeletonMaker.TRIGGERED).build();
+		ModelLoader.setCustomStateMapper(skeleton_maker, skeleton_maker_mapper);
+		ModelLoader.setCustomStateMapper(baby_skeleton_maker, skeleton_maker_mapper);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -335,6 +344,8 @@ public final class Overlord {
 	@SubscribeEvent
 	public static void soundRegistry(RegistryEvent.Register<SoundEvent> event){
 		event.getRegistry().register(HORN_SOUND.setRegistryName(hornSoundLoc));
+		event.getRegistry().register(CREATE_SKELETON_SOUND.setRegistryName(createSkeletonSoundLoc));
+		event.getRegistry().register(CREATE_SKELETON_2_SOUND.setRegistryName(createSkeleton2SoundLoc));
 	}
 
 	public static ItemStack crusaderShield() {

@@ -9,4 +9,6 @@ import javax.annotation.Nullable;
  */
 public interface ISkeletonMaker {
 	void spawnSkeleton(@Nullable EntityPlayer player);
+
+	boolean canSpawnSkeleton();
 }

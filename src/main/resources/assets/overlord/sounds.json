@@ -7,5 +7,23 @@
         "stream": false
       }
     ]
+  },
+  "skeleton_construct": {
+    "category": "blocks",
+    "sounds": [
+      {
+        "name": "overlord:skeleton_construct",
+        "stream": false
+      }
+    ]
+  },
+  "skeleton_construct_2": {
+    "category": "blocks",
+    "sounds": [
+      {
+        "name": "overlord:skeleton_construct_2",
+        "stream": false
+      }
+    ]
   }
 }
