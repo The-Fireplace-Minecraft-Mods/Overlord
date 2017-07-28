@@ -90,55 +90,52 @@ cfg.bonereq_warrior.tooltip=Hoeveel botten heeft men nodig om een Skelet Krijger
 cfg.bonereq_baby=Baby Skelet Bot Vereiste
 cfg.bonereq_baby.tooltip=Hoeveel botten heeft men nodig om een Baby Skelet te maken?
 
-achievement.firstbaby=Babies maken
-achievement.firstbaby.desc=Roep een Baby Skelet op
+advancements.overlord.make_baby=Babies maken
+advancements.overlord.make_baby.desc=Roep een Baby Skelet op
 
-achievement.firstskeleton=Jij en welk leger?
-achievement.firstskeleton.desc=Roep een Skelet op
+advancements.overlord.summon_skeleton=Jij en welk leger?
+advancements.overlord.summon_skeleton.desc=Roep een Skelet op
 
-achievement.secondskeleton=Slaafjes
-achievement.secondskeleton.desc=Roep nog een Skelet op
+advancements.overlord.drink_milk=Goed voor je botten
+advancements.overlord.drink_milk.desc=Geef een Skelet Krijger een Emmer Melk
 
-achievement.firstmilk=Goed voor je botten
-achievement.firstmilk.desc=Geef een Skelet Krijger een Emmer Melk
+advancements.overlord.level_up=Met deze opwaarderingen...
+advancements.overlord.level_up.desc=Laat een Skelet Krijger een niveau stijgen
 
-achievement.firstlevel=Met deze opwaarderingen...
-achievement.firstlevel.desc=Laat een Skelet Krijger een niveau stijgen
+advancements.overlord.armed_skeleton=Bewapend en Gevaarlijk
+advancements.overlord.armed_skeleton.desc=Geef een leger skelet een wapen
 
-achievement.armedskeleton=Bewapend en Gevaarlijk
-achievement.armedskeleton.desc=Geef een leger skelet een wapen
+advancements.overlord.sally=Sally
+advancements.overlord.sally.desc=Kleed een leger skelet aan met een huidpak
 
-achievement.sally=Sally
-achievement.sally.desc=Kleed een leger skelet aan met een huidpak
+advancements.overlord.crusader=Kruisvaarder
+advancements.overlord.crusader.desc=Verkleed een Skelet Krijger als een Kruisvaarder (Volledig maliën harnas, wit schild met rood kruis)
 
-achievement.crusader=Kruisvaarder
-achievement.crusader.desc=Verkleed een Skelet Krijger als een Kruisvaarder (Volledig maliën harnas, wit schild met rood kruis)
+advancements.overlord.drink_256_milk=Maar één hapje!
+advancements.overlord.drink_256_milk.desc=Heb een Skelet Krijger die 256 emmers melk heeft geconsumeerd
 
-achievement.milk256=Maar één hapje!
-achievement.milk256.desc=Heb een Skelet Krijger die 256 emmers melk heeft geconsumeerd
+advancements.overlord.drink_9001_milk=Het is over 9000!
+advancements.overlord.drink_9001_milk.desc=Heb een Skelet Krijger die meer dan 9000 emmers melk heeft geconsumeerd
 
-achievement.milk9001=Het is over 9000!
-achievement.milk9001.desc=Heb een Skelet Krijger die meer dan 9000 emmers melk heeft geconsumeerd
+advancements.overlord.alliance=Beter met vrienden
+advancements.overlord.alliance.desc=Vorm een bondgenootschap met een andere speler
 
-achievement.alliance=Beter met vrienden
-achievement.alliance.desc=Vorm een bondgenootschap met een andere speler
+advancements.overlord.dealbreaker=Dealbreker
+advancements.overlord.dealbreaker.desc=Verbreek een bondgenootschap met een andere speler
 
-achievement.breakalliance=Dealbreker
-achievement.breakalliance.desc=Verbreek een bondgenootschap met een andere speler
+advancements.overlord.warmonger=Oorlogsstoker
+advancements.overlord.warmonger.desc=Markeer een andere speler als je vijand
 
-achievement.warmonger=Oorlogsstoker
-achievement.warmonger.desc=Markeer een andere speler als je vijand
+advancements.overlord.forgiver=Vergever
+advancements.overlord.forgiver.desc=Beschouw een speler niet langer als je vijand
 
-achievement.forgiver=Vergever
-achievement.forgiver.desc=Beschouw een speler niet langer als je vijand
+advancements.overlord.interference=Niet mij, idioten!
+advancements.overlord.interference.desc=Sta in de weg van je eigen Skelet Krijger's pijl
 
-achievement.interference=Niet mij, idioten!
-achievement.interference.desc=Sta in de weg van je eigen Skelet Krijger's pijl
+advancements.overlord.war_dog=Doggo doet een oorlog
+advancements.overlord.war_dog.desc=Laat een huisdier wolf een lid van een leger vermoorden
 
-achievement.wardog=Doggo doet een oorlog
-achievement.wardog.desc=Laat een huisdier wolf een lid van een leger vermoorden
-
-achievement.sans=Heya
-achievement.sans.desc=Lijk op een spookachtige vriend...
+advancements.overlord.heya=Heya
+advancements.overlord.heya.desc=Lijk op een spookachtige vriend...
 
 gui.save=Opslaan

@@ -1,0 +1,26 @@
+{
+    "display": {
+        "icon": {
+            "item": "overlord:keychain_empty"
+        },
+        "title": {
+            "translate": "advancements.overlord.jingle_jingle"
+        },
+        "description": {
+            "translate": "advancements.overlord.jingle_jingle.desc"
+        }
+    },
+    "parent": "overlord:overlord/root",
+    "criteria": {
+        "has_the_mask": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "overlord:keychain_empty"
+                    }
+                ]
+            }
+        }
+    }
+}

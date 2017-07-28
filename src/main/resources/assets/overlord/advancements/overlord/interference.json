@@ -1,0 +1,25 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:arrow"
+        },
+        "title": {
+            "translate": "advancements.overlord.interference"
+        },
+        "description": {
+            "translate": "advancements.overlord.interference.desc"
+        }
+    },
+    "parent": "overlord:overlord/summon_skeleton",
+    "criteria": {
+        "skeleton_drank_milk": {
+            "trigger": "overlord:status_update",
+            "conditions": {
+                "item": {
+                    "item": "minecraft:arrow",
+                    "data": 0
+                }
+            }
+        }
+    }
+}

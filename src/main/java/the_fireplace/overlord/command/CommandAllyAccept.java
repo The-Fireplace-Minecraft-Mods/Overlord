@@ -5,9 +5,11 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentTranslation;
 import the_fireplace.overlord.Overlord;
+import the_fireplace.overlord.advancements.CriterionRegistry;
 import the_fireplace.overlord.tools.Alliance;
 import the_fireplace.overlord.tools.Alliances;
 
@@ -45,13 +47,11 @@ public class CommandAllyAccept extends CommandBase {
 					if (ally != null) {
 						ally.sendMessage(new TextComponentTranslation("overlord.allyaccept", ((EntityPlayer) sender).getDisplayNameString()));
 						if (ally instanceof EntityPlayerMP)
-							if (((EntityPlayerMP) ally).getStatFile().canUnlockAchievement(Overlord.alliance))
-								ally.addStat(Overlord.alliance);
+							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) ally, (EntityPlayer)sender, Items.CAKE, 0);
 					}
 					sender.sendMessage(new TextComponentTranslation("overlord.allyaccepted", alliance.getUser1().getPlayerName()));
 					if (sender instanceof EntityPlayerMP)
-						if (((EntityPlayerMP) sender).getStatFile().canUnlockAchievement(Overlord.alliance))
-							((EntityPlayer) sender).addStat(Overlord.alliance);
+						CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) sender, ally != null ? ally : (EntityPlayer)sender, Items.CAKE, 0);
 					return;
 				}
 			}

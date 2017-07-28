@@ -1,0 +1,24 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:milk_bucket"
+        },
+        "title": {
+            "translate": "advancements.overlord.drink_milk"
+        },
+        "description": {
+            "translate": "advancements.overlord.drink_milk.desc"
+        }
+    },
+    "parent": "overlord:overlord/summon_skeleton",
+    "criteria": {
+        "skeleton_drank_milk": {
+            "trigger": "overlord:status_update",
+            "conditions": {
+                "item": {
+                    "item": "overlord:milk_bottle"
+                }
+            }
+        }
+    }
+}

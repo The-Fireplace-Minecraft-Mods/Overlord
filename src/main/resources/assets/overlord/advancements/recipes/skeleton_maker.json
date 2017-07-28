@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "overlord:skeleton_maker"
+    ]
+  },
+  "criteria": {
+    "has_the_ingredients": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:bone"
+          },
+          {
+            "item": "minecraft:netherbrick"
+          }
+        ]
+      }
+    },
+    "has_the_ingredients_b": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:bone"
+          },
+          {
+            "item": "minecraft:nether_brick"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "overlord:skeleton_maker"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_ingredients",
+      "has_the_ingredients_b",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "overlord:overlords_stamp"
+  },
+  "pattern": [
+    " s",
+    "sp",
+    " d"
+  ],
+  "group": "overlords_stamp",
+  "type": "seal_crafting",
+  "key": {
+    "p": {
+      "item": "#PAPER"
+    },
+    "s": {
+      "item": "#STICKWOOD"
+    },
+    "d": {
+      "item": "#DYE"
+    }
+  }
+}

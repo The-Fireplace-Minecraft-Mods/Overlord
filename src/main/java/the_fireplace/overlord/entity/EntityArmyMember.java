@@ -231,7 +231,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 	}
 
 	@Override
-	protected SoundEvent getHurtSound() {
+	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
 		return SoundEvents.ENTITY_SKELETON_HURT;
 	}
 

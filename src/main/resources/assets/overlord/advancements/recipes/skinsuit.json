@@ -1,0 +1,97 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "overlord:skinsuit",
+      "overlord:skinsuit_mummy"
+    ]
+  },
+  "criteria": {
+    "summoned_skeleton_warrior": {
+      "trigger": "minecraft:summoned_entity",
+      "conditions": {
+        "entity": {
+          "type": "overlord:skeleton_warrior"
+        }
+      }
+    },
+    "summoned_skeleton_baby": {
+      "trigger": "minecraft:summoned_entity",
+      "conditions": {
+        "entity": {
+          "type": "overlord:skeleton_baby"
+        }
+      }
+    },
+    "summoned_skeleton_converted": {
+      "trigger": "minecraft:summoned_entity",
+      "conditions": {
+        "entity": {
+          "type": "overlord:skeleton_converted"
+        }
+      }
+    },
+    "has_the_ingredients": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:leather_helmet",
+            "data": 32767
+          },
+          {
+            "item": "minecraft:leather_chestplate",
+            "data": 32767
+          },
+          {
+            "item": "minecraft:leather_leggings",
+            "data": 32767
+          },
+          {
+            "item": "minecraft:leather_boots",
+            "data": 32767
+          },
+          {
+            "item": "minecraft:rotten_flesh"
+          }
+        ]
+      }
+    },
+    "has_the_ingredients_b": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:paper"
+          },
+          {
+            "item": "minecraft:rotten_flesh"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "overlord:skinsuit"
+      }
+    },
+    "has_the_other_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "overlord:skinsuit_mummy"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_skeleton_warrior",
+      "has_skeleton_baby",
+      "has_skeleton_converted",
+      "has_the_ingredients",
+      "has_the_ingredients_b",
+      "has_the_recipe",
+      "has_the_other_recipe"
+    ]
+  ]
+}

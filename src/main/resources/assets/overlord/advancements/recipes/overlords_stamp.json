@@ -1,0 +1,40 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "overlord:overlords_stamp",
+      "overlord:overlords_stamp_alt"
+    ]
+  },
+  "criteria": {
+    "has_the_ingredients": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:paper"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "overlord:overlords_stamp"
+      }
+    },
+    "has_the_recipe_b": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "overlord:overlords_stamp_alt"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_ingredients",
+      "has_the_recipe",
+      "has_the_recipe_b"
+    ]
+  ]
+}

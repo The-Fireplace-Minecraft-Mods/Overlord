@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "overlord:cake"
+    ]
+  },
+  "criteria": {
+    "has_the_original_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "minecraft:cake"
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "overlord:cake"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_original_recipe",
+      "has_the_recipe"
+    ]
+  ]
+}

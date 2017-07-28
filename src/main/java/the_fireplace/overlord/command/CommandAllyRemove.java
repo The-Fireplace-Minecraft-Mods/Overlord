@@ -6,9 +6,10 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentTranslation;
-import the_fireplace.overlord.Overlord;
+import the_fireplace.overlord.advancements.CriterionRegistry;
 import the_fireplace.overlord.tools.Alliance;
 import the_fireplace.overlord.tools.Alliances;
 
@@ -51,8 +52,7 @@ public class CommandAllyRemove extends CommandBase {
 							}
 						}
 						if (sender instanceof EntityPlayerMP)
-							if (((EntityPlayerMP) sender).getStatFile().canUnlockAchievement(Overlord.breakalliance))
-								((EntityPlayer) sender).addStat(Overlord.breakalliance);
+							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) sender, player, Items.STONE_AXE, 0);
 						player.sendMessage(new TextComponentTranslation("overlord.allytermination", ((EntityPlayer) sender).getDisplayNameString()));
 						sender.sendMessage(new TextComponentTranslation("overlord.allyterminated", player.getDisplayNameString()));
 					} else {

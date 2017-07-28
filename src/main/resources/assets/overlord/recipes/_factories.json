@@ -1,0 +1,5 @@
+{
+  "recipes": {
+    "seal_crafting": "the_fireplace.overlord.registry.SealRecipe$Factory"
+  }
+}

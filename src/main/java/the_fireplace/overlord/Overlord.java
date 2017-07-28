@@ -20,17 +20,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.stats.Achievement;
-import net.minecraft.stats.AchievementList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.AchievementPage;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.config.GuiConfigEntries;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Loader;
@@ -40,14 +37,16 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.RecipeSorter;
+import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.logging.log4j.Level;
+import the_fireplace.overlord.advancements.CriterionRegistry;
 import the_fireplace.overlord.augments.*;
 import the_fireplace.overlord.blocks.BlockSkeletonMaker;
 import the_fireplace.overlord.command.*;
@@ -60,14 +59,11 @@ import the_fireplace.overlord.entity.EntityCuringSkeleton;
 import the_fireplace.overlord.entity.EntitySkeletonWarrior;
 import the_fireplace.overlord.entity.projectile.EntityMilkBottle;
 import the_fireplace.overlord.handlers.DispenseBehaviorKeychain;
-import the_fireplace.overlord.handlers.OverlordFuelHandler;
 import the_fireplace.overlord.items.*;
 import the_fireplace.overlord.network.OverlordGuiHandler;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.registry.AugmentRegistry;
-import the_fireplace.overlord.registry.CraftingRecipes;
 import the_fireplace.overlord.registry.MilkRegistry;
-import the_fireplace.overlord.registry.SealRecipe;
 import the_fireplace.overlord.tileentity.TileEntityBabySkeletonMaker;
 import the_fireplace.overlord.tileentity.TileEntitySkeletonMaker;
 import the_fireplace.overlord.tools.*;
@@ -78,7 +74,8 @@ import java.util.ArrayList;
 /**
  * @author The_Fireplace
  */
-@Mod(modid = Overlord.MODID, name = Overlord.MODNAME, guiFactory = "the_fireplace.overlord.client.gui.OverlordConfigGuiFactory", updateJSON = "https://bitbucket.org/The_Fireplace/minecraft-mod-updates/raw/master/overlord.json", acceptedMinecraftVersions = "[1.11.2,)", dependencies = "before:guideapi", version = "${version}")
+@Mod.EventBusSubscriber
+@Mod(modid = Overlord.MODID, name = Overlord.MODNAME, guiFactory = "the_fireplace.overlord.client.gui.OverlordConfigGuiFactory", updateJSON = "https://bitbucket.org/The_Fireplace/minecraft-mod-updates/raw/master/overlord.json", acceptedMinecraftVersions = "[1.12,)", dependencies = "before:guideapi", version = "${version}")
 public final class Overlord {
 	public static final String MODNAME = "Overlord";
 	public static final String MODID = "overlord";
@@ -172,24 +169,7 @@ public final class Overlord {
 			MAXARROWDISTANCE_PROPERTY.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
 		}
 		syncConfig();
-		registerBlock(skeleton_maker);
-		registerBlock(baby_skeleton_maker);
-		registerItem(overlords_seal);
-		registerItem(overlords_stamp);
-		registerItem(squad_editor);
-		registerItem(sans_mask);
-		registerItem(skinsuit);
-		registerItem(skinsuit_mummy);
-		registerItem(warrior_spawner);
-		registerItem(baby_spawner);
-		registerItem(converted_spawner);
-		registerItem(milk_bottle);
-		registerItem(keychain);
-		registerItem(keychain_occupied);
-		registerItem(crown);
-		registerItem(rallying_horn);
-		GameRegistry.register(HORN_SOUND, hornSoundLoc);
-		OreDictionary.registerOre("book", squad_editor);
+
 		GameRegistry.registerTileEntity(TileEntitySkeletonMaker.class, "skeleton_maker");
 		GameRegistry.registerTileEntity(TileEntityBabySkeletonMaker.class, "baby_skeleton_maker");
 		int eid = -1;
@@ -198,17 +178,13 @@ public final class Overlord {
 		EntityRegistry.registerModEntity(new ResourceLocation(MODID + ":milk_bottle"), EntityMilkBottle.class, "milk_bottle", ++eid, instance, 32, 10, true);
 		EntityRegistry.registerModEntity(new ResourceLocation(MODID + ":skeleton_converted"), EntityConvertedSkeleton.class, "skeleton_converted", ++eid, instance, 116, 2, false);
 		EntityRegistry.registerModEntity(new ResourceLocation(MODID + ":skeleton_curing"), EntityCuringSkeleton.class, "skeleton_curing", ++eid, instance, 48, 2, false);
-		GameRegistry.registerFuelHandler(new OverlordFuelHandler());
 		proxy.registerClient();
-		MinecraftForge.EVENT_BUS.register(new CommonEvents());
 		DataSerializers.registerSerializer(CustomDataSerializers.UNIQUE_ID);
+		new CriterionRegistry();
 	}
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
-		addAchievements();
-		RecipeSorter.register("overlord:seal", SealRecipe.class, RecipeSorter.Category.SHAPED, "after:forge:shapedore");
-		CraftingRecipes.addRecipes();
 		AugmentRegistry.registerAugment(new ItemStack(Items.GOLDEN_APPLE), new AugmentSlowRegen());
 		AugmentRegistry.registerAugment(new ItemStack(Items.GOLDEN_APPLE, 1, 1), new AugmentFastRegen());
 		AugmentRegistry.registerAugment(new ItemStack(Items.IRON_INGOT), new AugmentIron());
@@ -216,7 +192,9 @@ public final class Overlord {
 		AugmentRegistry.registerAugment(new ItemStack(Blocks.ANVIL), new AugmentAnvil());
 		AugmentRegistry.registerAugment(new ItemStack(Items.SKULL, 1, 1), new AugmentWither());
 		AugmentRegistry.registerAugment(new ItemStack(Items.SUGAR), new AugmentJitters());
-		AugmentRegistry.registerAugment(CraftingRecipes.skinsuit_mummy, new AugmentMummy());
+		AugmentRegistry.registerAugment(new ItemStack(skinsuit_mummy), new AugmentMummy());
+
+		OreDictionary.registerOre("book", squad_editor);
 
 		MilkRegistry.getInstance().registerMilk(new ItemStack(Items.MILK_BUCKET), new ItemStack(Items.BUCKET));
 		MilkRegistry.getInstance().registerMilk(new ItemStack(milk_bottle), new ItemStack(Items.GLASS_BOTTLE));
@@ -260,8 +238,72 @@ public final class Overlord {
 		Squads.load();
 	}
 
+	private static IForgeRegistry<Block> blockRegistry = null;
+
+	public static void registerBlock(Block block) {
+		if(blockRegistry == null){
+			logError("Block registry was null, could not register: "+block.getUnlocalizedName());
+			return;
+		}
+		blockRegistry.register(block.setRegistryName(block.getUnlocalizedName().substring(5)));
+	}
+
+	private static IForgeRegistry<Item> itemRegistry = null;
+
+	public static void registerItem(Item item) {
+		if(itemRegistry == null){
+			logError("Item registry was null, could not register: "+item.getUnlocalizedName());
+			return;
+		}
+		itemRegistry.register(item.setRegistryName(item.getUnlocalizedName().substring(5)));
+	}
+
+	public static void registerItemForBlock(Block block) {
+		if(itemRegistry == null){
+			logError("Item registry was null, could not register: "+block.getUnlocalizedName());
+			return;
+		}
+		itemRegistry.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
+	}
+
+	public static void registerItemBlock(ItemBlock itemBlock) {
+		if(itemRegistry == null){
+			logError("Item registry was null, could not register: "+itemBlock.getUnlocalizedName());
+			return;
+		}
+		itemRegistry.register(itemBlock.setRegistryName(itemBlock.getBlock().getUnlocalizedName().substring(5)));
+	}
+
+	@SubscribeEvent
+	public static void itemRegistry(RegistryEvent.Register<Item> event) {
+		itemRegistry = event.getRegistry();
+		registerItem(overlords_seal);
+		registerItem(overlords_stamp);
+		registerItem(squad_editor);
+		registerItem(sans_mask);
+		registerItem(skinsuit);
+		registerItem(skinsuit_mummy);
+		registerItem(warrior_spawner);
+		registerItem(baby_spawner);
+		registerItem(converted_spawner);
+		registerItem(milk_bottle);
+		registerItem(keychain);
+		registerItem(keychain_occupied);
+		registerItem(crown);
+		registerItem(rallying_horn);
+		registerItemForBlock(skeleton_maker);
+		registerItemForBlock(baby_skeleton_maker);
+	}
+
+	@SubscribeEvent
+	public static void blockRegistry(RegistryEvent.Register<Block> event) {
+		blockRegistry = event.getRegistry();
+		registerBlock(skeleton_maker);
+		registerBlock(baby_skeleton_maker);
+	}
+
 	@SideOnly(Side.CLIENT)
-	public void registerItemRenders() {
+	public static void registerItemRenders() {
 		rmm(skeleton_maker);
 		rmm(baby_skeleton_maker);
 		rmm(overlords_seal);
@@ -281,22 +323,18 @@ public final class Overlord {
 	}
 
 	@SideOnly(Side.CLIENT)
-	private void rmm(Block b) {
+	private static void rmm(Block b) {
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(b), 0, new ModelResourceLocation(MODID + ':' + b.getUnlocalizedName().substring(5), "inventory"));
 	}
 
 	@SideOnly(Side.CLIENT)
-	private void rmm(Item i) {
+	private static void rmm(Item i) {
 		ModelLoader.setCustomModelResourceLocation(i, 0, new ModelResourceLocation(MODID + ':' + i.getUnlocalizedName().substring(5), "inventory"));
 	}
 
-	public void registerBlock(Block block) {
-		GameRegistry.register(block.setRegistryName(block.getUnlocalizedName().substring(5)));
-		GameRegistry.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
-	}
-
-	public void registerItem(Item item) {
-		GameRegistry.register(item.setRegistryName(item.getUnlocalizedName().substring(5)));
+	@SubscribeEvent
+	public static void soundRegistry(RegistryEvent.Register<SoundEvent> event){
+		event.getRegistry().register(HORN_SOUND.setRegistryName(hornSoundLoc));
 	}
 
 	public static ItemStack crusaderShield() {
@@ -315,55 +353,6 @@ public final class Overlord {
 		tagCompound.setTag("BlockEntityTag", bet);
 		shieldStack.setTagCompound(tagCompound);
 		return shieldStack;
-	}
-
-	public static Achievement firstBaby = new Achievement("firstbaby", "firstbaby", 1, 1, Items.SKULL, AchievementList.BUILD_PICKAXE);
-	public static Achievement firstSkeleton = new Achievement("firstskeleton", "firstskeleton", 0, 0, Items.SKULL, AchievementList.BUILD_PICKAXE);
-	public static Achievement converter = new Achievement("converter", "converter", -1, -1, Items.GOLDEN_APPLE, AchievementList.BUILD_PICKAXE);
-	public static Achievement secondSkeleton = new Achievement("secondskeleton", "secondskeleton", 0, 2, Items.SKULL, firstSkeleton);
-	public static Achievement firstMilk = new Achievement("firstmilk", "firstmilk", 2, 0, Items.MILK_BUCKET, firstSkeleton);
-	public static Achievement firstLevel = new Achievement("firstlevel", "firstlevel", 0, -2, Items.BONE, firstSkeleton);
-	public static Achievement armedSkeleton = new Achievement("armedskeleton", "armedskeleton", -2, 1, Items.WOODEN_SWORD, firstSkeleton);
-	public static Achievement sally = new Achievement("sally", "sally", -2, -1, skinsuit, firstSkeleton);
-	public static Achievement crusader = new Achievement("crusader", "crusader", -3, 0, crusaderShield(), firstSkeleton);
-	public static Achievement milk256 = new Achievement("milk256", "milk256", 4, 0, Items.MILK_BUCKET, firstMilk);
-	public static Achievement milk9001 = new Achievement("milk9001", "milk9001", 6, 0, Items.MILK_BUCKET, milk256);
-
-	public static Achievement nmyi = new Achievement("interference", "interference", 2, 2, Items.ARROW, AchievementList.BUILD_WORK_BENCH);
-
-	public static Achievement alliance = new Achievement("alliance", "alliance", 2, -2, Items.SHIELD, AchievementList.OPEN_INVENTORY);
-	public static Achievement breakalliance = new Achievement("breakalliance", "breakalliance", 4, -2, Items.IRON_AXE, alliance);
-
-	public static Achievement warmonger = new Achievement("warmonger", "warmonger", 2, -3, Items.IRON_SWORD, AchievementList.OPEN_INVENTORY);
-	public static Achievement forgiver = new Achievement("forgiver", "forgiver", 4, -3, Items.CAKE, warmonger);
-
-	public static Achievement wardog = new Achievement("wardog", "wardog", -3, 2, Items.COOKED_BEEF, AchievementList.OPEN_INVENTORY);
-
-	public static Achievement heya = new Achievement("sans", "sans", 4, 4, sans_mask, AchievementList.OPEN_INVENTORY);
-
-	private static void addAchievements() {
-		firstBaby.registerStat();
-		firstSkeleton.registerStat();
-		converter.registerStat();
-		secondSkeleton.registerStat();
-		firstLevel.registerStat();
-		firstMilk.registerStat();
-		armedSkeleton.registerStat();
-		sally.registerStat();
-		crusader.registerStat();
-		milk256.registerStat();
-		milk9001.registerStat();
-		milk9001.setSpecial();
-		nmyi.registerStat();
-		alliance.registerStat();
-		breakalliance.registerStat();
-		warmonger.registerStat();
-		forgiver.registerStat();
-		wardog.registerStat();
-		heya.registerStat();
-		heya.setSpecial();
-		AchievementPage.registerAchievementPage(new AchievementPage(MODNAME,
-				firstBaby, firstSkeleton, converter, secondSkeleton, firstLevel, firstMilk, armedSkeleton, sally, crusader, milk256, milk9001, nmyi, alliance, breakalliance, warmonger, forgiver, wardog, heya));
 	}
 
 	public static void logInfo(String log, Object... params) {

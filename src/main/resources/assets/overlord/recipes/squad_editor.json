@@ -1,0 +1,17 @@
+{
+  "result": {
+    "item": "overlord:squad_editor"
+  },
+  "ingredients": [
+    {
+      "item": "minecraft:book"
+    },
+    {
+      "item": "#DYEBLACK"
+    },
+    {
+      "item": "#BONE"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

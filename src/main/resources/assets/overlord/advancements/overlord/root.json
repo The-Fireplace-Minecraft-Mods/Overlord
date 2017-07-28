@@ -1,0 +1,21 @@
+{
+    "display": {
+        "icon": {
+            "item": "overlord:skeleton_maker"
+        },
+        "title": {
+            "translate": "advancements.overlord.root.title"
+        },
+        "description": {
+            "translate": "advancements.overlord.root.description"
+        },
+        "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
+        "show_toast": false,
+        "announce_to_chat": false
+    },
+    "criteria": {
+        "enter_block": {
+            "trigger": "minecraft:enter_block"
+        }
+    }
+}

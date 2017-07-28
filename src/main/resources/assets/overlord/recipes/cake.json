@@ -1,0 +1,25 @@
+{
+  "result": {
+    "item": "minecraft:cake"
+  },
+  "pattern": [
+    "mmm",
+    "ses",
+    "www"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "s": {
+      "item": "minecraft:sugar"
+    },
+    "e": {
+      "item": "#EGG"
+    },
+    "w": {
+      "item": "#CROPWHEAT"
+    },
+    "m": {
+      "item": "overlord:milk_bottle"
+    }
+  }
+}

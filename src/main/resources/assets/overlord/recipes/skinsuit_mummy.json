@@ -1,0 +1,35 @@
+{
+  "result": {
+    "item": "overlord:skinsuit_mummy"
+  },
+  "ingredients": [
+    {
+      "item": "minecraft:rotten_flesh"
+    },
+    {
+      "item": "minecraft:rotten_flesh"
+    },
+    {
+      "item": "minecraft:rotten_flesh"
+    },
+    {
+      "item": "minecraft:rotten_flesh"
+    },
+    {
+      "item": "minecraft:rotten_flesh"
+    },
+    {
+      "item": "#PAPER"
+    },
+    {
+      "item": "#PAPER"
+    },
+    {
+      "item": "#PAPER"
+    },
+    {
+      "item": "#PAPER"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

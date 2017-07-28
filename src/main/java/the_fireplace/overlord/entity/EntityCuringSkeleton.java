@@ -1,7 +1,10 @@
 package the_fireplace.overlord.entity;
 
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
@@ -106,6 +109,13 @@ public class EntityCuringSkeleton extends EntitySkeleton {
 		}
 
 		this.world.spawnEntity(entityConvertedSkeleton);
+
+		EntityLivingBase owner = entityConvertedSkeleton.getOwner();
+
+		if(owner != null && owner instanceof EntityPlayerMP){
+			CriteriaTriggers.SUMMONED_ENTITY.trigger((EntityPlayerMP)owner, entityConvertedSkeleton);
+		}
+
 		entityConvertedSkeleton.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 200, 0));
 		this.world.playEvent(null, 1027, new BlockPos((int) this.posX, (int) this.posY, (int) this.posZ), 0);
 	}

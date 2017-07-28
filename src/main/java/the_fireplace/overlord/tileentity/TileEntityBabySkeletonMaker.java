@@ -1,6 +1,8 @@
 package the_fireplace.overlord.tileentity;
 
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.ISidedInventory;
@@ -39,7 +41,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 	}
 
 	@Override
-	public void spawnSkeleton() {
+	public void spawnSkeleton(EntityPlayer player) {
 		UUID owner = null;
 		if (!getStackInSlot(0).isEmpty()) {
 			if (getStackInSlot(0).getTagCompound() != null) {
@@ -58,6 +60,11 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 		babySkeleton.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, getStackInSlot(8));
 
 		world.spawnEntity(babySkeleton);
+
+		if(player != null && player instanceof EntityPlayerMP){
+			CriteriaTriggers.SUMMONED_ENTITY.trigger((EntityPlayerMP)player, babySkeleton);
+		}
+
 		if (!getStackInSlot(9).isEmpty())
 			babySkeleton.setSkinsuit(getStackInSlot(9), SkinType.getSkinTypeFromStack(getStackInSlot(9)));
 		for (int i : clearslots) {

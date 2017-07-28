@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "overlord:baby_skeleton_maker"
+  },
+  "pattern": [
+    "b b",
+    "bgb",
+    "sss"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "b": {
+      "item": "#STONE"
+    },
+    "s": {
+      "item": "minecraft:stonebrick",
+      "data": 0
+    },
+    "g": {
+      "item": "#BLOCKGLASS"
+    }
+  }
+}

@@ -120,66 +120,78 @@ cfg.bonereq_baby.tooltip=How many bones does it take to make a Baby Skeleton?
 cfg.max_arrow_distance=Max Bow Use Distance
 cfg.max_arrow_distance.tooltip=Controls how far your Skeleton Warriors can shoot their bows.
 
-achievement.firstbaby=Makin' Babies
-achievement.firstbaby.desc=Summon a Baby Skeleton
+advancements.overlord.root.title=Overlord
+advancements.overlord.root.description=Build your army
 
-achievement.firstskeleton=You and what army?
-achievement.firstskeleton.desc=Summon a Skeleton
+advancements.overlord.make_baby=Makin' Babies
+advancements.overlord.make_baby.desc=Summon a Baby Skeleton
 
-achievement.converter=Recruiter
-achievement.converter.desc=Convert a Skeleton in to a member of your army
+advancements.overlord.summon_skeleton=You and what army?
+advancements.overlord.summon_skeleton.desc=Summon a Skeleton Warrior
 
-achievement.secondskeleton=Minions
-achievement.secondskeleton.desc=Summon another Skeleton
+advancements.overlord.convert_skeleton=Recruiter
+advancements.overlord.convert_skeleton.desc=Convert a Skeleton in to a member of your army
 
-achievement.firstmilk=Good for your bones
-achievement.firstmilk.desc=Give a Skeleton Warrior a Milk Bucket
+advancements.overlord.drink_milk=Good for your bones
+advancements.overlord.drink_milk.desc=Give a Skeleton Warrior a Milk Bucket or Bottle
 
-achievement.firstlevel=With These Upgrades...
-achievement.firstlevel.desc=Level up a Skeleton Warrior
+advancements.overlord.level_up=With These Upgrades...
+advancements.overlord.level_up.desc=Level up a Skeleton Warrior
 
-achievement.armedskeleton=Armed and Dangerous
-achievement.armedskeleton.desc=Give an Army Skeleton a weapon
+advancements.overlord.armed_skeleton=Armed and Dangerous
+advancements.overlord.armed_skeleton.desc=Give an Army Skeleton a weapon
 
-achievement.sally=Sally
-achievement.sally.desc=Put a Skinsuit on an Army Skeleton
+advancements.overlord.sally=Sally
+advancements.overlord.sally.desc=Put a Skinsuit on an Army Skeleton
 
-achievement.crusader=Crusader
-achievement.crusader.desc=Dress a Skeleton Warrior as a Crusader(Full chainmail, white shield with red cross)
+advancements.overlord.crusader=Crusader
+advancements.overlord.crusader.desc=Dress a Skeleton Warrior as a Crusader(Full chainmail, white shield with red cross)
 
-achievement.milk256=Just One Byte!
-achievement.milk256.desc=Have a Skeleton Warrior that has consumed 256 buckets of milk
+advancements.overlord.drink_256_milk=Just One Byte!
+advancements.overlord.drink_256_milk.desc=Have a Skeleton Warrior that has consumed 256 buckets of milk
 
-achievement.milk9001=It's Over 9000!
-achievement.milk9001.desc=Have a Skeleton Warrior that has consumed over 9000 buckets of milk
+advancements.overlord.drink_9001_milk=It's Over 9000!
+advancements.overlord.drink_9001_milk.desc=Have a Skeleton Warrior that has consumed over 9000 buckets of milk
 
-achievement.alliance=Better with Friends
-achievement.alliance.desc=Form an alliance with another player
+advancements.overlord.alliance=Better with Friends
+advancements.overlord.alliance.desc=Form an alliance with another player
 
-achievement.breakalliance=Dealbreaker
-achievement.breakalliance.desc=Disband an alliance with another player
+advancements.overlord.dealbreaker=Dealbreaker
+advancements.overlord.dealbreaker.desc=Disband an alliance with another player
 
-achievement.warmonger=Warmonger
-achievement.warmonger.desc=Mark another player as your enemy
+advancements.overlord.warmonger=Warmonger
+advancements.overlord.warmonger.desc=Mark another player as your enemy
 
-achievement.forgiver=Forgiver
-achievement.forgiver.desc=Stop considering a player your enemy
+advancements.overlord.forgiver=Forgiver
+advancements.overlord.forgiver.desc=Stop considering a player your enemy
 
-achievement.interference=Not me, you idiots!
-achievement.interference.desc=Get in the way of your own Skeleton Warrior's arrow
+advancements.overlord.interference=Not me, you idiots!
+advancements.overlord.interference.desc=Get in the way of your own Skeleton Warrior's arrow
 
-achievement.wardog=Doggo Does A War
-achievement.wardog.desc=Have a pet Wolf kill a member of an army
+advancements.overlord.secondthoughts=Doubtful Convert
+advancements.overlord.secondthoughts.desc=Get shot by your own Converted Skeleton's arrow
 
-achievement.sans=Heya
-achievement.sans.desc=Look like a spooky friend...
+advancements.overlord.war_dog=Doggo Does A War
+advancements.overlord.war_dog.desc=Have a pet Wolf kill a member of an army
+
+advancements.overlord.heya=Heya
+advancements.overlord.heya.desc=Obtain the face of a spooky friend...
+
+advancements.overlord.jingle_jingle=Jingle Jingle
+advancements.overlord.jingle_jingle.desc=Obtain an empty keychain
+
+advancements.overlord.carry_on=Travel Sized
+advancements.overlord.carry_on.desc=Have a keychain with an Army Skeleton on it
+
+advancements.overlord.crown_me=King Me!
+advancements.overlord.crown_me.desc=Obtain an Overlord's Crown
 
 gui.save=Save
 
 overlord.guide.welcome=Raising an Army
 overlord.guide.1=Skeleton Creation
 overlord.guide.1.1=Claiming your skeletons
-overlord.guide.1.1.1=The very first thing you'll want to do is craft either the Overlord's Stamp of the Overlord's Seal. The Stamp is a cheap, one-time use way to claim them, and the Seal is more expensive, but has unlimited uses.
+overlord.guide.1.1.1=The very first thing you'll want to do is craft either the Overlord's Stamp or the Overlord's Seal. The Stamp is a cheap, one-time use way to claim them, and the Seal is more expensive, but has unlimited uses.
 overlord.guide.1.1.2=After crafting, it should gain the glowy enchanted effect. If it doesn't have it, you need to hold the Seal/Stamps and right click to claim it/them as yours.
 overlord.guide.1.2=Creating Baby Skeletons
 overlord.guide.1.2.1=Start off by making a Baby Skeleton Maker.

@@ -27,9 +27,11 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import the_fireplace.overlord.advancements.CriterionRegistry;
 import the_fireplace.overlord.entity.*;
 import the_fireplace.overlord.entity.ai.EntityAIFindEntityNearestSkins;
 import the_fireplace.overlord.entity.ai.EntityAITargetSkins;
@@ -44,9 +46,10 @@ import java.util.Random;
 /**
  * @author The_Fireplace
  */
+@Mod.EventBusSubscriber
 public final class CommonEvents {
 	@SubscribeEvent
-	public void rightClickEntity(PlayerInteractEvent.EntityInteract event) {
+	public static void rightClickEntity(PlayerInteractEvent.EntityInteract event) {
 		if (event.getTarget() instanceof EntitySkeleton || ((event.getTarget() instanceof EntitySkeletonWarrior || event.getTarget() instanceof EntityBabySkeleton || event.getTarget() instanceof EntitySkeletonHorse) && event.getEntityPlayer().isSneaking())) {
 			if (((EntityLivingBase) event.getTarget()).getHealth() < ((EntityLivingBase) event.getTarget()).getMaxHealth())
 				if (!event.getItemStack().isEmpty())
@@ -109,7 +112,7 @@ public final class CommonEvents {
 	}
 
 	@SubscribeEvent
-	public void entityTick(LivingEvent.LivingUpdateEvent event) {
+	public static void entityTick(LivingEvent.LivingUpdateEvent event) {
 		if (!event.getEntityLiving().world.isRemote) {
 			if (event.getEntityLiving() instanceof EntitySkeleton || event.getEntityLiving() instanceof EntitySkeletonWarrior || event.getEntityLiving() instanceof EntityBabySkeleton || event.getEntityLiving() instanceof EntityConvertedSkeleton) {
 				if (event.getEntityLiving().ticksExisted < 5) {
@@ -151,14 +154,14 @@ public final class CommonEvents {
 	}
 
 	@SubscribeEvent
-	public void configChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+	public static void configChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
 		if (event.getModID().equals(Overlord.MODID)) {
 			Overlord.syncConfig();
 		}
 	}
 
 	@SubscribeEvent
-	public void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
+	public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
 		if (FMLCommonHandler.instance().getMinecraftServerInstance() != null)
 			if (event.player instanceof EntityPlayerMP) {
 				Overlord.logDebug("Sending " + event.player.getName() + " client their squads.");
@@ -167,14 +170,17 @@ public final class CommonEvents {
 	}
 
 	@SubscribeEvent
-	public void livingHurt(LivingHurtEvent event) {
+	public static void livingHurt(LivingHurtEvent event) {
 		if (!event.getEntity().world.isRemote)
 			if (event.getSource().isProjectile()) {
 				if (event.getEntityLiving() instanceof EntityPlayerMP) {
 					if (event.getSource().getTrueSource() instanceof EntitySkeletonWarrior) {
 						if (((EntitySkeletonWarrior) event.getSource().getTrueSource()).getOwnerId().equals(event.getEntityLiving().getUniqueID())) {
-							if (((EntityPlayerMP) event.getEntityLiving()).getStatFile().canUnlockAchievement(Overlord.nmyi))
-								((EntityPlayerMP) event.getEntityLiving()).addStat(Overlord.nmyi);
+							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) event.getEntityLiving(), event.getSource().getTrueSource(), Items.ARROW, 0);
+						}
+					}else if (event.getSource().getTrueSource() instanceof EntityConvertedSkeleton) {
+						if (((EntityConvertedSkeleton) event.getSource().getTrueSource()).getOwnerId().equals(event.getEntityLiving().getUniqueID())) {
+							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) event.getEntityLiving(), event.getSource().getTrueSource(), Items.ARROW, 1);
 						}
 					}
 				}
@@ -182,7 +188,7 @@ public final class CommonEvents {
 	}
 
 	@SubscribeEvent
-	public void livingDeath(LivingDeathEvent event) {
+	public static void livingDeath(LivingDeathEvent event) {
 		if (!event.getEntityLiving().world.isRemote) {
 			if (event.getSource().getTrueSource() instanceof EntitySkeletonWarrior && event.getEntityLiving() instanceof EntityLiving) {
 				int i = getExperiencePoints((EntityLiving) event.getEntityLiving());
@@ -198,9 +204,7 @@ public final class CommonEvents {
 					EntityPlayer wolfOwner = ((EntityArmyMember) event.getEntityLiving()).world.getPlayerEntityByUUID(((EntityWolf) event.getSource().getTrueSource()).getOwnerId());
 					if (wolfOwner != null) {
 						if (wolfOwner instanceof EntityPlayerMP)
-							if (((EntityPlayerMP) wolfOwner).getStatFile().canUnlockAchievement(Overlord.wardog)) {
-								wolfOwner.addStat(Overlord.wardog);
-							}
+							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) wolfOwner, event.getSource().getTrueSource(), Items.COOKED_BEEF, 0);
 					}
 				}
 			}
@@ -226,7 +230,7 @@ public final class CommonEvents {
 		}
 	}
 
-	protected int getExperiencePoints(EntityLiving entity) {
+	protected static int getExperiencePoints(EntityLiving entity) {
 		int experienceValue = ReflectionHelper.getPrivateValue(EntityLiving.class, entity, "experienceValue", "field_70728_aV");
 		if (experienceValue > 0) {
 			int i = experienceValue;

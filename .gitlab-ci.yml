@@ -4,8 +4,8 @@ variables:
   CACHE_DIR: "$CI_PROJECT_DIR/build"
   CACHE_DIR2: "$CI_PROJECT_DIR/.gradle"
   
-  ORIG_ARTIFACTS: "$CI_PROJECT_DIR/build/libs/Overlord-1.11.2-*.jar"
-  ARTIFACTS: "$CI_PROJECT_DIR/Overlord-1.11.2-*.jar"
+  ORIG_ARTIFACTS: "$CI_PROJECT_DIR/build/libs/Overlord-*.jar"
+  ARTIFACTS: "$CI_PROJECT_DIR/Overlord-*.jar"
 
 cache:
  paths:
@@ -25,7 +25,7 @@ deploy:
   - cp $ORIG_ARTIFACTS .
   when: manual
   artifacts:
-    name: "Overlord-1.11.2-$(cat $CACHE_DIR/.version)"
+    name: "Overlord-1.12-$(cat $CACHE_DIR/.version)"
     paths:
     - $ARTIFACTS
     
@@ -37,6 +37,6 @@ deployMaven:
   - cp $ORIG_ARTIFACTS .
   when: manual
   artifacts:
-    name: "Overlord-1.11.2-$(cat $CACHE_DIR/.version)"
+    name: "Overlord-1.12-$(cat $CACHE_DIR/.version)"
     paths:
     - $ARTIFACTS

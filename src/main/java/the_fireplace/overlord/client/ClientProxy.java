@@ -3,11 +3,9 @@ package the_fireplace.overlord.client;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import the_fireplace.overlord.CommonProxy;
-import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.client.render.*;
 import the_fireplace.overlord.entity.EntityBabySkeleton;
 import the_fireplace.overlord.entity.EntityConvertedSkeleton;
@@ -35,7 +33,6 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void registerClient() {
-		Overlord.instance.registerItemRenders();
 		RenderingRegistry.registerEntityRenderingHandler(EntitySkeletonWarrior.class, new SkeletonWarriorRenderFactory());
 		RenderingRegistry.registerEntityRenderingHandler(EntityBabySkeleton.class, new BabySkeletonRenderFactory());
 		RenderingRegistry.registerEntityRenderingHandler(EntityMilkBottle.class, new MilkBottleRenderFactory());
@@ -48,6 +45,5 @@ public class ClientProxy extends CommonProxy {
 						SkinTools.cacheSkin(file.getName().replace(".png", ""));
 				}
 		}
-		MinecraftForge.EVENT_BUS.register(new ClientEvents());
 	}
 }

@@ -39,7 +39,7 @@ public class CreateSkeletonMessage implements IMessage {
 		public IMessage handleServerMessage(EntityPlayer player, CreateSkeletonMessage message, MessageContext ctx) {
 			FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
 				if (player.world.getTileEntity(message.pos) instanceof ISkeletonMaker) {
-					((ISkeletonMaker) player.world.getTileEntity(message.pos)).spawnSkeleton();
+					((ISkeletonMaker) player.world.getTileEntity(message.pos)).spawnSkeleton(player);
 				}
 			});
 			return null;

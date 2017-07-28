@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "overlord:crown"
+  },
+  "pattern": [
+    "i i",
+    "jjj",
+    " i "
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "i": {
+      "item": "#NUGGETGOLD"
+    },
+    "j": {
+      "item": "#INGOTGOLD"
+    }
+  }
+}

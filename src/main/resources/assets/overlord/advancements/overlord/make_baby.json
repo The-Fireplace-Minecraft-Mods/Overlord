@@ -1,0 +1,24 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:skull"
+        },
+        "title": {
+            "translate": "advancements.overlord.make_baby"
+        },
+        "description": {
+            "translate": "advancements.overlord.make_baby.desc"
+        }
+    },
+    "parent": "overlord:overlord/root",
+    "criteria": {
+        "summoned_skeleton_converted": {
+            "trigger": "minecraft:summoned_entity",
+            "conditions": {
+                "entity": {
+                    "type": "overlord:skeleton_baby"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:skull"
+        },
+        "title": {
+            "translate": "advancements.overlord.summon_skeleton"
+        },
+        "description": {
+            "translate": "advancements.overlord.summon_skeleton.desc"
+        }
+    },
+    "parent": "overlord:overlord/root",
+    "criteria": {
+        "summoned_skeleton_converted": {
+            "trigger": "minecraft:summoned_entity",
+            "conditions": {
+                "entity": {
+                    "type": "overlord:skeleton_warrior"
+                }
+            }
+        }
+    }
+}

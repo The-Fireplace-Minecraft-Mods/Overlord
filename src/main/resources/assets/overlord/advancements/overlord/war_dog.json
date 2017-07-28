@@ -1,0 +1,24 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:cooked_beef"
+        },
+        "title": {
+            "translate": "advancements.overlord.war_dog"
+        },
+        "description": {
+            "translate": "advancements.overlord.war_dog.desc"
+        }
+    },
+    "parent": "overlord:overlord/root",
+    "criteria": {
+        "skeleton_drank_milk": {
+            "trigger": "overlord:status_update",
+            "conditions": {
+                "item": {
+                    "item": "minecraft:cooked_beef"
+                }
+            }
+        }
+    }
+}

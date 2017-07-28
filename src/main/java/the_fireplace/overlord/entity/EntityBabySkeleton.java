@@ -27,6 +27,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import the_fireplace.overlord.Overlord;
+import the_fireplace.overlord.advancements.CriterionRegistry;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.tools.ISkinsuitWearer;
 import the_fireplace.overlord.tools.SkinType;
@@ -58,25 +59,6 @@ public class EntityBabySkeleton extends EntityArmyMember implements ISkinsuitWea
 				return index >= 4 || !stack.isEmpty() && stack.getItem().isValidArmor(stack, EntityEquipmentSlot.values()[index], null);
 			}
 		};
-		if (getOwner() != null) {
-			if (getOwner() instanceof EntityPlayerMP)
-				if (((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.firstBaby)) {
-					((EntityPlayer) getOwner()).addStat(Overlord.firstBaby);
-				}
-		}
-		if (getOwner() != null) {
-			if (getOwner() instanceof EntityPlayerMP)
-				if (((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.firstSkeleton)) {
-					((EntityPlayer) getOwner()).addStat(Overlord.firstSkeleton);
-					return;
-				}
-		}
-		if (getOwner() != null) {
-			if (getOwner() instanceof EntityPlayerMP)
-				if (((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.secondSkeleton)) {
-					((EntityPlayer) getOwner()).addStat(Overlord.secondSkeleton);
-				}
-		}
 	}
 
 	@Override
@@ -132,11 +114,14 @@ public class EntityBabySkeleton extends EntityArmyMember implements ISkinsuitWea
 		return EnumCreatureAttribute.UNDEAD;
 	}
 
+	boolean sally = false;
+	boolean armed = false;
+
 	@Override
 	public void onLivingUpdate() {
 		if (!this.world.isRemote) {
 			if (this.world.isDaytime()) {
-				float f = this.getBrightness(1.0F);
+				float f = this.getBrightness();
 				BlockPos blockpos = this.getRidingEntity() instanceof EntityBoat ? (new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ)).up() : new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ);
 
 				if (!getSkinType().protectsFromSun())
@@ -166,24 +151,31 @@ public class EntityBabySkeleton extends EntityArmyMember implements ISkinsuitWea
 			if (!getHeldItemMainhand().isEmpty()) {
 				if (getOwner() != null) {
 					if (getOwner() instanceof EntityPlayerMP)
-						if (((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.armedSkeleton)) {
-							((EntityPlayer) getOwner()).addStat(Overlord.armedSkeleton);
+						if (!armed) {
+							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) getOwner(), this, Items.WOODEN_SWORD, 0);
+							armed = true;
 						}
 				}
+			}else if (armed){
+				armed = false;
 			}
+
 			if (getSkinType().equals(SkinType.PLAYER)) {
 				if (getOwner() != null) {
 					if (getOwner() instanceof EntityPlayerMP)
-						if (((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.sally)) {
-							((EntityPlayer) getOwner()).addStat(Overlord.sally);
+						if (!sally) {
+							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) getOwner(), this, Overlord.skinsuit, 0);
+							sally = true;
 						}
 				}
+			}else if (sally){
+				sally = false;
 			}
 		}
 
 		this.setSize(0.3F, 0.995F);
 
-		float f = this.getBrightness(1.0F);
+		float f = this.getBrightness();
 
 		if (f > 0.5F && !getSkinType().protectsFromSun())
 			this.idleTime += 1;

@@ -30,5 +30,10 @@ public final class CustomDataSerializers {
 		public DataParameter<UUID> createKey(int id) {
 			return new DataParameter(id, this);
 		}
+
+		@Override
+		public UUID copyValue(UUID value) {
+			return UUID.fromString(value.toString());
+		}
 	};
 }

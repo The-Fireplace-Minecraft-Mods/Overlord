@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "overlord:keychain_empty"
+    ]
+  },
+  "criteria": {
+    "has_the_ingredients": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:iron_nugget"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "overlord:keychain_empty"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_ingredients",
+      "has_the_recipe"
+    ]
+  ]
+}

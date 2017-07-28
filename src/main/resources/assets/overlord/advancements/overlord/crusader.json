@@ -1,0 +1,28 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:chainmail_helmet"
+        },
+        "title": {
+            "translate": "advancements.overlord.crusader"
+        },
+        "description": {
+            "translate": "advancements.overlord.crusader.desc"
+        },
+        "frame": "goal"
+    },
+    "parent": "overlord:overlord/summon_skeleton",
+    "criteria": {
+        "skeleton_drank_milk": {
+            "trigger": "overlord:status_update",
+            "conditions": {
+                "item": {
+                    "item": "minecraft:shield"
+                }
+            }
+        }
+    },
+    "rewards": {
+        "experience": 100
+    }
+}

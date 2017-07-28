@@ -1,5 +1,6 @@
 package the_fireplace.overlord.items;
 
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -62,7 +63,7 @@ public class ItemOverlordsSeal extends Item {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
 		if (stack.getTagCompound() != null && stack.getTagCompound().hasKey("Owner")) {
 			tooltip.add(proxy.translateToLocal(getUnlocalizedName() + ".tooltip", stack.getTagCompound().getString("OwnerName"), stack.getCount() > 1 ? "s" : ""));
 		} else {

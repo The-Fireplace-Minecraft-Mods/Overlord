@@ -2,6 +2,7 @@ package the_fireplace.overlord.items;
 
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -93,8 +94,8 @@ public class ItemWarriorSpawner extends Item {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-		super.addInformation(stack, playerIn, tooltip, advanced);
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
+		super.addInformation(stack, world, tooltip, advanced);
 		if (hasEffect(stack))
 			tooltip.add(Overlord.proxy.translateToLocal("tooltip.placeclone"));
 		else

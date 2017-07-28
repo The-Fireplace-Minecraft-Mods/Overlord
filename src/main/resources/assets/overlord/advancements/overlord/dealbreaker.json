@@ -1,0 +1,24 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:stone_axe"
+        },
+        "title": {
+            "translate": "advancements.overlord.dealbreaker"
+        },
+        "description": {
+            "translate": "advancements.overlord.dealbreaker.desc"
+        }
+    },
+    "parent": "overlord:overlord/alliance",
+    "criteria": {
+        "skeleton_drank_milk": {
+            "trigger": "overlord:status_update",
+            "conditions": {
+                "item": {
+                    "item": "minecraft:stone_axe"
+                }
+            }
+        }
+    }
+}

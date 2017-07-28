@@ -1,0 +1,29 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:golden_apple",
+            "data": 1
+        },
+        "title": {
+            "translate": "advancements.overlord.convert_skeleton"
+        },
+        "description": {
+            "translate": "advancements.overlord.convert_skeleton.desc"
+        },
+        "frame": "goal"
+    },
+    "parent": "overlord:overlord/root",
+    "criteria": {
+        "summoned_skeleton_converted": {
+            "trigger": "minecraft:summoned_entity",
+            "conditions": {
+                "entity": {
+                    "type": "overlord:skeleton_converted"
+                }
+            }
+        }
+    },
+    "rewards": {
+        "experience": 10
+    }
+}

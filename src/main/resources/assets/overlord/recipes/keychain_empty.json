@@ -1,0 +1,16 @@
+{
+  "result": {
+    "item": "overlord:keychain_empty"
+  },
+  "pattern": [
+    "ii ",
+    "i i",
+    " i "
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "i": {
+      "item": "#NUGGETIRON"
+    }
+  }
+}

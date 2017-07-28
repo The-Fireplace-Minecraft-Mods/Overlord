@@ -25,4 +25,9 @@ public class ItemRallyingHorn extends Item {
 		}
 		return super.onItemRightClick(worldIn, playerIn, handIn);
 	}
+
+	@Override
+	public int getItemBurnTime(ItemStack stack){
+		return 360;
+	}
 }

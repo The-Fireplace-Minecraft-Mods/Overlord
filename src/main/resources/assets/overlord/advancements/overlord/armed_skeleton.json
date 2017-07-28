@@ -1,0 +1,24 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:wooden_sword"
+        },
+        "title": {
+            "translate": "advancements.overlord.armed_skeleton"
+        },
+        "description": {
+            "translate": "advancements.overlord.armed_skeleton.desc"
+        }
+    },
+    "parent": "overlord:overlord/summon_skeleton",
+    "criteria": {
+        "skeleton_drank_milk": {
+            "trigger": "overlord:status_update",
+            "conditions": {
+                "item": {
+                    "item": "minecraft:wooden_sword"
+                }
+            }
+        }
+    }
+}

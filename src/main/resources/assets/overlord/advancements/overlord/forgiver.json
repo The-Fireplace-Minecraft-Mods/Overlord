@@ -1,0 +1,24 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:banner"
+        },
+        "title": {
+            "translate": "advancements.overlord.forgiver"
+        },
+        "description": {
+            "translate": "advancements.overlord.forgiver.desc"
+        }
+    },
+    "parent": "overlord:overlord/warmonger",
+    "criteria": {
+        "skeleton_drank_milk": {
+            "trigger": "overlord:status_update",
+            "conditions": {
+                "item": {
+                    "item": "minecraft:banner"
+                }
+            }
+        }
+    }
+}

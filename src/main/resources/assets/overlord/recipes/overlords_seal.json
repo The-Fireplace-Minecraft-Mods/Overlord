@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "overlord:overlords_seal"
+  },
+  "pattern": [
+    "nin",
+    "i i",
+    "nin"
+  ],
+  "type": "seal_crafting",
+  "key": {
+    "i": {
+      "item": "#NUGGETIRON"
+    },
+    "n": {
+      "item": "#NUGGETGOLD"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:experience_bottle"
+        },
+        "title": {
+            "translate": "advancements.overlord.level_up"
+        },
+        "description": {
+            "translate": "advancements.overlord.level_up.desc"
+        }
+    },
+    "parent": "overlord:overlord/summon_skeleton",
+    "criteria": {
+        "skeleton_drank_milk": {
+            "trigger": "overlord:status_update",
+            "conditions": {
+                "item": {
+                    "item": "minecraft:experience_bottle"
+                }
+            }
+        }
+    }
+}

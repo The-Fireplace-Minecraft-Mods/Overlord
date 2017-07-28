@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "overlord:squad_editor"
+    ]
+  },
+  "criteria": {
+    "has_the_ingredients": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:book"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "overlord:squad_editor"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_ingredients",
+      "has_the_recipe"
+    ]
+  ]
+}

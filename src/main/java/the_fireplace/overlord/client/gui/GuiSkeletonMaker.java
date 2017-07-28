@@ -106,6 +106,14 @@ public class GuiSkeletonMaker extends GuiContainer {
 	}
 
 	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks)
+	{
+		this.drawDefaultBackground();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		this.renderHoveredToolTip(mouseX, mouseY);
+	}
+
+	@Override
 	public void updateScreen() {
 		createSkeleton.enabled = isButtonEnabled();
 	}

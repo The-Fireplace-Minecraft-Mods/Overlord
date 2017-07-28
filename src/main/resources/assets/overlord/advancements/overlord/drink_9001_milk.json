@@ -1,0 +1,29 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:milk_bucket"
+        },
+        "title": {
+            "translate": "advancements.overlord.drink_9001_milk"
+        },
+        "description": {
+            "translate": "advancements.overlord.drink_9001_milk.desc"
+        },
+        "frame": "challenge"
+    },
+    "parent": "overlord:overlord/drink_256_milk",
+    "criteria": {
+        "skeleton_drank_milk": {
+            "trigger": "overlord:status_update",
+            "conditions": {
+                "item": {
+                    "item": "overlord:milk_bottle",
+                    "data": 9001
+                }
+            }
+        }
+    },
+    "rewards": {
+        "experience": 9001
+    }
+}

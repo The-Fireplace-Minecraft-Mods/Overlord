@@ -1,0 +1,24 @@
+{
+    "display": {
+        "icon": {
+            "item": "overlord:skinsuit"
+        },
+        "title": {
+            "translate": "advancements.overlord.sally"
+        },
+        "description": {
+            "translate": "advancements.overlord.sally.desc"
+        }
+    },
+    "parent": "overlord:overlord/summon_skeleton",
+    "criteria": {
+        "skeleton_drank_milk": {
+            "trigger": "overlord:status_update",
+            "conditions": {
+                "item": {
+                    "item": "overlord:skinsuit"
+                }
+            }
+        }
+    }
+}

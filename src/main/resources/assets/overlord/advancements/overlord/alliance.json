@@ -1,0 +1,24 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:shield"
+        },
+        "title": {
+            "translate": "advancements.overlord.alliance"
+        },
+        "description": {
+            "translate": "advancements.overlord.alliance.desc"
+        }
+    },
+    "parent": "overlord:overlord/root",
+    "criteria": {
+        "skeleton_drank_milk": {
+            "trigger": "overlord:status_update",
+            "conditions": {
+                "item": {
+                    "item": "minecraft:cake"
+                }
+            }
+        }
+    }
+}

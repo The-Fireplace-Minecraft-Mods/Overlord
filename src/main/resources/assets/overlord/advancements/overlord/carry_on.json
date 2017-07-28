@@ -1,0 +1,26 @@
+{
+    "display": {
+        "icon": {
+            "item": "overlord:keychain_occupied"
+        },
+        "title": {
+            "translate": "advancements.overlord.carry_on"
+        },
+        "description": {
+            "translate": "advancements.overlord.carry_on.desc"
+        }
+    },
+    "parent": "overlord:overlord/jingle_jingle",
+    "criteria": {
+        "has_the_mask": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "overlord:keychain_occupied"
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -90,55 +90,52 @@ cfg.bonereq_warrior.tooltip=Wie viele Knochen benötigt man, um einen Skelettkri
 cfg.bonereq_baby=BabySkelett-Knochenbdearf
 cfg.bonereq_baby.tooltip=Wie viele Knochen benötigt man, um einen BabySkelett zu erschaffen?
 
-achievement.firstbaby=Kinder machen
-achievement.firstbaby.desc=Erschaffe ein Babyskelett
+advancements.overlord.make_baby=Kinder machen
+advancements.overlord.make_baby.desc=Erschaffe ein Babyskelett
 
-achievement.firstskeleton=Du und welche Armee?
-achievement.firstskeleton.desc=Erschaffe ein Skelett
+advancements.overlord.summon_skeleton=Du und welche Armee?
+advancements.overlord.summon_skeleton.desc=Erschaffe ein Skelett
 
-achievement.secondskeleton=Schergen
-achievement.secondskeleton.desc=Erschaffe ein weiteres Skelett
+advancements.overlord.drink_milk=Gut für deine Knochen
+advancements.overlord.drink_milk.desc=Gib ein Skelett ein Eimer Milch
 
-achievement.firstmilk=Gut für deine Knochen
-achievement.firstmilk.desc=Gib ein Skelett ein Eimer Milch
+advancements.overlord.level_up=Immer diese Verbesserungen...
+advancements.overlord.level_up.desc=Verbessere eine Skelettkrieger
 
-achievement.firstlevel=Immer diese Verbesserungen...
-achievement.firstlevel.desc=Verbessere eine Skelettkrieger
+advancements.overlord.armed_skeleton=Bewaffnet und gefährlich
+advancements.overlord.armed_skeleton.desc=Gib einem Armeeskelett eine Waffe
 
-achievement.armedskeleton=Bewaffnet und gefährlich
-achievement.armedskeleton.desc=Gib einem Armeeskelett eine Waffe
+advancements.overlord.sally=Sally
+advancements.overlord.sally.desc=Zieh einem Armee-Skelett einen Hautanzug an
 
-achievement.sally=Sally
-achievement.sally.desc=Zieh einem Armee-Skelett einen Hautanzug an
+advancements.overlord.crusader=Kreuzritter
+advancements.overlord.crusader.desc=Zieh ein Skelettkrieger wie Kreuzritter an (Vollständige Kettenrüstung, weißer Schild mit rotem Kreuz)
 
-achievement.crusader=Kreuzritter
-achievement.crusader.desc=Zieh ein Skelettkrieger wie Kreuzritter an (Vollständige Kettenrüstung, weißer Schild mit rotem Kreuz)
+advancements.overlord.drink_256_milk=Nur ein Byte!
+advancements.overlord.drink_256_milk.desc=Lass ein Skelettkrieger 256 Eimer Milch trinken
 
-achievement.milk256=Nur ein Byte!
-achievement.milk256.desc=Lass ein Skelettkrieger 256 Eimer Milch trinken
+advancements.overlord.drink_9001_milk=Es ist über 9000!
+advancements.overlord.drink_9001_milk.desc=Lass ein Skelettkrieger über 9000 Eimer Milch trinken
 
-achievement.milk9001=Es ist über 9000!
-achievement.milk9001.desc=Lass ein Skelettkrieger über 9000 Eimer Milch trinken
+advancements.overlord.alliance=Besser mit Freunden
+advancements.overlord.alliance.desc=Gehe eine Allianz mit einem anderen Spieler ein
 
-achievement.alliance=Besser mit Freunden
-achievement.alliance.desc=Gehe eine Allianz mit einem anderen Spieler ein
+advancements.overlord.dealbreaker=Vertragsbrecher
+advancements.overlord.dealbreaker.desc=Löse eine Allianz mit einem anderen Spieler auf
 
-achievement.breakalliance=Vertragsbrecher
-achievement.breakalliance.desc=Löse eine Allianz mit einem anderen Spieler auf
+advancements.overlord.warmonger=Kriegshetzer
+advancements.overlord.warmonger.desc=Markiere einen anderen
 
-achievement.warmonger=Kriegshetzer
-achievement.warmonger.desc=Markiere einen anderen
+advancements.overlord.forgiver=Vergebung
+advancements.overlord.forgiver.desc=Sieh einen Feind nicht mehr als solchen an
 
-achievement.forgiver=Vergebung
-achievement.forgiver.desc=Sieh einen Feind nicht mehr als solchen an
+advancements.overlord.interference=Nicht micht, ihr Idioten!
+advancements.overlord.interference.desc=Laufe in den Pfeil eines deiner Skelettkrieger
 
-achievement.interference=Nicht micht, ihr Idioten!
-achievement.interference.desc=Laufe in den Pfeil eines deiner Skelettkrieger
+advancements.overlord.war_dog=Kriegshund
+advancements.overlord.war_dog.desc=Lass einen Hauswolf ein Skelett eines anderen Spielers töten
 
-achievement.wardog=Kriegshund
-achievement.wardog.desc=Lass einen Hauswolf ein Skelett eines anderen Spielers töten
-
-achievement.sans=Hey Ho
-achievement.sans.desc=Sieh wie einer deiner gruseligen Freunde aus...
+advancements.overlord.heya=Hey Ho
+advancements.overlord.heya.desc=Sieh wie einer deiner gruseligen Freunde aus...
 
 gui.save=Speichern

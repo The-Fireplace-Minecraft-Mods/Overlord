@@ -1,0 +1,26 @@
+{
+    "display": {
+        "icon": {
+            "item": "overlord:crown"
+        },
+        "title": {
+            "translate": "advancements.overlord.crown_me"
+        },
+        "description": {
+            "translate": "advancements.overlord.crown_me.desc"
+        }
+    },
+    "parent": "overlord:overlord/root",
+    "criteria": {
+        "has_the_mask": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "overlord:crown"
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -2,6 +2,7 @@ package the_fireplace.overlord.items;
 
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -101,7 +102,7 @@ public class ItemKeychain extends Item {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
 		NBTTagCompound nbt = stack.getTagCompound();
 		if (getIsOccupied() && nbt != null) {
 			if (nbt.hasKey("SkinsuitName") && nbt.hasKey("HasSkinsuit") && nbt.getBoolean("HasSkinsuit"))

@@ -1,0 +1,16 @@
+{
+  "result": {
+    "item": "overlord:rallying_horn"
+  },
+  "pattern": [
+    "p p",
+    "pp ",
+    " pp"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "p": {
+      "item": "#PLANKWOOD"
+    }
+  }
+}

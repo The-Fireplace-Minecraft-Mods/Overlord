@@ -6,9 +6,11 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentTranslation;
 import the_fireplace.overlord.Overlord;
+import the_fireplace.overlord.advancements.CriterionRegistry;
 import the_fireplace.overlord.tools.Alliance;
 import the_fireplace.overlord.tools.Alliances;
 import the_fireplace.overlord.tools.Enemies;
@@ -55,8 +57,7 @@ public class CommandEnemy extends CommandBase {
 								}
 							}
 							if (sender instanceof EntityPlayerMP)
-								if (((EntityPlayerMP) sender).getStatFile().canUnlockAchievement(Overlord.warmonger))
-									((EntityPlayer) sender).addStat(Overlord.warmonger);
+								CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) sender, player, Items.IRON_AXE, 0);
 						} else {
 							player.sendMessage(new TextComponentTranslation("overlord.allytriedenemy", ((EntityPlayer) sender).getDisplayNameString()));
 							sender.sendMessage(new TextComponentTranslation("overlord.noenemyallied", player.getDisplayNameString()));

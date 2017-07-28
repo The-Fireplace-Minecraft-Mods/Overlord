@@ -26,14 +26,18 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import the_fireplace.overlord.Overlord;
+import the_fireplace.overlord.advancements.CriterionRegistry;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.ai.EntityAIArmyBow;
 import the_fireplace.overlord.network.PacketDispatcher;
@@ -105,19 +109,6 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 			}
 		};
 		this.setCanPickUpLoot(true);
-		if (getOwner() != null) {
-			if (getOwner() instanceof EntityPlayerMP)
-				if (((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.firstSkeleton)) {
-					((EntityPlayer) getOwner()).addStat(Overlord.firstSkeleton);
-					return;
-				}
-		}
-		if (getOwner() != null) {
-			if (getOwner() instanceof EntityPlayerMP)
-				if (((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.secondSkeleton)) {
-					((EntityPlayer) getOwner()).addStat(Overlord.secondSkeleton);
-				}
-		}
 	}
 
 	@Override
@@ -232,8 +223,11 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 		return EnumCreatureAttribute.UNDEAD;
 	}
 
-	ItemStack bucket = new ItemStack(Items.BUCKET);
-	ItemStack bottle = new ItemStack(Items.GLASS_BOTTLE);
+	static ItemStack bucket = new ItemStack(Items.BUCKET);
+	static ItemStack bottle = new ItemStack(Items.GLASS_BOTTLE);
+	boolean sally = false;
+	boolean armed = false;
+	boolean crusader = false;
 
 	@Override
 	public void onLivingUpdate() {
@@ -260,7 +254,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 			checkLevelUp();
 
 			if (this.world.isDaytime()) {
-				float f = this.getBrightness(1.0F);
+				float f = this.getBrightness();
 				BlockPos blockpos = this.getRidingEntity() instanceof EntityBoat ? (new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ)).up() : new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ);
 
 				if (!getSkinType().protectsFromSun())
@@ -390,19 +384,27 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 			if (!getHeldItemMainhand().isEmpty()) {
 				if (getOwner() != null) {
 					if (getOwner() instanceof EntityPlayerMP)
-						if (((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.armedSkeleton)) {
-							((EntityPlayer) getOwner()).addStat(Overlord.armedSkeleton);
+						if (!armed) {
+							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) getOwner(), this, Items.WOODEN_SWORD, 0);
+							armed = true;
 						}
 				}
+			}else if (armed){
+				armed = false;
 			}
+
 			if (getSkinType().equals(SkinType.PLAYER)) {
 				if (getOwner() != null) {
 					if (getOwner() instanceof EntityPlayerMP)
-						if (((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.sally)) {
-							((EntityPlayer) getOwner()).addStat(Overlord.sally);
+						if (!sally) {
+							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) getOwner(), this, Overlord.skinsuit, 0);
+							sally = true;
 						}
 				}
+			}else if (sally){
+				sally = false;
 			}
+
 			if (!getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty() && !getItemStackFromSlot(EntityEquipmentSlot.CHEST).isEmpty() && !getItemStackFromSlot(EntityEquipmentSlot.LEGS).isEmpty() && !getItemStackFromSlot(EntityEquipmentSlot.FEET).isEmpty()) {
 				if (getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == Items.CHAINMAIL_HELMET && getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem() == Items.CHAINMAIL_CHESTPLATE && getItemStackFromSlot(EntityEquipmentSlot.LEGS).getItem() == Items.CHAINMAIL_LEGGINGS && getItemStackFromSlot(EntityEquipmentSlot.FEET).getItem() == Items.CHAINMAIL_BOOTS) {
 					if (!getHeldItemOffhand().isEmpty())
@@ -410,17 +412,20 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 							if (getHeldItemOffhand().getTagCompound().equals(Overlord.crusaderShield().getTagCompound()))
 								if (getOwner() != null) {
 									if (getOwner() instanceof EntityPlayerMP)
-										if (((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.crusader)) {
-											((EntityPlayer) getOwner()).addStat(Overlord.crusader);
+										if (!crusader) {
+											CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) getOwner(), this, Items.SHIELD, 0);
+											crusader = true;
 										}
 								}
+				}else if (crusader){
+					crusader = false;
 				}
 			}
 		}
 
 		this.setSize(0.6F, 1.99F);
 
-		float f = this.getBrightness(1.0F);
+		float f = this.getBrightness();
 
 		if (f > 0.5F && !getSkinType().protectsFromSun())
 			this.idleTime += 1;
@@ -439,15 +444,17 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 			int xp = getXP();
 			dataManager.set(XP, ++xp);
 		}
-		if (getOwner() != null)
-			if (getOwner() instanceof EntityPlayerMP)
-				((EntityPlayer) getOwner()).addStat(Overlord.firstMilk);
-		if (getTotalMilkConsumed() >= 256)
-			if (getOwner() != null)
-				((EntityPlayer) getOwner()).addStat(Overlord.milk256);
-		if (getTotalMilkConsumed() > 9000)
-			if (getOwner() != null)
-				((EntityPlayer) getOwner()).addStat(Overlord.milk9001);
+		EntityLivingBase owner = getOwner();
+		if(owner != null && owner instanceof EntityPlayerMP) {
+			CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) owner, this, Overlord.milk_bottle, getTotalMilkConsumed());
+			MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+			if(server == null)
+				return;
+			if(getTotalMilkConsumed() >= 256 && !server.getPlayerList().getPlayerAdvancements((EntityPlayerMP)owner).getProgress(server.getAdvancementManager().getAdvancement(new ResourceLocation(Overlord.MODID, "overlord/drink_256_milk"))).isDone())
+				CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) owner, this, Overlord.milk_bottle, 256);
+			if(getTotalMilkConsumed() >= 9001 && !server.getPlayerList().getPlayerAdvancements((EntityPlayerMP)owner).getProgress(server.getAdvancementManager().getAdvancement(new ResourceLocation(Overlord.MODID, "overlord/drink_9001_milk"))).isDone())
+				CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) owner, this, Overlord.milk_bottle, 9001);
+		}
 	}
 
 	public void checkLevelUp() {
@@ -461,12 +468,9 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 			updateEntityAttributes();
 			if (getHealth() < getMaxHealth())
 				heal(getMaxHealth() - getHealth());
-			if (getOwner() != null) {
-				if (getOwner() instanceof EntityPlayerMP)
-					if (((EntityPlayerMP) getOwner()).getStatFile().canUnlockAchievement(Overlord.firstLevel)) {
-						((EntityPlayer) getOwner()).addStat(Overlord.firstLevel);
-					}
-			}
+			EntityLivingBase owner = getOwner();
+			if(owner != null && owner instanceof EntityPlayerMP)
+				CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) owner, this, Items.EXPERIENCE_BOTTLE, level);
 		}
 	}
 

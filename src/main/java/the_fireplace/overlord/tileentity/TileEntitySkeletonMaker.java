@@ -1,7 +1,9 @@
 package the_fireplace.overlord.tileentity;
 
 import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -67,7 +69,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 	}
 
 	@Override
-	public void spawnSkeleton() {
+	public void spawnSkeleton(EntityPlayer player) {
 		UUID owner = null;
 		if (!getStackInSlot(0).isEmpty()) {
 			if (getStackInSlot(0).getTagCompound() != null) {
@@ -97,6 +99,11 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 		}
 
 		world.spawnEntity(skeletonWarrior);
+
+		if(player != null && player instanceof EntityPlayerMP){
+			CriteriaTriggers.SUMMONED_ENTITY.trigger((EntityPlayerMP)player, skeletonWarrior);
+		}
+
 		if (!getStackInSlot(12).isEmpty())
 			skeletonWarrior.setSkinsuit(getStackInSlot(12), SkinType.getSkinTypeFromStack(getStackInSlot(12)));
 		setMilk((byte) 0);

@@ -1,0 +1,22 @@
+{
+  "result": {
+    "item": "overlord:skeleton_maker"
+  },
+  "pattern": [
+    "b b",
+    "BgB",
+    "BBB"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "b": {
+      "item": "#INGOTBRICKNETHER"
+    },
+    "B": {
+      "item": "minecraft:nether_brick"
+    },
+    "g": {
+      "item": "overlord:baby_skeleton_maker"
+    }
+  }
+}

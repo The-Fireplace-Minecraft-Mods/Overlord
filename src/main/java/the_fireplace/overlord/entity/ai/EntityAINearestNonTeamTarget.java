@@ -1,6 +1,6 @@
 package the_fireplace.overlord.entity.ai;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
@@ -126,7 +126,7 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
 			if (!ConfigValues.HUNTCREEPERS && p_compare_2_ instanceof EntityCreeper)
 				b1i = false;
 			if (!b0 && b1i) {
-				return d0 < d1 ? -1 : (d0 > d1 ? 1 : 0);
+				return Double.compare(d0, d1);
 			} else if (b0 && b1i) {
 				return 1;
 			} else if (!b0) {
@@ -168,7 +168,7 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
 				}
 
 				if (playerToDouble != null) {
-					d2 *= Objects.firstNonNull(playerToDouble.apply(entityplayer1), 1.0D);
+					d2 *= MoreObjects.firstNonNull(playerToDouble.apply(entityplayer1), 1.0D);
 				}
 
 				if ((maxYDistance < 0.0D || Math.abs(entityplayer1.posY - posY) < maxYDistance * maxYDistance) && (maxXZDistance < 0.0D || d1 < d2 * d2) && (d0 == -1.0D || d1 < d0)) {

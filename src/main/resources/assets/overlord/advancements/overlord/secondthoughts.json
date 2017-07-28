@@ -1,0 +1,25 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:arrow"
+        },
+        "title": {
+            "translate": "advancements.overlord.secondthoughts"
+        },
+        "description": {
+            "translate": "advancements.overlord.secondthoughts.desc"
+        }
+    },
+    "parent": "overlord:overlord/convert_skeleton",
+    "criteria": {
+        "skeleton_drank_milk": {
+            "trigger": "overlord:status_update",
+            "conditions": {
+                "item": {
+                    "item": "minecraft:arrow",
+                    "data": 1
+                }
+            }
+        }
+    }
+}
