@@ -7,18 +7,16 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import the_fireplace.overlord.Overlord;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
@@ -30,10 +28,12 @@ import java.util.Random;
 public final class ClientEvents {
 	private static Random rand = new Random();
 	private static final ResourceLocation SPLASH_TEXTS = new ResourceLocation("texts/splashes.txt");
+	public static int splashOffsetCount = 0;
+	public static final int finalSplashOffsetCount;
 	private static final List<String> mySplashes = Lists.newArrayList(
 			"Milk is good for the skeletons!",
 			"Spooked solid!",
-			"#covfefe!"
+			"Do you have a moment to talk about our lord and savior, Skeletor?"
 	);
 
 	static {
@@ -41,8 +41,30 @@ public final class ClientEvents {
 			mySplashes.add("Skeletons dressed up as humans");
 		if (Calendar.getInstance().get(Calendar.MONTH) == Calendar.SEPTEMBER && Calendar.getInstance().get(Calendar.DATE) == 15)
 			mySplashes.add("now my brother, papyrus...");
-		if (Loader.isModLoaded("mechsoldiers"))
-			mySplashes.add("I'm sorry, Dave. I'm afraid I can't do that.");
+		splashOffsetCount += mySplashes.size();
+
+		//Using this system allows other mods using the system to know how many mod-added splashes there are. Not perfect, but Forge doesn't have a system in place, so this will have to do.
+		try{
+			File file = new File(".splashes");
+			if(file.exists()) {
+				byte[] encoded = Files.readAllBytes(file.toPath());
+				try {
+					splashOffsetCount += Integer.parseInt(new String(encoded, "UTF-8"));
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
+				if(!file.delete())
+					Overlord.logWarn("Splashes file could not be deleted");
+			}
+			file.createNewFile();
+			file.deleteOnExit();
+			FileWriter fw = new FileWriter(file);
+			fw.write(String.valueOf(splashOffsetCount));
+			fw.close();
+		}catch(IOException e){
+			Overlord.logWarn(e.getLocalizedMessage());
+		}
+		finalSplashOffsetCount = splashOffsetCount;
 	}
 
 	@SubscribeEvent
@@ -52,7 +74,7 @@ public final class ClientEvents {
 			try {
 				List<String> defaultSplashes = Lists.newArrayList();
 				iresource = Minecraft.getMinecraft().getResourceManager().getResource(SPLASH_TEXTS);
-				BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(iresource.getInputStream(), Charsets.UTF_8));
+				BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(iresource.getInputStream(), StandardCharsets.UTF_8));
 				String s;
 
 				while ((s = bufferedreader.readLine()) != null) {
@@ -63,10 +85,10 @@ public final class ClientEvents {
 					}
 				}
 
-				int splashNum = rand.nextInt(defaultSplashes.size() + mySplashes.size());
+				int splashNum = rand.nextInt(defaultSplashes.size() + finalSplashOffsetCount);
 
-				if (splashNum >= defaultSplashes.size())
-					ReflectionHelper.setPrivateValue(GuiMainMenu.class, (GuiMainMenu) event.getGui(), mySplashes.get(splashNum - defaultSplashes.size()), "splashText", "field_73975_c");
+				if (splashNum >= defaultSplashes.size()+finalSplashOffsetCount-mySplashes.size())
+					ReflectionHelper.setPrivateValue(GuiMainMenu.class, (GuiMainMenu) event.getGui(), mySplashes.get(splashNum - (defaultSplashes.size()+finalSplashOffsetCount-mySplashes.size())), "splashText", "field_73975_c");
 			} catch (IOException e) {
 				Overlord.logWarn(e.getLocalizedMessage());
 			} finally {
