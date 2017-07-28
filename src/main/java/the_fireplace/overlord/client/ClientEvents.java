@@ -33,7 +33,8 @@ public final class ClientEvents {
 	private static final List<String> mySplashes = Lists.newArrayList(
 			"Milk is good for the skeletons!",
 			"Spooked solid!",
-			"Do you have a moment to talk about our lord and savior, Skeletor?"
+			"Do you have a moment to talk about our lord and savior, Skeletor?",
+			"Not Boneless!"
 	);
 
 	static {
