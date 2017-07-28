@@ -48,6 +48,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
 import the_fireplace.overlord.advancements.CriterionRegistry;
 import the_fireplace.overlord.augments.*;
 import the_fireplace.overlord.blocks.BlockSkeletonMaker;
@@ -149,8 +150,11 @@ public final class Overlord {
 			config.save();
 	}
 
+	private static Logger LOGGER = FMLLog.getLogger();//default to that so if it somehow gets called before preInit, it isn't null.
+
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		LOGGER = event.getModLog();
 		PacketDispatcher.registerPackets();
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new OverlordGuiHandler());
 		config = new Configuration(event.getSuggestedConfigurationFile());
@@ -367,22 +371,22 @@ public final class Overlord {
 	}
 
 	public static void logInfo(String log, Object... params) {
-		FMLLog.log(MODNAME, Level.INFO, log, params);
+		LOGGER.log(Level.INFO, log, params);
 	}
 
 	public static void logDebug(String log, Object... params) {
-		FMLLog.log(MODNAME, Level.DEBUG, log, params);
+		LOGGER.log(Level.DEBUG, log, params);
 	}
 
 	public static void logError(String log, Object... params) {
-		FMLLog.log(MODNAME, Level.ERROR, log, params);
+		LOGGER.log(Level.ERROR, log, params);
 	}
 
 	public static void logTrace(String log, Object... params) {
-		FMLLog.log(MODNAME, Level.TRACE, log, params);
+		LOGGER.log(Level.TRACE, log, params);
 	}
 
 	public static void logWarn(String log, Object... params) {
-		FMLLog.log(MODNAME, Level.WARN, log, params);
+		LOGGER.log(Level.WARN, log, params);
 	}
 }
