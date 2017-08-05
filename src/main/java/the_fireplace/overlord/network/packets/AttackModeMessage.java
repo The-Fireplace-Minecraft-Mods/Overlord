@@ -19,7 +19,7 @@ public class AttackModeMessage implements IMessage {
 	}
 
 	public AttackModeMessage(EntityArmyMember skeleton) {
-		this.warrior = skeleton.hashCode();
+		this.warrior = skeleton.getEntityId();
 	}
 
 	@Override

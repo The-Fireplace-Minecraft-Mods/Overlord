@@ -21,7 +21,7 @@ public class SetSquadMessage implements IMessage {
 	}
 
 	public SetSquadMessage(EntityArmyMember skeleton, String squad) {
-		this.warrior = skeleton.hashCode();
+		this.warrior = skeleton.getEntityId();
 		this.squad = squad;
 	}
 

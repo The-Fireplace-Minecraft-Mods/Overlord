@@ -1,1 +1,2 @@
-Updated the splash system in preparation for Mechanical Soldiers and Fire's Random Things splashes
+Fixed dedicated server-side translations
+Stop server log spam when The One Probe looks at an army skeleton.

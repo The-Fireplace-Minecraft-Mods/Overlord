@@ -19,7 +19,7 @@ public class MovementModeMessage implements IMessage {
 	}
 
 	public MovementModeMessage(EntityArmyMember skeleton) {
-		this.warrior = skeleton.hashCode();
+		this.warrior = skeleton.getEntityId();
 	}
 
 	@Override

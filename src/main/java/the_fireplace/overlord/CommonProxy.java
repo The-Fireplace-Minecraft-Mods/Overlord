@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
  */
 public class CommonProxy {
 	public String translateToLocal(@Nonnull String key, Object... args) {
-		return I18n.translateToLocal(key);
+		return I18n.translateToLocalFormatted(key, args);
 	}
 
 	public EntityPlayer getPlayerEntity(MessageContext ctx) {
