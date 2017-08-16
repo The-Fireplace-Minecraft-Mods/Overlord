@@ -1,7 +1,7 @@
 [Overlord](https://minecraft.curseforge.com/projects/overlord)
 ============================================================================
 
-[![Curse Forge](http://cf.way2muchnoise.eu/short_250836_downloads.svg)](https://minecraft.curseforge.com/projects/overlord)
+[![Curse Forge](http://cf.way2muchnoise.eu/short_251732_downloads.svg)](https://minecraft.curseforge.com/projects/overlord)
 
 [Issue Reporting](https://github.com/The-Fireplace/Overlord/issues)
 ------------------------------------------------------------------
