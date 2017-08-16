@@ -11,7 +11,7 @@ import the_fireplace.overlord.entity.EntityArmyMember;
  * @author The_Fireplace
  */
 public class EntityAIArmyBow extends EntityAIBase {
-	private final EntityArmyMember entity;
+	private final EntityArmyMember armyMember;
 	private final double moveSpeedAmp;
 	private int attackCooldown;
 	private final float maxAttackDistance;
@@ -21,130 +21,109 @@ public class EntityAIArmyBow extends EntityAIBase {
 	private boolean strafingBackwards;
 	private int strafingTime = -1;
 
-	public EntityAIArmyBow(EntityArmyMember skeleton, double speedAmplifier, int delay, float maxDistance) {
-		this.entity = skeleton;
+	public EntityAIArmyBow(EntityArmyMember armyMember, double speedAmplifier, int delay, float maxDistance) {
+		this.armyMember = armyMember;
 		this.moveSpeedAmp = speedAmplifier;
 		this.attackCooldown = delay;
 		this.maxAttackDistance = maxDistance * maxDistance;
 		this.setMutexBits(3);
 	}
 
-	/**
-	 * Returns whether the EntityAIBase should begin execution.
-	 */
 	@Override
 	public boolean shouldExecute() {
-		return this.entity.getAttackTarget() != null && this.isBowInMainhand() && this.isArrowInOffhand();
+		return this.armyMember.getAttackTarget() != null && this.isBowInMainhand() && this.isArrowInOffhand();
 	}
 
 	protected boolean isBowInMainhand() {
-		return !this.entity.getHeldItemMainhand().isEmpty() && this.entity.getHeldItemMainhand().getItem() instanceof ItemBow;
+		return !this.armyMember.getHeldItemMainhand().isEmpty() && this.armyMember.getHeldItemMainhand().getItem() instanceof ItemBow;
 	}
 
 	protected boolean isArrowInOffhand() {
-		return !this.entity.getHeldItemOffhand().isEmpty() && this.entity.getHeldItemOffhand().getItem() instanceof ItemArrow;
+		return !this.armyMember.getHeldItemOffhand().isEmpty() && this.armyMember.getHeldItemOffhand().getItem() instanceof ItemArrow;
 	}
 
-	/**
-	 * Returns whether an in-progress EntityAIBase should continue executing
-	 */
 	@Override
 	public boolean shouldContinueExecuting() {
-		return (this.shouldExecute() || !this.entity.getNavigator().noPath()) && this.isBowInMainhand() && this.isArrowInOffhand();
+		return (this.shouldExecute() || (!this.armyMember.getNavigator().noPath() && this.isBowInMainhand() && this.isArrowInOffhand()));
 	}
 
-	/**
-	 * Execute a one shot task or start executing a continuous task
-	 */
 	@Override
 	public void startExecuting() {
 		super.startExecuting();
-		this.entity.setSwingingArms(true);
+		this.armyMember.setSwingingArms(true);
 	}
 
-	/**
-	 * Resets the task
-	 */
 	@Override
 	public void resetTask() {
 		super.resetTask();
-		this.entity.setSwingingArms(false);
+		this.armyMember.setSwingingArms(false);
 		this.seeTime = 0;
 		this.attackTime = -1;
-		this.entity.resetActiveHand();
+		this.armyMember.resetActiveHand();
 	}
 
-	/**
-	 * Updates the task
-	 */
 	@Override
 	public void updateTask() {
-		EntityLivingBase entitylivingbase = this.entity.getAttackTarget();
+		EntityLivingBase attackTarget = this.armyMember.getAttackTarget();
 
-		if (entitylivingbase != null) {
-			double d0 = this.entity.getDistanceSq(entitylivingbase.posX, entitylivingbase.getEntityBoundingBox().minY, entitylivingbase.posZ);
-			boolean flag = this.entity.getEntitySenses().canSee(entitylivingbase);
-			boolean flag1 = this.seeTime > 0;
+		if (attackTarget != null) {
+			double distanceSq = this.armyMember.getDistanceSq(attackTarget.posX, attackTarget.getEntityBoundingBox().minY, attackTarget.posZ);
+			boolean canSee = this.armyMember.getEntitySenses().canSee(attackTarget);
+			boolean targetWithinVisibleTime = this.seeTime > 0;
 
-			if (flag != flag1) {
+			if (canSee != targetWithinVisibleTime) {
 				this.seeTime = 0;
 			}
 
-			if (flag) {
+			if (canSee)
 				++this.seeTime;
-			} else {
+			else
 				--this.seeTime;
-			}
-			if (entity.getMovementMode() > 0)
-				if (d0 <= (double) this.maxAttackDistance && this.seeTime >= 20) {
-					this.entity.getNavigator().clearPathEntity();
+			if (armyMember.getMovementMode() > 0)
+				if (distanceSq <= (double) this.maxAttackDistance && this.seeTime >= 20) {
+					this.armyMember.getNavigator().clearPathEntity();
 					++this.strafingTime;
 				} else {
-					this.entity.getNavigator().tryMoveToEntityLiving(entitylivingbase, this.moveSpeedAmp);
+					this.armyMember.getNavigator().tryMoveToEntityLiving(attackTarget, this.moveSpeedAmp);
 					this.strafingTime = -1;
 				}
-			if (entity.getMovementMode() > 0)
+			if (armyMember.getMovementMode() > 0)
 				if (this.strafingTime >= 20) {
-					if ((double) this.entity.getRNG().nextFloat() < 0.3D) {
+					if ((double) this.armyMember.getRNG().nextFloat() < 0.3D)
 						this.strafingClockwise = !this.strafingClockwise;
-					}
 
-					if ((double) this.entity.getRNG().nextFloat() < 0.3D) {
+					if ((double) this.armyMember.getRNG().nextFloat() < 0.3D)
 						this.strafingBackwards = !this.strafingBackwards;
-					}
 
 					this.strafingTime = 0;
 				}
 			if (this.strafingTime > -1) {
-				if (entity.getMovementMode() > 0)
-					if (d0 > (double) (this.maxAttackDistance * 0.75F)) {
+				if (armyMember.getMovementMode() > 0)
+					if (distanceSq > (double) (this.maxAttackDistance * 0.75F))
 						this.strafingBackwards = false;
-					} else if (d0 < (double) (this.maxAttackDistance * 0.25F)) {
+					else if (distanceSq < (double) (this.maxAttackDistance * 0.25F))
 						this.strafingBackwards = true;
-					}
 
-				if (entity.getMovementMode() > 0)
-					this.entity.getMoveHelper().strafe(this.strafingBackwards ? -0.5F : 0.5F, this.strafingClockwise ? 0.5F : -0.5F);
-				this.entity.faceEntity(entitylivingbase, 30.0F, 30.0F);
-			} else {
-				this.entity.getLookHelper().setLookPositionWithEntity(entitylivingbase, 30.0F, 30.0F);
-			}
+				if (armyMember.getMovementMode() > 0)
+					this.armyMember.getMoveHelper().strafe(this.strafingBackwards ? -0.5F : 0.5F, this.strafingClockwise ? 0.5F : -0.5F);
+				this.armyMember.faceEntity(attackTarget, 30.0F, 30.0F);
+			} else
+				this.armyMember.getLookHelper().setLookPositionWithEntity(attackTarget, 30.0F, 30.0F);
 
-			if (this.entity.isHandActive()) {
-				if (!flag && this.seeTime < -60) {
-					this.entity.resetActiveHand();
-				} else if (flag) {
-					int i = this.entity.getItemInUseMaxCount();
+			if (this.armyMember.isHandActive()) {
+				if (!canSee && this.seeTime < -60) {
+					this.armyMember.resetActiveHand();
+				} else if (canSee) {
+					int i = this.armyMember.getItemInUseMaxCount();
 
 					if (i >= 20) {
-						this.entity.resetActiveHand();
-						this.entity.attackEntityWithRangedAttack(entitylivingbase, ItemBow.getArrowVelocity(i));
+						this.armyMember.resetActiveHand();
+						this.armyMember.attackEntityWithRangedAttack(attackTarget, ItemBow.getArrowVelocity(i));
 						this.attackTime = this.attackCooldown;
 					}
 				}
-			} else if (--this.attackTime <= 0 && this.seeTime >= -60) {
-				this.entity.setActiveHand(EnumHand.MAIN_HAND);
-			}
+			} else if (--this.attackTime <= 0 && this.seeTime >= -60)
+				this.armyMember.setActiveHand(EnumHand.MAIN_HAND);
 		}
 	}
 }

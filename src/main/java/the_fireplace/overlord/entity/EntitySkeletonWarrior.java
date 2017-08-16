@@ -478,7 +478,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 	public void onDeath(@Nonnull DamageSource cause) {
 		super.onDeath(cause);
 
-		if (cause.getTrueSource() instanceof EntityCreeper && ((EntityCreeper) cause.getTrueSource()).getPowered() && ((EntityCreeper) cause.getTrueSource()).isAIEnabled()) {
+		if (cause.getTrueSource() instanceof EntityCreeper && ((EntityCreeper) cause.getTrueSource()).getPowered() && !((EntityCreeper) cause.getTrueSource()).isAIDisabled()) {
 			((EntityCreeper) cause.getTrueSource()).incrementDroppedSkulls();
 			this.entityDropItem(new ItemStack(Items.SKULL), 0.0F);
 		}
@@ -775,7 +775,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 	}
 
 	@Override
-	public boolean shouldMobAttack(@Nonnull EntityLiving mob) {
+	public boolean willBeAttackedBy(@Nonnull EntityLiving mob) {
 		return this.getSkinType().equals(SkinType.PLAYER) && (getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty() || getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() != Items.SKULL || getItemStackFromSlot(EntityEquipmentSlot.HEAD).getMetadata() == 3);
 	}
 

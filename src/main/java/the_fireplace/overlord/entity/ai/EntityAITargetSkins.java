@@ -19,26 +19,17 @@ import net.minecraft.util.math.AxisAlignedBB;
 import the_fireplace.overlord.entity.EntityArmyMember;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 public class EntityAITargetSkins<T extends EntityLivingBase> extends EntityAITarget {
 	protected final Class<T> targetClass;
 	private final int targetChance;
-	/**
-	 * Instance of EntityAINearestAttackableTargetSorter.
-	 */
 	protected final EntityAITargetSkins.Sorter theNearestAttackableTargetSorter;
 	protected final Predicate<? super T> targetEntitySelector;
 	protected T targetEntity;
 
-	public final Predicate<EntityArmyMember> CAN_ATTACK_ARMY_MEMBER = new Predicate<EntityArmyMember>() {
-		@Override
-		public boolean apply(@Nullable EntityArmyMember p_apply_1_) {
-			return p_apply_1_ != null && p_apply_1_.shouldMobAttack(taskOwner);
-		}
-	};
+	public final Predicate<EntityArmyMember> CAN_ATTACK_ARMY_MEMBER = p_apply_1_ -> p_apply_1_ != null && p_apply_1_.willBeAttackedBy(taskOwner);
 
 	public EntityAITargetSkins(EntityCreature creature, Class<T> classTarget, boolean checkSight) {
 		this(creature, classTarget, checkSight, false);
@@ -54,29 +45,21 @@ public class EntityAITargetSkins<T extends EntityLivingBase> extends EntityAITar
 		this.targetChance = chance;
 		this.theNearestAttackableTargetSorter = new EntityAITargetSkins.Sorter(creature);
 		this.setMutexBits(1);
-		this.targetEntitySelector = new Predicate<T>() {
-			@Override
-			public boolean apply(@Nullable T p_apply_1_) {
-				return p_apply_1_ != null && EntitySelectors.NOT_SPECTATING.apply(p_apply_1_) && EntityAITargetSkins.this.isSuitableTarget(p_apply_1_, false) && CAN_ATTACK_ARMY_MEMBER.apply((EntityArmyMember) p_apply_1_);
-			}
-		};
+		this.targetEntitySelector = (Predicate<T>) p_apply_1_ -> p_apply_1_ != null && EntitySelectors.NOT_SPECTATING.apply(p_apply_1_) && EntityAITargetSkins.this.isSuitableTarget(p_apply_1_, false) && CAN_ATTACK_ARMY_MEMBER.apply((EntityArmyMember) p_apply_1_);
 	}
 
-	/**
-	 * Returns whether the EntityAIBase should begin execution.
-	 */
 	@Override
 	public boolean shouldExecute() {
 		if (this.targetChance > 0 && this.taskOwner.getRNG().nextInt(this.targetChance) != 0) {
 			return false;
 		} else if (this.targetClass != EntityPlayer.class && this.targetClass != EntityPlayerMP.class) {
-			List<T> list = this.taskOwner.world.getEntitiesWithinAABB(this.targetClass, this.getTargetableArea(this.getTargetDistance()), this.targetEntitySelector);
+			List<T> possibleTargetEntities = this.taskOwner.world.getEntitiesWithinAABB(this.targetClass, this.getTargetableArea(this.getTargetDistance()), this.targetEntitySelector);
 
-			if (list.isEmpty()) {
+			if (possibleTargetEntities.isEmpty())
 				return false;
-			} else {
-				Collections.sort(list, this.theNearestAttackableTargetSorter);
-				this.targetEntity = list.get(0);
+			else {
+				possibleTargetEntities.sort(this.theNearestAttackableTargetSorter);
+				this.targetEntity = possibleTargetEntities.get(0);
 				return true;
 			}
 		} else {
@@ -88,16 +71,16 @@ public class EntityAITargetSkins<T extends EntityLivingBase> extends EntityAITar
 
 					if (itemstack.getItem() == Items.SKULL) {
 						int i = itemstack.getItemDamage();
-						boolean flag = EntityAITargetSkins.this.taskOwner instanceof EntitySkeleton && i == 0;
-						boolean flag1 = EntityAITargetSkins.this.taskOwner instanceof EntityZombie && i == 2;
-						boolean flag2 = EntityAITargetSkins.this.taskOwner instanceof EntityCreeper && i == 4;
+						boolean skeletonSeeSkeleton = EntityAITargetSkins.this.taskOwner instanceof EntitySkeleton && i == 0;
+						boolean zombieSeeZombie = EntityAITargetSkins.this.taskOwner instanceof EntityZombie && i == 2;
+						boolean creeperSeeCreeper = EntityAITargetSkins.this.taskOwner instanceof EntityCreeper && i == 4;
 
-						if (flag || flag1 || flag2) {
-							return Double.valueOf(0.5D);
+						if (skeletonSeeSkeleton || zombieSeeZombie || creeperSeeCreeper) {
+							return 0.5D;
 						}
 					}
 
-					return Double.valueOf(1.0D);
+					return 1.0D;
 				}
 			}, (Predicate<EntityPlayer>) this.targetEntitySelector);
 			return this.targetEntity != null;
@@ -108,9 +91,6 @@ public class EntityAITargetSkins<T extends EntityLivingBase> extends EntityAITar
 		return this.taskOwner.getEntityBoundingBox().expand(targetDistance, 4.0D, targetDistance);
 	}
 
-	/**
-	 * Execute a one shot task or start executing a continuous task
-	 */
 	@Override
 	public void startExecuting() {
 		this.taskOwner.setAttackTarget(this.targetEntity);
@@ -128,7 +108,7 @@ public class EntityAITargetSkins<T extends EntityLivingBase> extends EntityAITar
 		public int compare(Entity p_compare_1_, Entity p_compare_2_) {
 			double d0 = this.theEntity.getDistanceSqToEntity(p_compare_1_);
 			double d1 = this.theEntity.getDistanceSqToEntity(p_compare_2_);
-			return d0 < d1 ? -1 : (d0 > d1 ? 1 : 0);
+			return Double.compare(d0, d1);
 		}
 	}
 }

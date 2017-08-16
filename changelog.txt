@@ -1,2 +1,1 @@
-Fixed dedicated server-side translations
-Stop server log spam when The One Probe looks at an army skeleton.
+Improved Army AI

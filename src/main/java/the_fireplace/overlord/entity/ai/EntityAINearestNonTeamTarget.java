@@ -53,9 +53,6 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
 		this.targetEntitySelector = (Predicate<T>) p_apply_1_ -> p_apply_1_ != null && (!(targetSelector != null && !targetSelector.test(p_apply_1_)) && (EntitySelectors.NOT_SPECTATING.apply(p_apply_1_) && EntityAINearestNonTeamTarget.this.isSuitableTarget(p_apply_1_, false)));
 	}
 
-	/**
-	 * Returns whether the EntityAIBase should begin execution.
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean shouldExecute() {
@@ -76,9 +73,8 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
 		} else {
 			this.targetEntity = (T) getNearestAttackablePlayer(this.taskOwner.world, this.taskOwner.posX, this.taskOwner.posY + (double) this.taskOwner.getEyeHeight(), this.taskOwner.posZ, this.getTargetDistance(), this.getTargetDistance(), new Function<EntityPlayer, Double>() {
 				@Override
-				@Nullable
 				public Double apply(@Nullable EntityPlayer p_apply_1_) {
-					return Double.valueOf(1.0D);
+					return 1.0D;
 				}
 			}, (Predicate<EntityPlayer>) this.targetEntitySelector);
 			return this.targetEntity != null;
@@ -181,9 +177,6 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
 		return entityplayer;
 	}
 
-	/**
-	 * Returns a list of all entities within the given bounding box that match the class or interface provided
-	 */
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> getEntitiesWithinAABB(World world, Class<T> clazz, AxisAlignedBB aabb, Predicate<? super T> predicate) {
 		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, aabb);

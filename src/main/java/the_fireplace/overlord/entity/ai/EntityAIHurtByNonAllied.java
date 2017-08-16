@@ -10,29 +10,16 @@ import the_fireplace.overlord.tools.Alliances;
  * @author The_Fireplace
  */
 public class EntityAIHurtByNonAllied extends EntityAIHurtByTarget {
-	EntityArmyMember owner;
+	EntityArmyMember armyMember;
 
 	public EntityAIHurtByNonAllied(EntityArmyMember creatureIn, boolean entityCallsForHelpIn, Class<?>... targetClassesIn) {
 		super(creatureIn, entityCallsForHelpIn, targetClassesIn);
-		owner = creatureIn;
+		armyMember = creatureIn;
 	}
 
 	@Override
 	public boolean shouldExecute() {
-		EntityLivingBase entitylivingbase = this.taskOwner.getRevengeTarget();
-		if (entitylivingbase instanceof EntityArmyMember)
-			if (((EntityArmyMember) entitylivingbase).getOwnerId().equals(this.owner.getOwnerId()))
-				return false;
-			else if (Alliances.getInstance().isAlliedTo(((EntityArmyMember) entitylivingbase).getOwnerId(), this.owner.getOwnerId()))
-				return false;
-		if (entitylivingbase instanceof EntityPlayer) {
-			if (entitylivingbase.getUniqueID().equals(this.owner.getOwnerId()))
-				return false;
-			else if (Alliances.getInstance().isAlliedTo(entitylivingbase.getUniqueID(), this.owner.getOwnerId()))
-				return false;
-			if (((EntityPlayer) entitylivingbase).isCreative())
-				return false;
-		}
-		return super.shouldExecute();
+		EntityLivingBase attackTarget = this.armyMember.getRevengeTarget();
+		return !(attackTarget instanceof EntityPlayer && (attackTarget.getUniqueID().equals(this.armyMember.getOwnerId()) || Alliances.getInstance().isAlliedTo(attackTarget.getUniqueID(), this.armyMember.getOwnerId()) || ((EntityPlayer) attackTarget).isCreative())) && !(attackTarget instanceof EntityArmyMember && (((EntityArmyMember) attackTarget).getOwnerId().equals(this.armyMember.getOwnerId()) || Alliances.getInstance().isAlliedTo(((EntityArmyMember) attackTarget).getOwnerId(), this.armyMember.getOwnerId()))) && super.shouldExecute();
 	}
 }

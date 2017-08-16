@@ -8,7 +8,7 @@ import the_fireplace.overlord.tools.Alliances;
 
 public class EntityAIMasterHurtByTarget extends EntityAITarget {
 	EntityArmyMember theDefendingTameable;
-	EntityLivingBase theOwnerAttacker;
+	EntityLivingBase entityAttackingOwner;
 	private int timestamp;
 
 	public EntityAIMasterHurtByTarget(EntityArmyMember theDefendingTameableIn) {
@@ -19,36 +19,29 @@ public class EntityAIMasterHurtByTarget extends EntityAITarget {
 
 	@Override
 	public boolean shouldExecute() {
-		EntityLivingBase entitylivingbase = this.theDefendingTameable.getOwner();
-
-		if (entitylivingbase instanceof EntityArmyMember)
-			if (((EntityArmyMember) entitylivingbase).getOwnerId().equals(this.theDefendingTameable.getOwnerId()))
-				return false;
-			else if (Alliances.getInstance().isAlliedTo(((EntityArmyMember) entitylivingbase).getOwnerId(), this.theDefendingTameable.getOwnerId()))
-				return false;
-		if (entitylivingbase instanceof EntityPlayer)
-			if (entitylivingbase.getUniqueID().equals(this.theDefendingTameable.getOwnerId()))
-				return false;
-			else if (Alliances.getInstance().isAlliedTo(entitylivingbase.getUniqueID(), this.theDefendingTameable.getOwnerId()))
-				return false;
-
-		if (entitylivingbase == null) {
+		EntityLivingBase owner = this.theDefendingTameable.getOwner();
+		if (owner == null)
 			return false;
-		} else {
-			this.theOwnerAttacker = entitylivingbase.getRevengeTarget();
-			int i = entitylivingbase.getRevengeTimer();
-			return i != this.timestamp && this.isSuitableTarget(this.theOwnerAttacker, false) && this.theDefendingTameable.shouldAttackEntity(this.theOwnerAttacker, entitylivingbase);
-		}
+		this.entityAttackingOwner = owner.getRevengeTarget();
+		int revengeTimer = owner.getRevengeTimer();
+
+		if (entityAttackingOwner instanceof EntityArmyMember)
+			if (((EntityArmyMember) entityAttackingOwner).getOwnerId().equals(this.theDefendingTameable.getOwnerId()) || Alliances.getInstance().isAlliedTo(((EntityArmyMember) entityAttackingOwner).getOwnerId(), this.theDefendingTameable.getOwnerId()))
+				return false;
+		if (entityAttackingOwner instanceof EntityPlayer)
+			if (entityAttackingOwner.getUniqueID().equals(this.theDefendingTameable.getOwnerId()) || Alliances.getInstance().isAlliedTo(entityAttackingOwner.getUniqueID(), this.theDefendingTameable.getOwnerId()))
+				return false;
+
+		return revengeTimer != this.timestamp && this.isSuitableTarget(this.entityAttackingOwner, false) && this.theDefendingTameable.shouldAttackEntity(this.entityAttackingOwner, owner);
 	}
 
 	@Override
 	public void startExecuting() {
-		this.taskOwner.setAttackTarget(this.theOwnerAttacker);
-		EntityLivingBase entitylivingbase = this.theDefendingTameable.getOwner();
+		this.taskOwner.setAttackTarget(this.entityAttackingOwner);
+		EntityLivingBase owner = this.theDefendingTameable.getOwner();
 
-		if (entitylivingbase != null) {
-			this.timestamp = entitylivingbase.getRevengeTimer();
-		}
+		if (owner != null)
+			this.timestamp = owner.getRevengeTimer();
 
 		super.startExecuting();
 	}

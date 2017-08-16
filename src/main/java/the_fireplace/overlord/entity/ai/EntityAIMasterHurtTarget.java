@@ -7,46 +7,40 @@ import the_fireplace.overlord.entity.EntityArmyMember;
 import the_fireplace.overlord.tools.Alliances;
 
 public class EntityAIMasterHurtTarget extends EntityAITarget {
-	EntityArmyMember theEntityTameable;
-	EntityLivingBase theTarget;
+	private EntityArmyMember tameable;
+	private EntityLivingBase targetOfAttack;
 	private int timestamp;
 
 	public EntityAIMasterHurtTarget(EntityArmyMember theEntityTameableIn) {
 		super(theEntityTameableIn, false);
-		this.theEntityTameable = theEntityTameableIn;
+		this.tameable = theEntityTameableIn;
 		this.setMutexBits(1);
 	}
 
 	@Override
 	public boolean shouldExecute() {
-		EntityLivingBase entitylivingbase = this.theEntityTameable.getOwner();
-		if (entitylivingbase instanceof EntityArmyMember)
-			if (((EntityArmyMember) entitylivingbase).getOwnerId().equals(this.theEntityTameable.getOwnerId()))
-				return false;
-			else if (Alliances.getInstance().isAlliedTo(((EntityArmyMember) entitylivingbase).getOwnerId(), this.theEntityTameable.getOwnerId()))
-				return false;
-		if (entitylivingbase instanceof EntityPlayer)
-			if (entitylivingbase.getUniqueID().equals(this.theEntityTameable.getOwnerId()))
-				return false;
-			else if (Alliances.getInstance().isAlliedTo(entitylivingbase.getUniqueID(), this.theEntityTameable.getOwnerId()))
-				return false;
-		if (entitylivingbase == null) {
+		EntityLivingBase owner = this.tameable.getOwner();
+		if (owner == null)
 			return false;
-		} else {
-			this.theTarget = entitylivingbase.getLastAttackedEntity();
-			int i = entitylivingbase.getLastAttackedEntityTime();
-			return i != this.timestamp && this.isSuitableTarget(this.theTarget, false) && this.theEntityTameable.shouldAttackEntity(this.theTarget, entitylivingbase);
-		}
+
+		this.targetOfAttack = owner.getLastAttackedEntity();
+		int lastAttackedEntityTime = owner.getLastAttackedEntityTime();
+		if (targetOfAttack instanceof EntityArmyMember)
+			if (((EntityArmyMember) targetOfAttack).getOwnerId().equals(this.tameable.getOwnerId()) || Alliances.getInstance().isAlliedTo(((EntityArmyMember) targetOfAttack).getOwnerId(), this.tameable.getOwnerId()))
+				return false;
+		if (targetOfAttack instanceof EntityPlayer)
+			if (targetOfAttack.getUniqueID().equals(this.tameable.getOwnerId()) || Alliances.getInstance().isAlliedTo(targetOfAttack.getUniqueID(), this.tameable.getOwnerId()))
+				return false;
+		return lastAttackedEntityTime != this.timestamp && this.isSuitableTarget(this.targetOfAttack, false) && this.tameable.shouldAttackEntity(this.targetOfAttack, owner);
 	}
 
 	@Override
 	public void startExecuting() {
-		this.taskOwner.setAttackTarget(this.theTarget);
-		EntityLivingBase entitylivingbase = this.theEntityTameable.getOwner();
+		this.taskOwner.setAttackTarget(this.targetOfAttack);
+		EntityLivingBase owner = this.tameable.getOwner();
 
-		if (entitylivingbase != null) {
-			this.timestamp = entitylivingbase.getLastAttackedEntityTime();
-		}
+		if (owner != null)
+			this.timestamp = owner.getLastAttackedEntityTime();
 
 		super.startExecuting();
 	}

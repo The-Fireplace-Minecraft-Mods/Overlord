@@ -17,28 +17,27 @@ import the_fireplace.overlord.entity.EntityArmyMember;
  * @author The_Fireplace
  */
 public class EntityAIFollowMaster extends EntityAIBase {
-	private final EntityArmyMember thePet;
+	private final EntityArmyMember armyMember;
 	private EntityLivingBase theOwner;
 	World theWorld;
 	private final double followSpeed;
-	private final PathNavigate petPathfinder;
+	private final PathNavigate armyMemberPathfinder;
 	private int timeToRecalcPath;
 	float maxDist;
 	float minDist;
 	private float oldWaterCost;
 
-	public EntityAIFollowMaster(EntityArmyMember thePetIn, double followSpeedIn, float minDistIn, float maxDistIn) {
-		this.thePet = thePetIn;
-		this.theWorld = thePetIn.world;
+	public EntityAIFollowMaster(EntityArmyMember armyMember, double followSpeedIn, float minDistIn, float maxDistIn) {
+		this.armyMember = armyMember;
+		this.theWorld = armyMember.world;
 		this.followSpeed = followSpeedIn;
-		this.petPathfinder = thePetIn.getNavigator();
+		this.armyMemberPathfinder = armyMember.getNavigator();
 		this.minDist = minDistIn;
 		this.maxDist = maxDistIn;
 		this.setMutexBits(3);
 
-		if (!(thePetIn.getNavigator() instanceof PathNavigateGround)) {
+		if (!(armyMember.getNavigator() instanceof PathNavigateGround))
 			throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
-		}
 	}
 
 	/**
@@ -46,48 +45,33 @@ public class EntityAIFollowMaster extends EntityAIBase {
 	 */
 	@Override
 	public boolean shouldExecute() {
-		EntityLivingBase entitylivingbase = this.thePet.getOwner();
+		EntityLivingBase owner = this.armyMember.getOwner();
 
-		if (entitylivingbase == null) {
+		if (owner == null || (owner instanceof EntityPlayer && ((EntityPlayer) owner).isSpectator()) || this.armyMember.getDistanceSqToEntity(owner) < (double) (this.minDist * this.minDist) || armyMember.getAttackTarget() != null)
 			return false;
-		} else if (entitylivingbase instanceof EntityPlayer && ((EntityPlayer) entitylivingbase).isSpectator()) {
-			return false;
-		} else if (this.thePet.getDistanceSqToEntity(entitylivingbase) < (double) (this.minDist * this.minDist)) {
-			return false;
-		} else if (thePet.getAttackTarget() != null) {
-			return false;
-		} else {
-			this.theOwner = entitylivingbase;
+		else {
+			this.theOwner = owner;
 			return true;
 		}
 	}
 
-	/**
-	 * Returns whether an in-progress EntityAIBase should continue executing
-	 */
 	@Override
 	public boolean shouldContinueExecuting() {
-		return !this.petPathfinder.noPath() && thePet.getAttackTarget() == null && this.thePet.getDistanceSqToEntity(this.theOwner) > (double) (this.maxDist * this.maxDist);
+		return !this.armyMemberPathfinder.noPath() && armyMember.getAttackTarget() == null && this.armyMember.getDistanceSqToEntity(this.theOwner) > (double) (this.maxDist * this.maxDist);
 	}
 
-	/**
-	 * Execute a one shot task or start executing a continuous task
-	 */
 	@Override
 	public void startExecuting() {
 		this.timeToRecalcPath = 0;
-		this.oldWaterCost = this.thePet.getPathPriority(PathNodeType.WATER);
-		this.thePet.setPathPriority(PathNodeType.WATER, 0.0F);
+		this.oldWaterCost = this.armyMember.getPathPriority(PathNodeType.WATER);
+		this.armyMember.setPathPriority(PathNodeType.WATER, 0.0F);
 	}
 
-	/**
-	 * Resets the task
-	 */
 	@Override
 	public void resetTask() {
 		this.theOwner = null;
-		this.petPathfinder.clearPathEntity();
-		this.thePet.setPathPriority(PathNodeType.WATER, this.oldWaterCost);
+		this.armyMemberPathfinder.clearPathEntity();
+		this.armyMember.setPathPriority(PathNodeType.WATER, this.oldWaterCost);
 	}
 
 	private boolean isEmptyBlock(BlockPos pos) {
@@ -95,28 +79,25 @@ public class EntityAIFollowMaster extends EntityAIBase {
 		return iblockstate.getMaterial() == Material.AIR;
 	}
 
-	/**
-	 * Updates the task
-	 */
 	@Override
 	public void updateTask() {
-		this.thePet.getLookHelper().setLookPositionWithEntity(this.theOwner, 10.0F, (float) this.thePet.getVerticalFaceSpeed());
+		this.armyMember.getLookHelper().setLookPositionWithEntity(this.theOwner, 10.0F, (float) this.armyMember.getVerticalFaceSpeed());
 
 		if (--this.timeToRecalcPath <= 0) {
 			this.timeToRecalcPath = 10;
 
-			if (!this.petPathfinder.tryMoveToEntityLiving(this.theOwner, this.followSpeed)) {
-				if (!this.thePet.getLeashed() && thePet.fallDistance <= 0) {
-					if (this.thePet.getDistanceSqToEntity(this.theOwner) >= 144.0D) {
-						int i = MathHelper.floor(this.theOwner.posX) - 2;
-						int j = MathHelper.floor(this.theOwner.posZ) - 2;
-						int k = MathHelper.floor(this.theOwner.getEntityBoundingBox().minY);
+			if (!this.armyMemberPathfinder.tryMoveToEntityLiving(this.theOwner, this.followSpeed)) {
+				if (!this.armyMember.getLeashed() && armyMember.fallDistance <= 0) {
+					if (this.armyMember.getDistanceSqToEntity(this.theOwner) >= 144.0D) {
+						int ownerX = MathHelper.floor(this.theOwner.posX) - 2;
+						int ownerY = MathHelper.floor(this.theOwner.getEntityBoundingBox().minY);
+						int ownerZ = MathHelper.floor(this.theOwner.posZ) - 2;
 
-						for (int l = 0; l <= 4; ++l) {
-							for (int i1 = 0; i1 <= 4; ++i1) {
-								if ((l < 1 || i1 < 1 || l > 3 || i1 > 3) && this.theWorld.getBlockState(new BlockPos(i + l, k - 1, j + i1)).isOpaqueCube() && this.isEmptyBlock(new BlockPos(i + l, k, j + i1)) && this.isEmptyBlock(new BlockPos(i + l, k + 1, j + i1))) {
-									this.thePet.setLocationAndAngles((double) ((float) (i + l) + 0.5F), (double) k, (double) ((float) (j + i1) + 0.5F), this.thePet.rotationYaw, this.thePet.rotationPitch);
-									this.petPathfinder.clearPathEntity();
+						for (int xOffset = 0; xOffset <= 4; ++xOffset) {
+							for (int zOffset = 0; zOffset <= 4; ++zOffset) {
+								if ((xOffset < 1 || zOffset < 1 || xOffset > 3 || zOffset > 3) && this.theWorld.getBlockState(new BlockPos(ownerX + xOffset, ownerY - 1, ownerZ + zOffset)).isOpaqueCube() && this.isEmptyBlock(new BlockPos(ownerX + xOffset, ownerY, ownerZ + zOffset)) && this.isEmptyBlock(new BlockPos(ownerX + xOffset, ownerY + 1, ownerZ + zOffset))) {
+									this.armyMember.setLocationAndAngles((double) ((float) (ownerX + xOffset) + 0.5F), (double) ownerY, (double) ((float) (ownerZ + zOffset) + 0.5F), this.armyMember.rotationYaw, this.armyMember.rotationPitch);
+									this.armyMemberPathfinder.clearPathEntity();
 									return;
 								}
 							}

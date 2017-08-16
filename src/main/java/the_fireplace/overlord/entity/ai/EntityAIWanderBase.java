@@ -2,6 +2,7 @@ package the_fireplace.overlord.entity.ai;
 
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import the_fireplace.overlord.entity.EntityArmyMember;
 
@@ -28,27 +29,21 @@ public class EntityAIWanderBase extends EntityAIBase {
 		this.setMutexBits(1);
 	}
 
-	/**
-	 * Returns whether the EntityAIBase should begin execution.
-	 */
 	@Override
 	public boolean shouldExecute() {
-		if (this.mayNotUpdate) {
-			if (this.entity.getRNG().nextInt(this.executionChance) != 0) {
-				return false;
-			}
-		}
+		if (this.mayNotUpdate && this.entity.getRNG().nextInt(this.executionChance) != 0)
+			return false;
 
 		Vec3d vec3d = RandomPositionGenerator.findRandomTarget(this.entity, 10, 7);
-		int attempts = 0;
-		while (attempts < 10 && entity.getHomePosition().getDistance(vec3d != null ? (int) vec3d.x: (int) entity.posX, vec3d != null ? (int) vec3d.y : (int) entity.posY, vec3d != null ? (int) vec3d.z : (int) entity.posZ) > entity.getMaximumHomeDistance()) {
+		int wanderTargetAttempts = 0;
+		while (wanderTargetAttempts < 10 && (vec3d == null || !entity.isWithinHomeDistanceFromPosition(new BlockPos(vec3d)))) {
 			vec3d = RandomPositionGenerator.findRandomTarget(this.entity, 12, 8);
-			attempts++;
+			wanderTargetAttempts++;
 		}
 
-		if (vec3d == null || attempts >= 10) {
+		if (vec3d == null || wanderTargetAttempts >= 10)
 			return false;
-		} else {
+		else {
 			this.xPosition = vec3d.x;
 			this.yPosition = vec3d.y;
 			this.zPosition = vec3d.z;
@@ -57,17 +52,11 @@ public class EntityAIWanderBase extends EntityAIBase {
 		}
 	}
 
-	/**
-	 * Returns whether an in-progress EntityAIBase should continue executing
-	 */
 	@Override
 	public boolean shouldContinueExecuting() {
 		return !this.entity.getNavigator().noPath();
 	}
 
-	/**
-	 * Execute a one shot task or start executing a continuous task
-	 */
 	@Override
 	public void startExecuting() {
 		this.entity.getNavigator().tryMoveToXYZ(this.xPosition, this.yPosition, this.zPosition, this.speed);

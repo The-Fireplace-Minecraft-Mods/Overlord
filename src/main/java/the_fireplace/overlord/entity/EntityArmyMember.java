@@ -104,22 +104,20 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 	public void addMovementTasks() {
 		switch (dataManager.get(MOVEMENT_MODE)) {
 			case 1:
-				if (shouldMobAttack(new EntityCreeper(this.world))) {
+				if (!ConfigValues.HUNTCREEPERS)
 					this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityCreeper.class, 10.0F, 1.2D, 1.6D));
-				}
 				this.tasks.addTask(4, new EntityAIOpenDoor(this, getAttackMode() != 2));
 				this.tasks.addTask(6, new EntityAIFollowMaster(this, 1.0D, 10.0F, 2.0F));
 			case 0:
-				this.setHomePosAndDistance(new BlockPos(this.posX, this.posY, this.posZ), -1);
+				this.detachHome();
 				break;
 			case 2:
 			default:
 				this.setHomePosAndDistance(new BlockPos(this.posX, this.posY, this.posZ), 20);
 				this.tasks.addTask(2, new EntityAIRestrictSun(this));
 				this.tasks.addTask(3, new EntityAIFleeSun(this, 1.0D));
-				if (shouldMobAttack(new EntityCreeper(this.world))) {
+				if (!ConfigValues.HUNTCREEPERS)
 					this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityCreeper.class, 10.0F, 1.2D, 1.6D));
-				}
 				this.tasks.addTask(4, new EntityAIOpenDoor(this, getAttackMode() != 2));
 				this.tasks.addTask(7, new EntityAIWanderBase(this, 1.0D));
 		}
@@ -214,15 +212,8 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 	@Override
 	public void onDeath(@Nonnull DamageSource cause) {
 		super.onDeath(cause);
-		if (!this.world.isRemote && this.world.getGameRules().getBoolean("showDeathMessages") && this.getOwner() instanceof EntityPlayerMP) {
-            /*String name = "";
-            if(hasCustomName()) {
-                name += getCustomNameTag();
-                name += " (" + proxy.translateToLocal("entity." + EntityList.getEntityString(this) + ".name") + ')';
-            }else
-                name += proxy.translateToLocal("entity." + EntityList.getEntityString(this) + ".name");*/
+		if (!this.world.isRemote && this.world.getGameRules().getBoolean("showDeathMessages") && this.getOwner() instanceof EntityPlayerMP)
 			this.getOwner().sendMessage(cause.getDeathMessage(this));
-		}
 	}
 
 	@Override
@@ -537,34 +528,28 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 	}
 
 	public boolean shouldAttackEntity(EntityLivingBase target, EntityLivingBase owner) {
-		if (!(!ConfigValues.HUNTCREEPERS && target instanceof EntityCreeper)/* && !(target instanceof EntityGhast)*/) {
+		if (ConfigValues.HUNTCREEPERS || !(target instanceof EntityCreeper)) {
 			if (target instanceof EntityWolf) {
 				EntityWolf entitywolf = (EntityWolf) target;
 
-				if (entitywolf.isTamed() && entitywolf.getOwner() == owner) {
-					return false;
-				} else if (Alliances.getInstance().isAlliedTo(((EntityWolf) target).getOwnerId(), getOwnerId()))
+				if (entitywolf.isTamed() && entitywolf.getOwner() == owner || Alliances.getInstance().isAlliedTo(entitywolf.getOwnerId(), getOwnerId()))
 					return false;
 			}
 
-			if (target instanceof EntityArmyMember) {
-				if ((getAttackMode() < 2 && Enemies.getInstance().isNotEnemiesWith(((EntityArmyMember) target).getOwnerId(), getOwnerId())) || ((EntityArmyMember) target).getOwnerId().equals(getOwnerId()))
+			if (target instanceof EntityArmyMember)
+				if ((getAttackMode() < 2 && Enemies.getInstance().isNotEnemiesWith(((EntityArmyMember) target).getOwnerId(), getOwnerId())) || ((EntityArmyMember) target).getOwnerId().equals(getOwnerId()) || Alliances.getInstance().isAlliedTo(((EntityArmyMember) target).getOwnerId(), getOwnerId()))
 					return false;
-				if (Alliances.getInstance().isAlliedTo(((EntityArmyMember) target).getOwnerId(), getOwnerId()))
-					return false;
-			}
 
 			return !(target instanceof EntityPlayer && owner instanceof EntityPlayer && !((EntityPlayer) owner).canAttackPlayer((EntityPlayer) target)) && (!(target instanceof EntityHorse) || !((EntityHorse) target).isTame());
-		} else {
+		} else
 			return false;
-		}
 	}
 
 	public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {
 
 	}
 
-	public boolean shouldMobAttack(EntityLiving mob) {
+	public boolean willBeAttackedBy(EntityLiving mob) {
 		return false;
 	}
 }
