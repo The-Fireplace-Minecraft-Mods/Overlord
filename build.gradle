@@ -24,9 +24,9 @@ apply plugin: 'net.cazzar.gradle.modsio'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
-version = "2.4.4"
+version = "2.4.5"
 group= "the_fireplace.overlord"
-archivesBaseName = "Overlord-1.12"
+archivesBaseName = "Overlord-1.12.1"
 
 allprojects {
     sourceCompatibility = 1.8
@@ -34,13 +34,12 @@ allprojects {
 }
 
 minecraft {
-    version = "1.12-14.21.1.2413"
+    version = "1.12.1-14.22.0.2456"
     runDir = "run"
     replace '${version}', project.version
-    mappings = "snapshot_20170628"
-	//useDepAts = true
+    mappings = "snapshot_20170815"
 	
-	clientRunArgs += "-uuid=0b1ec5ad-cb2a-43b7-995d-889320eb2e5b -username=The_Fireplace"
+	clientRunArgs += "--uuid=0b1ec5ad-cb2a-43b7-995d-889320eb2e5b --username=The_Fireplace"
 }
 
 dependencies {
@@ -122,6 +121,7 @@ curseforge {
     id = '251732'
     changelog = file('changelog.txt')
     releaseType = 'release'
+    addGameVersion '1.12.1'
     addGameVersion '1.12'
 	addGameVersion 'Java 8'
     mainArtifact(jar) {
@@ -147,7 +147,7 @@ modsIO {
     project{
 		artifact = new File(jar.destinationDir, archivesBaseName+"-"+version+".jar")
 		modid = "1239"
-		minecraft = "1.12"
+		minecraft = "1.12.1"
 		try{changelog = file('changelog.txt').text}catch(Exception e){changelog=""}
 		tag = ""
 		current = true

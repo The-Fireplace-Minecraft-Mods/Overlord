@@ -17,5 +17,4 @@ build
 # other
 eclipse
 run
-runclient
 libs/*
