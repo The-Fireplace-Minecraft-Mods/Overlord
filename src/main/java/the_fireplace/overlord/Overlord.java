@@ -150,6 +150,7 @@ public final class Overlord {
 			config.save();
 	}
 
+	@SuppressWarnings("deprecation")
 	private static Logger LOGGER = FMLLog.getLogger();//default to that so if it somehow gets called before preInit, it isn't null.
 
 	@Mod.EventHandler

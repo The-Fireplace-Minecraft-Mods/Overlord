@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
  * @author The_Fireplace
  */
 public class CommonProxy {
+	@SuppressWarnings("deprecation")
 	public String translateToLocal(@Nonnull String key, Object... args) {
 		return I18n.translateToLocalFormatted(key, args);
 	}
