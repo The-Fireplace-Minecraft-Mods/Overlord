@@ -1,4 +1,4 @@
-[Fire's Survival Tweaks](https://minecraft.curseforge.com/projects/overlord)
+[Overlord](https://minecraft.curseforge.com/projects/overlord)
 ============================================================================
 
 [![Curse Forge](http://cf.way2muchnoise.eu/short_250836_downloads.svg)](https://minecraft.curseforge.com/projects/overlord)
