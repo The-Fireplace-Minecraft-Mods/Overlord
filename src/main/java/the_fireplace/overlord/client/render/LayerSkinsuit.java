@@ -65,9 +65,8 @@ public class LayerSkinsuit implements LayerRenderer<EntityLivingBase> {
 								img = ImageIO.read(skinFile);
 								SkinTools.skins.put(skin.getSkinName(), img);
 							}
-							if (((img.getRGB(54, 21) >> 24) & 0xff) == 0) {
+							//if (((img.getRGB(54, 21) >> 24) & 0xff) == 0)
 								//TODO: Small arms
-							}
 							DynamicTexture texture;
 							if (SkinTools.skintextures.get(img) != null)
 								texture = SkinTools.skintextures.get(img);

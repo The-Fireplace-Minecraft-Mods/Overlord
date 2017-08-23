@@ -71,12 +71,7 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
 				return true;
 			}
 		} else {
-			this.targetEntity = (T) getNearestAttackablePlayer(this.taskOwner.world, this.taskOwner.posX, this.taskOwner.posY + (double) this.taskOwner.getEyeHeight(), this.taskOwner.posZ, this.getTargetDistance(), this.getTargetDistance(), new Function<EntityPlayer, Double>() {
-				@Override
-				public Double apply(@Nullable EntityPlayer p_apply_1_) {
-					return 1.0D;
-				}
-			}, (Predicate<EntityPlayer>) this.targetEntitySelector);
+			this.targetEntity = (T) getNearestAttackablePlayer(this.taskOwner.world, this.taskOwner.posX, this.taskOwner.posY + (double) this.taskOwner.getEyeHeight(), this.taskOwner.posZ, this.getTargetDistance(), this.getTargetDistance(), p_apply_1_ -> 1.0D, (Predicate<EntityPlayer>) this.targetEntitySelector);
 			return this.targetEntity != null;
 		}
 	}

@@ -35,15 +35,18 @@ import the_fireplace.overlord.registry.MilkRegistry;
 import the_fireplace.overlord.tools.SkinType;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.UUID;
 
 /**
  * @author The_Fireplace
  */
 @MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class TileEntitySkeletonMaker extends TileEntity implements ITickable, ISidedInventory, ISkeletonMaker {
 	private ItemStack[] inventory;
-	byte milk = 0;
+	private byte milk = 0;
 	public static final int[] clearslots = new int[]{6, 7, 8, 9, 10, 11, 12};
 
 	public TileEntitySkeletonMaker() {
@@ -72,7 +75,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 	}
 
 	@Override
-	public void spawnSkeleton(EntityPlayer player) {
+	public void spawnSkeleton(@Nullable EntityPlayer player) {
 		if (!canSpawnSkeleton() || world.isRemote)
 			return;
 		UUID owner = null;
@@ -195,7 +198,6 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 	}
 
 	@Override
-	@Nonnull
 	public ItemStack getStackInSlot(int index) {
 		if (inventory[index] != null)
 			return inventory[index];
@@ -204,7 +206,6 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 	}
 
 	@Override
-	@Nonnull
 	public ItemStack decrStackSize(int index, int count) {
 		ItemStack is = getStackInSlot(index);
 		if (!is.isEmpty()) {
@@ -219,7 +220,6 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 	}
 
 	@Override
-	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
 		ItemStack is = getStackInSlot(index);
 		setInventorySlotContents(index, ItemStack.EMPTY);
@@ -227,7 +227,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 	}
 
 	@Override
-	public void setInventorySlotContents(int index, @Nonnull ItemStack stack) {
+	public void setInventorySlotContents(int index, ItemStack stack) {
 		inventory[index] = stack;
 
 		if (!stack.isEmpty() && stack.getCount() > getInventoryStackLimit()) {
@@ -242,20 +242,20 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 	}
 
 	@Override
-	public boolean isUsableByPlayer(@Nonnull EntityPlayer player) {
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		return player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64;
 	}
 
 	@Override
-	public void openInventory(@Nonnull EntityPlayer player) {
+	public void openInventory(EntityPlayer player) {
 	}
 
 	@Override
-	public void closeInventory(@Nonnull EntityPlayer player) {
+	public void closeInventory(EntityPlayer player) {
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack) {
+	public boolean isItemValidForSlot(int index, ItemStack stack) {
 		return (index == 0 && stack.getItem() instanceof ItemOverlordsSeal) || ((index == 1 || index == 2) && stack.getItem() == Items.BONE) || (index == 3 && AugmentRegistry.getAugment(stack) != null) || (index == 4 && (stack.getItem() == Items.MILK_BUCKET || stack.getItem() == Overlord.milk_bottle)) || (index > 5 && index < 10 && stack.getItem().isValidArmor(stack, getSlotEquipmentType(index), null) || (index == 12 && stack.getItem() == Overlord.skinsuit));
 	}
 
@@ -347,8 +347,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 	}
 
 	@Override
-	@Nonnull
-	public int[] getSlotsForFace(@Nonnull EnumFacing side) {
+	public int[] getSlotsForFace(EnumFacing side) {
 		if (side == EnumFacing.EAST || side == EnumFacing.WEST || side == EnumFacing.NORTH || side == EnumFacing.SOUTH || side == EnumFacing.UP) {
 			return new int[]{1, 2, 3, 4, 6, 7, 8, 9, 12};
 		} else if (side == EnumFacing.DOWN) {
@@ -359,7 +358,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 	}
 
 	@Override
-	public boolean canInsertItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing direction) {
+	public boolean canInsertItem(int index, ItemStack stack, EnumFacing direction) {
 		if (!stack.isEmpty()) {
 			if (index >= 1 && index < 5 || index >= 6 && index < 10 || index == 12) {
 				if (this.isItemValidForSlot(index, stack))
@@ -370,7 +369,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 	}
 
 	@Override
-	public boolean canExtractItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing direction) {
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
 		if (!stack.isEmpty())
 			if (index == 5)
 				return true;
@@ -383,7 +382,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
 		if (facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 			if (facing == EnumFacing.DOWN)
 				return (T) handlerBottom;

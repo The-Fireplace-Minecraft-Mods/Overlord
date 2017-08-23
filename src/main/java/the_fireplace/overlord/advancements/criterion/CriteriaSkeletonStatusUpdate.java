@@ -36,12 +36,7 @@ public class CriteriaSkeletonStatusUpdate implements ICriterionTrigger<CriteriaS
 
 	@Override
 	public void addListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<CriteriaSkeletonStatusUpdate.Instance> listener) {
-		CriteriaSkeletonStatusUpdate.Listeners milkDrinkListeners = this.listeners.get(playerAdvancementsIn);
-
-		if (milkDrinkListeners == null) {
-			milkDrinkListeners = new CriteriaSkeletonStatusUpdate.Listeners(playerAdvancementsIn);
-			this.listeners.put(playerAdvancementsIn, milkDrinkListeners);
-		}
+		CriteriaSkeletonStatusUpdate.Listeners milkDrinkListeners = this.listeners.computeIfAbsent(playerAdvancementsIn, Listeners::new);
 
 		milkDrinkListeners.add(listener);
 	}
@@ -90,11 +85,7 @@ public class CriteriaSkeletonStatusUpdate implements ICriterionTrigger<CriteriaS
 		}
 
 		public boolean test(EntityPlayerMP player, Entity entity, Item criteria, int value) {
-			if (!this.item.test(new ItemStack(criteria, 1, value))) {
-				return false;
-			} else {
-				return this.entity.test(player, entity);
-			}
+			return this.item.test(new ItemStack(criteria, 1, value)) && this.entity.test(player, entity);
 		}
 	}
 

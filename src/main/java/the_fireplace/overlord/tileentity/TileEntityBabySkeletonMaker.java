@@ -31,11 +31,14 @@ import the_fireplace.overlord.registry.MilkRegistry;
 import the_fireplace.overlord.tools.SkinType;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.UUID;
 
 /**
  * @author The_Fireplace
  */
+@ParametersAreNonnullByDefault
 public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInventory, ISkeletonMaker {
 	private ItemStack[] inventory;
 	public static final int[] clearslots = new int[]{4, 5, 6, 7, 8, 9};
@@ -45,7 +48,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 	}
 
 	@Override
-	public void spawnSkeleton(EntityPlayer player) {
+	public void spawnSkeleton(@Nullable EntityPlayer player) {
 		if (!canSpawnSkeleton() || world.isRemote)
 			return;
 		UUID owner = null;
@@ -178,7 +181,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 	}
 
 	@Override
-	public void setInventorySlotContents(int index, @Nonnull ItemStack stack) {
+	public void setInventorySlotContents(int index, ItemStack stack) {
 		inventory[index] = stack;
 
 		if (!stack.isEmpty() && stack.getCount() > getInventoryStackLimit()) {
@@ -193,20 +196,20 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 	}
 
 	@Override
-	public boolean isUsableByPlayer(@Nonnull EntityPlayer player) {
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		return player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64;
 	}
 
 	@Override
-	public void openInventory(@Nonnull EntityPlayer player) {
+	public void openInventory(EntityPlayer player) {
 	}
 
 	@Override
-	public void closeInventory(@Nonnull EntityPlayer player) {
+	public void closeInventory(EntityPlayer player) {
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack) {
+	public boolean isItemValidForSlot(int index, ItemStack stack) {
 		return (index == 0 && stack.getItem() instanceof ItemOverlordsSeal) || (index == 1 && stack.getItem() == Items.BONE) || (index == 2 && (stack.getItem() == Items.MILK_BUCKET || stack.getItem() == Overlord.milk_bottle)) || (index > 3 && index < 8 && stack.getItem().isValidArmor(stack, getSlotEquipmentType(index), null) || (index == 9 && stack.getItem() == Overlord.skinsuit));
 	}
 
@@ -285,7 +288,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 
 	@Override
 	@Nonnull
-	public int[] getSlotsForFace(@Nonnull EnumFacing side) {
+	public int[] getSlotsForFace(EnumFacing side) {
 		if (side == EnumFacing.EAST || side == EnumFacing.WEST || side == EnumFacing.NORTH || side == EnumFacing.SOUTH || side == EnumFacing.UP) {
 			return new int[]{1, 2, 4, 5, 6, 7, 9};
 		} else if (side == EnumFacing.DOWN) {
@@ -296,7 +299,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 	}
 
 	@Override
-	public boolean canInsertItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing direction) {
+	public boolean canInsertItem(int index, ItemStack stack, EnumFacing direction) {
 		if (!stack.isEmpty()) {
 			if (index >= 1 && index < 3 || index >= 4 && index < 8 || index == 9) {
 				if (this.isItemValidForSlot(index, stack))
@@ -307,7 +310,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 	}
 
 	@Override
-	public boolean canExtractItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing direction) {
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
 		if (!stack.isEmpty())
 			if (index == 3)
 				return true;
@@ -320,7 +323,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
 		if (facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 			if (facing == EnumFacing.DOWN)
 				return (T) handlerBottom;

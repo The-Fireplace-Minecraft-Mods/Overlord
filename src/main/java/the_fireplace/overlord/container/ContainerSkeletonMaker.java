@@ -91,9 +91,7 @@ public class ContainerSkeletonMaker extends Container {
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
 
-		for (int i = 0; i < this.listeners.size(); ++i) {
-			IContainerListener icontainerlistener = this.listeners.get(i);
-
+		for (IContainerListener icontainerlistener : this.listeners) {
 			if (this.milk != te.getField(0)) {
 				icontainerlistener.sendWindowProperty(this, 0, te.getField(0));
 			}

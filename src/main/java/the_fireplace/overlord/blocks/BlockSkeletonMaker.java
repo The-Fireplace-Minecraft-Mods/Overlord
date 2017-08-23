@@ -1,5 +1,6 @@
 package the_fireplace.overlord.blocks;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -33,6 +34,7 @@ import java.util.Random;
 /**
  * @author The_Fireplace
  */
+@MethodsReturnNonnullByDefault
 public class BlockSkeletonMaker extends BlockContainer {
 	public static final PropertyBool TRIGGERED = PropertyBool.create("triggered");
 

@@ -61,13 +61,11 @@ public class Enemies implements Serializable {
 	}
 
 	public ArrayList<StringPair> getMyEnemies(UUID player) {
-		ArrayList<StringPair> enemies = this.enemies.stream().filter(playerPair -> UUID.fromString(playerPair.getUser1().getUUID()).equals(player)).map(Alliance::getUser2).collect(Collectors.toCollection(ArrayList::new));
-		return enemies;
+		return this.enemies.stream().filter(playerPair -> UUID.fromString(playerPair.getUser1().getUUID()).equals(player)).map(Alliance::getUser2).collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	public ArrayList<StringPair> getWhoEnemied(UUID player) {
-		ArrayList<StringPair> enemies = this.enemies.stream().filter(playerPair -> UUID.fromString(playerPair.getUser2().getUUID()).equals(player)).map(Alliance::getUser1).collect(Collectors.toCollection(ArrayList::new));
-		return enemies;
+		return this.enemies.stream().filter(playerPair -> UUID.fromString(playerPair.getUser2().getUUID()).equals(player)).map(Alliance::getUser1).collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	public void addEnemies(Alliance playerPair) {
