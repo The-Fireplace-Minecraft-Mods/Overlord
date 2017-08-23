@@ -1,1 +1,2 @@
-Improved Army AI
+Fixed "player not found" command messages
+Army Members now show up in JourneyMap
