@@ -56,7 +56,7 @@ public class CommandEnemyRemove extends CommandBase {
 						sender.sendMessage(new TextComponentTranslation("overlord.notenemied", player.getDisplayNameString()));
 					}
 				} else {
-					sender.sendMessage(new TextComponentTranslation("commands.generic.player.notFound"));
+					sender.sendMessage(new TextComponentTranslation("commands.generic.player.notFound", args[0]));
 				}
 			} else {
 				throw new WrongUsageException(getUsage(sender));

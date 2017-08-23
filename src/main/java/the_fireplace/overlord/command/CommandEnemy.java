@@ -66,7 +66,7 @@ public class CommandEnemy extends CommandBase {
 						sender.sendMessage(new TextComponentTranslation("overlord.alreadyenemies", player.getDisplayNameString()));
 					}
 				} else {
-					sender.sendMessage(new TextComponentTranslation("commands.generic.player.notFound"));
+					sender.sendMessage(new TextComponentTranslation("commands.generic.player.notFound", args[0]));
 				}
 			} else {
 				throw new WrongUsageException(getUsage(sender));

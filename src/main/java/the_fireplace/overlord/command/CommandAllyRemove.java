@@ -59,7 +59,7 @@ public class CommandAllyRemove extends CommandBase {
 						sender.sendMessage(new TextComponentTranslation("overlord.notallied", player.getDisplayNameString()));
 					}
 				} else {
-					sender.sendMessage(new TextComponentTranslation("commands.generic.player.notFound"));
+					sender.sendMessage(new TextComponentTranslation("commands.generic.player.notFound", args[0]));
 				}
 			} else {
 				throw new WrongUsageException(getUsage(sender));
