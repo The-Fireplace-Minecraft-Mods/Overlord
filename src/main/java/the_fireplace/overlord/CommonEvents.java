@@ -171,7 +171,7 @@ public final class CommonEvents {
 			if (event.player instanceof EntityPlayerMP) {
 				Overlord.logDebug("Sending " + event.player.getName() + " client their squads.");
 				PacketDispatcher.sendTo(new SetSquadsMessage(Squads.getInstance().getSquadsFor(event.player.getUniqueID())), (EntityPlayerMP) event.player);
-				if(ConfigValues.TEAMHACK) {
+				if (ConfigValues.TEAMHACK) {
 					ScorePlayerTeam team = event.player.getEntityWorld().getScoreboard().getTeam(event.player.getName());
 					//noinspection ConstantConditions
 					if (team == null) {
@@ -192,7 +192,7 @@ public final class CommonEvents {
 						if (((EntitySkeletonWarrior) event.getSource().getTrueSource()).getOwnerId().equals(event.getEntityLiving().getUniqueID())) {
 							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) event.getEntityLiving(), event.getSource().getTrueSource(), Items.ARROW, 0);
 						}
-					}else if (event.getSource().getTrueSource() instanceof EntityConvertedSkeleton) {
+					} else if (event.getSource().getTrueSource() instanceof EntityConvertedSkeleton) {
 						if (((EntityConvertedSkeleton) event.getSource().getTrueSource()).getOwnerId().equals(event.getEntityLiving().getUniqueID())) {
 							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) event.getEntityLiving(), event.getSource().getTrueSource(), Items.ARROW, 1);
 						}

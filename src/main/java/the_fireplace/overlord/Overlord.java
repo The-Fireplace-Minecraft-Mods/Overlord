@@ -222,7 +222,7 @@ public final class Overlord {
 			}
 		});
 
-		if(Loader.isModLoaded("ic2")){
+		if (Loader.isModLoaded("ic2")) {
 			modCompat = new IC2Compat();
 			modCompat.init(event);
 		}
@@ -255,8 +255,8 @@ public final class Overlord {
 	private static IForgeRegistry<Block> blockRegistry = null;
 
 	public static void registerBlock(Block block) {
-		if(blockRegistry == null){
-			logError("Block registry was null, could not register: "+block.getUnlocalizedName());
+		if (blockRegistry == null) {
+			logError("Block registry was null, could not register: " + block.getUnlocalizedName());
 			return;
 		}
 		blockRegistry.register(block.setRegistryName(block.getUnlocalizedName().substring(5)));
@@ -265,24 +265,24 @@ public final class Overlord {
 	private static IForgeRegistry<Item> itemRegistry = null;
 
 	public static void registerItem(Item item) {
-		if(itemRegistry == null){
-			logError("Item registry was null, could not register: "+item.getUnlocalizedName());
+		if (itemRegistry == null) {
+			logError("Item registry was null, could not register: " + item.getUnlocalizedName());
 			return;
 		}
 		itemRegistry.register(item.setRegistryName(item.getUnlocalizedName().substring(5)));
 	}
 
 	public static void registerItemForBlock(Block block) {
-		if(itemRegistry == null){
-			logError("Item registry was null, could not register: "+block.getUnlocalizedName());
+		if (itemRegistry == null) {
+			logError("Item registry was null, could not register: " + block.getUnlocalizedName());
 			return;
 		}
 		itemRegistry.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
 	}
 
 	public static void registerItemBlock(ItemBlock itemBlock) {
-		if(itemRegistry == null){
-			logError("Item registry was null, could not register: "+itemBlock.getUnlocalizedName());
+		if (itemRegistry == null) {
+			logError("Item registry was null, could not register: " + itemBlock.getUnlocalizedName());
 			return;
 		}
 		itemRegistry.register(itemBlock.setRegistryName(itemBlock.getBlock().getUnlocalizedName().substring(5)));
@@ -350,7 +350,7 @@ public final class Overlord {
 	}
 
 	@SubscribeEvent
-	public static void soundRegistry(RegistryEvent.Register<SoundEvent> event){
+	public static void soundRegistry(RegistryEvent.Register<SoundEvent> event) {
 		event.getRegistry().register(HORN_SOUND.setRegistryName(hornSoundLoc));
 		event.getRegistry().register(CREATE_SKELETON_SOUND.setRegistryName(createSkeletonSoundLoc));
 		event.getRegistry().register(CREATE_SKELETON_2_SOUND.setRegistryName(createSkeleton2SoundLoc));

@@ -164,7 +164,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 
 	@SuppressWarnings("unchecked")
 	/*
-      Register targeting tasks here
+	  Register targeting tasks here
      */
 	public void addTargetTasks() {
 		switch (dataManager.get(ATTACK_MODE)) {

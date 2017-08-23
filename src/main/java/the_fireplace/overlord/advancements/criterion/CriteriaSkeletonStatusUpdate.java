@@ -26,22 +26,19 @@ import java.util.Set;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class CriteriaSkeletonStatusUpdate implements ICriterionTrigger<CriteriaSkeletonStatusUpdate.Instance> {
-	private static final ResourceLocation ID = new ResourceLocation(Overlord.MODID,"status_update");
+	private static final ResourceLocation ID = new ResourceLocation(Overlord.MODID, "status_update");
 	private final Map<PlayerAdvancements, CriteriaSkeletonStatusUpdate.Listeners> listeners = Maps.newHashMap();
 
 	@Override
-	public ResourceLocation getId()
-	{
+	public ResourceLocation getId() {
 		return ID;
 	}
 
 	@Override
-	public void addListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<CriteriaSkeletonStatusUpdate.Instance> listener)
-	{
+	public void addListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<CriteriaSkeletonStatusUpdate.Instance> listener) {
 		CriteriaSkeletonStatusUpdate.Listeners milkDrinkListeners = this.listeners.get(playerAdvancementsIn);
 
-		if (milkDrinkListeners == null)
-		{
+		if (milkDrinkListeners == null) {
 			milkDrinkListeners = new CriteriaSkeletonStatusUpdate.Listeners(playerAdvancementsIn);
 			this.listeners.put(playerAdvancementsIn, milkDrinkListeners);
 		}
@@ -50,105 +47,83 @@ public class CriteriaSkeletonStatusUpdate implements ICriterionTrigger<CriteriaS
 	}
 
 	@Override
-	public void removeListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<CriteriaSkeletonStatusUpdate.Instance> listener)
-	{
+	public void removeListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<CriteriaSkeletonStatusUpdate.Instance> listener) {
 		CriteriaSkeletonStatusUpdate.Listeners milkDrinkListeners = this.listeners.get(playerAdvancementsIn);
 
-		if (milkDrinkListeners != null)
-		{
+		if (milkDrinkListeners != null) {
 			milkDrinkListeners.remove(listener);
 
-			if (milkDrinkListeners.isEmpty())
-			{
+			if (milkDrinkListeners.isEmpty()) {
 				this.listeners.remove(playerAdvancementsIn);
 			}
 		}
 	}
 
 	@Override
-	public void removeAllListeners(PlayerAdvancements playerAdvancementsIn)
-	{
+	public void removeAllListeners(PlayerAdvancements playerAdvancementsIn) {
 		this.listeners.remove(playerAdvancementsIn);
 	}
 
 	@Override
-	public CriteriaSkeletonStatusUpdate.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context)
-	{
+	public CriteriaSkeletonStatusUpdate.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context) {
 		ItemPredicate itemPredicate = ItemPredicate.deserialize(json.get("item"));
 		EntityPredicate entitypredicate = EntityPredicate.deserialize(json.get("entity"));
 		return new CriteriaSkeletonStatusUpdate.Instance(itemPredicate, entitypredicate);
 	}
 
-	public void trigger(EntityPlayerMP player, Entity entityIn, Item criteria, int value)
-	{
+	public void trigger(EntityPlayerMP player, Entity entityIn, Item criteria, int value) {
 		CriteriaSkeletonStatusUpdate.Listeners playerhurtentitytrigger$listeners = this.listeners.get(player.getAdvancements());
 
-		if (playerhurtentitytrigger$listeners != null)
-		{
+		if (playerhurtentitytrigger$listeners != null) {
 			playerhurtentitytrigger$listeners.trigger(player, entityIn, criteria, value);
 		}
 	}
 
-	public static class Instance extends AbstractCriterionInstance
-	{
+	public static class Instance extends AbstractCriterionInstance {
 		private final ItemPredicate item;
 		private final EntityPredicate entity;
 
-		public Instance(ItemPredicate item, EntityPredicate entity)
-		{
+		public Instance(ItemPredicate item, EntityPredicate entity) {
 			super(ID);
 			this.item = item;
 			this.entity = entity;
 		}
 
-		public boolean test(EntityPlayerMP player, Entity entity, Item criteria, int value)
-		{
-			if (!this.item.test(new ItemStack(criteria, 1, value)))
-			{
+		public boolean test(EntityPlayerMP player, Entity entity, Item criteria, int value) {
+			if (!this.item.test(new ItemStack(criteria, 1, value))) {
 				return false;
-			}
-			else
-			{
+			} else {
 				return this.entity.test(player, entity);
 			}
 		}
 	}
 
-	static class Listeners
-	{
+	static class Listeners {
 		private final PlayerAdvancements playerAdvancements;
 		private final Set<Listener<CriteriaSkeletonStatusUpdate.Instance>> listeners = Sets.newHashSet();
 
-		public Listeners(PlayerAdvancements playerAdvancementsIn)
-		{
+		public Listeners(PlayerAdvancements playerAdvancementsIn) {
 			this.playerAdvancements = playerAdvancementsIn;
 		}
 
-		public boolean isEmpty()
-		{
+		public boolean isEmpty() {
 			return this.listeners.isEmpty();
 		}
 
-		public void add(ICriterionTrigger.Listener<CriteriaSkeletonStatusUpdate.Instance> listener)
-		{
+		public void add(ICriterionTrigger.Listener<CriteriaSkeletonStatusUpdate.Instance> listener) {
 			this.listeners.add(listener);
 		}
 
-		public void remove(ICriterionTrigger.Listener<CriteriaSkeletonStatusUpdate.Instance> listener)
-		{
+		public void remove(ICriterionTrigger.Listener<CriteriaSkeletonStatusUpdate.Instance> listener) {
 			this.listeners.remove(listener);
 		}
 
-		public void trigger(EntityPlayerMP player, Entity entity, Item criteria, int value)
-		{
+		public void trigger(EntityPlayerMP player, Entity entity, Item criteria, int value) {
 			List<Listener<CriteriaSkeletonStatusUpdate.Instance>> list = null;
 
-			for (ICriterionTrigger.Listener<CriteriaSkeletonStatusUpdate.Instance> listener : this.listeners)
-			{
-				if ((listener.getCriterionInstance()).test(player, entity, criteria, value))
-				{
-					if (list == null)
-					{
+			for (ICriterionTrigger.Listener<CriteriaSkeletonStatusUpdate.Instance> listener : this.listeners) {
+				if ((listener.getCriterionInstance()).test(player, entity, criteria, value)) {
+					if (list == null) {
 						list = Lists.newArrayList();
 					}
 
@@ -156,10 +131,8 @@ public class CriteriaSkeletonStatusUpdate implements ICriterionTrigger<CriteriaS
 				}
 			}
 
-			if (list != null)
-			{
-				for (ICriterionTrigger.Listener<CriteriaSkeletonStatusUpdate.Instance> listener1 : list)
-				{
+			if (list != null) {
+				for (ICriterionTrigger.Listener<CriteriaSkeletonStatusUpdate.Instance> listener1 : list) {
 					listener1.grantCriterion(this.playerAdvancements);
 				}
 			}

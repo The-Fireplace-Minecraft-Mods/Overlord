@@ -46,7 +46,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 
 	@Override
 	public void spawnSkeleton(EntityPlayer player) {
-		if(!canSpawnSkeleton() || world.isRemote)
+		if (!canSpawnSkeleton() || world.isRemote)
 			return;
 		UUID owner = null;
 		if (!getStackInSlot(0).isEmpty()) {
@@ -67,8 +67,8 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 
 		world.spawnEntity(babySkeleton);
 
-		if(player != null && player instanceof EntityPlayerMP){
-			CriteriaTriggers.SUMMONED_ENTITY.trigger((EntityPlayerMP)player, babySkeleton);
+		if (player != null && player instanceof EntityPlayerMP) {
+			CriteriaTriggers.SUMMONED_ENTITY.trigger((EntityPlayerMP) player, babySkeleton);
 		}
 
 		world.playSound(null, pos, Overlord.CREATE_SKELETON_SOUND, SoundCategory.BLOCKS, 1.0f, 0.5f + world.rand.nextFloat());
@@ -337,8 +337,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 	}
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
-	{
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
 		return oldState.getBlock() != newState.getBlock();
 	}
 }

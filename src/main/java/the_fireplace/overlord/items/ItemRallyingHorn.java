@@ -27,7 +27,7 @@ public class ItemRallyingHorn extends Item {
 	}
 
 	@Override
-	public int getItemBurnTime(ItemStack stack){
+	public int getItemBurnTime(ItemStack stack) {
 		return 360;
 	}
 }

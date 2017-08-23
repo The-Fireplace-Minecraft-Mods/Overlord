@@ -47,11 +47,11 @@ public class CommandAllyAccept extends CommandBase {
 					if (ally != null) {
 						ally.sendMessage(new TextComponentTranslation("overlord.allyaccept", ((EntityPlayer) sender).getDisplayNameString()));
 						if (ally instanceof EntityPlayerMP)
-							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) ally, (EntityPlayer)sender, Items.CAKE, 0);
+							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) ally, (EntityPlayer) sender, Items.CAKE, 0);
 					}
 					sender.sendMessage(new TextComponentTranslation("overlord.allyaccepted", alliance.getUser1().getPlayerName()));
 					if (sender instanceof EntityPlayerMP)
-						CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) sender, ally != null ? ally : (EntityPlayer)sender, Items.CAKE, 0);
+						CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) sender, ally != null ? ally : (EntityPlayer) sender, Items.CAKE, 0);
 					return;
 				}
 			}

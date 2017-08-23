@@ -319,7 +319,7 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 							armed = true;
 						}
 				}
-			}else if (armed){
+			} else if (armed) {
 				armed = false;
 			}
 
@@ -331,7 +331,7 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 							sally = true;
 						}
 				}
-			}else if (sally){
+			} else if (sally) {
 				sally = false;
 			}
 

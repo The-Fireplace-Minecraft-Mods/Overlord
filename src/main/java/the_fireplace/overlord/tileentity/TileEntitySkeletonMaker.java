@@ -73,7 +73,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 
 	@Override
 	public void spawnSkeleton(EntityPlayer player) {
-		if(!canSpawnSkeleton() || world.isRemote)
+		if (!canSpawnSkeleton() || world.isRemote)
 			return;
 		UUID owner = null;
 		if (!getStackInSlot(0).isEmpty()) {
@@ -105,8 +105,8 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 
 		world.spawnEntity(skeletonWarrior);
 
-		if(player != null && player instanceof EntityPlayerMP){
-			CriteriaTriggers.SUMMONED_ENTITY.trigger((EntityPlayerMP)player, skeletonWarrior);
+		if (player != null && player instanceof EntityPlayerMP) {
+			CriteriaTriggers.SUMMONED_ENTITY.trigger((EntityPlayerMP) player, skeletonWarrior);
 		}
 
 		world.playSound(null, pos, Overlord.CREATE_SKELETON_SOUND, SoundCategory.BLOCKS, 1.0f, 0.5f + world.rand.nextFloat());
@@ -406,8 +406,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 	}
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
-	{
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
 		return oldState.getBlock() != newState.getBlock();
 	}
 }

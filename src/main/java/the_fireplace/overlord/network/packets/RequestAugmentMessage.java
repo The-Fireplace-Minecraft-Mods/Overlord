@@ -48,7 +48,7 @@ public class RequestAugmentMessage implements IMessage {
 					Overlord.logError("Entity is not an Army Member. It is " + player.world.getEntityByID(message.warrior).toString());
 				}
 			} else {
-				if(!Loader.isModLoaded("theoneprobe"))
+				if (!Loader.isModLoaded("theoneprobe"))
 					Overlord.logError("Error 404: Army Member not found: " + message.warrior);
 			}
 			return new SetAugmentMessage(message.warrior, augmentID, stack);

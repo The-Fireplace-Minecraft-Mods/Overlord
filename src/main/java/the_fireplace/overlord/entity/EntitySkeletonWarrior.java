@@ -389,7 +389,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 							armed = true;
 						}
 				}
-			}else if (armed){
+			} else if (armed) {
 				armed = false;
 			}
 
@@ -401,7 +401,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 							sally = true;
 						}
 				}
-			}else if (sally){
+			} else if (sally) {
 				sally = false;
 			}
 
@@ -417,7 +417,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 											crusader = true;
 										}
 								}
-				}else if (crusader){
+				} else if (crusader) {
 					crusader = false;
 				}
 			}
@@ -445,14 +445,14 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 			dataManager.set(XP, ++xp);
 		}
 		EntityLivingBase owner = getOwner();
-		if(owner != null && owner instanceof EntityPlayerMP) {
+		if (owner != null && owner instanceof EntityPlayerMP) {
 			CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) owner, this, Overlord.milk_bottle, getTotalMilkConsumed());
 			MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-			if(server == null)
+			if (server == null)
 				return;
-			if(getTotalMilkConsumed() >= 256 && !server.getPlayerList().getPlayerAdvancements((EntityPlayerMP)owner).getProgress(server.getAdvancementManager().getAdvancement(new ResourceLocation(Overlord.MODID, "overlord/drink_256_milk"))).isDone())
+			if (getTotalMilkConsumed() >= 256 && !server.getPlayerList().getPlayerAdvancements((EntityPlayerMP) owner).getProgress(server.getAdvancementManager().getAdvancement(new ResourceLocation(Overlord.MODID, "overlord/drink_256_milk"))).isDone())
 				CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) owner, this, Overlord.milk_bottle, 256);
-			if(getTotalMilkConsumed() >= 9001 && !server.getPlayerList().getPlayerAdvancements((EntityPlayerMP)owner).getProgress(server.getAdvancementManager().getAdvancement(new ResourceLocation(Overlord.MODID, "overlord/drink_9001_milk"))).isDone())
+			if (getTotalMilkConsumed() >= 9001 && !server.getPlayerList().getPlayerAdvancements((EntityPlayerMP) owner).getProgress(server.getAdvancementManager().getAdvancement(new ResourceLocation(Overlord.MODID, "overlord/drink_9001_milk"))).isDone())
 				CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) owner, this, Overlord.milk_bottle, 9001);
 		}
 	}
@@ -469,7 +469,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 			if (getHealth() < getMaxHealth())
 				heal(getMaxHealth() - getHealth());
 			EntityLivingBase owner = getOwner();
-			if(owner != null && owner instanceof EntityPlayerMP)
+			if (owner != null && owner instanceof EntityPlayerMP)
 				CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) owner, this, Items.EXPERIENCE_BOTTLE, level);
 		}
 	}

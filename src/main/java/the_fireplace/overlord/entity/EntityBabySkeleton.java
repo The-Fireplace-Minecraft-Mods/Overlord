@@ -156,7 +156,7 @@ public class EntityBabySkeleton extends EntityArmyMember implements ISkinsuitWea
 							armed = true;
 						}
 				}
-			}else if (armed){
+			} else if (armed) {
 				armed = false;
 			}
 
@@ -168,7 +168,7 @@ public class EntityBabySkeleton extends EntityArmyMember implements ISkinsuitWea
 							sally = true;
 						}
 				}
-			}else if (sally){
+			} else if (sally) {
 				sally = false;
 			}
 		}

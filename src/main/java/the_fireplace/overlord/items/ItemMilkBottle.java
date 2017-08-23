@@ -23,9 +23,6 @@ public class ItemMilkBottle extends Item {
 		setUnlocalizedName("milk_bottle");
 	}
 
-	/**
-	 * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
-	 */
 	@Override
 	@Nonnull
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand hand) {

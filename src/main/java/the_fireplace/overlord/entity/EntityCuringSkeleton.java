@@ -112,8 +112,8 @@ public class EntityCuringSkeleton extends EntitySkeleton {
 
 		EntityLivingBase owner = entityConvertedSkeleton.getOwner();
 
-		if(owner != null && owner instanceof EntityPlayerMP){
-			CriteriaTriggers.SUMMONED_ENTITY.trigger((EntityPlayerMP)owner, entityConvertedSkeleton);
+		if (owner != null && owner instanceof EntityPlayerMP) {
+			CriteriaTriggers.SUMMONED_ENTITY.trigger((EntityPlayerMP) owner, entityConvertedSkeleton);
 		}
 
 		entityConvertedSkeleton.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 200, 0));

@@ -96,8 +96,7 @@ public class SealRecipe extends ShapedOreRecipe {
 			String group = JsonUtils.getString(json, "group", "");
 
 			Map<Character, Ingredient> ingMap = Maps.newHashMap();
-			for (Map.Entry<String, JsonElement> entry : JsonUtils.getJsonObject(json, "key").entrySet())
-			{
+			for (Map.Entry<String, JsonElement> entry : JsonUtils.getJsonObject(json, "key").entrySet()) {
 				if (entry.getKey().length() != 1)
 					throw new JsonSyntaxException("Invalid key entry: '" + entry.getKey() + "' is an invalid symbol (must be 1 character only).");
 				if (" ".equals(entry.getKey()))
@@ -114,8 +113,7 @@ public class SealRecipe extends ShapedOreRecipe {
 				throw new JsonSyntaxException("Invalid pattern: empty pattern not allowed");
 
 			String[] pattern = new String[patternJ.size()];
-			for (int x = 0; x < pattern.length; ++x)
-			{
+			for (int x = 0; x < pattern.length; ++x) {
 				String line = JsonUtils.getString(patternJ.get(x), "pattern[" + x + "]");
 				if (x > 0 && pattern[0].length() != line.length())
 					throw new JsonSyntaxException("Invalid pattern: each row must  be the same width");
@@ -132,10 +130,8 @@ public class SealRecipe extends ShapedOreRecipe {
 			keys.remove(' ');
 
 			int x = 0;
-			for (String line : pattern)
-			{
-				for (char chr : line.toCharArray())
-				{
+			for (String line : pattern) {
+				for (char chr : line.toCharArray()) {
 					Ingredient ing = ingMap.get(chr);
 					if (ing == null)
 						throw new JsonSyntaxException("Pattern references symbol '" + chr + "' but it's not defined in the key");

@@ -35,6 +35,7 @@ import java.util.Random;
  */
 public class BlockSkeletonMaker extends BlockContainer {
 	public static final PropertyBool TRIGGERED = PropertyBool.create("triggered");
+
 	public BlockSkeletonMaker(String name) {
 		super(Material.ROCK);
 		setUnlocalizedName(name);
@@ -44,8 +45,7 @@ public class BlockSkeletonMaker extends BlockContainer {
 	}
 
 	@Override
-	public int tickRate(World worldIn)
-	{
+	public int tickRate(World worldIn) {
 		return 4;
 	}
 
@@ -106,57 +106,46 @@ public class BlockSkeletonMaker extends BlockContainer {
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(IBlockState state)
-	{
+	public boolean hasComparatorInputOverride(IBlockState state) {
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos)
-	{
+	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos) {
 		return Container.calcRedstone(worldIn.getTileEntity(pos));
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
-	{
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
 		boolean flag = worldIn.isBlockPowered(pos) || worldIn.isBlockPowered(pos.up());
-		boolean flag1 = ((Boolean)state.getValue(TRIGGERED)).booleanValue();
+		boolean flag1 = ((Boolean) state.getValue(TRIGGERED)).booleanValue();
 
-		if (flag && !flag1)
-		{
+		if (flag && !flag1) {
 			worldIn.scheduleUpdate(pos, this, this.tickRate(worldIn));
 			worldIn.setBlockState(pos, state.withProperty(TRIGGERED, Boolean.valueOf(true)), 4);
-		}
-		else if (!flag && flag1)
-		{
+		} else if (!flag && flag1) {
 			worldIn.setBlockState(pos, state.withProperty(TRIGGERED, Boolean.valueOf(false)), 4);
 		}
 	}
 
 	@Override
-	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
-	{
+	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
 		TileEntity te = worldIn.getTileEntity(pos);
-		if (!worldIn.isRemote && te instanceof ISkeletonMaker)
-		{
-			((ISkeletonMaker)te).spawnSkeleton(null);
+		if (!worldIn.isRemote && te instanceof ISkeletonMaker) {
+			((ISkeletonMaker) te).spawnSkeleton(null);
 		}
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
+	public IBlockState getStateFromMeta(int meta) {
 		return this.getDefaultState().withProperty(TRIGGERED, Boolean.valueOf((meta & 8) > 0));
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state)
-	{
+	public int getMetaFromState(IBlockState state) {
 		int i = 0;
 
-		if (((Boolean)state.getValue(TRIGGERED)).booleanValue())
-		{
+		if (((Boolean) state.getValue(TRIGGERED)).booleanValue()) {
 			i |= 8;
 		}
 
@@ -164,8 +153,7 @@ public class BlockSkeletonMaker extends BlockContainer {
 	}
 
 	@Override
-	protected BlockStateContainer createBlockState()
-	{
+	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, TRIGGERED);
 	}
 }
