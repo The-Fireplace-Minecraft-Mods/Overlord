@@ -24,7 +24,7 @@ apply plugin: 'net.cazzar.gradle.modsio'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
-version = "2.4.5"
+version = "2.4.6"
 group= "the_fireplace.overlord"
 archivesBaseName = "Overlord-1.12.1"
 
@@ -43,8 +43,8 @@ minecraft {
 }
 
 dependencies {
-	deobfCompile group: "mezz.jei", name: "jei_1.12", version: "4.7.4.81"
-	deobfCompile "info.amerifrance.guideapi:Guide-API:1.12-2.1.4-56"
+	deobfCompile group: "mezz.jei", name: "jei_1.12.1", version: "4.7.5.88"
+	deobfCompile "info.amerifrance.guideapi:Guide-API:1.12-2.1.4-57"
 	deobfProvided("codechicken:NotEnoughItems:1.12-2.4.0.229:universal") {
         exclude module: "jei_1.12"
 		//Old mappings
@@ -52,10 +52,17 @@ dependencies {
     }
 	//Manually do CCL so the game doesn't crash
 	deobfCompile "codechicken:CodeChickenLib:1.12-3.1.1.288:universal"
-	deobfCompile "net.industrial-craft:industrialcraft-2:2.8.4-ex112"
+	deobfCompile "net.industrial-craft:industrialcraft-2:2.8.17-ex112"
+	deobfCompile group: "info.journeymap", name: "journeymap-api", version: "1.12-1.4-SNAPSHOT", changing: true
+}
+
+configurations.all {
+    // Check for snapshots more frequently than Gradle's default of 1 day. 0 = every build. Used for JourneyMap.
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
 repositories{
+	mavenCentral()
     maven { //JEI, Natura, Mantle, TiCon
         url "http://dvs1.progwml6.com/files/maven"
     }
@@ -67,6 +74,9 @@ repositories{
 	}
 	maven { //IC2, Forestry
 		url = "http://maven.ic2.player.to/"
+	}
+	maven { //Journeymap snapshot
+		url = "https://oss.sonatype.org/content/groups/public/"
 	}
 }
 
