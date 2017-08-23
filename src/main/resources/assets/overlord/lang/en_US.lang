@@ -120,6 +120,9 @@ cfg.bonereq_baby.tooltip=How many bones does it take to make a Baby Skeleton?
 cfg.max_arrow_distance=Max Bow Use Distance
 cfg.max_arrow_distance.tooltip=Controls how far your Skeleton Warriors can shoot their bows.
 
+cfg.teamhack=Modify Scoreboard Teams
+cfg.teamhack.tooltip=Makes each player their own scoreboard team. This doesn't interfere with anything that I know of, but if it does cause issues, you can disable it.
+
 advancements.overlord.root.title=Overlord
 advancements.overlord.root.description=Build your army
 

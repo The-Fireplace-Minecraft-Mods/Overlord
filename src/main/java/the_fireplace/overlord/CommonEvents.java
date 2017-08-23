@@ -19,8 +19,10 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -32,6 +34,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import the_fireplace.overlord.advancements.CriterionRegistry;
+import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.entity.*;
 import the_fireplace.overlord.entity.ai.EntityAIFindEntityNearestSkins;
 import the_fireplace.overlord.entity.ai.EntityAITargetSkins;
@@ -160,12 +163,23 @@ public final class CommonEvents {
 		}
 	}
 
+	private static int teamColor = 0;
+
 	@SubscribeEvent
 	public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
 		if (FMLCommonHandler.instance().getMinecraftServerInstance() != null)
 			if (event.player instanceof EntityPlayerMP) {
 				Overlord.logDebug("Sending " + event.player.getName() + " client their squads.");
 				PacketDispatcher.sendTo(new SetSquadsMessage(Squads.getInstance().getSquadsFor(event.player.getUniqueID())), (EntityPlayerMP) event.player);
+				if(ConfigValues.TEAMHACK) {
+					ScorePlayerTeam team = event.player.getEntityWorld().getScoreboard().getTeam(event.player.getName());
+					//noinspection ConstantConditions
+					if (team == null) {
+						team = event.player.getEntityWorld().getScoreboard().createTeam(event.player.getName());
+						team.setColor(TextFormatting.values()[teamColor++ % 15]);
+					}
+					event.player.getEntityWorld().getScoreboard().addPlayerToTeam(event.player.getName(), team.getName());
+				}
 			}
 	}
 

@@ -24,6 +24,10 @@ public class ConfigValues {
 	public static boolean SUFFOCATIONWARNING;
 	public static final String SUFFOCATIONWARNING_NAME = "cfg.suffocationwarning";
 
+	public static final boolean TEAMHACK_DEFAULT = true;
+	public static boolean TEAMHACK;
+	public static final String TEAMHACK_NAME = "cfg.teamhack";
+
 	public static final int BONEREQ_WARRIOR_DEFAULT = 32;
 	public static int BONEREQ_WARRIOR;
 	public static int SERVER_BONEREQ_WARRIOR;

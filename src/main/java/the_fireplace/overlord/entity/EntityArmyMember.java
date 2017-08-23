@@ -46,7 +46,7 @@ import java.util.UUID;
  *
  * @author The_Fireplace
  */
-public abstract class EntityArmyMember extends EntityCreature implements IEntityOwnable {
+public abstract class EntityArmyMember extends EntityCreature implements IEntityOwnable, INpc {
 
 	protected static final DataParameter<UUID> OWNER_UNIQUE_ID = EntityDataManager.createKey(EntityArmyMember.class, CustomDataSerializers.UNIQUE_ID);
 	protected static final DataParameter<String> SQUAD = EntityDataManager.createKey(EntityArmyMember.class, DataSerializers.STRING);
@@ -377,9 +377,6 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 		return super.getTeam();
 	}
 
-	/**
-	 * Returns whether this Entity is on the same team as the given Entity.
-	 */
 	@Override
 	public boolean isOnSameTeam(Entity entityIn) {
 		EntityLivingBase entitylivingbase = this.getOwner();
