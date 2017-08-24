@@ -70,17 +70,15 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 
 		world.spawnEntity(babySkeleton);
 
-		if (player != null && player instanceof EntityPlayerMP) {
+		if (player != null && player instanceof EntityPlayerMP)
 			CriteriaTriggers.SUMMONED_ENTITY.trigger((EntityPlayerMP) player, babySkeleton);
-		}
 
 		world.playSound(null, pos, Overlord.CREATE_SKELETON_SOUND, SoundCategory.BLOCKS, 1.0f, 0.5f + world.rand.nextFloat());
 
 		if (!getStackInSlot(9).isEmpty())
 			babySkeleton.setSkinsuit(getStackInSlot(9), SkinType.getSkinTypeFromStack(getStackInSlot(9)));
-		for (int i : clearslots) {
+		for (int i : clearslots)
 			setInventorySlotContents(i, ItemStack.EMPTY);
-		}
 		if (MilkRegistry.getInstance().isMilk(getStackInSlot(2))) {
 			if (!getStackInSlot(3).isEmpty() && !MilkRegistry.getInstance().getEmptiedStack(getStackInSlot(2)).isEmpty()) {
 				if (getStackInSlot(3).getItem() == MilkRegistry.getInstance().getEmptiedStack(getStackInSlot(2)).getItem() && getStackInSlot(3).getCount() < getStackInSlot(3).getMaxStackSize())

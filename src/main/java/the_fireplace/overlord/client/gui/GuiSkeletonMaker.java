@@ -67,8 +67,8 @@ public class GuiSkeletonMaker extends GuiContainer {
 		int k = (this.width - this.xSize) / 2;
 		int l = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
-		if (te.getMilk() > 0) {
-			int j = te.getMilk();
+		if (te.getFluidAmount() > 0) {
+			int j = te.getFluidAmount()/1000;
 			this.drawTexturedModalRect(guiLeft + 121, guiTop + (j == 1 ? 56 : 33), 176, j == 1 ? 23 : 0, 28, j == 1 ? 23 : 46);
 		}
 	}

@@ -3,9 +3,13 @@ package the_fireplace.overlord.registry;
 import com.google.common.collect.Maps;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.oredict.OreDictionary;
 import the_fireplace.overlord.Overlord;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
 
@@ -18,6 +22,30 @@ public final class MilkRegistry {
 	private static MilkRegistry instance;
 	private HashMap<ItemStack, ItemStack> milks;
 
+	public static final IFluidHandler FLUID_BLACK_HOLE = new IFluidHandler() {
+		@Override
+		public IFluidTankProperties[] getTankProperties() {
+			return new IFluidTankProperties[0];
+		}
+
+		@Override
+		public int fill(FluidStack stack, boolean b) {
+			return Integer.MAX_VALUE;
+		}
+
+		@Nullable
+		@Override
+		public FluidStack drain(FluidStack stack, boolean b) {
+			return null;
+		}
+
+		@Nullable
+		@Override
+		public FluidStack drain(int i, boolean b) {
+			return null;
+		}
+	};
+
 	private MilkRegistry() {
 		milks = Maps.newHashMap();
 	}
@@ -26,6 +54,20 @@ public final class MilkRegistry {
 		if (instance == null)
 			instance = new MilkRegistry();
 		return instance;
+	}
+
+	public static boolean isMilkRegistered(){
+		return Overlord.instance.isMilkRegistered;
+	}
+
+	@Nullable
+	public static Fluid getMilk(){
+		return isMilkRegistered() ? Overlord.instance.milk : null;
+	}
+
+	private static boolean stackContainsMilk(ItemStack stack){
+		FluidStack f = FluidUtil.getFluidContained(stack);
+		return isMilkRegistered() && f != null && f.getFluid().equals(getMilk());
 	}
 
 	/**
@@ -53,11 +95,15 @@ public final class MilkRegistry {
 	 * @return True if the stack is registered as Milk, false otherwise.
 	 */
 	public boolean isMilk(ItemStack stackToCheck) {
-		for (ItemStack milk : milks.keySet()) {
-			if (milk.getItem() == stackToCheck.getItem() && (milk.getMetadata() == OreDictionary.WILDCARD_VALUE || milk.getMetadata() == stackToCheck.getMetadata()))
-				return true;
+		if(isMilkRegistered())
+			return stackContainsMilk(stackToCheck);
+		else {
+			for (ItemStack milk : milks.keySet()) {
+				if (milk.getItem() == stackToCheck.getItem() && (milk.getMetadata() == OreDictionary.WILDCARD_VALUE || milk.getMetadata() == stackToCheck.getMetadata()))
+					return true;
+			}
+			return false;
 		}
-		return false;
 	}
 
 	/**
@@ -68,12 +114,17 @@ public final class MilkRegistry {
 	 * @return The emptied ItemStack, or null if there isn't one.
 	 */
 	public ItemStack getEmptiedStack(ItemStack inputStack) {
-		if (inputStack.isEmpty())
+		if(isMilkRegistered()){
+			FluidActionResult result = FluidUtil.tryEmptyContainer(inputStack, FLUID_BLACK_HOLE, 1000, null, false);
+			return result.getResult();
+		}else {
+			if (inputStack.isEmpty())
+				return ItemStack.EMPTY;
+			for (ItemStack milk : milks.keySet()) {
+				if (milk.getItem() == inputStack.getItem() && (milk.getMetadata() == OreDictionary.WILDCARD_VALUE || milk.getMetadata() == inputStack.getMetadata()))
+					return milks.get(milk);
+			}
 			return ItemStack.EMPTY;
-		for (ItemStack milk : milks.keySet()) {
-			if (milk.getItem() == inputStack.getItem() && (milk.getMetadata() == OreDictionary.WILDCARD_VALUE || milk.getMetadata() == inputStack.getMetadata()))
-				return milks.get(milk);
 		}
-		return ItemStack.EMPTY;
 	}
 }

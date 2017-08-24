@@ -23,6 +23,11 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.FluidTankProperties;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
@@ -44,9 +49,10 @@ import java.util.UUID;
  */
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class TileEntitySkeletonMaker extends TileEntity implements ITickable, ISidedInventory, ISkeletonMaker {
+public class TileEntitySkeletonMaker extends TileEntity implements ITickable, ISidedInventory, ISkeletonMaker, IFluidHandler, IFluidTank {
 	private ItemStack[] inventory;
-	private byte milk = 0;
+	private int heldMilkAmount;
+	public static final int heldMilkAmountMax = 2000;
 	public static final int[] clearslots = new int[]{6, 7, 8, 9, 10, 11, 12};
 
 	public TileEntitySkeletonMaker() {
@@ -55,16 +61,16 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 
 	@Override
 	public void update() {
-		if (!getStackInSlot(4).isEmpty() && MilkRegistry.getInstance().isMilk(getStackInSlot(4)) && getMilk() < 2) {
+		if (!getStackInSlot(4).isEmpty() && MilkRegistry.getInstance().isMilk(getStackInSlot(4)) && heldMilkAmount < heldMilkAmountMax) {
 			if (!getStackInSlot(5).isEmpty() && !MilkRegistry.getInstance().getEmptiedStack(getStackInSlot(4)).isEmpty() && getStackInSlot(5).getItem() == MilkRegistry.getInstance().getEmptiedStack(getStackInSlot(4)).getItem() && getStackInSlot(5).getCount() < getStackInSlot(5).getMaxStackSize()) {
-				setMilk((byte) (getMilk() + 1));
+				setMilk(heldMilkAmount + 1000);
 				getStackInSlot(5).grow(1);
 				if (getStackInSlot(4).getCount() > 1)
 					getStackInSlot(4).shrink(1);
 				else
 					setInventorySlotContents(4, ItemStack.EMPTY);
 			} else if (getStackInSlot(5).isEmpty()) {
-				setMilk((byte) (getMilk() + 1));
+				setMilk(heldMilkAmount + 1000);
 				setInventorySlotContents(5, MilkRegistry.getInstance().getEmptiedStack(getStackInSlot(4)));
 				if (getStackInSlot(4).getCount() > 1)
 					getStackInSlot(4).shrink(1);
@@ -151,7 +157,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 			s1 = getStackInSlot(1).getCount();
 		if (!getStackInSlot(2).isEmpty())
 			s2 = getStackInSlot(2).getCount();
-		return getMilk() >= 2 && s1 + s2 >= ConfigValues.SERVER_BONEREQ_WARRIOR;
+		return heldMilkAmount >= heldMilkAmountMax && s1 + s2 >= ConfigValues.SERVER_BONEREQ_WARRIOR;
 	}
 
 	@Override
@@ -277,7 +283,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 	public int getField(int id) {
 		switch (id) {
 			case 0:
-				return this.milk;
+				return this.heldMilkAmount;
 			default:
 				return 0;
 		}
@@ -287,7 +293,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 	public void setField(int id, int value) {
 		switch (id) {
 			case 0:
-				this.milk = (byte) value;
+				this.heldMilkAmount = value;
 				break;
 			default:
 
@@ -323,7 +329,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 				list.appendTag(item);
 			}
 		}
-		compound.setByte("Milk", milk);
+		compound.setInteger("HeldMilk", heldMilkAmount);
 		compound.setTag("ItemsSkeletonMaker", list);
 		return compound;
 	}
@@ -343,7 +349,10 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 		} else {
 			Overlord.logWarn("List was null when reading TileEntitySkeletonMaker NBTTagCompound");
 		}
-		this.milk = compound.getByte("Milk");
+		if(compound.getByte("Milk") != 0)
+			this.heldMilkAmount = compound.getByte("Milk")*1000;
+		else
+			this.heldMilkAmount = compound.getInteger("HeldMilk");
 	}
 
 	@Override
@@ -390,15 +399,13 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 				return (T) handlerTop;
 			else
 				return (T) handlerSide;
+		if (MilkRegistry.isMilkRegistered() && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			return (T) this;
 		return super.getCapability(capability, facing);
 	}
 
-	public byte getMilk() {
-		return milk;
-	}
-
-	public void setMilk(byte milk) {
-		this.milk = milk;
+	public void setMilk(int milk) {
+		this.heldMilkAmount = milk;
 		markDirty();
 		if (!world.isRemote)
 			world.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
@@ -407,5 +414,101 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
 		return oldState.getBlock() != newState.getBlock();
+	}
+
+	@Override
+	public IFluidTankProperties[] getTankProperties() {
+		return new IFluidTankProperties[]{new FluidTankProperties(new FluidStack(getFluid(), getFluidAmount()), getCapacity())};
+	}
+
+	@Nullable
+	@Override
+	public FluidStack getFluid() {
+		Fluid milk = MilkRegistry.getMilk();
+		if (milk != null && getFluidAmount() > 0)
+			return new FluidStack(milk, getFluidAmount());
+		return null;
+	}
+
+	@Override
+	public int getFluidAmount() {
+		return heldMilkAmount;
+	}
+
+	@Override
+	public int getCapacity() {
+		return heldMilkAmountMax;
+	}
+
+	@Override
+	public FluidTankInfo getInfo() {
+		return new FluidTankInfo(this);
+	}
+
+	@Override
+	public int fill(FluidStack resource, boolean doFill) {
+		if(MilkRegistry.isMilkRegistered()) {
+			Fluid milk = MilkRegistry.getMilk();
+			int maxFillAmount = getCapacity() - getFluidAmount();
+			if (milk != null && resource.getFluid().equals(milk) && maxFillAmount > 0) {
+				if (maxFillAmount < resource.amount) {
+					if (doFill)
+						heldMilkAmount += maxFillAmount;
+					return maxFillAmount;
+				} else {
+					if (doFill)
+						heldMilkAmount += resource.amount;
+					return resource.amount;
+				}
+			}
+		}
+		return 0;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(FluidStack resource, boolean doDrain) {
+		if(MilkRegistry.isMilkRegistered()) {
+			Fluid milk = MilkRegistry.getMilk();
+			if (resource.amount > 0 && milk != null && resource.getFluid().equals(milk)) {
+				if (resource.amount < getFluidAmount()) {
+					if (doDrain)
+						heldMilkAmount -= resource.amount;
+					return new FluidStack(milk, resource.amount);
+				} else {
+					int prevHeldMilk = getFluidAmount();
+					if (doDrain)
+						heldMilkAmount = 0;
+					return new FluidStack(milk, prevHeldMilk);
+				}
+			}
+		}
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(int maxDrain, boolean doDrain) {
+		if(MilkRegistry.isMilkRegistered()) {
+			Fluid milk = MilkRegistry.getMilk();
+			if (milk != null && maxDrain > 0) {
+				if (maxDrain < getFluidAmount()) {
+					if (doDrain)
+						heldMilkAmount -= maxDrain;
+					return new FluidStack(milk, maxDrain);
+				} else {
+					int prevHeldWater = getFluidAmount();
+					if (doDrain)
+						heldMilkAmount = 0;
+					return new FluidStack(milk, prevHeldWater);
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+		return (MilkRegistry.isMilkRegistered() && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) || super.hasCapability(capability, facing);
 	}
 }

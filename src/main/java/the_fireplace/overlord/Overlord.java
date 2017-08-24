@@ -30,15 +30,14 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.client.config.GuiConfigEntries;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -101,6 +100,9 @@ public final class Overlord {
 	public static CommonProxy proxy;
 
 	private static ICompat modCompat;
+
+	public boolean isMilkRegistered = false;
+	public Fluid milk = null;
 
 	public static final CreativeTabs tabOverlord = new CreativeTabs(MODID) {
 		@Nonnull
@@ -226,6 +228,13 @@ public final class Overlord {
 			modCompat = new IC2Compat();
 			modCompat.init(event);
 		}
+	}
+
+	@Mod.EventHandler
+	public void postInit(FMLPostInitializationEvent event){
+		milk = FluidRegistry.getFluid("milk");
+		if(milk != null)
+			isMilkRegistered = true;
 	}
 
 	@Mod.EventHandler

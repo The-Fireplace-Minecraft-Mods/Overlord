@@ -4,15 +4,20 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.entity.projectile.EntityMilkBottle;
+import the_fireplace.overlord.handlers.MilkBottleWrapper;
+import the_fireplace.overlord.registry.MilkRegistry;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author The_Fireplace
@@ -39,5 +44,13 @@ public class ItemMilkBottle extends Item {
 		}
 
 		return new ActionResult(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
+	}
+
+	@Override
+	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+		if (MilkRegistry.isMilkRegistered() && this.getClass() == ItemMilkBottle.class)
+			return new MilkBottleWrapper(stack);
+		else
+			return super.initCapabilities(stack, nbt);
 	}
 }
