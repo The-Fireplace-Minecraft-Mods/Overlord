@@ -16,6 +16,17 @@
         ]
       }
     },
+    "has_the_ingredients2": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "type": "forge:ore_dict",
+            "ore": "book"
+          }
+        ]
+      }
+    },
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
@@ -26,6 +37,7 @@
   "requirements": [
     [
       "has_the_ingredients",
+      "has_the_ingredients2",
       "has_the_recipe"
     ]
   ]

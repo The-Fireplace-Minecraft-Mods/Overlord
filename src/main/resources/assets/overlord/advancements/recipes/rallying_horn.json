@@ -11,8 +11,8 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:planks",
-            "data": 32767
+            "type": "forge:ore_dict",
+            "ore": "plankWood"
           }
         ]
       }

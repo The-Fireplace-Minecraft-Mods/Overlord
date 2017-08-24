@@ -14,7 +14,8 @@
             "item": "minecraft:bone"
           },
           {
-            "item": "minecraft:stone"
+            "type": "forge:ore_dict",
+            "ore": "stone"
           }
         ]
       }

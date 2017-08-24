@@ -11,7 +11,8 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:iron_nugget"
+            "type": "forge:ore_dict",
+            "ore": "nuggetIron"
           }
         ]
       }

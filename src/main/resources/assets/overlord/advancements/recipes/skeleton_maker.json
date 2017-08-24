@@ -11,10 +11,12 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:bone"
+            "type": "forge:ore_dict",
+            "ore": "bone"
           },
           {
-            "item": "minecraft:netherbrick"
+            "type": "forge:ore_dict",
+            "ore": "ingotBrickNether"
           }
         ]
       }
@@ -24,7 +26,8 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:bone"
+            "type": "forge:ore_dict",
+            "ore": "bone"
           },
           {
             "item": "minecraft:nether_brick"

@@ -62,7 +62,8 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:paper"
+            "type": "forge:ore_dict",
+            "ore": "paper"
           },
           {
             "item": "minecraft:rotten_flesh"
