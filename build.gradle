@@ -130,7 +130,7 @@ curseforge {
   project {
     id = '251732'
     changelog = file('changelog.txt')
-    releaseType = 'release'
+    releaseType = 'beta'
     addGameVersion '1.12.1'
     addGameVersion '1.12'
 	addGameVersion 'Java 8'
@@ -159,7 +159,7 @@ modsIO {
 		modid = "1239"
 		minecraft = "1.12.1"
 		try{changelog = file('changelog.txt').text}catch(Exception e){changelog=""}
-		tag = ""
+		tag = "beta"
 		current = true
     }
 }
