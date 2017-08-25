@@ -524,6 +524,8 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 		return false;
 	}
 
+	@SuppressWarnings("DeprecatedIsStillUsed")
+	@Deprecated
 	public boolean shouldAttackEntity(EntityLivingBase target, EntityLivingBase owner) {
 		if (ConfigValues.HUNTCREEPERS || !(target instanceof EntityCreeper)) {
 			if (target instanceof EntityWolf) {
@@ -540,6 +542,11 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 			return !(target instanceof EntityPlayer && owner instanceof EntityPlayer && !((EntityPlayer) owner).canAttackPlayer((EntityPlayer) target)) && (!(target instanceof EntityHorse) || !((EntityHorse) target).isTame());
 		} else
 			return false;
+	}
+
+	@SuppressWarnings("deprecation")
+	public boolean shouldAttackEntity(EntityLivingBase target){
+		return shouldAttackEntity(target, getOwner());
 	}
 
 	public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {

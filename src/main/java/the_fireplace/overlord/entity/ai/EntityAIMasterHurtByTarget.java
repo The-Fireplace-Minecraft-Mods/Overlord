@@ -32,7 +32,7 @@ public class EntityAIMasterHurtByTarget extends EntityAITarget {
 			if (entityAttackingOwner.getUniqueID().equals(this.theDefendingTameable.getOwnerId()) || Alliances.getInstance().isAlliedTo(entityAttackingOwner.getUniqueID(), this.theDefendingTameable.getOwnerId()))
 				return false;
 
-		return revengeTimer != this.timestamp && this.isSuitableTarget(this.entityAttackingOwner, false) && this.theDefendingTameable.shouldAttackEntity(this.entityAttackingOwner, owner);
+		return revengeTimer != this.timestamp && this.isSuitableTarget(this.entityAttackingOwner, false) && this.theDefendingTameable.shouldAttackEntity(this.entityAttackingOwner);
 	}
 
 	@Override

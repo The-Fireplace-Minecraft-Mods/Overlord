@@ -31,7 +31,7 @@ public class EntityAIMasterHurtTarget extends EntityAITarget {
 		if (targetOfAttack instanceof EntityPlayer)
 			if (targetOfAttack.getUniqueID().equals(this.tameable.getOwnerId()) || Alliances.getInstance().isAlliedTo(targetOfAttack.getUniqueID(), this.tameable.getOwnerId()))
 				return false;
-		return lastAttackedEntityTime != this.timestamp && this.isSuitableTarget(this.targetOfAttack, false) && this.tameable.shouldAttackEntity(this.targetOfAttack, owner);
+		return lastAttackedEntityTime != this.timestamp && this.isSuitableTarget(this.targetOfAttack, false) && this.tameable.shouldAttackEntity(this.targetOfAttack);
 	}
 
 	@Override

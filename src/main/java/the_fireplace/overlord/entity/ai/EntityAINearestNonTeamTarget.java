@@ -5,10 +5,10 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITarget;
 import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EntitySelectors;
@@ -34,23 +34,28 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
 	private final int targetChance;
 	protected final Sorter theNearestAttackableTargetSorter;
 	protected final Predicate<? super T> targetEntitySelector;
+	protected final Predicate<? super T> isPassivePigman = (Predicate<T>) input -> input instanceof EntityPigZombie && !((EntityPigZombie)input).isAngry();
+	protected final Predicate<? super T> shouldNotAttackEntity;
 	protected T targetEntity;
+	protected EntityArmyMember armyMember;
 
-	public EntityAINearestNonTeamTarget(EntityCreature creature, Class<T> classTarget, boolean checkSight) {
-		this(creature, classTarget, checkSight, false);
+	public EntityAINearestNonTeamTarget(EntityArmyMember armyMember, Class<T> classTarget, boolean checkSight) {
+		this(armyMember, classTarget, checkSight, false);
 	}
 
-	public EntityAINearestNonTeamTarget(EntityCreature creature, Class<T> classTarget, boolean checkSight, boolean onlyNearby) {
-		this(creature, classTarget, 10, checkSight, onlyNearby, null);
+	public EntityAINearestNonTeamTarget(EntityArmyMember armyMember, Class<T> classTarget, boolean checkSight, boolean onlyNearby) {
+		this(armyMember, classTarget, 10, checkSight, onlyNearby, null);
 	}
 
-	public EntityAINearestNonTeamTarget(EntityCreature creature, Class<T> classTarget, int chance, boolean checkSight, boolean onlyNearby, @Nullable final java.util.function.Predicate<? super T> targetSelector) {
-		super(creature, checkSight, onlyNearby);
+	public EntityAINearestNonTeamTarget(EntityArmyMember armyMember, Class<T> classTarget, int chance, boolean checkSight, boolean onlyNearby, @Nullable final java.util.function.Predicate<? super T> targetSelector) {
+		super(armyMember, checkSight, onlyNearby);
 		this.targetClass = classTarget;
 		this.targetChance = chance;
-		this.theNearestAttackableTargetSorter = new Sorter(creature);
+		this.armyMember = armyMember;
+		this.theNearestAttackableTargetSorter = new Sorter(armyMember);
 		this.setMutexBits(1);
-		this.targetEntitySelector = (Predicate<T>) p_apply_1_ -> p_apply_1_ != null && (!(targetSelector != null && !targetSelector.test(p_apply_1_)) && (EntitySelectors.NOT_SPECTATING.apply(p_apply_1_) && EntityAINearestNonTeamTarget.this.isSuitableTarget(p_apply_1_, false)));
+		this.targetEntitySelector = (Predicate<T>) input -> input != null && (!(targetSelector != null && !targetSelector.test(input)) && (EntitySelectors.NOT_SPECTATING.apply(input) && EntityAINearestNonTeamTarget.this.isSuitableTarget(input, false)));
+		this.shouldNotAttackEntity = (Predicate<T>) input -> !armyMember.shouldAttackEntity(input);
 	}
 
 	@Override
@@ -64,8 +69,13 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
 			if (list.isEmpty()) {
 				return false;
 			} else {
+				if(armyMember.getAttackMode() != 2)
+					list.removeIf(isPassivePigman);
+				list.removeIf(shouldNotAttackEntity);
+				if(list.isEmpty())
+					return false;
 				list.sort(this.theNearestAttackableTargetSorter);
-				if (!((EntityArmyMember) this.taskOwner).shouldAttackEntity(list.get(0), ((EntityArmyMember) this.taskOwner).getOwner()))
+				if (!armyMember.shouldAttackEntity(list.get(0)))
 					return false;
 				this.targetEntity = list.get(0);
 				return true;
@@ -80,9 +90,6 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
 		return this.taskOwner.getEntityBoundingBox().expand(targetDistance, 4.0D, targetDistance);
 	}
 
-	/**
-	 * Execute a one shot task or start executing a continuous task
-	 */
 	@Override
 	public void startExecuting() {
 		this.taskOwner.setAttackTarget(this.targetEntity);
@@ -98,26 +105,16 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
 
 		@Override
 		public int compare(Entity p_compare_1_, Entity p_compare_2_) {
-			double d0 = this.theEntity.getDistanceSqToEntity(p_compare_1_);
-			double d1 = this.theEntity.getDistanceSqToEntity(p_compare_2_);
+			double compareDistance1 = this.theEntity.getDistanceSqToEntity(p_compare_1_);
+			double compareDistance2 = this.theEntity.getDistanceSqToEntity(p_compare_2_);
 			boolean b0 = false;
 			boolean b1i = true;
-			if (p_compare_1_ instanceof EntityArmyMember) {
-				b0 = ((EntityArmyMember) p_compare_1_).getOwnerId().equals(theEntity.getUniqueID());
-				if (!b0)
-					b0 = Alliances.getInstance().isAlliedTo(((EntityArmyMember) p_compare_1_).getOwnerId(), theEntity.getUniqueID());
-			}
-			if (p_compare_2_ instanceof EntityArmyMember) {
-				b1i = !((EntityArmyMember) p_compare_2_).getOwnerId().equals(theEntity.getUniqueID());
-				if (b1i)
-					b1i = !Alliances.getInstance().isAlliedTo(((EntityArmyMember) p_compare_2_).getOwnerId(), theEntity.getUniqueID());
-			}
 			if (!ConfigValues.HUNTCREEPERS && p_compare_1_ instanceof EntityCreeper)
 				b0 = true;
 			if (!ConfigValues.HUNTCREEPERS && p_compare_2_ instanceof EntityCreeper)
 				b1i = false;
 			if (!b0 && b1i) {
-				return Double.compare(d0, d1);
+				return Double.compare(compareDistance1, compareDistance2);
 			} else if (b0 && b1i) {
 				return 1;
 			} else if (!b0) {
