@@ -1,2 +1,5 @@
 Fixed "player not found" command messages
 Army Members now show up in JourneyMap
+Added FluidRegistry support. This means if other containers hold milk than the vanilla ones, this will probably support them.
+Recipe Book unlock triggers now use OreDictionary. Requires Forge 1.12.1-14.22.0.2452 or newer.
+Improved targeting AI.
