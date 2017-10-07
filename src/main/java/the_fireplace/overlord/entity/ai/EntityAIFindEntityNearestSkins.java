@@ -54,7 +54,7 @@ public class EntityAIFindEntityNearestSkins extends EntityAIBase {
 	@Override
 	public boolean shouldExecute() {
 		double maxTargetRange = this.maxTargetRange();
-		List<EntityPlayer> players = this.taskOwner.world.getEntitiesWithinAABB(EntityPlayer.class, this.taskOwner.getEntityBoundingBox().expand(maxTargetRange, 4.0D, maxTargetRange), this.predicate::test);
+		List<EntityPlayer> players = this.taskOwner.world.getEntitiesWithinAABB(EntityPlayer.class, this.taskOwner.getEntityBoundingBox().grow(maxTargetRange, 4.0D, maxTargetRange), this.predicate::test);
 		players.sort(this.sorter);
 
 		if (players.isEmpty())

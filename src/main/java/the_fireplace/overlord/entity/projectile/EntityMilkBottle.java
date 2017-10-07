@@ -34,17 +34,16 @@ public class EntityMilkBottle extends EntityThrowable {
 	@Override
 	protected void onImpact(@Nonnull RayTraceResult mop) {
 		if (!this.world.isRemote) {
-			AxisAlignedBB axisalignedbb = this.getEntityBoundingBox().expand(4.0D, 2.0D, 4.0D);
-			List<EntityLivingBase> list = this.world.<EntityLivingBase>getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
+			AxisAlignedBB axisalignedbb = this.getEntityBoundingBox().grow(4.0D, 2.0D, 4.0D);
+			List<EntityLivingBase> list = this.world.getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
 
 			if (!list.isEmpty()) {
 				for (EntityLivingBase entitylivingbase : list) {
 					if (entitylivingbase instanceof EntitySkeletonWarrior || entitylivingbase instanceof EntityBabySkeleton || entitylivingbase instanceof EntitySkeleton || entitylivingbase instanceof EntitySkeletonHorse) {
 						double d0 = this.getDistanceSqToEntity(entitylivingbase);
 
-						if (d0 < 16.0D) {
+						if (d0 < 16.0D)
 							entitylivingbase.heal(1);
-						}
 					}
 				}
 			}

@@ -281,7 +281,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 					}
 			}
 
-			this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D)).stream().filter(entityitem -> !entityitem.isDead && !entityitem.getItem().isEmpty() && !entityitem.cannotPickup()).forEach(entityitem -> {
+			this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().grow(1.0D, 0.0D, 1.0D)).stream().filter(entityitem -> !entityitem.isDead && !entityitem.getItem().isEmpty() && !entityitem.cannotPickup()).forEach(entityitem -> {
 				ItemStack stack2 = inventory.addItem(entityitem.getItem());
 				if (!stack2.isEmpty()) {
 					if (stack2.getCount() != entityitem.getItem().getCount())
@@ -301,7 +301,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 				}
 			});
 
-			for (EntityXPOrb xp : world.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox().expand(8, 5, 8))) {
+			for (EntityXPOrb xp : world.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox().grow(8, 5, 8))) {
 				if (!xp.hasNoGravity())
 					xp.motionY -= 0.029999999329447746D;
 
