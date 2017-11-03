@@ -194,8 +194,9 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 	@Override
 	public void onLivingUpdate() {
 		updateArmSwingProgress();
-		if (getAugment() != null)
-			getAugment().onEntityTick(this);
+		Augment aug = getAugment();
+		if (aug != null)
+			aug.onEntityTick(this);
 		super.onLivingUpdate();
 	}
 
@@ -212,8 +213,9 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 	@Override
 	public void onDeath(@Nonnull DamageSource cause) {
 		super.onDeath(cause);
-		if (!this.world.isRemote && this.world.getGameRules().getBoolean("showDeathMessages") && this.getOwner() instanceof EntityPlayerMP)
-			this.getOwner().sendMessage(cause.getDeathMessage(this));
+		EntityLivingBase owner = getOwner();
+		if (!this.world.isRemote && this.world.getGameRules().getBoolean("showDeathMessages") && owner instanceof EntityPlayerMP)
+			owner.sendMessage(cause.getDeathMessage(this));
 	}
 
 	@Override
@@ -275,10 +277,11 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 		compound.setByte("AttackMode", this.dataManager.get(ATTACK_MODE));
 		compound.setByte("MovementMode", this.dataManager.get(MOVEMENT_MODE));
 		compound.setString("Squad", getSquad());
-		if (this.getOwnerId() == null) {
+		UUID ownerId = this.getOwnerId();
+		if (ownerId == null) {
 			compound.setString("OwnerUUID", "0b1ec5ad-cb2a-43b7-995d-889320eb2e5b");
 		} else {
-			compound.setString("OwnerUUID", this.getOwnerId().toString());
+			compound.setString("OwnerUUID", ownerId.toString());
 		}
 	}
 
@@ -370,28 +373,24 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 	public Team getTeam() {
 		EntityLivingBase entitylivingbase = this.getOwner();
 
-		if (entitylivingbase != null) {
+		if (entitylivingbase != null)
 			return entitylivingbase.getTeam();
-		}
 
 		return super.getTeam();
 	}
 
 	@Override
 	public boolean isOnSameTeam(Entity entityIn) {
-		EntityLivingBase entitylivingbase = this.getOwner();
+		EntityLivingBase owner = this.getOwner();
 
-		if (entityIn == entitylivingbase) {
+		if (entityIn == owner)
 			return true;
-		}
 
-		if (entitylivingbase instanceof EntityArmyMember) {
-			return ((EntityArmyMember) entitylivingbase).getOwnerId() == this.getOwnerId();
-		}
+		if (entityIn instanceof EntityArmyMember)
+			return ((EntityArmyMember) entityIn).getOwnerId() == this.getOwnerId();
 
-		if (entitylivingbase != null) {
-			return entitylivingbase.isOnSameTeam(entityIn);
-		}
+		if (owner != null)
+			return owner.isOnSameTeam(entityIn);
 
 		return super.isOnSameTeam(entityIn);
 	}
@@ -465,19 +464,22 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 
 	@Override
 	public boolean attackEntityAsMob(@Nonnull Entity entityIn) {
-		if (getHeldItemMainhand().isEmpty())
-			setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
+		ItemStack mainHandItem = this.getHeldItemMainhand();
+		if (mainHandItem.isEmpty()) {
+			mainHandItem = ItemStack.EMPTY;
+			setHeldItem(EnumHand.MAIN_HAND, mainHandItem);
+		}
 		float attackDamage = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
 		int knockback = 0;
 
 		if (entityIn instanceof EntityLivingBase) {
-			attackDamage += EnchantmentHelper.getModifierForCreature(this.getHeldItemMainhand(), ((EntityLivingBase) entityIn).getCreatureAttribute());
+			attackDamage += EnchantmentHelper.getModifierForCreature(mainHandItem, ((EntityLivingBase) entityIn).getCreatureAttribute());
 			knockback += EnchantmentHelper.getKnockbackModifier(this);
 		}
 
-		boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), attackDamage);
+		boolean successfulAttack = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), attackDamage);
 
-		if (flag) {
+		if (successfulAttack) {
 			if (knockback > 0) {
 				((EntityLivingBase) entityIn).knockBack(this, (float) knockback * 0.5F, (double) MathHelper.sin(this.rotationYaw * 0.017453292F), (double) (-MathHelper.cos(this.rotationYaw * 0.017453292F)));
 				this.motionX *= 0.6D;
@@ -492,10 +494,9 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 
 			if (entityIn instanceof EntityPlayer) {
 				EntityPlayer entityplayer = (EntityPlayer) entityIn;
-				ItemStack itemstack = this.getHeldItemMainhand();
-				ItemStack itemstack1 = entityplayer.isHandActive() ? entityplayer.getActiveItemStack() : ItemStack.EMPTY;
+				ItemStack playerItemBeingUsed = entityplayer.isHandActive() ? entityplayer.getActiveItemStack() : ItemStack.EMPTY;
 
-				if (!itemstack.isEmpty() && !itemstack1.isEmpty() && itemstack.getItem() instanceof ItemAxe && itemstack1.getItem() == Items.SHIELD) {
+				if (!mainHandItem.isEmpty() && !playerItemBeingUsed.isEmpty() && mainHandItem.getItem() instanceof ItemAxe && playerItemBeingUsed.getItem() == Items.SHIELD) {
 					float f1 = 0.25F + (float) EnchantmentHelper.getEfficiencyModifier(this) * 0.05F;
 
 					if (this.rand.nextFloat() < f1) {
@@ -507,16 +508,16 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 
 			this.applyEnchantments(this, entityIn);
 
-			if (!getHeldItemMainhand().isEmpty() && entityIn instanceof EntityLivingBase)
-				getHeldItemMainhand().getItem().hitEntity(getHeldItemMainhand(), (EntityLivingBase) entityIn, this);
+			if (!mainHandItem.isEmpty() && entityIn instanceof EntityLivingBase)
+				mainHandItem.getItem().hitEntity(mainHandItem, (EntityLivingBase) entityIn, this);
 
 			if (this.getAugment() != null)
 				this.getAugment().onStrike(this, entityIn);
 		}
-		if (getHeldItemMainhand().isEmpty())
+		if (mainHandItem.isEmpty())
 			setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
 
-		return flag;
+		return successfulAttack;
 	}
 
 	@Override

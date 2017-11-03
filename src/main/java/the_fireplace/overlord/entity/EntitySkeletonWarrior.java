@@ -212,9 +212,10 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 	public Augment getAugment() {
 		if (equipInventory == null)
 			return null;
-		if (AugmentRegistry.getAugment(getAugmentStack()) == null && world.isRemote)
+		Augment aug = AugmentRegistry.getAugment(getAugmentStack());
+		if (aug == null && world.isRemote)
 			return getClientAugment();
-		return AugmentRegistry.getAugment(getAugmentStack());
+		return aug;
 	}
 
 	@Override
