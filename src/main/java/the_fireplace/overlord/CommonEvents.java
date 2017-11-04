@@ -23,6 +23,7 @@ import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -158,9 +159,8 @@ public final class CommonEvents {
 
 	@SubscribeEvent
 	public static void configChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-		if (event.getModID().equals(Overlord.MODID)) {
+		if (event.getModID().equals(Overlord.MODID))
 			Overlord.syncConfig();
-		}
 	}
 
 	private static int teamColor = 0;
@@ -199,6 +199,16 @@ public final class CommonEvents {
 					}
 				}
 			}
+	}
+
+	@SubscribeEvent
+	public static void entitySpawn(EntityJoinWorldEvent event){
+		if(ConfigValues.XPOVERRIDE && !event.getWorld().isRemote && event.getEntity().getClass() == EntityXPOrb.class){
+			event.setCanceled(true);
+			EntityXPOrb xp = (EntityXPOrb) event.getEntity();
+			EntityCustomXPOrb newXP = new EntityCustomXPOrb(xp.world, xp.posX, xp.posY, xp.posZ, xp.xpValue);
+			event.getWorld().spawnEntity(newXP);
+		}
 	}
 
 	@SubscribeEvent

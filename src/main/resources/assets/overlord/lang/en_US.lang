@@ -123,6 +123,9 @@ cfg.max_arrow_distance.tooltip=Controls how far your Skeleton Warriors can shoot
 cfg.teamhack=Modify Scoreboard Teams
 cfg.teamhack.tooltip=Makes each player their own scoreboard team. This doesn't interfere with anything that I know of, but if it does cause issues, you can disable it.
 
+cfg.xp_override=Replace XP Orbs
+cfg.xp_overrice.tooltip=Replaces XP Orbs with custom XP Orbs. Improves the performance of Skeleton Warriors. This doesn't interfere with anything that I know of, but if it does cause issues, you can disable it.
+
 advancements.overlord.root.title=Overlord
 advancements.overlord.root.description=Build your army
 

@@ -302,57 +302,47 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 				}
 			});
 
-			for (EntityXPOrb xp : world.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox().grow(8, 5, 8))) {
-				if (!xp.hasNoGravity())
-					xp.motionY -= 0.029999999329447746D;
+			if(!ConfigValues.XPOVERRIDE) {
+				for (EntityXPOrb xp : world.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox().grow(8, 5, 8))) {
+					if (!xp.hasNoGravity())
+						xp.motionY -= 0.029999999329447746D;
 
-				if (xp.world.getBlockState(new BlockPos(this)).getMaterial() == Material.LAVA) {
-					xp.motionY = 0.20000000298023224D;
-					xp.motionX = (double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
-					xp.motionZ = (double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
-					xp.playSound(SoundEvents.ENTITY_GENERIC_BURN, 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
+					if (xp.world.getBlockState(new BlockPos(this)).getMaterial() == Material.LAVA) {
+						xp.motionY = 0.20000000298023224D;
+						xp.motionX = (double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
+						xp.motionZ = (double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
+						xp.playSound(SoundEvents.ENTITY_GENERIC_BURN, 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
+					}
+
+					this.pushOutOfBlocks(this.posX, (this.getEntityBoundingBox().minY + this.getEntityBoundingBox().maxY) / 2.0D, this.posZ);
+					double d1 = (this.posX - xp.posX) / 8.0D;
+					double d2 = (this.posY + (double) this.getEyeHeight() / 2.0D - xp.posY) / 8.0D;
+					double d3 = (this.posZ - xp.posZ) / 8.0D;
+					double d4 = Math.sqrt(d1 * d1 + d2 * d2 + d3 * d3);
+					double d5 = 1.0D - d4;
+
+					if (d5 > 0.0D) {
+						d5 = d5 * d5;
+						xp.motionX += d1 / d4 * d5 * 0.1D;
+						xp.motionY += d2 / d4 * d5 * 0.1D;
+						xp.motionZ += d3 / d4 * d5 * 0.1D;
+					}
+
+					xp.move(MoverType.SELF, xp.motionX, xp.motionY, xp.motionZ);
+					float f = 0.98F;
+
+					if (this.onGround)
+						f = xp.world.getBlockState(new BlockPos(MathHelper.floor(xp.posX), MathHelper.floor(xp.getEntityBoundingBox().minY) - 1, MathHelper.floor(xp.posZ))).getBlock().slipperiness * 0.98F;
+
+					xp.motionX *= (double) f;
+					xp.motionY *= 0.9800000190734863D;
+					xp.motionZ *= (double) f;
+
+					if (xp.onGround)
+						xp.motionY *= -0.8999999761581421D;
 				}
-
-				this.pushOutOfBlocks(this.posX, (this.getEntityBoundingBox().minY + this.getEntityBoundingBox().maxY) / 2.0D, this.posZ);
-				double d1 = (this.posX - xp.posX) / 8.0D;
-				double d2 = (this.posY + (double) this.getEyeHeight() / 2.0D - xp.posY) / 8.0D;
-				double d3 = (this.posZ - xp.posZ) / 8.0D;
-				double d4 = Math.sqrt(d1 * d1 + d2 * d2 + d3 * d3);
-				double d5 = 1.0D - d4;
-
-				if (d5 > 0.0D) {
-					d5 = d5 * d5;
-					xp.motionX += d1 / d4 * d5 * 0.1D;
-					xp.motionY += d2 / d4 * d5 * 0.1D;
-					xp.motionZ += d3 / d4 * d5 * 0.1D;
-				}
-
-				xp.move(MoverType.SELF, xp.motionX, xp.motionY, xp.motionZ);
-				float f = 0.98F;
-
-				if (this.onGround)
-					f = xp.world.getBlockState(new BlockPos(MathHelper.floor(xp.posX), MathHelper.floor(xp.getEntityBoundingBox().minY) - 1, MathHelper.floor(xp.posZ))).getBlock().slipperiness * 0.98F;
-
-				xp.motionX *= (double) f;
-				xp.motionY *= 0.9800000190734863D;
-				xp.motionZ *= (double) f;
-
-				if (xp.onGround)
-					xp.motionY *= -0.8999999761581421D;
 			}
-			world.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox()).stream().filter(xp -> xp.delayBeforeCanPickup <= 0).forEach(xp -> {
-				ItemStack itemstack = EnchantmentHelper.getEnchantedItem(Enchantments.MENDING, this);
-
-				int xpValue = xp.getXpValue();
-				if (!itemstack.isEmpty() && itemstack.isItemDamaged()) {
-					int i = Math.min(xpValue * 2, itemstack.getItemDamage());
-					xpValue -= i / 2;
-					itemstack.setItemDamage(itemstack.getItemDamage() - i);
-				}
-				if (xpValue > 0)
-					this.addXP(xpValue);
-				xp.setDead();
-			});
+			world.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox()).stream().filter(xp -> xp.delayBeforeCanPickup <= 0).forEach(this::handleXPCollision);
 			//Bow stuffs
 			if (!getHeldItemMainhand().isEmpty()) {
 				if (getHeldItemMainhand().getItem() instanceof ItemBow)
@@ -431,6 +421,20 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 		if (brightness > 0.5F && !getSkinType().protectsFromSun())
 			this.idleTime += 1;
 		super.onLivingUpdate();
+	}
+
+	public void handleXPCollision(EntityXPOrb xp){
+		ItemStack itemstack = EnchantmentHelper.getEnchantedItem(Enchantments.MENDING, this);
+
+		int xpValue = xp.getXpValue();
+		if (!itemstack.isEmpty() && itemstack.isItemDamaged()) {
+			int i = Math.min(xpValue * 2, itemstack.getItemDamage());
+			xpValue -= i / 2;
+			itemstack.setItemDamage(itemstack.getItemDamage() - i);
+		}
+		if (xpValue > 0)
+			this.addXP(xpValue);
+		xp.setDead();
 	}
 
 	public void addXP(int amount) {

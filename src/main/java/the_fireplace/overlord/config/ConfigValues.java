@@ -41,4 +41,8 @@ public class ConfigValues {
 	public static final double MAXARROWDISTANCE_DEFAULT = 30.0D;
 	public static double MAXARROWDISTANCE;
 	public static final String MAXARROWDISTANCE_NAME = "cfg.max_arrow_distance";
+
+	public static final boolean XPOVERRIDE_DEFAULT = true;
+	public static boolean XPOVERRIDE;
+	public static final String XPOVERRIDE_NAME = "cfg.xp_override";
 }
