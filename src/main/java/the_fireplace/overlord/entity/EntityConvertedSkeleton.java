@@ -2,10 +2,7 @@ package the_fireplace.overlord.entity;
 
 import com.google.common.collect.Lists;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EnumCreatureAttribute;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityItem;
@@ -138,9 +135,8 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 				}
 			};
 		}
-		if (aiArrowAttack == null) {
+		if (aiArrowAttack == null)
 			aiArrowAttack = new EntityAIArmyBow(this, 1.0D, 20, 15.0F);
-		}
 		if (!this.getHeldItemMainhand().isEmpty())
 			if (this.getHeldItemMainhand().getItem() instanceof ItemBow) {
 				this.tasks.addTask(5, aiArrowAttack);
@@ -162,8 +158,9 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
-		if (this.getOwner() != null) {
-			if (this.getOwner().equals(player)) {
+		EntityLivingBase owner = this.getOwner();
+		if (owner != null) {
+			if (owner.equals(player)) {
 				if (!player.isSneaking()) {
 					FMLNetworkHandler.openGui(player, Overlord.instance, hashCode(), world, (int) this.posX, (int) this.posY, (int) this.posZ);
 					return true;
@@ -236,29 +233,29 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 			}
 
 			if (this.world.isDaytime()) {
-				float f = this.getBrightness();
+				float brightness = this.getBrightness();
 				BlockPos blockpos = this.getRidingEntity() instanceof EntityBoat ? (new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ)).up() : new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ);
 
 				if (!getSkinType().protectsFromSun())
-					if (f > 0.5F && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.world.canSeeSky(blockpos)) {
-						boolean flag = true;
-						ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+					if (brightness > 0.5F && this.rand.nextFloat() * 30.0F < (brightness - 0.4F) * 2.0F && this.world.canSeeSky(blockpos)) {
+						boolean burn = true;
+						ItemStack headwear = this.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
-						if (!itemstack.isEmpty()) {
+						if (!headwear.isEmpty()) {
 							if (ConfigValues.HELMETDAMAGE)
-								if (itemstack.isItemStackDamageable()) {
-									itemstack.setItemDamage(itemstack.getItemDamage() + this.rand.nextInt(2));
+								if (headwear.isItemStackDamageable()) {
+									headwear.setItemDamage(headwear.getItemDamage() + this.rand.nextInt(2));
 
-									if (itemstack.getItemDamage() >= itemstack.getMaxDamage()) {
-										this.renderBrokenItemStack(itemstack);
+									if (headwear.getItemDamage() >= headwear.getMaxDamage()) {
+										this.renderBrokenItemStack(headwear);
 										this.setItemStackToSlot(EntityEquipmentSlot.HEAD, ItemStack.EMPTY);
 									}
 								}
 
-							flag = false;
+							burn = false;
 						}
 
-						if (flag)
+						if (burn)
 							this.setFire(6);
 					}
 			}
@@ -311,53 +308,51 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 					}
 			}
 			//Equipment Achievements
+			EntityLivingBase owner = getOwner();
 			if (!getHeldItemMainhand().isEmpty()) {
-				if (getOwner() != null) {
-					if (getOwner() instanceof EntityPlayerMP)
+				if (owner != null) {
+					if (owner instanceof EntityPlayerMP)
 						if (!armed) {
-							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) getOwner(), this, Items.WOODEN_SWORD, 0);
+							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) owner, this, Items.WOODEN_SWORD, 0);
 							armed = true;
 						}
 				}
-			} else if (armed) {
+			} else if (armed)
 				armed = false;
-			}
 
 			if (getSkinType().equals(SkinType.PLAYER)) {
-				if (getOwner() != null) {
-					if (getOwner() instanceof EntityPlayerMP)
+				if (owner != null) {
+					if (owner instanceof EntityPlayerMP)
 						if (!sally) {
-							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) getOwner(), this, Overlord.skinsuit, 0);
+							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) owner, this, Overlord.skinsuit, 0);
 							sally = true;
 						}
 				}
-			} else if (sally) {
+			} else if (sally)
 				sally = false;
-			}
 
 			if (!getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty() && !getItemStackFromSlot(EntityEquipmentSlot.CHEST).isEmpty() && !getItemStackFromSlot(EntityEquipmentSlot.LEGS).isEmpty() && !getItemStackFromSlot(EntityEquipmentSlot.FEET).isEmpty()) {
 				if (getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == Items.CHAINMAIL_HELMET && getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem() == Items.CHAINMAIL_CHESTPLATE && getItemStackFromSlot(EntityEquipmentSlot.LEGS).getItem() == Items.CHAINMAIL_LEGGINGS && getItemStackFromSlot(EntityEquipmentSlot.FEET).getItem() == Items.CHAINMAIL_BOOTS) {
 					if (!getHeldItemOffhand().isEmpty())
 						if (getHeldItemOffhand().getTagCompound() != null && getHeldItemOffhand().getItem() instanceof ItemShield)
 							if (getHeldItemOffhand().getTagCompound().equals(Overlord.crusaderShield().getTagCompound()))
-								if (getOwner() != null) {
-									if (getOwner() instanceof EntityPlayerMP)
+								if (owner != null) {
+									if (owner instanceof EntityPlayerMP)
 										if (!crusader) {
-											CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) getOwner(), this, Items.SHIELD, 0);
+											CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) owner, this, Items.SHIELD, 0);
 											crusader = true;
 										}
 								}
-				} else if (crusader) {
+				} else if (crusader)
 					crusader = false;
-				}
 			}
 		}
 
 		this.setSize(0.6F, 1.99F);
 
-		float f = this.getBrightness();
+		float brightness = this.getBrightness();
 
-		if (f > 0.5F && !getSkinType().protectsFromSun())
+		if (brightness > 0.5F && !getSkinType().protectsFromSun())
 			this.idleTime += 1;
 		super.onLivingUpdate();
 	}
@@ -366,8 +361,9 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 	public void onDeath(@Nonnull DamageSource cause) {
 		super.onDeath(cause);
 
-		if (cause.getTrueSource() instanceof EntityCreeper && ((EntityCreeper) cause.getTrueSource()).getPowered() && !((EntityCreeper) cause.getTrueSource()).isAIDisabled()) {
-			((EntityCreeper) cause.getTrueSource()).incrementDroppedSkulls();
+		Entity damageCause = cause.getTrueSource();
+		if (damageCause instanceof EntityCreeper && ((EntityCreeper) damageCause).getPowered() && !((EntityCreeper) damageCause).isAIDisabled()) {
+			((EntityCreeper) damageCause).incrementDroppedSkulls();
 			this.entityDropItem(new ItemStack(Items.SKULL), 0.0F);
 		}
 
@@ -426,9 +422,8 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 					equipInventory.setInventorySlotContents(slot, new ItemStack(item));
 				}
 			}
-		} else {
+		} else
 			Overlord.logWarn("List was null when reading Converted Skeleton's Equipment");
-		}
 	}
 
 	@Override
@@ -478,8 +473,8 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 
 	@Override
 	public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {
-		ItemStack itemstack = this.getHeldItemOffhand();
-		if (itemstack.isEmpty() || !(itemstack.getItem() instanceof ItemArrow))
+		ItemStack arrowItem = this.getHeldItemOffhand();
+		if (arrowItem.isEmpty() || !(arrowItem.getItem() instanceof ItemArrow))
 			return;
 
 		EntityArrow entityarrow = getArrow(distanceFactor);
@@ -490,8 +485,8 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 		entityarrow.setThrowableHeading(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, (float) (14 - this.world.getDifficulty().getDifficultyId() * 4));
 
 		if (EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.INFINITY, this) <= 0) {
-			if (itemstack.getCount() > 1)
-				itemstack.shrink(1);
+			if (arrowItem.getCount() > 1)
+				arrowItem.shrink(1);
 			else
 				setHeldItem(EnumHand.OFF_HAND, ItemStack.EMPTY);
 			entityarrow.pickupStatus = EntityArrow.PickupStatus.ALLOWED;
@@ -504,9 +499,9 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 	}
 
 	protected EntityArrow getArrow(float distanceFactor) {
-		ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
+		ItemStack arrowItem = this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
 
-		if (itemstack.getItem() == Items.SPECTRAL_ARROW) {
+		if (arrowItem.getItem() == Items.SPECTRAL_ARROW) {
 			EntitySpectralArrow entityspectralarrow = new EntitySpectralArrow(this.world, this);
 			entityspectralarrow.setEnchantmentEffectsFromEntity(this, distanceFactor);
 			return entityspectralarrow;
@@ -514,9 +509,8 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 			EntityTippedArrow entityarrow = new EntityTippedArrow(this.world, this);
 			entityarrow.setEnchantmentEffectsFromEntity(this, distanceFactor);
 
-			if (itemstack.getItem() == Items.TIPPED_ARROW) {
-				entityarrow.setPotionEffect(itemstack);
-			}
+			if (arrowItem.getItem() == Items.TIPPED_ARROW)
+				entityarrow.setPotionEffect(arrowItem);
 
 			return entityarrow;
 		}
@@ -599,9 +593,8 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 		if (hand == EnumHand.MAIN_HAND) {
 			this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, stack);
 		} else {
-			if (hand != EnumHand.OFF_HAND) {
+			if (hand != EnumHand.OFF_HAND)
 				throw new IllegalArgumentException("Invalid hand " + hand);
-			}
 
 			this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, stack);
 		}

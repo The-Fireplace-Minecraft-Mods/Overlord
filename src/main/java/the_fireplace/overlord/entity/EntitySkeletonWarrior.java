@@ -260,7 +260,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 
 				if (!getSkinType().protectsFromSun())
 					if (f > 0.5F && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.world.canSeeSky(blockpos)) {
-						boolean flag = true;
+						boolean burn = true;
 						ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
 						if (!itemstack.isEmpty()) {
@@ -274,10 +274,10 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 									}
 								}
 
-							flag = false;
+							burn = false;
 						}
 
-						if (flag)
+						if (burn)
 							this.setFire(6);
 					}
 			}
@@ -382,11 +382,12 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 					}
 			}
 			//Equipment Achievements
+			EntityLivingBase owner = getOwner();
 			if (!getHeldItemMainhand().isEmpty()) {
-				if (getOwner() != null) {
-					if (getOwner() instanceof EntityPlayerMP)
+				if (owner != null) {
+					if (owner instanceof EntityPlayerMP)
 						if (!armed) {
-							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) getOwner(), this, Items.WOODEN_SWORD, 0);
+							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) owner, this, Items.WOODEN_SWORD, 0);
 							armed = true;
 						}
 				}
@@ -395,10 +396,10 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 			}
 
 			if (getSkinType().equals(SkinType.PLAYER)) {
-				if (getOwner() != null) {
-					if (getOwner() instanceof EntityPlayerMP)
+				if (owner != null) {
+					if (owner instanceof EntityPlayerMP)
 						if (!sally) {
-							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) getOwner(), this, Overlord.skinsuit, 0);
+							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) owner, this, Overlord.skinsuit, 0);
 							sally = true;
 						}
 				}
@@ -411,24 +412,23 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 					if (!getHeldItemOffhand().isEmpty())
 						if (getHeldItemOffhand().getTagCompound() != null && getHeldItemOffhand().getItem() instanceof ItemShield)
 							if (getHeldItemOffhand().getTagCompound().equals(Overlord.crusaderShield().getTagCompound()))
-								if (getOwner() != null) {
-									if (getOwner() instanceof EntityPlayerMP)
+								if (owner != null) {
+									if (owner instanceof EntityPlayerMP)
 										if (!crusader) {
-											CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) getOwner(), this, Items.SHIELD, 0);
+											CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) owner, this, Items.SHIELD, 0);
 											crusader = true;
 										}
 								}
-				} else if (crusader) {
+				} else if (crusader)
 					crusader = false;
-				}
 			}
 		}
 
 		this.setSize(0.6F, 1.99F);
 
-		float f = this.getBrightness();
+		float brightness = this.getBrightness();
 
-		if (f > 0.5F && !getSkinType().protectsFromSun())
+		if (brightness > 0.5F && !getSkinType().protectsFromSun())
 			this.idleTime += 1;
 		super.onLivingUpdate();
 	}
@@ -479,8 +479,9 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 	public void onDeath(@Nonnull DamageSource cause) {
 		super.onDeath(cause);
 
-		if (cause.getTrueSource() instanceof EntityCreeper && ((EntityCreeper) cause.getTrueSource()).getPowered() && !((EntityCreeper) cause.getTrueSource()).isAIDisabled()) {
-			((EntityCreeper) cause.getTrueSource()).incrementDroppedSkulls();
+		Entity damageCause = cause.getTrueSource();
+		if (damageCause instanceof EntityCreeper && ((EntityCreeper) damageCause).getPowered() && !((EntityCreeper) damageCause).isAIDisabled()) {
+			((EntityCreeper) damageCause).incrementDroppedSkulls();
 			this.entityDropItem(new ItemStack(Items.SKULL), 0.0F);
 		}
 
@@ -644,9 +645,9 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 	}
 
 	protected EntityArrow getArrow(float distanceFactor) {
-		ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
+		ItemStack arrowStack = this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
 
-		if (itemstack.getItem() == Items.SPECTRAL_ARROW) {
+		if (arrowStack.getItem() == Items.SPECTRAL_ARROW) {
 			EntitySpectralArrow entityspectralarrow = new EntitySpectralArrow(this.world, this);
 			entityspectralarrow.setEnchantmentEffectsFromEntity(this, distanceFactor);
 			return entityspectralarrow;
@@ -654,9 +655,8 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 			EntityTippedArrow entityarrow = new EntityTippedArrow(this.world, this);
 			entityarrow.setEnchantmentEffectsFromEntity(this, distanceFactor);
 
-			if (itemstack.getItem() == Items.TIPPED_ARROW) {
-				entityarrow.setPotionEffect(itemstack);
-			}
+			if (arrowStack.getItem() == Items.TIPPED_ARROW)
+				entityarrow.setPotionEffect(arrowStack);
 
 			return entityarrow;
 		}
@@ -725,13 +725,12 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 	@Override
 	@Nonnull
 	public ItemStack getHeldItem(EnumHand hand) {
-		if (hand == EnumHand.MAIN_HAND) {
+		if (hand == EnumHand.MAIN_HAND)
 			return getHeldItemMainhand();
-		} else if (hand == EnumHand.OFF_HAND) {
+		else if (hand == EnumHand.OFF_HAND)
 			return getHeldItemOffhand();
-		} else {
+		else
 			throw new IllegalArgumentException("Invalid hand " + hand);
-		}
 	}
 
 	@Override
@@ -739,9 +738,8 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 		if (hand == EnumHand.MAIN_HAND) {
 			this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, stack);
 		} else {
-			if (hand != EnumHand.OFF_HAND) {
+			if (hand != EnumHand.OFF_HAND)
 				throw new IllegalArgumentException("Invalid hand " + hand);
-			}
 
 			this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, stack);
 		}
