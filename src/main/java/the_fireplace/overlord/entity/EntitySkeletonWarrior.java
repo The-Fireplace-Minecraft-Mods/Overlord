@@ -212,9 +212,10 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 	public Augment getAugment() {
 		if (equipInventory == null)
 			return null;
-		if (AugmentRegistry.getAugment(getAugmentStack()) == null && world.isRemote)
+		Augment aug = AugmentRegistry.getAugment(getAugmentStack());
+		if (aug == null && world.isRemote)
 			return getClientAugment();
-		return AugmentRegistry.getAugment(getAugmentStack());
+		return aug;
 	}
 
 	@Override
@@ -259,7 +260,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 
 				if (!getSkinType().protectsFromSun())
 					if (f > 0.5F && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.world.canSeeSky(blockpos)) {
-						boolean flag = true;
+						boolean burn = true;
 						ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
 						if (!itemstack.isEmpty()) {
@@ -273,15 +274,15 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 									}
 								}
 
-							flag = false;
+							burn = false;
 						}
 
-						if (flag)
+						if (burn)
 							this.setFire(6);
 					}
 			}
 
-			this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D)).stream().filter(entityitem -> !entityitem.isDead && !entityitem.getItem().isEmpty() && !entityitem.cannotPickup()).forEach(entityitem -> {
+			this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().grow(1.0D, 0.0D, 1.0D)).stream().filter(entityitem -> !entityitem.isDead && !entityitem.getItem().isEmpty() && !entityitem.cannotPickup()).forEach(entityitem -> {
 				ItemStack stack2 = inventory.addItem(entityitem.getItem());
 				if (!stack2.isEmpty()) {
 					if (stack2.getCount() != entityitem.getItem().getCount())
@@ -301,57 +302,47 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 				}
 			});
 
-			for (EntityXPOrb xp : world.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox().expand(8, 5, 8))) {
-				if (!xp.hasNoGravity())
-					xp.motionY -= 0.029999999329447746D;
+			if(!ConfigValues.XPOVERRIDE) {
+				for (EntityXPOrb xp : world.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox().grow(8, 5, 8))) {
+					if (!xp.hasNoGravity())
+						xp.motionY -= 0.029999999329447746D;
 
-				if (xp.world.getBlockState(new BlockPos(this)).getMaterial() == Material.LAVA) {
-					xp.motionY = 0.20000000298023224D;
-					xp.motionX = (double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
-					xp.motionZ = (double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
-					xp.playSound(SoundEvents.ENTITY_GENERIC_BURN, 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
+					if (xp.world.getBlockState(new BlockPos(this)).getMaterial() == Material.LAVA) {
+						xp.motionY = 0.20000000298023224D;
+						xp.motionX = (double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
+						xp.motionZ = (double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
+						xp.playSound(SoundEvents.ENTITY_GENERIC_BURN, 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
+					}
+
+					this.pushOutOfBlocks(this.posX, (this.getEntityBoundingBox().minY + this.getEntityBoundingBox().maxY) / 2.0D, this.posZ);
+					double d1 = (this.posX - xp.posX) / 8.0D;
+					double d2 = (this.posY + (double) this.getEyeHeight() / 2.0D - xp.posY) / 8.0D;
+					double d3 = (this.posZ - xp.posZ) / 8.0D;
+					double d4 = Math.sqrt(d1 * d1 + d2 * d2 + d3 * d3);
+					double d5 = 1.0D - d4;
+
+					if (d5 > 0.0D) {
+						d5 = d5 * d5;
+						xp.motionX += d1 / d4 * d5 * 0.1D;
+						xp.motionY += d2 / d4 * d5 * 0.1D;
+						xp.motionZ += d3 / d4 * d5 * 0.1D;
+					}
+
+					xp.move(MoverType.SELF, xp.motionX, xp.motionY, xp.motionZ);
+					float f = 0.98F;
+
+					if (this.onGround)
+						f = xp.world.getBlockState(new BlockPos(MathHelper.floor(xp.posX), MathHelper.floor(xp.getEntityBoundingBox().minY) - 1, MathHelper.floor(xp.posZ))).getBlock().slipperiness * 0.98F;
+
+					xp.motionX *= (double) f;
+					xp.motionY *= 0.9800000190734863D;
+					xp.motionZ *= (double) f;
+
+					if (xp.onGround)
+						xp.motionY *= -0.8999999761581421D;
 				}
-
-				this.pushOutOfBlocks(this.posX, (this.getEntityBoundingBox().minY + this.getEntityBoundingBox().maxY) / 2.0D, this.posZ);
-				double d1 = (this.posX - xp.posX) / 8.0D;
-				double d2 = (this.posY + (double) this.getEyeHeight() / 2.0D - xp.posY) / 8.0D;
-				double d3 = (this.posZ - xp.posZ) / 8.0D;
-				double d4 = Math.sqrt(d1 * d1 + d2 * d2 + d3 * d3);
-				double d5 = 1.0D - d4;
-
-				if (d5 > 0.0D) {
-					d5 = d5 * d5;
-					xp.motionX += d1 / d4 * d5 * 0.1D;
-					xp.motionY += d2 / d4 * d5 * 0.1D;
-					xp.motionZ += d3 / d4 * d5 * 0.1D;
-				}
-
-				xp.move(MoverType.SELF, xp.motionX, xp.motionY, xp.motionZ);
-				float f = 0.98F;
-
-				if (this.onGround)
-					f = xp.world.getBlockState(new BlockPos(MathHelper.floor(xp.posX), MathHelper.floor(xp.getEntityBoundingBox().minY) - 1, MathHelper.floor(xp.posZ))).getBlock().slipperiness * 0.98F;
-
-				xp.motionX *= (double) f;
-				xp.motionY *= 0.9800000190734863D;
-				xp.motionZ *= (double) f;
-
-				if (xp.onGround)
-					xp.motionY *= -0.8999999761581421D;
 			}
-			world.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox()).stream().filter(xp -> xp.delayBeforeCanPickup <= 0).forEach(xp -> {
-				ItemStack itemstack = EnchantmentHelper.getEnchantedItem(Enchantments.MENDING, this);
-
-				int xpValue = xp.getXpValue();
-				if (!itemstack.isEmpty() && itemstack.isItemDamaged()) {
-					int i = Math.min(xpValue * 2, itemstack.getItemDamage());
-					xpValue -= i / 2;
-					itemstack.setItemDamage(itemstack.getItemDamage() - i);
-				}
-				if (xpValue > 0)
-					this.addXP(xpValue);
-				xp.setDead();
-			});
+			world.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox()).stream().filter(xp -> xp.delayBeforeCanPickup <= 0).forEach(this::handleXPCollision);
 			//Bow stuffs
 			if (!getHeldItemMainhand().isEmpty()) {
 				if (getHeldItemMainhand().getItem() instanceof ItemBow)
@@ -381,11 +372,12 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 					}
 			}
 			//Equipment Achievements
+			EntityLivingBase owner = getOwner();
 			if (!getHeldItemMainhand().isEmpty()) {
-				if (getOwner() != null) {
-					if (getOwner() instanceof EntityPlayerMP)
+				if (owner != null) {
+					if (owner instanceof EntityPlayerMP)
 						if (!armed) {
-							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) getOwner(), this, Items.WOODEN_SWORD, 0);
+							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) owner, this, Items.WOODEN_SWORD, 0);
 							armed = true;
 						}
 				}
@@ -394,10 +386,10 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 			}
 
 			if (getSkinType().equals(SkinType.PLAYER)) {
-				if (getOwner() != null) {
-					if (getOwner() instanceof EntityPlayerMP)
+				if (owner != null) {
+					if (owner instanceof EntityPlayerMP)
 						if (!sally) {
-							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) getOwner(), this, Overlord.skinsuit, 0);
+							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) owner, this, Overlord.skinsuit, 0);
 							sally = true;
 						}
 				}
@@ -410,26 +402,39 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 					if (!getHeldItemOffhand().isEmpty())
 						if (getHeldItemOffhand().getTagCompound() != null && getHeldItemOffhand().getItem() instanceof ItemShield)
 							if (getHeldItemOffhand().getTagCompound().equals(Overlord.crusaderShield().getTagCompound()))
-								if (getOwner() != null) {
-									if (getOwner() instanceof EntityPlayerMP)
+								if (owner != null) {
+									if (owner instanceof EntityPlayerMP)
 										if (!crusader) {
-											CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) getOwner(), this, Items.SHIELD, 0);
+											CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) owner, this, Items.SHIELD, 0);
 											crusader = true;
 										}
 								}
-				} else if (crusader) {
+				} else if (crusader)
 					crusader = false;
-				}
 			}
 		}
 
 		this.setSize(0.6F, 1.99F);
 
-		float f = this.getBrightness();
+		float brightness = this.getBrightness();
 
-		if (f > 0.5F && !getSkinType().protectsFromSun())
+		if (brightness > 0.5F && !getSkinType().protectsFromSun())
 			this.idleTime += 1;
 		super.onLivingUpdate();
+	}
+
+	public void handleXPCollision(EntityXPOrb xp){
+		ItemStack itemstack = EnchantmentHelper.getEnchantedItem(Enchantments.MENDING, this);
+
+		int xpValue = xp.getXpValue();
+		if (!itemstack.isEmpty() && itemstack.isItemDamaged()) {
+			int i = Math.min(xpValue * 2, itemstack.getItemDamage());
+			xpValue -= i / 2;
+			itemstack.setItemDamage(itemstack.getItemDamage() - i);
+		}
+		if (xpValue > 0)
+			this.addXP(xpValue);
+		xp.setDead();
 	}
 
 	public void addXP(int amount) {
@@ -478,8 +483,9 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 	public void onDeath(@Nonnull DamageSource cause) {
 		super.onDeath(cause);
 
-		if (cause.getTrueSource() instanceof EntityCreeper && ((EntityCreeper) cause.getTrueSource()).getPowered() && !((EntityCreeper) cause.getTrueSource()).isAIDisabled()) {
-			((EntityCreeper) cause.getTrueSource()).incrementDroppedSkulls();
+		Entity damageCause = cause.getTrueSource();
+		if (damageCause instanceof EntityCreeper && ((EntityCreeper) damageCause).getPowered() && !((EntityCreeper) damageCause).isAIDisabled()) {
+			((EntityCreeper) damageCause).incrementDroppedSkulls();
 			this.entityDropItem(new ItemStack(Items.SKULL), 0.0F);
 		}
 
@@ -643,9 +649,9 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 	}
 
 	protected EntityArrow getArrow(float distanceFactor) {
-		ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
+		ItemStack arrowStack = this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
 
-		if (itemstack.getItem() == Items.SPECTRAL_ARROW) {
+		if (arrowStack.getItem() == Items.SPECTRAL_ARROW) {
 			EntitySpectralArrow entityspectralarrow = new EntitySpectralArrow(this.world, this);
 			entityspectralarrow.setEnchantmentEffectsFromEntity(this, distanceFactor);
 			return entityspectralarrow;
@@ -653,9 +659,8 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 			EntityTippedArrow entityarrow = new EntityTippedArrow(this.world, this);
 			entityarrow.setEnchantmentEffectsFromEntity(this, distanceFactor);
 
-			if (itemstack.getItem() == Items.TIPPED_ARROW) {
-				entityarrow.setPotionEffect(itemstack);
-			}
+			if (arrowStack.getItem() == Items.TIPPED_ARROW)
+				entityarrow.setPotionEffect(arrowStack);
 
 			return entityarrow;
 		}
@@ -724,13 +729,12 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 	@Override
 	@Nonnull
 	public ItemStack getHeldItem(EnumHand hand) {
-		if (hand == EnumHand.MAIN_HAND) {
+		if (hand == EnumHand.MAIN_HAND)
 			return getHeldItemMainhand();
-		} else if (hand == EnumHand.OFF_HAND) {
+		else if (hand == EnumHand.OFF_HAND)
 			return getHeldItemOffhand();
-		} else {
+		else
 			throw new IllegalArgumentException("Invalid hand " + hand);
-		}
 	}
 
 	@Override
@@ -738,9 +742,8 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 		if (hand == EnumHand.MAIN_HAND) {
 			this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, stack);
 		} else {
-			if (hand != EnumHand.OFF_HAND) {
+			if (hand != EnumHand.OFF_HAND)
 				throw new IllegalArgumentException("Invalid hand " + hand);
-			}
 
 			this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, stack);
 		}

@@ -1,6 +1,5 @@
 package the_fireplace.overlord.entity.ai;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -18,7 +17,6 @@ import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.AxisAlignedBB;
 import the_fireplace.overlord.entity.EntityArmyMember;
 
-import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
 
@@ -63,32 +61,29 @@ public class EntityAITargetSkins<T extends EntityLivingBase> extends EntityAITar
 				return true;
 			}
 		} else {
-			this.targetEntity = (T) this.taskOwner.world.getNearestAttackablePlayer(this.taskOwner.posX, this.taskOwner.posY + (double) this.taskOwner.getEyeHeight(), this.taskOwner.posZ, this.getTargetDistance(), this.getTargetDistance(), new Function<EntityPlayer, Double>() {
-				@Override
-				@Nullable
-				public Double apply(@Nullable EntityPlayer p_apply_1_) {
-					ItemStack itemstack = p_apply_1_.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+			//noinspection unchecked
+			this.targetEntity = (T) this.taskOwner.world.getNearestAttackablePlayer(this.taskOwner.posX, this.taskOwner.posY + (double) this.taskOwner.getEyeHeight(), this.taskOwner.posZ, this.getTargetDistance(), this.getTargetDistance(), p_apply_1_ -> {
+				ItemStack itemstack = p_apply_1_.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
-					if (itemstack.getItem() == Items.SKULL) {
-						int i = itemstack.getItemDamage();
-						boolean skeletonSeeSkeleton = EntityAITargetSkins.this.taskOwner instanceof EntitySkeleton && i == 0;
-						boolean zombieSeeZombie = EntityAITargetSkins.this.taskOwner instanceof EntityZombie && i == 2;
-						boolean creeperSeeCreeper = EntityAITargetSkins.this.taskOwner instanceof EntityCreeper && i == 4;
+				if (itemstack.getItem() == Items.SKULL) {
+					int i = itemstack.getItemDamage();
+					boolean skeletonSeeSkeleton = EntityAITargetSkins.this.taskOwner instanceof EntitySkeleton && i == 0;
+					boolean zombieSeeZombie = EntityAITargetSkins.this.taskOwner instanceof EntityZombie && i == 2;
+					boolean creeperSeeCreeper = EntityAITargetSkins.this.taskOwner instanceof EntityCreeper && i == 4;
 
-						if (skeletonSeeSkeleton || zombieSeeZombie || creeperSeeCreeper) {
-							return 0.5D;
-						}
+					if (skeletonSeeSkeleton || zombieSeeZombie || creeperSeeCreeper) {
+						return 0.5D;
 					}
-
-					return 1.0D;
 				}
+
+				return 1.0D;
 			}, (Predicate<EntityPlayer>) this.targetEntitySelector);
 			return this.targetEntity != null;
 		}
 	}
 
 	protected AxisAlignedBB getTargetableArea(double targetDistance) {
-		return this.taskOwner.getEntityBoundingBox().expand(targetDistance, 4.0D, targetDistance);
+		return this.taskOwner.getEntityBoundingBox().grow(targetDistance, 4.0D, targetDistance);
 	}
 
 	@Override

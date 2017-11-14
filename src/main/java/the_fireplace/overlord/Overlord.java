@@ -55,10 +55,7 @@ import the_fireplace.overlord.command.*;
 import the_fireplace.overlord.compat.ICompat;
 import the_fireplace.overlord.compat.ic2.IC2Compat;
 import the_fireplace.overlord.config.ConfigValues;
-import the_fireplace.overlord.entity.EntityBabySkeleton;
-import the_fireplace.overlord.entity.EntityConvertedSkeleton;
-import the_fireplace.overlord.entity.EntityCuringSkeleton;
-import the_fireplace.overlord.entity.EntitySkeletonWarrior;
+import the_fireplace.overlord.entity.*;
 import the_fireplace.overlord.entity.projectile.EntityMilkBottle;
 import the_fireplace.overlord.handlers.DispenseBehaviorKeychain;
 import the_fireplace.overlord.items.*;
@@ -77,7 +74,7 @@ import java.util.ArrayList;
  * @author The_Fireplace
  */
 @Mod.EventBusSubscriber
-@Mod(modid = Overlord.MODID, name = Overlord.MODNAME, guiFactory = "the_fireplace.overlord.client.gui.OverlordConfigGuiFactory", updateJSON = "https://bitbucket.org/The_Fireplace/minecraft-mod-updates/raw/master/overlord.json", acceptedMinecraftVersions = "[1.12,)", dependencies = "before:guideapi", version = "${version}")
+@Mod(modid = Overlord.MODID, name = Overlord.MODNAME, guiFactory = "the_fireplace.overlord.client.gui.OverlordConfigGuiFactory", updateJSON = "https://bitbucket.org/The_Fireplace/minecraft-mod-updates/raw/master/overlord.json", acceptedMinecraftVersions = "[1.12,1.13)", dependencies = "before:guideapi", version = "${version}")
 public final class Overlord {
 	public static final String MODNAME = "Overlord";
 	public static final String MODID = "overlord";
@@ -95,6 +92,7 @@ public final class Overlord {
 	public static Property BONEREQ_BABY_PROPERTY;
 	public static Property MAXARROWDISTANCE_PROPERTY;
 	public static Property TEAMHACK_PROPERTY;
+	public static Property XPOVERRIDE_PROPERTY;
 
 	@SidedProxy(clientSide = "the_fireplace." + MODID + ".client.ClientProxy", serverSide = "the_fireplace." + MODID + ".CommonProxy")
 	public static CommonProxy proxy;
@@ -150,6 +148,7 @@ public final class Overlord {
 		ConfigValues.BONEREQ_BABY = BONEREQ_BABY_PROPERTY.getInt();
 		ConfigValues.MAXARROWDISTANCE = MAXARROWDISTANCE_PROPERTY.getDouble();
 		ConfigValues.TEAMHACK = TEAMHACK_PROPERTY.getBoolean();
+		ConfigValues.XPOVERRIDE = XPOVERRIDE_PROPERTY.getBoolean();
 		if (config.hasChanged())
 			config.save();
 	}
@@ -173,6 +172,7 @@ public final class Overlord {
 		BONEREQ_BABY_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.BONEREQ_BABY_NAME, ConfigValues.BONEREQ_BABY_DEFAULT, proxy.translateToLocal(ConfigValues.BONEREQ_BABY_NAME + ".tooltip"));
 		MAXARROWDISTANCE_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.MAXARROWDISTANCE_NAME, ConfigValues.MAXARROWDISTANCE_DEFAULT, proxy.translateToLocal(ConfigValues.MAXARROWDISTANCE_NAME + ".tooltip"));
 		TEAMHACK_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.TEAMHACK_NAME, ConfigValues.TEAMHACK_DEFAULT, proxy.translateToLocal(ConfigValues.TEAMHACK_NAME + ".tooltip"));
+		XPOVERRIDE_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.XPOVERRIDE_NAME, ConfigValues.XPOVERRIDE_DEFAULT, proxy.translateToLocal(ConfigValues.XPOVERRIDE_NAME + ".tooltip"));
 		BONEREQ_WARRIOR_PROPERTY.setMinValue(2);
 		BONEREQ_BABY_PROPERTY.setMinValue(1);
 		BONEREQ_WARRIOR_PROPERTY.setMaxValue(128);
@@ -192,6 +192,7 @@ public final class Overlord {
 		EntityRegistry.registerModEntity(new ResourceLocation(MODID + ":skeleton_warrior"), EntitySkeletonWarrior.class, "skeleton_warrior", ++eid, instance, 128, 2, false);
 		EntityRegistry.registerModEntity(new ResourceLocation(MODID + ":skeleton_baby"), EntityBabySkeleton.class, "skeleton_baby", ++eid, instance, 64, 2, false);
 		EntityRegistry.registerModEntity(new ResourceLocation(MODID + ":milk_bottle"), EntityMilkBottle.class, "milk_bottle", ++eid, instance, 32, 10, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(MODID + ":custom_xp_orb"), EntityCustomXPOrb.class, "custom_xp_orb", ++eid, instance, 16, 2, true);
 		EntityRegistry.registerModEntity(new ResourceLocation(MODID + ":skeleton_converted"), EntityConvertedSkeleton.class, "skeleton_converted", ++eid, instance, 116, 2, false);
 		EntityRegistry.registerModEntity(new ResourceLocation(MODID + ":skeleton_curing"), EntityCuringSkeleton.class, "skeleton_curing", ++eid, instance, 48, 2, false);
 		proxy.registerClient();
