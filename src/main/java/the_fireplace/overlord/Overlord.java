@@ -93,6 +93,7 @@ public final class Overlord {
 	public static Property MAXARROWDISTANCE_PROPERTY;
 	public static Property TEAMHACK_PROPERTY;
 	public static Property XPOVERRIDE_PROPERTY;
+	public static Property FF_PROPERTY;
 
 	@SidedProxy(clientSide = "the_fireplace." + MODID + ".client.ClientProxy", serverSide = "the_fireplace." + MODID + ".CommonProxy")
 	public static CommonProxy proxy;
@@ -149,6 +150,7 @@ public final class Overlord {
 		ConfigValues.MAXARROWDISTANCE = MAXARROWDISTANCE_PROPERTY.getDouble();
 		ConfigValues.TEAMHACK = TEAMHACK_PROPERTY.getBoolean();
 		ConfigValues.XPOVERRIDE = XPOVERRIDE_PROPERTY.getBoolean();
+		ConfigValues.FF = FF_PROPERTY.getBoolean();
 		if (config.hasChanged())
 			config.save();
 	}
@@ -173,6 +175,7 @@ public final class Overlord {
 		MAXARROWDISTANCE_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.MAXARROWDISTANCE_NAME, ConfigValues.MAXARROWDISTANCE_DEFAULT, proxy.translateToLocal(ConfigValues.MAXARROWDISTANCE_NAME + ".tooltip"));
 		TEAMHACK_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.TEAMHACK_NAME, ConfigValues.TEAMHACK_DEFAULT, proxy.translateToLocal(ConfigValues.TEAMHACK_NAME + ".tooltip"));
 		XPOVERRIDE_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.XPOVERRIDE_NAME, ConfigValues.XPOVERRIDE_DEFAULT, proxy.translateToLocal(ConfigValues.XPOVERRIDE_NAME + ".tooltip"));
+		FF_PROPERTY = config.get(Configuration.CATEGORY_GENERAL, ConfigValues.FF_NAME, ConfigValues.FF_DEFAULT, proxy.translateToLocal(ConfigValues.FF_NAME + ".tooltip"));
 		BONEREQ_WARRIOR_PROPERTY.setMinValue(2);
 		BONEREQ_BABY_PROPERTY.setMinValue(1);
 		BONEREQ_WARRIOR_PROPERTY.setMaxValue(128);

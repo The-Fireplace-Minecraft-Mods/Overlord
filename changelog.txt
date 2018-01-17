@@ -1,1 +1,1 @@
-Greatly imrpoved Custom XP Orb performance.
+Added a config option to disable friendly fire.

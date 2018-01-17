@@ -24,7 +24,7 @@ apply plugin: 'net.cazzar.gradle.modsio'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
-version = "2.4.9"
+version = "2.4.10"
 group= "the_fireplace.overlord"
 archivesBaseName = "Overlord-1.12.2"
 
@@ -138,7 +138,7 @@ curseforge {
     mainArtifact(jar) {
         displayName = jar.archiveName.replace(".jar", "")
         relations{
-			requiredLibrary 'guide-api'
+			optionalLibrary 'guide-api'
 			optionalLibrary 'industrial-craft'
 		}
     }

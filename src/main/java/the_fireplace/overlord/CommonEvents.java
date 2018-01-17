@@ -41,6 +41,7 @@ import the_fireplace.overlord.entity.ai.EntityAIFindEntityNearestSkins;
 import the_fireplace.overlord.entity.ai.EntityAITargetSkins;
 import the_fireplace.overlord.network.PacketDispatcher;
 import the_fireplace.overlord.network.packets.SetSquadsMessage;
+import the_fireplace.overlord.tools.Alliances;
 import the_fireplace.overlord.tools.ISkinsuitWearer;
 import the_fireplace.overlord.tools.SkinType;
 import the_fireplace.overlord.tools.Squads;
@@ -186,18 +187,23 @@ public final class CommonEvents {
 	@SubscribeEvent
 	public static void livingHurt(LivingHurtEvent event) {
 		if (!event.getEntity().world.isRemote)
-			if (event.getSource().isProjectile()) {
+			if(event.getSource().getTrueSource() instanceof EntityArmyMember) {
 				if (event.getEntityLiving() instanceof EntityPlayerMP) {
-					if (event.getSource().getTrueSource() instanceof EntitySkeletonWarrior) {
-						if (((EntitySkeletonWarrior) event.getSource().getTrueSource()).getOwnerId().equals(event.getEntityLiving().getUniqueID())) {
+					if (event.getSource().isProjectile()) {
+						if (event.getSource().getTrueSource() instanceof EntitySkeletonWarrior && ((EntitySkeletonWarrior) event.getSource().getTrueSource()).getOwnerId().equals(event.getEntityLiving().getUniqueID()))
 							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) event.getEntityLiving(), event.getSource().getTrueSource(), Items.ARROW, 0);
-						}
-					} else if (event.getSource().getTrueSource() instanceof EntityConvertedSkeleton) {
-						if (((EntityConvertedSkeleton) event.getSource().getTrueSource()).getOwnerId().equals(event.getEntityLiving().getUniqueID())) {
+						else if (event.getSource().getTrueSource() instanceof EntityConvertedSkeleton && ((EntityConvertedSkeleton) event.getSource().getTrueSource()).getOwnerId().equals(event.getEntityLiving().getUniqueID()))
 							CriterionRegistry.instance.SKELETON_STATUS_UPDATE.trigger((EntityPlayerMP) event.getEntityLiving(), event.getSource().getTrueSource(), Items.ARROW, 1);
-						}
 					}
-				}
+					if(ConfigValues.FF && Alliances.getInstance().isAlliedTo(((EntityArmyMember) event.getSource().getTrueSource()).getOwnerId(), event.getEntityLiving().getUniqueID()))
+						event.setCanceled(true);
+				} else if(ConfigValues.FF && event.getEntityLiving() instanceof EntityArmyMember && Alliances.getInstance().isAlliedTo(((EntityArmyMember) event.getSource().getTrueSource()).getOwnerId(), ((EntityArmyMember)event.getEntityLiving()).getOwnerId()))
+					event.setCanceled(true);
+			} else if (ConfigValues.FF && event.getSource().getTrueSource() instanceof EntityPlayer) {
+				if(event.getEntityLiving() instanceof EntityPlayer && Alliances.getInstance().isAlliedTo(event.getSource().getTrueSource().getUniqueID(), event.getEntityLiving().getUniqueID()))
+					event.setCanceled(true);
+				else if(event.getEntityLiving() instanceof EntityArmyMember && Alliances.getInstance().isAlliedTo(event.getSource().getTrueSource().getUniqueID(), ((EntityArmyMember)event.getEntityLiving()).getOwnerId()))
+					event.setCanceled(true);
 			}
 	}
 
