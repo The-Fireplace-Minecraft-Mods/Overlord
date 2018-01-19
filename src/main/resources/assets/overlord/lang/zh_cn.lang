@@ -126,6 +126,9 @@ cfg.teamhack.tooltip=让每个玩家都有单独的计分板队伍。据我所�
 cfg.xp_override=替换经验球
 cfg.xp_overrice.tooltip=用自定义经验球替换默认的经验球。提高骷髅战士的性能。据我所知，这不会影响任何东西，但如果确实导致问题的话，你可以禁用它。
 
+cfg.disable_friendly_fire=禁用友军伤害
+cfg.disable_friendly_fire.tooltip=禁用友军伤害。这意味着你与你的军队都不能对盟友造成伤害。
+
 advancements.overlord.root.title=不死者之王
 advancements.overlord.root.description=建立你的军队
 
