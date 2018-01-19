@@ -24,7 +24,7 @@ apply plugin: 'net.cazzar.gradle.modsio'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
-version = "2.4.8"
+version = "2.4.10"
 group= "the_fireplace.overlord"
 archivesBaseName = "Overlord-1.12.2"
 
@@ -34,7 +34,7 @@ allprojects {
 }
 
 minecraft {
-    version = "1.12.2-14.23.0.2503"
+    version = "1.12.2-14.23.1.2555"
     runDir = "run"
     replace '${version}', project.version
     mappings = "snapshot_20170815"
@@ -43,7 +43,7 @@ minecraft {
 }
 
 dependencies {
-	deobfCompile group: "mezz.jei", name: "jei_1.12.2", version: "4.8.0.105"
+	deobfCompile group: "mezz.jei", name: "jei_1.12.2", version: "4.8.5.132"
 	deobfCompile "info.amerifrance.guideapi:Guide-API:1.12-2.1.4-57"
 	deobfProvided("codechicken:NotEnoughItems:1.12-2.4.0.231:universal") {
         exclude module: "jei_1.12"
@@ -138,7 +138,7 @@ curseforge {
     mainArtifact(jar) {
         displayName = jar.archiveName.replace(".jar", "")
         relations{
-			requiredLibrary 'guide-api'
+			optionalLibrary 'guide-api'
 			optionalLibrary 'industrial-craft'
 		}
     }

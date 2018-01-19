@@ -45,4 +45,8 @@ public class ConfigValues {
 	public static final boolean XPOVERRIDE_DEFAULT = true;
 	public static boolean XPOVERRIDE;
 	public static final String XPOVERRIDE_NAME = "cfg.xp_override";
+
+	public static final boolean FF_DEFAULT = false;
+	public static boolean FF;
+	public static final String FF_NAME = "cfg.disable_friendly_fire";
 }

@@ -1,1 +1,1 @@
-Performance enhancements
+Added a config option to disable friendly fire.
