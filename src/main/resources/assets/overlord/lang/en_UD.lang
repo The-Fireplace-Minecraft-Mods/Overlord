@@ -1,0 +1,264 @@
+tile.skeleton_maker.name=ɹǝʞɐW ɹoᴉɹɹɐM uoʇǝꞁǝʞS
+tile.baby_skeleton_maker.name=ɹǝʞɐW uoʇǝꞁǝʞS ʎqɐᗺ
+item.overlords_seal.name=ꞁɐǝS s,pɹoꞁɹǝʌO
+item.overlords_stamp.name=dɯɐʇS s,pɹoꞁɹǝʌO
+item.overlords_seal.tooltip.default=¡ꞁɐǝs ɹnoʎ sᴉɥʇ ǝʞɐɯ oʇ ʞɔᴉꞁƆ-ʇɥᵷᴉᴚ
+item.overlords_seal.tooltip=%1$s ɟo ꞁɐǝS
+item.overlords_stamp.tooltip.default=¡%2$sdɯɐʇs ɹnoʎ %1$sɥʇ ǝʞɐɯ oʇ ʞɔᴉꞁƆ-ʇɥᵷᴉᴚ
+item.overlords_stamp.tooltip=%1$s ɟo %2$sdɯɐʇS
+item.squad_editor.name=ɹoʇᴉpƎ pɐnbS
+item.sans_mask.name=ʞsɐW suɐS
+item.crown.name=uʍoɹƆ s,pɹoꞁɹǝʌO
+item.skinsuit.name=ʇᴉnsuᴉʞS
+item.skinsuit_mummy.name=ʇᴉnsuᴉʞS ʎɯɯnW
+item.warrior_spawner.name=ᵷᵷƎ uʍɐdS ɹoᴉɹɹɐM uoʇǝꞁǝʞS
+item.baby_spawner.name=ᵷᵷƎ uʍɐdS uoʇǝꞁǝʞS ʎqɐᗺ
+item.converted_spawner.name=ᵷᵷƎ uʍɐdS uoʇǝꞁǝʞS pǝʇɹǝʌuoƆ
+item.milk_bottle.name=ǝꞁʇʇoᗺ ʞꞁᴉW
+item.overlord_guide.name=ʞooᗺ ǝpᴉn⅁ pɹoꞁɹǝʌO
+item.keychain_empty.name=uᴉɐɥɔʎǝʞ
+item.keychain_occupied.name=§buᴉɐɥɔʎǝʞ§f
+item.rallying_horn.name=uɹoH ᵷuᴉʎꞁꞁɐᴚ
+itemGroup.overlord=pɹoꞁɹǝʌO
+skeleton_maker.create=¡ǝʇɐǝɹƆ
+skeleton_maker.warning.unclaimed=˙pǝɯᴉɐꞁɔ ǝq ʇou ꞁꞁᴉʍ uoʇǝꞁǝʞs sᴉɥ⟘ :ᵷuᴉuɹɐM
+skeleton_maker.warning.notmine=%s oʇ ᵷuoꞁǝq ꞁꞁᴉʍ uoʇǝꞁǝʞs sᴉɥ⟘ :ᵷuᴉuɹɐM
+skeleton_maker.warning.suffocation=˙ǝʇɐɔoɟɟns ʎɐɯ uoʇǝꞁǝʞS pǝuʍɐds ǝɥ⟘ ˙ʇᴉ ǝʌoqɐ ʇɥᵷᴉɹ sʞɔoꞁq sɐɥ ɹǝʞɐW uoʇǝꞁǝʞS ɹno⅄ :ᵷuᴉuɹɐM
+entity.overlord.skeleton_warrior.name=ɹoᴉɹɹɐM uoʇǝꞁǝʞS
+entity.overlord.skeleton_baby.name=uoʇǝꞁǝʞS ʎqɐᗺ
+entity.overlord.skeleton_converted.name=uoʇǝꞁǝʞS pǝʇɹǝʌuoƆ
+entity.overlord.skeleton_curing.name=uoʇǝꞁǝʞS
+entity.skeleton_warrior.name=ɹoᴉɹɹɐM uoʇǝꞁǝʞS
+entity.skeleton_baby.name=uoʇǝꞁǝʞS ʎqɐᗺ
+entity.skeleton_converted.name=uoʇǝꞁǝʞS pǝʇɹǝʌuoƆ
+entity.skeleton_curing.name=uoʇǝꞁǝʞS
+
+tooltip.placeclone=˙ʎdoɔ ʇuǝɹɹnɔ ɹnoʎ ǝɔɐꞁdǝɹ oʇ uoʇǝꞁǝʞs ɹǝɥʇouɐ ʞɔᴉꞁƆ ʇɥᵷᴉᴚ+ʞɐǝuS
+tooltip.copyclone=˙ʇᴉ ʎdoɔ oʇ uoʇǝꞁǝʞs ɐ ʞɔᴉꞁƆ ʇɥᵷᴉᴚ+ʞɐǝuS
+
+tooltip.skin=:ʇᴉnsuᴉʞS
+tooltip.level=:ꞁǝʌǝꞀ
+tooltip.equipment=:ʇuǝɯdᴉnbƎ
+tooltip.name=:ǝɯɐN
+tooltip.attack_mode=:ǝpoW ʞɔɐʇʇⱯ
+tooltip.movement_mode=:ǝpoW ʇuǝɯǝʌoW
+tooltip.squad=:pɐnbS
+tooltip.type=:ǝdʎ⟘
+
+skeleton.mode.aggressive=ǝʌᴉssǝɹᵷᵷⱯ
+skeleton.mode.defensive=ǝʌᴉsuǝɟǝᗡ
+skeleton.mode.passive=ǝʌᴉssɐԀ
+
+skeleton.mode.stationed=pǝuoᴉʇɐʇS
+skeleton.mode.follower=ɹǝʍoꞁꞁoℲ
+skeleton.mode.base=ɐǝɹⱯ ɹǝpuɐM
+
+overlords_seal.warning=˙suoʇǝꞁǝʞs pǝpɐoꞁ ɹnoʎ ɟo ꞁꞁɐ oʇ sǝᴉꞁddɐ sᴉɥ⟘
+
+overlord.requestsent=˙%s ɥʇᴉʍ ǝɔuɐᴉꞁꞁɐ uɐ pǝʇsǝnbǝɹ ǝʌɐɥ no⅄
+overlord.allyrequest=˙ʎuǝp oʇ ʇɔǝɾǝɹʎꞁꞁɐ/ ɹo ʇdǝɔɔɐ oʇ ʇdǝɔɔɐʎꞁꞁɐ/ ǝdʎ⟘ ¡%s ɯoɹɟ ʇsǝnbǝɹ ʎꞁꞁɐ ʍǝN
+overlord.alreadyrequested=˙%s ɥʇᴉʍ ǝɔuɐᴉꞁꞁɐ uɐ pǝʇsǝnbǝɹ ʎpɐǝɹꞁɐ ǝʌɐɥ no⅄
+overlord.alreadyrequested.other=˙ʇdǝɔɔɐ oʇ ʇdǝɔɔɐʎꞁꞁɐ/ ǝdʎ⟘ ˙noʎ ɥʇᴉʍ ǝɔuɐᴉꞁꞁɐ uɐ pǝʇsǝnbǝɹ ʎpɐǝɹꞁɐ ǝʌɐɥ ʎǝɥ⟘
+overlord.alreadyallied=˙%s ɥʇᴉʍ sǝᴉꞁꞁɐ ʎpɐǝɹꞁɐ ǝɹɐ no⅄
+overlord.enemieswith=¡sǝᴉɯǝuǝ ǝɹɐ %s puɐ no⅄
+
+overlord.nothingpending=˙sʇsǝnbǝɹ ǝɔuɐᴉꞁꞁɐ ᵷuᴉpuǝd ou ǝʌɐɥ no⅄
+
+overlord.allyaccepted=˙%s ɥʇᴉʍ pǝᴉꞁꞁɐ ʍou ǝɹɐ no⅄
+overlord.allyaccept=¡ʇsǝnbǝɹ ʎꞁꞁɐ ɹnoʎ pǝʇdǝɔɔɐ %s
+
+overlord.allyrejected=˙%s ɯoɹɟ ʇsǝnbǝɹ ʎꞁꞁɐ uɐ pǝᴉuǝp no⅄
+overlord.allyreject=˙ʇsǝnbǝɹ ʎꞁꞁɐ ɹnoʎ pǝᴉuǝp %s
+
+overlord.allyterminated=˙%s oʇ pǝᴉꞁꞁɐ ɹǝᵷuoꞁ ou ǝɹɐ no⅄
+overlord.allytermination=˙ʎꞁꞁɐ ɹnoʎ ɹǝᵷuoꞁ ou sᴉ %s
+overlord.notallied=˙%s oʇ pǝᴉꞁꞁɐ ʇou ǝɹɐ no⅄
+
+overlord.allylist=:sǝᴉꞁꞁɐ ɹno⅄
+overlord.nofriends=˙sǝᴉꞁꞁɐ ou ǝʌɐɥ no⅄
+
+overlord.madeenemy=˙ʎɯǝuǝ ɹnoʎ %s ǝpɐɯ ǝʌɐɥ no⅄
+overlord.enemied=˙ʎɯǝuǝ ɹᴉǝɥʇ noʎ ǝpɐɯ sɐɥ %s
+overlord.noenemyallied=˙ʎꞁꞁɐ ɹnoʎ ʎꞁʇuǝɹɹnɔ ǝɹɐ ʎǝɥʇ '%s ʎɯǝuǝ ʇouuɐɔ no⅄
+overlord.allytriedenemy=˙pǝᴉꞁꞁɐ ʎꞁʇuǝɹɹnɔ ǝɹɐ noʎ ʇnq 'ʎɯǝuǝ ɹᴉǝɥʇ noʎ ǝʞɐɯ oʇ pǝᴉɹʇ %s
+overlord.alreadyenemies=¡ʎɯǝuǝ ɹnoʎ ʎpɐǝɹꞁɐ sᴉ %s
+
+overlord.enemyterminated=˙ʎɯǝuǝ uɐ %s ɹǝpᴉsuoɔ ɹǝᵷuoꞁ ou no⅄
+overlord.enemytermination=˙ʎɯǝuǝ uɐ noʎ sɹǝpᴉsuoɔ ɹǝᵷuoꞁ ou %s
+overlord.notenemied=˙ʎɯǝuǝ uɐ ǝq oʇ %s ɹǝpᴉsuoɔ ʇou op no⅄
+
+overlord.enemylist=:sǝᴉɯǝuǝ ɹno⅄
+overlord.noenemies=˙sǝᴉɯǝuǝ ou ǝʌɐɥ no⅄
+
+overlord.all_squads=spɐnbS ꞁꞁⱯ
+overlord.no_squad=pɐnbS oN
+overlord.squad_editor=ɹoʇᴉpƎ pɐnbS
+
+overlord.armydeath=˙%2$s ɟo ǝsnɐɔǝq pǝᴉp %1$s ɹno⅄
+
+cfg.helmet_damage=ʇɥᵷᴉꞁunS uᴉ ǝᵷɐɯɐᗡ ʇǝɯꞁǝH ǝꞁqɐuƎ
+cfg.helmet_damage.tooltip=ʇɥᵷᴉꞁuns ǝɥʇ uᴉ ᵷuᴉʞɐǝɹq ʎꞁꞁɐnʇuǝʌǝ puɐ ǝᵷɐɯɐp ᵷuᴉʞɐʇ suoʇǝꞁǝʞS ʎɯɹⱯ ʎq uɹoʍ sʇǝɯꞁǝɥ sǝꞁqɐuƎ
+
+cfg.ghostly_skins=sʇᴉnsuᴉʞS ʎꞁʇsoɥ⅁
+cfg.ghostly_skins.tooltip=ʇuǝɹɐdsuɐɹʇ ᴉɯǝs ǝɹɐ sʇᴉnsuᴉʞS
+
+cfg.skinsuitnametags=suoʇǝꞁǝʞS ǝɯɐN sʇᴉnsuᴉʞS
+cfg.skinsuitnametags.tooltip=¿uᴉʞs ǝɥʇ ɹǝʇɟɐ suoʇǝꞁǝʞS ǝɯɐu sʇᴉnsuᴉʞS pǝɯɐu oᗡ
+
+cfg.huntcreepers=sɹǝdǝǝɹƆ ʇunH
+cfg.huntcreepers.tooltip=¿sɹǝdǝǝɹƆ ɹǝʇɟɐ oᵷ suoʇǝꞁǝʞS ʎɯɹⱯ oᗡ
+
+cfg.suffocationwarning=ᵷuᴉuɹɐM uoᴉʇɐɔoɟɟnS ɹoᴉɹɹɐM
+cfg.suffocationwarning.tooltip=¿ǝʇɐɔoɟɟns ʎɐɯ pǝuʍɐds uoʇǝꞁǝʞS ǝɥʇ ɟᴉ I∩⅁ ɹǝʞɐW uoʇǝꞁǝʞS ǝɥʇ uᴉ sɹǝʎɐꞁd uɹɐM
+
+cfg.bonereq_warrior=ʇuǝɯǝɹᴉnbǝᴚ ǝuoᗺ ɹoᴉɹɹɐM uoʇǝꞁǝʞS
+cfg.bonereq_warrior.tooltip=¿ɹoᴉɹɹɐM uoʇǝꞁǝʞS ɐ ǝʞɐɯ oʇ ǝʞɐʇ ʇᴉ sǝop sǝuoq ʎuɐɯ ʍoH
+
+cfg.bonereq_baby=ʇuǝɯǝɹᴉnbǝᴚ ǝuoᗺ uoʇǝꞁǝʞS ʎqɐᗺ
+cfg.bonereq_baby.tooltip=¿uoʇǝꞁǝʞS ʎqɐᗺ ɐ ǝʞɐɯ oʇ ǝʞɐʇ ʇᴉ sǝop sǝuoq ʎuɐɯ ʍoH
+
+cfg.max_arrow_distance=ǝɔuɐʇsᴉᗡ ǝs∩ ʍoᗺ xɐW
+cfg.max_arrow_distance.tooltip=˙sʍoq ɹᴉǝɥʇ ʇooɥs uɐɔ sɹoᴉɹɹɐM uoʇǝꞁǝʞS ɹnoʎ ɹɐɟ ʍoɥ sꞁoɹʇuoƆ
+
+cfg.teamhack=sɯɐǝ⟘ pɹɐoqǝɹoɔS ʎɟᴉpoW
+cfg.teamhack.tooltip=˙ʇᴉ ǝꞁqɐsᴉp uɐɔ noʎ 'sǝnssᴉ ǝsnɐɔ sǝop ʇᴉ ɟᴉ ʇnq 'ɟo ʍouʞ I ʇɐɥʇ ᵷuᴉɥʇʎuɐ ɥʇᴉʍ ǝɹǝɟɹǝʇuᴉ ʇ,usǝop sᴉɥ⟘ ˙ɯɐǝʇ pɹɐoqǝɹoɔs uʍo ɹᴉǝɥʇ ɹǝʎɐꞁd ɥɔɐǝ sǝʞɐW
+
+cfg.xp_override=sqɹO ԀX ǝɔɐꞁdǝᴚ
+cfg.xp_overrice.tooltip=˙ʇᴉ ǝꞁqɐsᴉp uɐɔ noʎ 'sǝnssᴉ ǝsnɐɔ sǝop ʇᴉ ɟᴉ ʇnq 'ɟo ʍouʞ I ʇɐɥʇ ᵷuᴉɥʇʎuɐ ɥʇᴉʍ ǝɹǝɟɹǝʇuᴉ ʇ,usǝop sᴉɥ⟘ ˙sɹoᴉɹɹɐM uoʇǝꞁǝʞS ɟo ǝɔuɐɯɹoɟɹǝd ǝɥʇ sǝʌoɹdɯI ˙sqɹO ԀX ɯoʇsnɔ ɥʇᴉʍ sqɹO ԀX sǝɔɐꞁdǝᴚ
+
+cfg.disable_friendly_fire=ǝɹᴉℲ ʎꞁpuǝᴉɹℲ ǝꞁqɐsᴉᗡ
+cfg.disable_friendly_fire.tooltip=˙sǝᴉꞁꞁɐ ɯɹɐɥ ʇ,uɐɔ ʎɯɹɐ ɹnoʎ puɐ noʎ suɐǝɯ sᴉɥ⟘ ˙ǝɹᴉɟ ʎꞁpuǝᴉɹɟ sǝꞁqɐsᴉᗡ
+
+advancements.overlord.root.title=pɹoꞁɹǝʌO
+advancements.overlord.root.description=ʎɯɹɐ ɹnoʎ pꞁᴉnᗺ
+
+advancements.overlord.make_baby=sǝᴉqɐᗺ ,uᴉʞɐW
+advancements.overlord.make_baby.desc=uoʇǝꞁǝʞS ʎqɐᗺ ɐ uoɯɯnS
+
+advancements.overlord.summon_skeleton=¿ʎɯɹɐ ʇɐɥʍ puɐ no⅄
+advancements.overlord.summon_skeleton.desc=ɹoᴉɹɹɐM uoʇǝꞁǝʞS ɐ uoɯɯnS
+
+advancements.overlord.convert_skeleton=ɹǝʇᴉnɹɔǝᴚ
+advancements.overlord.convert_skeleton.desc=ʎɯɹɐ ɹnoʎ ɟo ɹǝqɯǝɯ ɐ oʇ uᴉ uoʇǝꞁǝʞS ɐ ʇɹǝʌuoƆ
+
+advancements.overlord.drink_milk=sǝuoq ɹnoʎ ɹoɟ poo⅁
+advancements.overlord.drink_milk.desc=ǝꞁʇʇoᗺ ɹo ʇǝʞɔnᗺ ʞꞁᴉW ɐ ɹoᴉɹɹɐM uoʇǝꞁǝʞS ɐ ǝʌᴉ⅁
+
+advancements.overlord.level_up=˙˙˙sǝpɐɹᵷd∩ ǝsǝɥ⟘ ɥʇᴉM
+advancements.overlord.level_up.desc=ɹoᴉɹɹɐM uoʇǝꞁǝʞS ɐ dn ꞁǝʌǝꞀ
+
+advancements.overlord.armed_skeleton=snoɹǝᵷuɐᗡ puɐ pǝɯɹⱯ
+advancements.overlord.armed_skeleton.desc=uodɐǝʍ ɐ uoʇǝꞁǝʞS ʎɯɹⱯ uɐ ǝʌᴉ⅁
+
+advancements.overlord.sally=ʎꞁꞁɐS
+advancements.overlord.sally.desc=uoʇǝꞁǝʞS ʎɯɹⱯ uɐ uo ʇᴉnsuᴉʞS ɐ ʇnԀ
+
+advancements.overlord.crusader=ɹǝpɐsnɹƆ
+advancements.overlord.crusader.desc=(ssoɹɔ pǝɹ ɥʇᴉʍ pꞁǝᴉɥs ǝʇᴉɥʍ 'ꞁᴉɐɯuᴉɐɥɔ ꞁꞁnℲ)ɹǝpɐsnɹƆ ɐ sɐ ɹoᴉɹɹɐM uoʇǝꞁǝʞS ɐ ssǝɹᗡ
+
+advancements.overlord.drink_256_milk=¡ǝʇʎᗺ ǝuO ʇsnՐ
+advancements.overlord.drink_256_milk.desc=ʞꞁᴉɯ ɟo sʇǝʞɔnq 95ᘔ pǝɯnsuoɔ sɐɥ ʇɐɥʇ ɹoᴉɹɹɐM uoʇǝꞁǝʞS ɐ ǝʌɐH
+
+advancements.overlord.drink_9001_milk=¡0006 ɹǝʌO s,ʇI
+advancements.overlord.drink_9001_milk.desc=ʞꞁᴉɯ ɟo sʇǝʞɔnq 0006 ɹǝʌo pǝɯnsuoɔ sɐɥ ʇɐɥʇ ɹoᴉɹɹɐM uoʇǝꞁǝʞS ɐ ǝʌɐH
+
+advancements.overlord.alliance=spuǝᴉɹℲ ɥʇᴉʍ ɹǝʇʇǝᗺ
+advancements.overlord.alliance.desc=ɹǝʎɐꞁd ɹǝɥʇouɐ ɥʇᴉʍ ǝɔuɐᴉꞁꞁɐ uɐ ɯɹoℲ
+
+advancements.overlord.dealbreaker=ɹǝʞɐǝɹqꞁɐǝᗡ
+advancements.overlord.dealbreaker.desc=ɹǝʎɐꞁd ɹǝɥʇouɐ ɥʇᴉʍ ǝɔuɐᴉꞁꞁɐ uɐ puɐqsᴉᗡ
+
+advancements.overlord.warmonger=ɹǝᵷuoɯɹɐM
+advancements.overlord.warmonger.desc=ʎɯǝuǝ ɹnoʎ sɐ ɹǝʎɐꞁd ɹǝɥʇouɐ ʞɹɐW
+
+advancements.overlord.forgiver=ɹǝʌᴉᵷɹoℲ
+advancements.overlord.forgiver.desc=ʎɯǝuǝ ɹnoʎ ɹǝʎɐꞁd ɐ ᵷuᴉɹǝpᴉsuoɔ doʇS
+
+advancements.overlord.interference=¡sʇoᴉpᴉ noʎ 'ǝɯ ʇoN
+advancements.overlord.interference.desc=ʍoɹɹɐ s,ɹoᴉɹɹɐM uoʇǝꞁǝʞS uʍo ɹnoʎ ɟo ʎɐʍ ǝɥʇ uᴉ ʇǝ⅁
+
+advancements.overlord.secondthoughts=ʇɹǝʌuoƆ ꞁnɟʇqnoᗡ
+advancements.overlord.secondthoughts.desc=ʍoɹɹɐ s,uoʇǝꞁǝʞS pǝʇɹǝʌuoƆ uʍo ɹnoʎ ʎq ʇoɥs ʇǝ⅁
+
+advancements.overlord.war_dog=ɹɐM Ɐ sǝoᗡ oᵷᵷoᗡ
+advancements.overlord.war_dog.desc=ʎɯɹɐ uɐ ɟo ɹǝqɯǝɯ ɐ ꞁꞁᴉʞ ɟꞁoM ʇǝd ɐ ǝʌɐH
+
+advancements.overlord.heya=ɐʎǝH
+advancements.overlord.heya.desc=˙˙˙puǝᴉɹɟ ʎʞoods ɐ ɟo ǝɔɐɟ ǝɥʇ uᴉɐʇqO
+
+advancements.overlord.jingle_jingle=ǝꞁᵷuᴉՐ ǝꞁᵷuᴉՐ
+advancements.overlord.jingle_jingle.desc=uᴉɐɥɔʎǝʞ ʎʇdɯǝ uɐ uᴉɐʇqO
+
+advancements.overlord.carry_on=pǝzᴉS ꞁǝʌɐɹ⟘
+advancements.overlord.carry_on.desc=ʇᴉ uo uoʇǝꞁǝʞS ʎɯɹⱯ uɐ ɥʇᴉʍ uᴉɐɥɔʎǝʞ ɐ ǝʌɐH
+
+advancements.overlord.crown_me=¡ǝW ᵷuᴉʞ
+advancements.overlord.crown_me.desc=uʍoɹƆ s,pɹoꞁɹǝʌO uɐ uᴉɐʇqO
+
+gui.save=ǝʌɐS
+
+overlord.guide.welcome=ʎɯɹⱯ uɐ ᵷuᴉsᴉɐᴚ
+overlord.guide.1=uoᴉʇɐǝɹƆ uoʇǝꞁǝʞS
+overlord.guide.1.1=suoʇǝꞁǝʞs ɹnoʎ ᵷuᴉɯᴉɐꞁƆ
+overlord.guide.1.1.1=˙sǝsn pǝʇᴉɯᴉꞁun sɐɥ ʇnq 'ǝʌᴉsuǝdxǝ ǝɹoɯ sᴉ ꞁɐǝS ǝɥʇ puɐ 'ɯǝɥʇ ɯᴉɐꞁɔ oʇ ʎɐʍ ǝsn ǝɯᴉʇ-ǝuo 'dɐǝɥɔ ɐ sᴉ dɯɐʇS ǝɥ⟘ ˙ꞁɐǝS s,pɹoꞁɹǝʌO ǝɥʇ ɹo dɯɐʇS s,pɹoꞁɹǝʌO ǝɥʇ ɹǝɥʇᴉǝ ʇɟɐɹɔ sᴉ op oʇ ʇuɐʍ ꞁꞁ,noʎ ᵷuᴉɥʇ ʇsɹᴉɟ ʎɹǝʌ ǝɥ⟘
+overlord.guide.1.1.2=˙sɹnoʎ sɐ ɯǝɥʇ/ʇᴉ ɯᴉɐꞁɔ oʇ ʞɔᴉꞁɔ ʇɥᵷᴉɹ puɐ sdɯɐʇS/ꞁɐǝS ǝɥʇ pꞁoɥ oʇ pǝǝu noʎ 'ʇᴉ ǝʌɐɥ ʇ,usǝop ʇᴉ ɟI ˙ʇɔǝɟɟǝ pǝʇuɐɥɔuǝ ʎʍoꞁᵷ ǝɥʇ uᴉɐᵷ pꞁnoɥs ʇᴉ 'ᵷuᴉʇɟɐɹɔ ɹǝʇɟⱯ
+overlord.guide.1.2=suoʇǝꞁǝʞS ʎqɐᗺ ᵷuᴉʇɐǝɹƆ
+overlord.guide.1.2.1=˙ɹǝʞɐW uoʇǝꞁǝʞS ʎqɐᗺ ɐ ᵷuᴉʞɐɯ ʎq ɟɟo ʇɹɐʇS
+overlord.guide.1.2.2=(noʎ ʎǝqo ʇ,uoʍ uoʇǝꞁǝʞS ʎqɐᗺ ǝɥʇ ɹo 'ʇsɹᴉɟ ʇᴉ pǝɯᴉɐꞁɔ ǝʌɐɥ noʎ ǝɹns ǝʞɐW) ˙dɯɐʇS/ꞁɐǝS s,pɹoꞁɹǝʌO ⥝*\nǝꞁʇʇoq ɹo ʇǝʞɔnq ʞꞁᴉɯ ⥝*\n(ʇunoɯɐ ǝꞁqɐɹnᵷᴉɟuoɔ)sǝuoq 9⥝*\n:ɹǝʞɐW uoʇǝꞁǝʞS ʎqɐᗺ ǝɥʇ uᴉ ʇnd oʇ pǝǝu noʎ sɯǝʇᴉ ꞁɐɹǝʌǝs ǝʌɐɥ no⅄
+overlord.guide.1.2.3=suʍɐds ʇᴉ uǝɥʍ ʇᴉ ǝʌɐɥ oʇ uoʇǝꞁǝʞS ʎqɐᗺ ɹnoʎ ʇuɐʍ noʎ ɟᴉ 'ʇᴉnsuᴉʞs Ɐ*\n(ǝɯᴉʇ ʎuɐ ʇɐ ʇuǝɯdᴉnbǝ sʇᴉ ǝᵷuɐɥɔ uɐɔ no⅄)suʍɐds ʇᴉ uǝɥʍ ᵷuᴉɹɐǝʍ ǝq oʇ uoʇǝꞁǝʞS ʎqɐᗺ ɹnoʎ ʇuɐʍ noʎ ʇuǝɯdᴉnbǝ ʎuⱯ*
+overlord.guide.1.3=suoʇǝꞁǝʞS ᵷuᴉʇɹǝʌuoƆ
+overlord.guide.1.3.1=ǝʇǝꞁdɯoɔ oʇ ssǝɔoɹd ǝɥʇ ɹoɟ sǝʇnuᴉɯ 8 oʇ ᘔ ʇᴉɐM (˙Ɛ\nǝꞁddⱯ uǝpꞁo⅁ ɐ ɥʇᴉʍ ʇᴉ ʞɔᴉꞁƆ ʇɥᵷᴉᴚ (˙ᘔ\n˙ʇɔǝɟɟǝ uoᴉʇod ssǝuʞɐǝʍ ǝɥʇ sɐɥ ʇᴉ ǝɹns ǝʞɐW (˙⥝\n˙uoʇǝꞁǝʞS ɐ uo ǝuop ʇnq 'ɹǝᵷɐꞁꞁᴉᴧ ǝᴉqɯoZ ɐ ᵷuᴉɹnɔ sɐ ssǝɔoɹd ǝɯɐs ǝɥʇ sᴉ sᴉɥ⟘ :ǝʇoN
+overlord.guide.1.4=sɹoᴉɹɹɐM uoʇǝꞁǝʞS ᵷuᴉʇɐǝɹƆ
+overlord.guide.1.4.1=˙ɹǝʞɐW ɹoᴉɹɹɐM uoʇǝꞁǝʞS ɐ ᵷuᴉʞɐɯ ʎq ɟɟo ʇɹɐʇS
+overlord.guide.1.4.2=(sǝꞁʇʇoq/sʇǝʞɔnq ʎʇdɯǝ ʞɔɐq noʎ ǝʌᴉᵷ puɐ ʞuɐʇ ꞁɐuɹǝʇuᴉ sʇᴉ uᴉ ʞꞁᴉɯ ǝɥʇ ǝɹoʇs ꞁꞁᴉʍ ʇᴉ)sǝꞁʇʇoq/sʇǝʞɔnq ʞꞁᴉɯ ᘔ*\n(ʇunoɯɐ ǝꞁqɐɹnᵷᴉɟuoɔ)sǝuoq ᘔƐ*\n:ɹǝʞɐW uoʇǝꞁǝʞS ǝɥʇ uᴉ ʇnd oʇ pǝǝu noʎ sɯǝʇᴉ ꞁɐɹǝʌǝs ǝʌɐɥ no⅄
+overlord.guide.1.4.3=(ǝɯᴉʇ ʎuɐ ʇɐ ʇuǝɯdᴉnbǝ sʇᴉ ǝᵷuɐɥɔ uɐɔ no⅄)suʍɐds ʇᴉ uǝɥʍ ᵷuᴉɹɐǝʍ ǝq oʇ ɹoᴉɹɹɐM uoʇǝꞁǝʞS ɹnoʎ ʇuɐʍ noʎ ʇuǝɯdᴉnbǝ ʎuⱯ*\n(noʎ ʎǝqo ʇ,uoʍ ɹoᴉɹɹɐM uoʇǝꞁǝʞS ǝɥʇ ɹo 'ʇsɹᴉɟ ʇᴉ pǝɯᴉɐꞁɔ ǝʌɐɥ noʎ ǝɹns ǝʞɐW) ˙dɯɐʇS/ꞁɐǝS s,pɹoꞁɹǝʌO ⥝*
+overlord.guide.1.4.4=suʍɐds ʇᴉ uǝɥʍ ʇᴉ ǝʌɐɥ oʇ ɹoᴉɹɹɐM uoʇǝꞁǝʞS ɹnoʎ ʇuɐʍ noʎ ɟᴉ 'ʇᴉnsuᴉʞS Ɐ*\nsuʍɐds ʇᴉ uǝɥʍ ʇᴉ ǝʌɐɥ oʇ ɹoᴉɹɹɐM uoʇǝꞁǝʞS ɹnoʎ ʇuɐʍ noʎ ɟᴉ 'ʇuǝɯᵷnɐ uⱯ*
+overlord.guide.2=suoʇǝꞁǝʞS ǝɥʇ ʇnoqⱯ
+overlord.guide.2.1=uoʇǝꞁǝʞS ʎqɐᗺ
+overlord.guide.2.1.1=˙sʞɔɐʇʇɐ ǝǝꞁǝɯ ǝsn ʎꞁuo uɐɔ 'uodɐǝʍ ɐ puɐ ɹoɯɹɐ dᴉnbǝ oʇ ǝꞁqɐ sᴉ 'ɥʇꞁɐǝɥ 8 sɐɥ ʎꞁuO ˙ǝdʎʇ uoʇǝꞁǝʞs ʇsǝʞɐǝʍ ǝɥ⟘
+overlord.guide.2.2=uoʇǝꞁǝʞS pǝʇɹǝʌuoƆ
+overlord.guide.2.2.1=˙sʇuǝɯᵷnⱯ dᴉnbǝ oʇ ǝꞁqɐ sᴉ puɐ 'ʎɹoʇuǝʌuᴉ ʇoꞁs 6 ɐ sɐɥ 'ʍoq ɐ ǝsn oʇ ǝꞁqɐ sᴉ 'suodɐǝʍ puɐ ɹoɯɹɐ dᴉnbǝ uɐɔ 'ɥʇꞁɐǝɥ 0ᘔ sɐH ˙uoʇǝꞁǝʞs ꞁǝʌǝꞁ-pᴉɯ Ɐ
+overlord.guide.2.3=ɹoᴉɹɹɐM uoʇǝꞁǝʞS
+overlord.guide.2.3.1=˙ǝɯnꞁoʌ dǝʇs puɐ 'ɹǝʍod ʞɔɐʇʇɐ 'pǝǝds 'ɥʇꞁɐǝɥ sǝsɐǝɹɔuᴉ ɥɔᴉɥʍ 'dn ꞁǝʌǝꞁ uɐɔ 'ʎꞁʇuɐʇɹodɯᴉ ʇsoɯ puɐ 'sʇuǝɯᵷnⱯ dᴉnbǝ oʇ ǝꞁqɐ sᴉ 'ʎɹoʇuǝʌuᴉ ʇoꞁs 6 ɐ sɐɥ 'ʍoq ɐ ǝsn uɐɔ 'suodɐǝʍ puɐ ɹoɯɹɐ dᴉnbǝ uɐƆ ˙ꞁǝʌǝꞁ ɥʇᴉʍ sǝsɐǝɹɔuᴉ puɐ 'ʞꞁᴉW ᵷuᴉʞuᴉɹp ɹǝʇɟɐ 0ᘔ oʇ dn sǝoᵷ '9⥝ ʇɐ sʇɹɐʇs ɥʇꞁɐǝH ˙poɯ ǝsɐq ǝɥʇ uᴉ uoʇǝꞁǝʞs ꞁnɟɹǝʍod ʇsoɯ ǝɥ⟘
+overlord.guide.3=suoʇǝꞁǝʞS ɥʇᴉʍ ᵷuᴉʇɔɐɹǝʇuI
+overlord.guide.3.1=suoʇǝꞁǝʞS ɹnoʎ ᵷuᴉꞁɐǝH
+overlord.guide.3.1.1=˙sꞁɐǝɥ osꞁɐ dn ꞁǝʌǝꞁ 'sɹoᴉɹɹɐM uoʇǝꞁǝʞS ɹoℲ ˙ʇuǝɯᵷnɐ uǝᵷǝᴚ sʇuɐɹᵷ ʇɐɥʇ ɯǝʇᴉ uɐ dᴉnbǝ uɐɔ noʎ 'sʇuǝɯᵷnⱯ ǝsn oʇ ǝꞁqɐ sɹǝqɯǝW ʎɯɹⱯ ɹoℲ ˙ʇᴉ ʇɐ ǝꞁʇʇoᗺ ʞꞁᴉW ɐ ʍoɹɥʇ ɹo 'ʇǝʞɔnᗺ ʞꞁᴉW ɐ ᵷuᴉpꞁoɥ ǝꞁᴉɥʍ ʇᴉ ʞɔᴉꞁƆ ʇɥᵷᴉᴚ+ʞɐǝuS ʇsnՐ ˙pǝꞁɐǝɥ ǝq uɐɔ ʇᴉ 'ʎɹɹoʍ ʇ,uop 'ʇɐqɯoɔ uᴉ ʇɹnɥ uǝǝq sɐɥ uoʇǝꞁǝʞS ɹnoʎ ɟI
+overlord.guide.3.2=sɹoᴉɹɹɐM uoʇǝꞁǝʞS dn ᵷuᴉꞁǝʌǝꞀ
+overlord.guide.3.2.1=˙ɯǝɥʇ ʞuᴉɹp ꞁꞁᴉʍ ʇᴉ puɐ 'ʎɹoʇuǝʌuᴉ sʇᴉ uᴉ sǝꞁʇʇoᗺ ɹo sʇǝʞɔnᗺ ʞꞁᴉW ʇnd 'uǝɥ⟘ ˙I∩⅁ ǝɥʇ uǝdo oʇ ɹoᴉɹɹɐM uoʇǝꞁǝʞS ǝɥʇ ʞɔᴉꞁɔ ʇɥᵷᴉɹ 'ʇsɹᴉℲ\n:ʞꞁᴉW (˙⥝\n˙suoᴉʇdo oʍʇ ǝʌɐɥ noʎ 'ꞁnɟɹǝʍod ǝɹoɯ ɹoᴉɹɹɐM uoʇǝꞁǝʞS ɐ ǝʞɐɯ o⟘
+overlord.guide.3.2.2=˙ʎɐʍ ʇɐɥʇ sꞁǝʌǝꞁ uᴉɐᵷ uɐɔ puɐ 'sqoɯ pǝʇɐǝɟǝp ɯoɹɟ ԀX uᴉ ʍɐɹp ꞁꞁᴉʍ ɹoᴉɹɹɐM uoʇǝꞁǝʞS ɹno⅄\n:ʇɐqɯoƆ (˙ᘔ\n˙pǝpǝǝu ɟᴉ 'ɯooɹ ǝʞɐɯ oʇ sǝꞁʇʇoq ɹo sʇǝʞɔnq ʎʇdɯǝ ʇno ᵷuᴉʍoɹɥʇ 'ɯǝɥʇ ʞuᴉɹp puɐ punoɹᵷ ǝɥʇ ɟɟo sʇǝʞɔnᗺ puɐ sǝꞁʇʇoᗺ ʞꞁᴉW dn ʞɔᴉd osꞁɐ ꞁꞁᴉʍ ʎǝɥ⟘
+overlord.guide.3.3=sǝpoW IⱯ
+overlord.guide.3.3.1=˙ʞɔɐʇʇⱯ puɐ ʇuǝɯǝʌoW 'sǝᴉɹoᵷǝʇɐɔ oʍʇ ɹǝpun ꞁꞁɐɟ ǝsǝɥ⟘ ˙ɥɔɐǝ ɹoɟ sɹoᴉʌɐɥǝq ʇuǝɹǝɟɟᴉp ɥʇᴉʍ 'uᴉ ǝq ꞁꞁᴉʍ sɹǝqɯǝɯ ʎɯɹɐ ɹnoʎ ʇɐɥʇ sǝpoɯ IⱯ ꞁɐɹǝʌǝs ǝɹɐ ǝɹǝɥ⟘
+overlord.guide.3.3.2=˙pǝuᵷᴉssɐ sᴉ IⱯ sᴉɥʇ ǝɹǝɥʍ ɯoɹɟ snᴉpɐɹ ʞɔoꞁq ᘔƐ ɐ uᴉ ɹǝpuɐʍ ꞁꞁᴉʍ ɹǝqɯǝɯ ʎɯɹɐ ɹno⅄ - ɐǝɹⱯ ɹǝpuɐM*\n˙sǝop ɟꞁoM ʇǝd ɐ ǝʞᴉꞁ ɥɔnɯ 'punoɹɐ noʎ ʍoꞁꞁoɟ ꞁꞁᴉʍ ɹǝqɯǝɯ ʎɯɹɐ ɹno⅄ - ɹǝʍoꞁꞁoℲ*\n˙ʞɔɐʇʇɐ ǝǝꞁǝɯ ɹo ǝʌoɯ ʇou ꞁꞁᴉʍ ɹǝqɯǝɯ ʎɯɹɐ ɹno⅄ - pǝuoᴉʇɐʇS*\n:ʇuǝɯǝʌoW
+overlord.guide.3.3.3=˙noʎ ɹo ʇᴉ sʞɔɐʇʇɐ ʇɐɥʇ ᵷuᴉɥʇʎuɐ puɐ 'sqoɯ ɟɟo ʇɥᵷᴉɟ ꞁꞁᴉʍ ɹoᴉɹɹɐʍ ɹno⅄ - ǝʌᴉsuǝɟǝᗡ*\n˙ʞɔɐʇʇɐ noʎ ᵷuᴉɥʇʎuɐ puɐ 'ʇᴉ sʞɔɐʇʇɐ ʇɐɥʇ ᵷuᴉɥʇʎuɐ 'sqoɯ 'sɹǝʎɐꞁd pǝᴉꞁꞁɐ-uou sǝpnꞁɔuᴉ sᴉɥ⟘ ˙ʇɐǝɹɥʇ ꞁɐᴉʇuǝʇod ʎɹǝʌǝ ʞɔɐʇʇɐ ꞁꞁᴉʍ ɹǝqɯǝɯ ʎɯɹɐ ɹno⅄ - ǝʌᴉssǝɹᵷᵷⱯ*\n:ʞɔɐʇʇⱯ
+overlord.guide.3.3.4=˙pǝʞɔɐʇʇɐ sᴉ ʇᴉ ɟᴉ uǝʌǝ 'ᵷuᴉɥʇʎuɐ ʞɔɐʇʇɐ ʇou ꞁꞁᴉʍ puɐ ʇsᴉɟᴉɔɐd ꞁꞁnɟ sǝoᵷ ɹǝqɯǝɯ ʎɯɹɐ ɹno⅄ - ǝʌᴉssɐԀ*
+overlord.guide.3.3.5=˙IⱯ ʇǝs oʇ suoʇʇnq ǝɥʇ ǝsn uǝɥʇ 'ɹoɟ ʇᴉ ʇǝs oʇ dnoɹᵷ ɥɔᴉɥʍ ǝsooɥɔ oʇ ʇɐɥʇ ǝsn puɐ ꞁɐǝS s,pɹoꞁɹǝʌO ǝɥʇ ɥʇᴉʍ ʞɔᴉꞁɔ-ʇɥᵷᴉɹ ʇsnɯ noʎ 'ʎɯɹɐ ǝꞁoɥʍ ǝɥʇ ɹo pɐnbs ɐ ɹoɟ ʇᴉ ʇǝs o⟘ ˙ʎɯɹɐ ǝꞁoɥʍ ǝɥʇ ɹoɟ ɹo 'pɐnbs-ɹǝd 'uoʇǝꞁǝʞs-ɹǝd sǝpoɯ IⱯ ǝsǝɥʇ ʇǝs uɐɔ no⅄
+overlord.guide.3.4=spɐnbS
+overlord.guide.3.4.1=˙ɹoʇᴉpǝ pɐnbs ɐ ʇɟɐɹɔ ʇsɹᴉɟ ʇsnɯ noʎ 'spɐnbs ǝʇɐǝɹɔ o⟘ ˙suoʇǝꞁǝʞs ɟo sdnoɹᵷ ʇuǝɹǝɟɟᴉp ɟo ꞁoɹʇuoɔ ɹǝᴉsɐǝ ɹoɟ 'sdnoɹᵷ-qns oʇ uᴉ sɹǝqɯǝɯ ʎɯɹɐ ɹnoʎ dnoɹᵷ oʇ noʎ ʍoꞁꞁɐ spɐnbS
+overlord.guide.3.4.2=˙pɐnbS ɐ uᴉ ʇou ǝɹɐ suoʇǝꞁǝʞs 'ʇꞁnɐɟǝp ʎᗺ ˙I∩⅁ sʇᴉ ᵷuᴉsn uᴉ sᴉ ɹǝqɯǝɯ ʎɯɹɐ uɐ pɐnbs ɥɔᴉɥʍ ʇǝs uɐɔ noʎ puɐ 'spɐnbs 5 oʇ dn ǝʌɐɥ uɐɔ no⅄
+overlord.guide.4=sǝpɐɹᵷd∩
+overlord.guide.4.1=sʇᴉnsuᴉʞS
+overlord.guide.4.1.1=˙ɥʇoq ɥsᴉꞁdɯoɔɔɐ uɐɔ noʎ puɐ 'ʇᴉnsuᴉʞs ɐ ʇᴉ ǝʞɐW ¿ʇɥᵷᴉꞁuns ǝɥʇ uᴉ ᵷuᴉuɹnq ɯoɹɟ ʇᴉ ᵷuᴉʇuǝʌǝɹd ʇnoqɐ ʍoH ¿ʞsnH ɐ ǝʞᴉꞁ ɹo 'ɹǝʎɐꞁd ɐ ǝʞᴉꞁ ǝɹoɯ ʞooꞁ oʇ uoʇǝꞁǝʞS ɹnoʎ ʇuɐM
+overlord.guide.4.1.2=˙ǝʌᴉʇᴉsuǝs-ǝsɐɔ sᴉ ʇI ˙ɯoɹɟ uᴉʞs ǝɥʇ ǝsn oʇ ʇuɐʍ noʎ ǝɯɐu ɹǝʎɐꞁd ǝɥʇ oʇ ꞁᴉʌuⱯ uɐ uᴉ ɯǝʇᴉ ǝɥʇ ǝɯɐuǝɹ oʇ pǝǝu noʎ 'ǝʌǝʇS uɐɥʇ ɹǝɥʇo ᵷuᴉɥʇʎuɐ ǝq oʇ uᴉʞs ɹǝʎɐꞁd ǝɥʇ ʇuɐʍ noʎ ɟI
+overlord.guide.4.1.3=˙sɹɐǝɥS ᵷuᴉpꞁoɥ ǝꞁᴉɥʍ ʇᴉ ʞɔᴉꞁƆ ʇɥᵷᴉᴚ+ʞɐǝuS 'uoʇǝꞁǝʞS ɐ ɯoɹɟ ʇᴉnsuᴉʞS ɐ ǝʌoɯǝɹ o⟘\n˙ʇᴉnsuᴉʞS ǝɥʇ ᵷuᴉpꞁoɥ ǝꞁᴉɥʍ ʇᴉ ʞɔᴉꞁƆ ʇɥᵷᴉᴚ+ʞɐǝuS 'uoʇǝꞁǝʞS ɐ oʇ ʇᴉnsuᴉʞs ǝɥʇ ʎꞁddɐ o⟘
+overlord.guide.4.2=sʇuǝɯᵷnⱯ
+overlord.guide.4.2.1=ǝɔuɐʇsᴉsǝᴚ ǝɹᴉℲ puɐ 'ssǝuʍoꞁS 'ǝɔuɐʇsᴉsǝᴚ ʇᴉun ǝɥʇ sǝʌᴉ⅁ - uɐᴉpᴉsqO*\nǝɔuɐʇsᴉsǝᴚ ʇᴉun ǝɥʇ sǝʌᴉ⅁ - ʇoᵷuI uoɹI*\n:poɯ ǝsɐq ǝɥʇ uᴉ sʇuǝɯᵷnɐ ɟo ʇsᴉꞀ\n˙sʇuǝɯᵷnɐ dᴉnbǝ ʇouuɐɔ suoʇǝꞁǝʞS ʎqɐᗺ ˙sǝsnuoq ꞁɐᴉɔǝds sɹǝqɯǝɯ ʎɯɹɐ ɹnoʎ ǝʌᴉᵷ ʇɐɥʇ sɯǝʇᴉ ǝɹɐ sʇuǝɯᵷnⱯ
+overlord.guide.4.2.2=ǝɔuɐʇsᴉsǝᴚ ǝɹᴉℲ sppɐ puɐ 'ʇɔǝɟɟǝ ɹǝɥʇᴉM ǝɥʇ sʞɔɐʇʇɐ sǝʌᴉ⅁ - ꞁꞁnʞS uoʇǝꞁǝʞS ɹǝɥʇᴉM*\nuǝᵷǝᴚ ɥʇꞁɐǝH ʇsɐℲ - ǝꞁddⱯ uǝpꞁo⅁ pǝʇuɐɥɔuƎ*\nuǝᵷǝᴚ ɥʇꞁɐǝɥ ʍoꞁS - ǝꞁddⱯ uǝpꞁo⅁*\n˙ǝɔuɐʇsᴉsǝᴚ sʇuɐɹᵷ osꞁⱯ ˙uo spuɐꞁ ʇᴉ ᵷuᴉɥʇʎuɐ ǝɹnɾuᴉ puɐ 'ʎꞁʞɔᴉnb ꞁꞁɐɟ ʇᴉun ǝɥʇ sǝʞɐW - ꞁᴉʌuⱯ*
+overlord.guide.4.2.3=suoʇǝꞁǝʞs ʎqɹɐǝu suǝɥʇᵷuǝɹʇs puɐ 'ǝʞᴉɹʇs uo ɹǝᵷunH sʇɔᴉꞁɟuI - ʇᴉnsuᴉʞS ʎɯɯnW*\n˙ɹǝʍoꞁs ʎꞁʇɥᵷᴉꞁs ʞɔɐʇʇɐ ʇnq 'ɹǝʇsɐɟ ǝʌoɯ ʇᴉun ǝɥʇ sǝʞɐW - ɹɐᵷnS*
+overlord.guide.4.2.ic2=˙ǝᵷɐɯɐp ssǝꞁ ꞁɐǝp ʇnq 'ɹǝʇsɐɟ ʞɔɐʇʇɐ puɐ ǝʌoɯ ʇᴉun ǝɥʇ sǝʞɐW - ɹǝʞɔoꞁɔɹǝʌO*
+overlord.guide.5=sɹǝʎɐꞁԀ ɹǝɥʇO
+overlord.guide.5.1=sǝɔuɐᴉꞁꞁⱯ
+overlord.guide.5.1.1=˙noʎ ʞɔɐʇʇɐ ʇou ꞁꞁᴉʍ sɹᴉǝɥʇ puɐ 'ɹǝʎɐꞁd ʇɐɥʇ ʞɔɐʇʇɐ ʇou ꞁꞁᴉʍ suoʇǝꞁǝʞs ɹnoʎ 'ɹǝʎɐꞁd ɐ oʇ pǝᴉꞁꞁɐ ǝɹɐ noʎ uǝɥM ˙spuǝᴉɹɟ ɹnoʎ sɹǝʎɐꞁd ɹǝɥʇo ǝʞɐɯ oʇ noʎ sʍoꞁꞁɐ sǝɔuɐᴉꞁꞁⱯ
+overlord.guide.5.1.2=˙ʎꞁꞁɐ ɹnoʎ ǝq oʇ ʇuɐʍ ʇ,uop ʎǝɥʇ ɟᴉ ʇɔǝɾǝɹʎꞁꞁɐ/ ǝdʎʇ osꞁɐ ʎɐɯ ʎǝɥ⟘ ˙ʇsǝnbǝɹ ǝɔuɐᴉꞁꞁɐ ɹnoʎ ʇdǝɔɔɐ oʇ ʇdǝɔɔɐʎꞁꞁɐ/ ǝdʎʇ oʇ pǝǝu uǝɥʇ ʎǝɥ⟘ ˙ʞɹoʍ oʇ sᴉɥʇ ɹoɟ ǝuᴉꞁuo ǝq ʇsnɯ ʎǝɥ⟘ ˙<ǝɯɐNɹǝʎɐꞁԀ> ʎꞁꞁɐ/ ǝdʎʇ oʇ pǝǝu noʎ 'ʎꞁꞁɐ ɹnoʎ ɹǝʎɐꞁd ɐ ǝʞɐɯ o⟘
+overlord.guide.5.1.3=˙ǝuᴉꞁuo ǝq ʇsnɯ ǝʌoɯǝɹ oʇ ɥsᴉʍ noʎ ɹǝʎɐꞁd ǝɥ⟘ ˙<ǝɯɐNɹǝʎɐꞁԀ> ǝʌoɯǝɹʎꞁꞁɐ/ ǝdʎʇ 'ʎꞁꞁɐ uɐ ǝʌoɯǝɹ o⟘ ˙ʇsᴉꞁʎꞁꞁɐ/ ǝdʎʇ 'oʇ pǝᴉꞁꞁɐ ʎꞁʇuǝɹɹnɔ ǝɹɐ noʎ sɹǝʎɐꞁd ɥɔᴉɥʍ ǝǝs o⟘
+overlord.guide.5.2=sǝᴉɯǝuƎ
+overlord.guide.5.2.1=˙ʇɥᵷᴉs uo ɯǝɥʇ ʞɔɐʇʇɐ ꞁꞁᴉʍ sɹǝqɯǝɯ ʎɯɹɐ ǝʌᴉsuǝɟǝᗡ ɹnoʎ os ʇᴉ sǝʞɐɯ puɐ 'sʇsǝnbǝɹ ʎꞁꞁɐ noʎ ᵷuᴉpuǝs ɯoɹɟ  ɯǝɥʇ sʇuǝʌǝɹd sᴉɥʇ ᵷuᴉoᗡ ˙ʎɯǝuǝ uɐ sɐ ɹǝʎɐꞁd ɐ ʞɹɐɯ oʇ ʇuɐʍ ʎɐɯ no⅄
+overlord.guide.5.2.2=˙ʞɹoʍ oʇ sᴉɥʇ ɹoɟ ǝuᴉꞁuo ǝq ʇsnɯ ʎǝɥʇ 'uᴉɐᵷⱯ ˙<ǝɯɐNɹǝʎɐꞁԀ> ǝʌoɯǝɹʎɯǝuǝ/ ǝsn 'ʎɯǝuǝ uɐ ǝʌoɯǝɹ o⟘ ˙ʇsᴉꞁʎɯǝuǝ/ ǝsn 'sǝᴉɯǝuǝ ɹnoʎ ʍǝᴉʌ o⟘ ˙ʞɹoʍ oʇ sᴉɥʇ ɹoɟ ǝuᴉꞁuo ǝq ʇsnɯ ʎǝɥ⟘ ˙<ǝɯɐNɹǝʎɐꞁԀ> ʎɯǝuǝ/ ǝsn oʇ pǝǝu noʎ 'sᴉɥʇ op o⟘
+overlord.guide.6=ʇuǝɯdᴉnbƎ s,pɹoꞁɹǝʌO
+overlord.guide.6.1=ꞁɐǝS s,pɹoꞁɹǝʌO
+overlord.guide.6.1.1=˙ʎɹoʇᴉuɐꞁdxǝ ɟꞁǝs sᴉ ʇsǝɹ ǝɥʇ 'I∩⅁ ǝɥʇ uǝdo oʇ ʇᴉ ɥʇᴉʍ ʞɔᴉꞁɔ ʇɥᵷᴉɹ ʇsnՐ ˙spɐnbs ǝꞁoɥʍ ɹo 'ʎɯɹɐ ǝꞁoɥʍ ɹnoʎ ɹoɟ sǝpoW IⱯ ǝɥʇ ʇǝs noʎ sʇǝꞁ osꞁɐ ʇᴉ 'uoᴉʇᴉppɐ uI ˙suoʇǝꞁǝʞs ɹnoʎ ɯᴉɐꞁɔ oʇ noʎ sʍoꞁꞁɐ ꞁɐǝS s,pɹoꞁɹǝʌO ǝɥ⟘
+overlord.guide.6.2=uʍoɹƆ s,pɹoꞁɹǝʌO
+overlord.guide.6.2.1=˙spɐǝɥ ɹᴉǝɥʇ ɹǝʌo ᵷuᴉɹǝʌoɥ sɯǝʇᴉ ʇuǝɯᵷnɐ ɹᴉǝɥʇ ǝǝs noʎ 'pǝddᴉnbǝ uǝɥM ˙ǝuo ʎq ǝuo sI∩⅁ ɹᴉǝɥʇ uǝdo oʇ ᵷuᴉʌɐɥ ʇnoɥʇᴉʍ pǝddᴉnbǝ ǝʌɐɥ sɹǝqɯǝɯ ʎɯɹɐ ɹnoʎ sʇuǝɯᵷnɐ ʇɐɥʍ ǝǝs oʇ noʎ sʍoꞁꞁɐ uʍoɹƆ s,pɹoꞁɹǝʌO ǝɥ⟘
+overlord.guide.6.3=uᴉɐɥɔʎǝʞ
+overlord.guide.6.3.1=˙uo ʇᴉ ǝɔɐꞁd oʇ ʞɔoꞁq ǝɥʇ ʞɔᴉꞁɔ ʇɥᵷᴉɹ 'uoʇǝꞁǝʞs ɹnoʎ ǝɔɐꞁd o⟘ ˙uᴉɐɥɔʎǝʞ ʎʇdɯǝ ǝɥʇ ɥʇᴉʍ uoʇǝꞁǝʞs ǝɥʇ ʞɔᴉꞁƆ ʇɥᵷᴉᴚ+ʞɐǝuS 'uᴉɐɥɔʎǝʞ ɐ oʇ ɹǝqɯǝɯ ʎɯɹɐ uɐ ɥɔɐʇʇɐ o⟘ ˙sɹǝqɯǝɯ ʎɯɹɐ ɹnoʎ ʇɹodsuɐɹʇ oʇ noʎ sʍoꞁꞁɐ uᴉɐɥɔʎǝʞ ǝɥ⟘
+overlord.guide.6.4=uɹoH ᵷuᴉʎꞁꞁɐᴚ
+overlord.guide.6.4.1=˙sɹǝqɯǝɯ ʎɯɹɐ pǝpɐoꞁ ɹnoʎ ɟo ꞁꞁɐ uoɯɯns oʇ noʎ sʍoꞁꞁɐ uɹoH ᵷuᴉʎꞁꞁɐᴚ ǝɥ⟘
