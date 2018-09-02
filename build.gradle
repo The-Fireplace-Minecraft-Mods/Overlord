@@ -35,10 +35,10 @@ allprojects {
 }
 
 minecraft {
-    version = "1.12.2-14.23.1.2555"
+    version = "1.12.2-14.23.4.2718"
     runDir = "run"
     replace '${version}', project.version
-    mappings = "snapshot_20170815"
+    mappings = "stable_39"
 	
 	clientRunArgs += "--uuid=0b1ec5ad-cb2a-43b7-995d-889320eb2e5b --username=The_Fireplace"
 }
@@ -49,16 +49,16 @@ en2ud {
 }
 
 dependencies {
-	deobfCompile group: "mezz.jei", name: "jei_1.12.2", version: "4.8.5.132"
-	deobfCompile "info.amerifrance.guideapi:Guide-API:1.12-2.1.4-57"
-	deobfProvided("codechicken:NotEnoughItems:1.12-2.4.0.231:universal") {
-        exclude module: "jei_1.12"
+	deobfCompile group: "mezz.jei", name: "jei_1.12.2", version: "4.11.0.212"
+	deobfCompile "info.amerifrance.guideapi:Guide-API:1.12-2.1.6-61"
+	deobfProvided("codechicken:NotEnoughItems:1.12.2-2.4.1.238:universal") {
+        exclude module: "jei_1.12.2"
 		//Old mappings
 		exclude module: "CodeChickenLib"
     }
 	//Manually do CCL so the game doesn't crash
-	deobfCompile "codechicken:CodeChickenLib:1.12-3.1.3.313:universal"
-	deobfCompile "net.industrial-craft:industrialcraft-2:2.8.26-ex112"
+	deobfProvided "codechicken:CodeChickenLib:1.12.2-3.2.2.353:universal"
+	deobfCompile "net.industrial-craft:industrialcraft-2:2.8.73-ex112"
 	deobfCompile group: "info.journeymap", name: "journeymap-api", version: "1.12-1.4-SNAPSHOT", changing: true
 }
 

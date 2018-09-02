@@ -40,7 +40,7 @@ public class EntityMilkBottle extends EntityThrowable {
 			if (!list.isEmpty()) {
 				for (EntityLivingBase entitylivingbase : list) {
 					if (entitylivingbase instanceof EntitySkeletonWarrior || entitylivingbase instanceof EntityBabySkeleton || entitylivingbase instanceof EntitySkeleton || entitylivingbase instanceof EntitySkeletonHorse) {
-						double d0 = this.getDistanceSqToEntity(entitylivingbase);
+						double d0 = this.getDistanceSq(entitylivingbase);
 
 						if (d0 < 16.0D)
 							entitylivingbase.heal(1);

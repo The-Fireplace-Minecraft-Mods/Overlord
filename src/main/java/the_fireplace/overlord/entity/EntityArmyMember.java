@@ -85,7 +85,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 		if (!isUpdatingAI) {
 			isUpdatingAI = true;
 			this.tasks.taskEntries.clear();//Clear first so this can be called when the AI Modes change
-			this.getNavigator().clearPathEntity();
+			this.getNavigator().clearPath();
 			this.tasks.addTask(1, new EntityAISwimming(this));
 			this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 			this.tasks.addTask(8, new EntityAILookIdle(this));

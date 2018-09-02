@@ -22,7 +22,7 @@ import java.util.HashMap;
  */
 @SideOnly(Side.CLIENT)
 public final class SkinTools {
-	public static final File cachedir = new File(Minecraft.getMinecraft().mcDataDir, "cachedImages/skins/");
+	public static final File cachedir = new File(Minecraft.getMinecraft().gameDir, "cachedImages/skins/");
 	public static final HashMap<String, BufferedImage> skins = Maps.newHashMap();
 	public static final HashMap<BufferedImage, DynamicTexture> skintextures = Maps.newHashMap();
 	public static final ArrayList<File> nonexistants = Lists.newArrayList();

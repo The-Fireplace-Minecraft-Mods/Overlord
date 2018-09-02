@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 public class ItemSansMask extends ItemArmor {
 	public ItemSansMask(ArmorMaterial materialIn) {
 		super(materialIn, -1, EntityEquipmentSlot.HEAD);
-		setUnlocalizedName("sans_mask");
+		setTranslationKey("sans_mask");
 	}
 
 	@Override

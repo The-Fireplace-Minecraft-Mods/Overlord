@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 public class ItemCrown extends ItemArmor {
 	public ItemCrown(ArmorMaterial materialIn) {
 		super(materialIn, -1, EntityEquipmentSlot.HEAD);
-		setUnlocalizedName("crown");
+		setTranslationKey("crown");
 	}
 
 	@Override

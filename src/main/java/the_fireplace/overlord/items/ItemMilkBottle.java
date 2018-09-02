@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 public class ItemMilkBottle extends Item {
 	public ItemMilkBottle() {
 		setCreativeTab(Overlord.tabOverlord);
-		setUnlocalizedName("milk_bottle");
+		setTranslationKey("milk_bottle");
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class ItemMilkBottle extends Item {
 
 		if (!worldIn.isRemote) {
 			EntityMilkBottle bottle = new EntityMilkBottle(worldIn, playerIn);
-			bottle.setHeadingFromThrower(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
+			bottle.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
 			worldIn.spawnEntity(bottle);
 		}
 

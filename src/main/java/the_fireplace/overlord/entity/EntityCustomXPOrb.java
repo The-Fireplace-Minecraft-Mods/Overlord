@@ -43,7 +43,7 @@ public class EntityCustomXPOrb extends EntityXPOrb {
 				this.motionY -= 0.029999999329447746D;
 
 			if (this.xpTargetColor < this.xpColor - 20 + this.getEntityId() % 100) {
-				if (this.closestXPReciever == null || this.closestXPReciever.getDistanceSqToEntity(this) > 64.0D) {
+				if (this.closestXPReciever == null || this.closestXPReciever.getDistanceSq(this) > 64.0D) {
 					//Identify the closest entity capable of recieving the XP
 					this.closestXPReciever = null;
 					for (Entity entity : this.world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(8), input -> {
@@ -52,7 +52,7 @@ public class EntityCustomXPOrb extends EntityXPOrb {
 								return true;
 						return false;
 					})) {
-						if (closestXPReciever == null || getDistanceSqToEntity(closestXPReciever) > getDistanceSqToEntity(entity))
+						if (closestXPReciever == null || getDistanceSq(closestXPReciever) > getDistanceSq(entity))
 							closestXPReciever = entity;
 					}
 				}

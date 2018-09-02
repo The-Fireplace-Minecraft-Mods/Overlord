@@ -83,17 +83,17 @@ public final class Overlord {
 	public static Overlord instance;
 
 	public static Configuration config;
-	public static Property HELMETDAMAGE_PROPERTY;
-	public static Property GHOSTLYSKINS_PROPERTY;
-	public static Property SKINSUITNAMETAGS_PROPERTY;
-	public static Property HUNTCREEPERS_PROPERTY;
-	public static Property SUFFOCATIONWARNING_PROPERTY;
-	public static Property BONEREQ_WARRIOR_PROPERTY;
-	public static Property BONEREQ_BABY_PROPERTY;
-	public static Property MAXARROWDISTANCE_PROPERTY;
-	public static Property TEAMHACK_PROPERTY;
-	public static Property XPOVERRIDE_PROPERTY;
-	public static Property FF_PROPERTY;
+	private static Property HELMETDAMAGE_PROPERTY;
+	private static Property GHOSTLYSKINS_PROPERTY;
+	private static Property SKINSUITNAMETAGS_PROPERTY;
+	private static Property HUNTCREEPERS_PROPERTY;
+	private static Property SUFFOCATIONWARNING_PROPERTY;
+	private static Property BONEREQ_WARRIOR_PROPERTY;
+	private static Property BONEREQ_BABY_PROPERTY;
+	private static Property MAXARROWDISTANCE_PROPERTY;
+	private static Property TEAMHACK_PROPERTY;
+	private static Property XPOVERRIDE_PROPERTY;
+	private static Property FF_PROPERTY;
 
 	@SidedProxy(clientSide = "the_fireplace." + MODID + ".client.ClientProxy", serverSide = "the_fireplace." + MODID + ".CommonProxy")
 	public static CommonProxy proxy;
@@ -106,7 +106,7 @@ public final class Overlord {
 	public static final CreativeTabs tabOverlord = new CreativeTabs(MODID) {
 		@Nonnull
 		@Override
-		public ItemStack getTabIconItem() {
+		public ItemStack createIcon() {
 			return new ItemStack(Overlord.skeleton_maker);
 		}
 	};
@@ -124,20 +124,20 @@ public final class Overlord {
 
 	public static final Block skeleton_maker = new BlockSkeletonMaker("skeleton_maker").setHardness(5F).setResistance(15F);
 	public static final Block baby_skeleton_maker = new BlockSkeletonMaker("baby_skeleton_maker").setHardness(4F).setResistance(10F);
-	public static final Item overlords_seal = new ItemOverlordsSeal().setUnlocalizedName("overlords_seal").setCreativeTab(tabOverlord).setMaxStackSize(1);
-	public static final Item overlords_stamp = new ItemOverlordsSeal(false, true).setUnlocalizedName("overlords_stamp").setCreativeTab(tabOverlord);
-	public static final Item squad_editor = new ItemSquadEditor().setUnlocalizedName("squad_editor").setCreativeTab(tabOverlord).setMaxStackSize(1);
+	public static final Item overlords_seal = new ItemOverlordsSeal().setTranslationKey("overlords_seal").setCreativeTab(tabOverlord).setMaxStackSize(1);
+	public static final Item overlords_stamp = new ItemOverlordsSeal(false, true).setTranslationKey("overlords_stamp").setCreativeTab(tabOverlord);
+	public static final Item squad_editor = new ItemSquadEditor().setTranslationKey("squad_editor").setCreativeTab(tabOverlord).setMaxStackSize(1);
 	public static final Item sans_mask = new ItemSansMask(sans);
-	public static final Item skinsuit = new ItemSkinsuit(SkinType.PLAYER).setUnlocalizedName("skinsuit").setCreativeTab(tabOverlord).setMaxStackSize(1);
-	public static final Item skinsuit_mummy = new ItemSkinsuit(SkinType.MUMMY).setUnlocalizedName("skinsuit_mummy").setCreativeTab(tabOverlord).setMaxStackSize(1);
-	public static final Item warrior_spawner = new ItemWarriorSpawner().setUnlocalizedName("warrior_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
-	public static final Item baby_spawner = new ItemBabySpawner().setUnlocalizedName("baby_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
-	public static final Item converted_spawner = new ItemConvertedSpawner().setUnlocalizedName("converted_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
+	public static final Item skinsuit = new ItemSkinsuit(SkinType.PLAYER).setTranslationKey("skinsuit").setCreativeTab(tabOverlord).setMaxStackSize(1);
+	public static final Item skinsuit_mummy = new ItemSkinsuit(SkinType.MUMMY).setTranslationKey("skinsuit_mummy").setCreativeTab(tabOverlord).setMaxStackSize(1);
+	public static final Item warrior_spawner = new ItemWarriorSpawner().setTranslationKey("warrior_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
+	public static final Item baby_spawner = new ItemBabySpawner().setTranslationKey("baby_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
+	public static final Item converted_spawner = new ItemConvertedSpawner().setTranslationKey("converted_spawner").setCreativeTab(tabOverlord).setMaxStackSize(1);
 	public static final Item milk_bottle = new ItemMilkBottle().setMaxStackSize(16);
-	public static final Item keychain = new ItemKeychain(false).setUnlocalizedName("keychain_empty");
-	public static final Item keychain_occupied = new ItemKeychain(true).setUnlocalizedName("keychain_occupied");
+	public static final Item keychain = new ItemKeychain(false).setTranslationKey("keychain_empty");
+	public static final Item keychain_occupied = new ItemKeychain(true).setTranslationKey("keychain_occupied");
 	public static final Item crown = new ItemCrown(ItemArmor.ArmorMaterial.GOLD);
-	public static final Item rallying_horn = new ItemRallyingHorn().setUnlocalizedName("rallying_horn").setMaxStackSize(1).setCreativeTab(tabOverlord);
+	public static final Item rallying_horn = new ItemRallyingHorn().setTranslationKey("rallying_horn").setMaxStackSize(1).setCreativeTab(tabOverlord);
 
 	public static void syncConfig() {
 		ConfigValues.HELMETDAMAGE = HELMETDAMAGE_PROPERTY.getBoolean();
@@ -191,6 +191,10 @@ public final class Overlord {
 
 		GameRegistry.registerTileEntity(TileEntitySkeletonMaker.class, "skeleton_maker");
 		GameRegistry.registerTileEntity(TileEntityBabySkeletonMaker.class, "baby_skeleton_maker");
+		/*TODO in 1.13 - wipes TE inventory if done on existing world
+		GameRegistry.registerTileEntity(TileEntitySkeletonMaker.class, new ResourceLocation(MODID, "skeleton_maker"));
+		GameRegistry.registerTileEntity(TileEntityBabySkeletonMaker.class, new ResourceLocation(MODID, "baby_skeleton_maker"));
+		*/
 		int eid = -1;
 		EntityRegistry.registerModEntity(new ResourceLocation(MODID + ":skeleton_warrior"), EntitySkeletonWarrior.class, "skeleton_warrior", ++eid, instance, 128, 2, false);
 		EntityRegistry.registerModEntity(new ResourceLocation(MODID + ":skeleton_baby"), EntityBabySkeleton.class, "skeleton_baby", ++eid, instance, 64, 2, false);
@@ -269,25 +273,25 @@ public final class Overlord {
 
 	public static void registerBlock(Block block) {
 		if (blockRegistry == null) {
-			logError("Block registry was null, could not register: " + block.getUnlocalizedName());
+			logError("Block registry was null, could not register: " + block.getTranslationKey());
 			return;
 		}
-		blockRegistry.register(block.setRegistryName(block.getUnlocalizedName().substring(5)));
+		blockRegistry.register(block.setRegistryName(block.getTranslationKey().substring(5)));
 	}
 
 	private static IForgeRegistry<Item> itemRegistry = null;
 
 	public static void registerItem(Item item) {
 		if (itemRegistry == null) {
-			logError("Item registry was null, could not register: " + item.getUnlocalizedName());
+			logError("Item registry was null, could not register: " + item.getTranslationKey());
 			return;
 		}
-		itemRegistry.register(item.setRegistryName(item.getUnlocalizedName().substring(5)));
+		itemRegistry.register(item.setRegistryName(item.getTranslationKey().substring(5)));
 	}
 
 	public static void registerItemForBlock(Block block) {
 		if (itemRegistry == null) {
-			logError("Item registry was null, could not register: " + block.getUnlocalizedName());
+			logError("Item registry was null, could not register: " + block.getTranslationKey());
 			return;
 		}
 		itemRegistry.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
@@ -295,10 +299,10 @@ public final class Overlord {
 
 	public static void registerItemBlock(ItemBlock itemBlock) {
 		if (itemRegistry == null) {
-			logError("Item registry was null, could not register: " + itemBlock.getUnlocalizedName());
+			logError("Item registry was null, could not register: " + itemBlock.getTranslationKey());
 			return;
 		}
-		itemRegistry.register(itemBlock.setRegistryName(itemBlock.getBlock().getUnlocalizedName().substring(5)));
+		itemRegistry.register(itemBlock.setRegistryName(itemBlock.getBlock().getTranslationKey().substring(5)));
 	}
 
 	@SubscribeEvent
@@ -354,12 +358,12 @@ public final class Overlord {
 
 	@SideOnly(Side.CLIENT)
 	private static void rmm(Block b) {
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(b), 0, new ModelResourceLocation(MODID + ':' + b.getUnlocalizedName().substring(5), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(b), 0, new ModelResourceLocation(MODID + ':' + b.getTranslationKey().substring(5), "inventory"));
 	}
 
 	@SideOnly(Side.CLIENT)
 	private static void rmm(Item i) {
-		ModelLoader.setCustomModelResourceLocation(i, 0, new ModelResourceLocation(MODID + ':' + i.getUnlocalizedName().substring(5), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(i, 0, new ModelResourceLocation(MODID + ':' + i.getTranslationKey().substring(5), "inventory"));
 	}
 
 	@SubscribeEvent

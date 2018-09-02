@@ -22,9 +22,9 @@ public class DispenseBehaviorKeychain extends BehaviorDefaultDispenseItem {
 	@Override
 	public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
 		EnumFacing enumfacing = source.getBlockState().getValue(BlockDispenser.FACING);
-		double d0 = source.getX() + (double) enumfacing.getFrontOffsetX();
-		double d1 = (double) ((float) (source.getBlockPos().getY() + enumfacing.getFrontOffsetY()) + 0.2F);
-		double d2 = source.getZ() + (double) enumfacing.getFrontOffsetZ();
+		double d0 = source.getX() + (double) enumfacing.getXOffset();
+		double d1 = (double) ((float) (source.getBlockPos().getY() + enumfacing.getXOffset()) + 0.2F);
+		double d2 = source.getZ() + (double) enumfacing.getXOffset();
 
 		EntityArmyMember entity;
 		NBTTagCompound entNbt = stack.getTagCompound();

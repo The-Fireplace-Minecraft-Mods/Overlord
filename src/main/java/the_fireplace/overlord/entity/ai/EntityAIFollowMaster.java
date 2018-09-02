@@ -47,7 +47,7 @@ public class EntityAIFollowMaster extends EntityAIBase {
 	public boolean shouldExecute() {
 		EntityLivingBase owner = this.armyMember.getOwner();
 
-		if (owner == null || (owner instanceof EntityPlayer && ((EntityPlayer) owner).isSpectator()) || this.armyMember.getDistanceSqToEntity(owner) < (double) (this.minDist * this.minDist) || armyMember.getAttackTarget() != null)
+		if (owner == null || (owner instanceof EntityPlayer && ((EntityPlayer) owner).isSpectator()) || this.armyMember.getDistanceSq(owner) < (double) (this.minDist * this.minDist) || armyMember.getAttackTarget() != null)
 			return false;
 		else {
 			this.theOwner = owner;
@@ -57,7 +57,7 @@ public class EntityAIFollowMaster extends EntityAIBase {
 
 	@Override
 	public boolean shouldContinueExecuting() {
-		return !this.armyMemberPathfinder.noPath() && armyMember.getAttackTarget() == null && this.armyMember.getDistanceSqToEntity(this.theOwner) > (double) (this.maxDist * this.maxDist);
+		return !this.armyMemberPathfinder.noPath() && armyMember.getAttackTarget() == null && this.armyMember.getDistanceSq(this.theOwner) > (double) (this.maxDist * this.maxDist);
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class EntityAIFollowMaster extends EntityAIBase {
 	@Override
 	public void resetTask() {
 		this.theOwner = null;
-		this.armyMemberPathfinder.clearPathEntity();
+		this.armyMemberPathfinder.clearPath();
 		this.armyMember.setPathPriority(PathNodeType.WATER, this.oldWaterCost);
 	}
 
@@ -88,7 +88,7 @@ public class EntityAIFollowMaster extends EntityAIBase {
 
 			if (!this.armyMemberPathfinder.tryMoveToEntityLiving(this.theOwner, this.followSpeed)) {
 				if (!this.armyMember.getLeashed() && armyMember.fallDistance <= 0) {
-					if (this.armyMember.getDistanceSqToEntity(this.theOwner) >= 144.0D) {
+					if (this.armyMember.getDistanceSq(this.theOwner) >= 144.0D) {
 						int ownerX = MathHelper.floor(this.theOwner.posX) - 2;
 						int ownerY = MathHelper.floor(this.theOwner.getEntityBoundingBox().minY);
 						int ownerZ = MathHelper.floor(this.theOwner.posZ) - 2;
@@ -97,7 +97,7 @@ public class EntityAIFollowMaster extends EntityAIBase {
 							for (int zOffset = 0; zOffset <= 4; ++zOffset) {
 								if ((xOffset < 1 || zOffset < 1 || xOffset > 3 || zOffset > 3) && this.theWorld.getBlockState(new BlockPos(ownerX + xOffset, ownerY - 1, ownerZ + zOffset)).isOpaqueCube() && this.isEmptyBlock(new BlockPos(ownerX + xOffset, ownerY, ownerZ + zOffset)) && this.isEmptyBlock(new BlockPos(ownerX + xOffset, ownerY + 1, ownerZ + zOffset))) {
 									this.armyMember.setLocationAndAngles((double) ((float) (ownerX + xOffset) + 0.5F), (double) ownerY, (double) ((float) (ownerZ + zOffset) + 0.5F), this.armyMember.rotationYaw, this.armyMember.rotationPitch);
-									this.armyMemberPathfinder.clearPathEntity();
+									this.armyMemberPathfinder.clearPath();
 									return;
 								}
 							}

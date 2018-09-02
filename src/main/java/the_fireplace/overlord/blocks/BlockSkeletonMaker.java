@@ -40,7 +40,7 @@ public class BlockSkeletonMaker extends BlockContainer {
 
 	public BlockSkeletonMaker(String name) {
 		super(Material.ROCK);
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setCreativeTab(Overlord.tabOverlord);
 		setHarvestLevel("pickaxe", 0);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(TRIGGERED, Boolean.valueOf(false)));
@@ -65,7 +65,7 @@ public class BlockSkeletonMaker extends BlockContainer {
 	@Nonnull
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer() {
+	public BlockRenderLayer getRenderLayer() {
 		return BlockRenderLayer.CUTOUT;
 	}
 
@@ -77,7 +77,7 @@ public class BlockSkeletonMaker extends BlockContainer {
 
 	@Override
 	public TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
-		return getUnlocalizedName().substring(5).equals("baby_skeleton_maker") ? new TileEntityBabySkeletonMaker() : new TileEntitySkeletonMaker();
+		return getTranslationKey().substring(5).equals("baby_skeleton_maker") ? new TileEntityBabySkeletonMaker() : new TileEntitySkeletonMaker();
 	}
 
 	@Override

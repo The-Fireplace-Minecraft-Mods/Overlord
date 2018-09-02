@@ -45,7 +45,7 @@ public class EntityAIFindEntityNearestSkins extends EntityAIBase {
 			} else {
 				double maxTargetRange = EntityAIFindEntityNearestSkins.this.maxTargetRange();
 
-				return !((double) p_apply_1_.getDistanceToEntity(EntityAIFindEntityNearestSkins.this.taskOwner) > maxTargetRange) && (EntityAITarget.isSuitableTarget(EntityAIFindEntityNearestSkins.this.taskOwner, (EntityLivingBase) p_apply_1_, false, true) && CAN_ATTACK_ARMY_MEMBER.test((EntityArmyMember) p_apply_1_));
+				return !((double) p_apply_1_.getDistance(EntityAIFindEntityNearestSkins.this.taskOwner) > maxTargetRange) && (EntityAITarget.isSuitableTarget(EntityAIFindEntityNearestSkins.this.taskOwner, (EntityLivingBase) p_apply_1_, false, true) && CAN_ATTACK_ARMY_MEMBER.test((EntityArmyMember) p_apply_1_));
 			}
 		};
 		this.sorter = new EntityAINearestAttackableTarget.Sorter(entityLivingIn);
@@ -83,7 +83,7 @@ public class EntityAIFindEntityNearestSkins extends EntityAIBase {
 				return false;
 			else {
 				double maxTargetRange = this.maxTargetRange();
-				return !(this.taskOwner.getDistanceSqToEntity(attackTarget) > maxTargetRange * maxTargetRange) && (!(attackTarget instanceof EntityPlayerMP) || !((EntityPlayerMP) attackTarget).interactionManager.isCreative());
+				return !(this.taskOwner.getDistanceSq(attackTarget) > maxTargetRange * maxTargetRange) && (!(attackTarget instanceof EntityPlayerMP) || !((EntityPlayerMP) attackTarget).interactionManager.isCreative());
 			}
 		}
 	}

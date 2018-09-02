@@ -105,8 +105,8 @@ public class EntityAINearestNonTeamTarget<T extends EntityLivingBase> extends En
 
 		@Override
 		public int compare(Entity p_compare_1_, Entity p_compare_2_) {
-			double compareDistance1 = this.theEntity.getDistanceSqToEntity(p_compare_1_);
-			double compareDistance2 = this.theEntity.getDistanceSqToEntity(p_compare_2_);
+			double compareDistance1 = this.theEntity.getDistanceSq(p_compare_1_);
+			double compareDistance2 = this.theEntity.getDistanceSq(p_compare_2_);
 			boolean b0 = false;
 			boolean b1i = true;
 			if (!ConfigValues.HUNTCREEPERS && p_compare_1_ instanceof EntityCreeper)

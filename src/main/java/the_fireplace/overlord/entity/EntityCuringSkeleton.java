@@ -74,7 +74,7 @@ public class EntityCuringSkeleton extends EntitySkeleton {
 	public void startConverting(int startingTime) {
 		this.conversionTime = startingTime;
 		this.removePotionEffect(MobEffects.WEAKNESS);
-		this.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, startingTime, Math.min(this.world.getDifficulty().getDifficultyId() - 1, 0)));
+		this.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, startingTime, Math.min(this.world.getDifficulty().getId() - 1, 0)));
 		this.world.setEntityState(this, (byte) 16);
 	}
 

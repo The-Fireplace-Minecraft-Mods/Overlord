@@ -81,7 +81,7 @@ public class EntityAIArmyBow extends EntityAIBase {
 				--this.seeTime;
 			if (armyMember.getMovementMode() > 0)
 				if (distanceSq <= (double) this.maxAttackDistance && this.seeTime >= 20) {
-					this.armyMember.getNavigator().clearPathEntity();
+					this.armyMember.getNavigator().clearPath();
 					++this.strafingTime;
 				} else {
 					this.armyMember.getNavigator().tryMoveToEntityLiving(attackTarget, this.moveSpeedAmp);

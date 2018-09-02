@@ -65,9 +65,9 @@ public class ItemOverlordsSeal extends Item {
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
 		if (stack.getTagCompound() != null && stack.getTagCompound().hasKey("Owner")) {
-			tooltip.add(proxy.translateToLocal(getUnlocalizedName() + ".tooltip", stack.getTagCompound().getString("OwnerName"), stack.getCount() > 1 ? "s" : ""));
+			tooltip.add(proxy.translateToLocal(getTranslationKey() + ".tooltip", stack.getTagCompound().getString("OwnerName"), stack.getCount() > 1 ? "s" : ""));
 		} else {
-			tooltip.add(proxy.translateToLocal(getUnlocalizedName() + ".tooltip.default", stack.getCount() > 1 ? "ese" : "is", stack.getCount() > 1 ? "s" : ""));
+			tooltip.add(proxy.translateToLocal(getTranslationKey() + ".tooltip.default", stack.getCount() > 1 ? "ese" : "is", stack.getCount() > 1 ? "s" : ""));
 		}
 	}
 
