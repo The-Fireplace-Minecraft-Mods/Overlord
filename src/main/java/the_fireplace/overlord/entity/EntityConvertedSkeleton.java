@@ -38,6 +38,7 @@ import the_fireplace.overlord.network.packets.RequestAugmentMessage;
 import the_fireplace.overlord.registry.AugmentRegistry;
 import the_fireplace.overlord.tools.Augment;
 import the_fireplace.overlord.tools.ISkinsuitWearer;
+import the_fireplace.overlord.tools.SkeletonNBTUtil;
 import the_fireplace.overlord.tools.SkinType;
 
 import javax.annotation.Nonnull;
@@ -181,6 +182,7 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 		return super.processInteract(player, hand);
 	}
 
+	@SuppressWarnings("UnnecessaryBoxing")
 	@Override
 	protected void entityInit() {
 		super.entityInit();
@@ -209,6 +211,7 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 	boolean armed = false;
 	boolean crusader = false;
 
+	@SuppressWarnings("Duplicates")
 	@Override
 	public void onLivingUpdate() {
 		if (!this.world.isRemote) {
@@ -357,6 +360,7 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 		super.onLivingUpdate();
 	}
 
+	@SuppressWarnings("Duplicates")
 	@Override
 	public void onDeath(@Nonnull DamageSource cause) {
 		super.onDeath(cause);
@@ -385,6 +389,7 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 		}
 	}
 
+	@SuppressWarnings("UnnecessaryBoxing")
 	@Override
 	public void readEntityFromNBT(NBTTagCompound compound) {
 		super.readEntityFromNBT(compound);
@@ -403,25 +408,13 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 		}
 		NBTTagList mainInv = (NBTTagList) compound.getTag("SkeletonInventory");
 		if (mainInv != null) {
-			for (int i = 0; i < mainInv.tagCount(); i++) {
-				NBTTagCompound item = (NBTTagCompound) mainInv.get(i);
-				int slot = item.getByte("SlotSkeletonInventory");
-				if (slot >= 0 && slot < inventory.getSizeInventory()) {
-					inventory.setInventorySlotContents(slot, new ItemStack(item));
-				}
-			}
+			SkeletonNBTUtil.readInventoryFromNBT(mainInv, inventory);
 		} else {
 			Overlord.logWarn("List was null when reading Converted Skeleton's Inventory");
 		}
 		NBTTagList armorInv = (NBTTagList) compound.getTag("SkeletonEquipment");
 		if (armorInv != null) {
-			for (int i = 0; i < armorInv.tagCount(); i++) {
-				NBTTagCompound item = (NBTTagCompound) armorInv.get(i);
-				int slot = item.getByte("SlotSkeletonEquipment");
-				if (slot >= 0 && slot < equipInventory.getSizeInventory()) {
-					equipInventory.setInventorySlotContents(slot, new ItemStack(item));
-				}
-			}
+			SkeletonNBTUtil.readArmorInventoryFromNBT(armorInv, equipInventory);
 		} else
 			Overlord.logWarn("List was null when reading Converted Skeleton's Equipment");
 	}
@@ -433,31 +426,11 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 		compound.setString("SkinsuitName", this.dataManager.get(SKINSUIT_NAME));
 
 		NBTTagList mainInv = new NBTTagList();
-		for (int i = 0; i < inventory.getSizeInventory(); i++) {
-			ItemStack is = inventory.getStackInSlot(i);
-			if (!is.isEmpty()) {
-				NBTTagCompound item = new NBTTagCompound();
-
-				item.setByte("SlotSkeletonInventory", (byte) i);
-				is.writeToNBT(item);
-
-				mainInv.appendTag(item);
-			}
-		}
+		SkeletonNBTUtil.writeInventoryToNBT(mainInv, inventory);
 		compound.setTag("SkeletonInventory", mainInv);
 
 		NBTTagList armorInv = new NBTTagList();
-		for (int i = 0; i < equipInventory.getSizeInventory(); i++) {
-			ItemStack is = equipInventory.getStackInSlot(i);
-			if (!is.isEmpty()) {
-				NBTTagCompound item = new NBTTagCompound();
-
-				item.setByte("SlotSkeletonEquipment", (byte) i);
-				is.writeToNBT(item);
-
-				armorInv.appendTag(item);
-			}
-		}
+		SkeletonNBTUtil.writeEquipmentToNBT(armorInv, equipInventory);
 		compound.setTag("SkeletonEquipment", armorInv);
 	}
 
@@ -471,6 +444,7 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 		return -0.35D;
 	}
 
+	@SuppressWarnings("Duplicates")
 	@Override
 	public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {
 		ItemStack arrowItem = this.getHeldItemOffhand();
@@ -498,6 +472,7 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 		this.world.spawnEntity(entityarrow);
 	}
 
+	@SuppressWarnings("Duplicates")
 	protected EntityArrow getArrow(float distanceFactor) {
 		ItemStack arrowItem = this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
 
@@ -522,6 +497,7 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 		return slotIn == EntityEquipmentSlot.MAINHAND ? equipInventory.getStackInSlot(4) : (slotIn == EntityEquipmentSlot.OFFHAND ? equipInventory.getStackInSlot(5) : (slotIn.getSlotType() == EntityEquipmentSlot.Type.ARMOR ? this.equipInventory.getStackInSlot(slotIn.getIndex()) : ItemStack.EMPTY));
 	}
 
+	@SuppressWarnings("Duplicates")
 	@Override
 	public void setItemStackToSlot(EntityEquipmentSlot slotIn, @Nonnull ItemStack stack) {
 		if (slotIn == EntityEquipmentSlot.MAINHAND) {
@@ -588,6 +564,7 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 		}
 	}
 
+	@SuppressWarnings("Duplicates")
 	@Override
 	public void setHeldItem(EnumHand hand, @Nonnull ItemStack stack) {
 		if (hand == EnumHand.MAIN_HAND) {
@@ -625,7 +602,7 @@ public class EntityConvertedSkeleton extends EntityArmyMember implements ISkinsu
 		return this.dataManager.get(SKINSUIT_NAME);
 	}
 
-	@SuppressWarnings("UnnecessaryBoxing")
+	@SuppressWarnings({"UnnecessaryBoxing", "Duplicates"})
 	@Override
 	public void setSkinsuit(@Nonnull ItemStack stack, @Nonnull SkinType type) {
 		if (type.isNone()) {

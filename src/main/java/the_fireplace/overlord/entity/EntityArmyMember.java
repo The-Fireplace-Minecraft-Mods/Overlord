@@ -296,6 +296,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 
 	public void cycleAttackMode() {
 		byte b = getAttackMode();
+		//noinspection Duplicates
 		if (b < 2) {
 			byte b1 = ++b;
 			dataManager.set(ATTACK_MODE, b1);
@@ -322,6 +323,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 
 	public void cycleMovementMode() {
 		byte b = getMovementMode();
+		//noinspection Duplicates
 		if (b < 2) {
 			byte b1 = ++b;
 			dataManager.set(MOVEMENT_MODE, b1);

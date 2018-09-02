@@ -28,6 +28,7 @@ import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.advancements.CriterionRegistry;
 import the_fireplace.overlord.config.ConfigValues;
 import the_fireplace.overlord.tools.ISkinsuitWearer;
+import the_fireplace.overlord.tools.SkeletonNBTUtil;
 import the_fireplace.overlord.tools.SkinType;
 
 import javax.annotation.Nonnull;
@@ -94,6 +95,7 @@ public class EntityBabySkeleton extends EntityArmyMember implements ISkinsuitWea
 		return super.processInteract(player, hand);
 	}
 
+	@SuppressWarnings("UnnecessaryBoxing")
 	@Override
 	protected void entityInit() {
 		super.entityInit();
@@ -116,6 +118,7 @@ public class EntityBabySkeleton extends EntityArmyMember implements ISkinsuitWea
 	boolean sally = false;
 	boolean armed = false;
 
+	@SuppressWarnings("Duplicates")
 	@Override
 	public void onLivingUpdate() {
 		if (!this.world.isRemote) {
@@ -185,6 +188,7 @@ public class EntityBabySkeleton extends EntityArmyMember implements ISkinsuitWea
 		return true;
 	}
 
+	@SuppressWarnings("Duplicates")
 	@Override
 	public void onDeath(@Nonnull DamageSource cause) {
 		super.onDeath(cause);
@@ -206,6 +210,7 @@ public class EntityBabySkeleton extends EntityArmyMember implements ISkinsuitWea
 		}
 	}
 
+	@SuppressWarnings("UnnecessaryBoxing")
 	@Override
 	public void readEntityFromNBT(NBTTagCompound compound) {
 		super.readEntityFromNBT(compound);
@@ -223,13 +228,7 @@ public class EntityBabySkeleton extends EntityArmyMember implements ISkinsuitWea
 		}
 		NBTTagList armorInv = (NBTTagList) compound.getTag("SkeletonEquipment");
 		if (armorInv != null) {
-			for (int i = 0; i < armorInv.tagCount(); i++) {
-				NBTTagCompound item = (NBTTagCompound) armorInv.get(i);
-				int slot = item.getByte("SlotSkeletonEquipment");
-				if (slot >= 0 && slot < equipInventory.getSizeInventory()) {
-					equipInventory.setInventorySlotContents(slot, new ItemStack(item));
-				}
-			}
+			SkeletonNBTUtil.readArmorInventoryFromNBT(armorInv, equipInventory);
 		} else
 			Overlord.logWarn("List was null when reading Baby Skeleton's Equipment");
 	}
@@ -241,17 +240,7 @@ public class EntityBabySkeleton extends EntityArmyMember implements ISkinsuitWea
 		compound.setString("SkinsuitName", this.dataManager.get(SKINSUIT_NAME));
 
 		NBTTagList armorInv = new NBTTagList();
-		for (int i = 0; i < equipInventory.getSizeInventory(); i++) {
-			ItemStack is = equipInventory.getStackInSlot(i);
-			if (!is.isEmpty()) {
-				NBTTagCompound item = new NBTTagCompound();
-
-				item.setByte("SlotSkeletonEquipment", (byte) i);
-				is.writeToNBT(item);
-
-				armorInv.appendTag(item);
-			}
-		}
+		SkeletonNBTUtil.writeEquipmentToNBT(armorInv, equipInventory);
 		compound.setTag("SkeletonEquipment", armorInv);
 	}
 
@@ -350,7 +339,7 @@ public class EntityBabySkeleton extends EntityArmyMember implements ISkinsuitWea
 		return this.dataManager.get(SKINSUIT_NAME);
 	}
 
-	@SuppressWarnings("UnnecessaryBoxing")
+	@SuppressWarnings({"UnnecessaryBoxing", "Duplicates"})
 	@Override
 	public void setSkinsuit(@Nonnull ItemStack stack, @Nonnull SkinType type) {
 		if (type.isNone()) {

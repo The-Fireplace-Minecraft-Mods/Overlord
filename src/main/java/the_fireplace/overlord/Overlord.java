@@ -73,6 +73,7 @@ import java.util.ArrayList;
 /**
  * @author The_Fireplace
  */
+@SuppressWarnings("WeakerAccess")
 @Mod.EventBusSubscriber
 @Mod(modid = Overlord.MODID, name = Overlord.MODNAME, guiFactory = "the_fireplace.overlord.client.gui.OverlordConfigGuiFactory", updateJSON = "https://bitbucket.org/The_Fireplace/minecraft-mod-updates/raw/master/overlord.json", acceptedMinecraftVersions = "[1.12,1.13)", dependencies = "before:guideapi", version = "${version}")
 public final class Overlord {
