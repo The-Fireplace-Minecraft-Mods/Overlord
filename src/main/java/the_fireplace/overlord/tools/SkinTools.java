@@ -31,7 +31,8 @@ public final class SkinTools {
 		Overlord.logTrace("Attempting to cache skin for " + username);
 		try {
 			File file = new File(cachedir, username + ".png");
-			URL url = new URL(String.format("http://skins.minecraft.net/MinecraftSkins/%s.png", username));
+			//TODO: Convert this to get from official Minecraft servers. See #131 for a link to a tweet with details.
+			URL url = new URL(String.format("https://minotar.net/skin/%s", username));
 			InputStream is = url.openStream();
 			if (file.exists())
 				file.delete();
