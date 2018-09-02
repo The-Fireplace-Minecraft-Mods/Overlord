@@ -10,6 +10,7 @@ import amerifrance.guideapi.api.impl.abstraction.CategoryAbstract;
 import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
 import amerifrance.guideapi.category.CategoryItemStack;
 import amerifrance.guideapi.entry.EntryItemStack;
+import amerifrance.guideapi.page.PageJsonRecipe;
 import amerifrance.guideapi.page.PageText;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -45,13 +46,13 @@ public class OverlordGuide implements IGuideBook {
 
 		List<IPage> pages = Lists.newArrayList();
 		pages.add(new PageText(proxy.translateToLocal("overlord.guide.1.1.1")));
-		//pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "overlords_stamp")));
-		//pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "overlords_seal")));
+		pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "overlords_stamp")));
+		pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "overlords_seal")));
 		entries.put(new ResourceLocation(Overlord.MODID, "1.1"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.1.1"), new ItemStack(Overlord.skeleton_maker)));
 
 		pages = Lists.newArrayList();
 		pages.add(new PageText(proxy.translateToLocal("overlord.guide.1.2.1")));
-		//pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "baby_skeleton_maker")));
+		pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "baby_skeleton_maker")));
 		pages.add(new PageText(proxy.translateToLocal("overlord.guide.1.2.2")));
 		pages.add(new PageText(proxy.translateToLocal("overlord.guide.1.2.3")));
 		entries.put(new ResourceLocation(Overlord.MODID, "1.2"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.1.2"), new ItemStack(Overlord.baby_skeleton_maker)));
@@ -62,7 +63,7 @@ public class OverlordGuide implements IGuideBook {
 
 		pages = Lists.newArrayList();
 		pages.add(new PageText(proxy.translateToLocal("overlord.guide.1.4.1")));
-		//pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "skeleton_maker")));
+		pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "skeleton_maker")));
 		pages.add(new PageText(proxy.translateToLocal("overlord.guide.1.4.2")));
 		pages.add(new PageText(proxy.translateToLocal("overlord.guide.1.4.3")));
 		pages.add(new PageText(proxy.translateToLocal("overlord.guide.1.4.4")));
@@ -110,7 +111,7 @@ public class OverlordGuide implements IGuideBook {
 
 		pages = Lists.newArrayList();
 		pages.add(new PageText(proxy.translateToLocal("overlord.guide.3.4.1")));
-		//pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "squad_editor")));
+		pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "squad_editor")));
 		pages.add(new PageText(proxy.translateToLocal("overlord.guide.3.4.2")));
 		entries.put(new ResourceLocation(Overlord.MODID, "3.4"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.3.4"), new ItemStack(Overlord.squad_editor)));
 
@@ -121,8 +122,8 @@ public class OverlordGuide implements IGuideBook {
 
 		pages = Lists.newArrayList();
 		pages.add(new PageText(proxy.translateToLocal("overlord.guide.4.1.1")));
-		//pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "skinsuit")));
-		//pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "skinsuit_mummy")));
+		pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "skinsuit")));
+		pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "skinsuit_mummy")));
 		pages.add(new PageText(proxy.translateToLocal("overlord.guide.4.1.2")));
 		pages.add(new PageText(proxy.translateToLocal("overlord.guide.4.1.3")));
 		entries.put(new ResourceLocation(Overlord.MODID, "4.1"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.4.1"), new ItemStack(Overlord.skinsuit)));
@@ -156,22 +157,22 @@ public class OverlordGuide implements IGuideBook {
 
 		pages = Lists.newArrayList();
 		pages.add(new PageText(proxy.translateToLocal("overlord.guide.6.1.1")));
-		//pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "overlords_seal")));
+		pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "overlords_seal")));
 		entries.put(new ResourceLocation(Overlord.MODID, "6.1"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.6.1"), new ItemStack(Overlord.overlords_seal)));
 
 		pages = Lists.newArrayList();
 		pages.add(new PageText(proxy.translateToLocal("overlord.guide.6.2.1")));
-		//pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "crown")));
+		pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "crown")));
 		entries.put(new ResourceLocation(Overlord.MODID, "6.2"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.6.2"), new ItemStack(Overlord.crown)));
 
 		pages = Lists.newArrayList();
 		pages.add(new PageText(proxy.translateToLocal("overlord.guide.6.3.1")));
-		//pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "keychain_empty")));
+		pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "keychain_empty")));
 		entries.put(new ResourceLocation(Overlord.MODID, "6.3"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.6.3"), new ItemStack(Overlord.keychain)));
 
 		pages = Lists.newArrayList();
 		pages.add(new PageText(proxy.translateToLocal("overlord.guide.6.4.1")));
-		//pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "rallying_horn")));
+		pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "rallying_horn")));
 		entries.put(new ResourceLocation(Overlord.MODID, "6.4"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.6.4"), new ItemStack(Overlord.rallying_horn)));
 
 		categories.add(new CategoryItemStack(entries, proxy.translateToLocal("overlord.guide.6"), new ItemStack(Overlord.crown)));

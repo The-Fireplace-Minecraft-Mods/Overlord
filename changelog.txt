@@ -1,4 +1,1 @@
-Fixed skinsuit rendering
-Added en_UD.lang
-Guide book will no longer be given to the player by default
-Minor optimizations
+Recipes now show up in Guide Book.
