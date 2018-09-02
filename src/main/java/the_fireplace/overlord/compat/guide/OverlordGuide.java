@@ -5,6 +5,7 @@ import amerifrance.guideapi.api.GuideBook;
 import amerifrance.guideapi.api.IGuideBook;
 import amerifrance.guideapi.api.IPage;
 import amerifrance.guideapi.api.impl.Book;
+import amerifrance.guideapi.api.impl.BookBinder;
 import amerifrance.guideapi.api.impl.abstraction.CategoryAbstract;
 import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
 import amerifrance.guideapi.category.CategoryItemStack;
@@ -165,7 +166,7 @@ public class OverlordGuide implements IGuideBook {
 
 		pages = Lists.newArrayList();
 		pages.add(new PageText(proxy.translateToLocal("overlord.guide.6.3.1")));
-		///pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "keychain_empty")));
+		//pages.add(new PageJsonRecipe(new ResourceLocation(Overlord.MODID, "keychain_empty")));
 		entries.put(new ResourceLocation(Overlord.MODID, "6.3"), new EntryItemStack(pages, proxy.translateToLocal("overlord.guide.6.3"), new ItemStack(Overlord.keychain)));
 
 		pages = Lists.newArrayList();
@@ -176,15 +177,15 @@ public class OverlordGuide implements IGuideBook {
 		categories.add(new CategoryItemStack(entries, proxy.translateToLocal("overlord.guide.6"), new ItemStack(Overlord.crown)));
 
 		// Setup the book's base information
-		myGuide = new Book();
-		myGuide.setTitle(Overlord.MODNAME);
-		myGuide.setDisplayName(proxy.translateToLocal("item.overlord_guide.name"));
-		myGuide.setWelcomeMessage(proxy.translateToLocal("overlord.guide.welcome"));
-		myGuide.setAuthor("The_Fireplace");
-		myGuide.setColor(Color.ORANGE);
-		myGuide.setCategoryList(categories);
-		myGuide.setRegistryName(new ResourceLocation(Overlord.MODID, "overlord_guide"));
-		myGuide.setSpawnWithBook(true);
+		BookBinder bb = new BookBinder(new ResourceLocation(Overlord.MODID, "overlord_guide"));
+		bb.setGuideTitle(Overlord.MODNAME);
+		bb.setItemName(proxy.translateToLocal("item.overlord_guide.name"));
+		bb.setHeader(proxy.translateToLocal("overlord.guide.welcome"));
+		bb.setAuthor("The_Fireplace");
+		bb.setColor(Color.ORANGE);
+		for(CategoryAbstract category: categories)
+			bb.addCategory(category);
+		myGuide = bb.build();
 		return myGuide;
 	}
 
