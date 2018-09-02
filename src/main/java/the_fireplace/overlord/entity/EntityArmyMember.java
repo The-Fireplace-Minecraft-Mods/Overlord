@@ -285,11 +285,13 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 		}
 	}
 
+	@SuppressWarnings("UnnecessaryUnboxing")
 	@SideOnly(Side.CLIENT)
 	public boolean isSwingingArms() {
 		return this.dataManager.get(SWINGING_ARMS).booleanValue();
 	}
 
+	@SuppressWarnings("UnnecessaryBoxing")
 	public void setSwingingArms(boolean swingingArms) {
 		this.dataManager.set(SWINGING_ARMS, Boolean.valueOf(swingingArms));
 	}

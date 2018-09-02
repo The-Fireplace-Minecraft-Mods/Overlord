@@ -426,7 +426,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 		super.onLivingUpdate();
 	}
 
-	public void handleXPCollision(EntityXPOrb xp){
+	private void handleXPCollision(EntityXPOrb xp){
 		ItemStack itemstack = EnchantmentHelper.getEnchantedItem(Enchantments.MENDING, this);
 
 		int xpValue = xp.getXpValue();
@@ -466,7 +466,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 		}
 	}
 
-	public void checkLevelUp() {
+	protected void checkLevelUp() {
 		int level = dataManager.get(SKELETON_POWER_LEVEL);
 		int xp = getXP();
 		if (xp >= Math.pow(2, level)) {
