@@ -389,7 +389,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 	IItemHandler handlerBottom = new SidedInvWrapper(this, EnumFacing.DOWN);
 	IItemHandler handlerSide = new SidedInvWrapper(this, EnumFacing.WEST);
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "Duplicates"})
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
 		if (facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
@@ -418,7 +418,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 
 	@Override
 	public IFluidTankProperties[] getTankProperties() {
-		return new IFluidTankProperties[]{new FluidTankProperties(new FluidStack(getFluid(), getFluidAmount()), getCapacity())};
+		return getFluid() != null ? new IFluidTankProperties[]{new FluidTankProperties(new FluidStack(getFluid(), getFluidAmount()), getCapacity())} : new IFluidTankProperties[]{};
 	}
 
 	@Nullable
