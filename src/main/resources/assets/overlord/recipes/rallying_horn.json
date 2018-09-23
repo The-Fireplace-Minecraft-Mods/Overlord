@@ -3,14 +3,17 @@
     "item": "overlord:rallying_horn"
   },
   "pattern": [
-    "p p",
-    "pp ",
-    " pp"
+    "  p",
+    "ipp",
+    "  p"
   ],
   "type": "forge:ore_shaped",
   "key": {
     "p": {
-      "item": "#PLANKWOOD"
+      "item": "#INGOTGOLD"
+    },
+    "i": {
+      "item": "#INGOTIRON"
     }
   }
 }
