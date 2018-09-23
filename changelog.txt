@@ -1,1 +1,2 @@
 Upgraded the Rallying Horn
+Attempt to fix skeletons sometimes picking up their items as they die.
