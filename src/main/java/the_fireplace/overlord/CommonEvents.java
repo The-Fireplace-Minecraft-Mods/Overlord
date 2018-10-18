@@ -173,10 +173,10 @@ public final class CommonEvents {
 				Overlord.logDebug("Sending " + event.player.getName() + " client their squads.");
 				PacketDispatcher.sendTo(new SetSquadsMessage(Squads.getInstance().getSquadsFor(event.player.getUniqueID())), (EntityPlayerMP) event.player);
 				if (ConfigValues.TEAMHACK) {
-					ScorePlayerTeam team = event.player.getEntityWorld().getScoreboard().getTeam(event.player.getName());
+					ScorePlayerTeam team = event.player.getEntityWorld().getScoreboard().getTeam(event.player.getName().length() > 16 ? event.player.getName().substring(0,15) : event.player.getName());
 					//noinspection ConstantConditions
 					if (team == null) {
-						team = event.player.getEntityWorld().getScoreboard().createTeam(event.player.getName());
+						team = event.player.getEntityWorld().getScoreboard().createTeam(event.player.getName().length() > 16 ? event.player.getName().substring(0,15) : event.player.getName());
 						team.setColor(TextFormatting.values()[teamColor++ % 15]);
 					}
 					event.player.getEntityWorld().getScoreboard().addPlayerToTeam(event.player.getName(), team.getName());

@@ -33,6 +33,7 @@ import the_fireplace.overlord.tools.SkinType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -45,6 +46,7 @@ public class TileEntityBabySkeletonMaker extends TileEntity implements ISidedInv
 
 	public TileEntityBabySkeletonMaker() {
 		inventory = new ItemStack[10];
+		Arrays.fill(inventory, ItemStack.EMPTY);
 	}
 
 	@Override

@@ -23,7 +23,10 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -42,6 +45,7 @@ import the_fireplace.overlord.tools.SkinType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -57,6 +61,7 @@ public class TileEntitySkeletonMaker extends TileEntity implements ITickable, IS
 
 	public TileEntitySkeletonMaker() {
 		inventory = new ItemStack[13];
+		Arrays.fill(inventory, ItemStack.EMPTY);
 	}
 
 	@Override
