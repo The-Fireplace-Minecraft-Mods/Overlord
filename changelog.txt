@@ -1,4 +1,1 @@
-Upgraded the Rallying Horn
-Attempt to fix skeletons sometimes picking up their items as they die.
-Attempt to fix log spam with WAILA/HWYLA
-Fix Chinese localization not loading (mcBegins2Snow)
+Fix a few crashes
