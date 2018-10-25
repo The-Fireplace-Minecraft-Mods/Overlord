@@ -1,6 +1,7 @@
 {
   "horn": {
     "category": "player",
+    "subtitle": "overlord.dootdoot",
     "sounds": [
       {
         "name": "overlord:horn",

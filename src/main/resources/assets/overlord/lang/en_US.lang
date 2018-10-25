@@ -33,6 +33,8 @@ entity.skeleton_baby.name=Baby Skeleton
 entity.skeleton_converted.name=Converted Skeleton
 entity.skeleton_curing.name=Skeleton
 
+overlord.dootdoot=Doot Doot!
+
 tooltip.placeclone=Sneak+Right Click another skeleton to replace your current copy.
 tooltip.copyclone=Sneak+Right Click a skeleton to copy it.
 
