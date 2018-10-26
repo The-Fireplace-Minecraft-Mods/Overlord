@@ -1,0 +1,266 @@
+tile.skeleton_maker.name=骷髏戰士製造臺
+tile.baby_skeleton_maker.name=小骷髏製造臺
+item.overlords_seal.name=不死者之王的印章
+item.overlords_stamp.name=不死者之王的戳記
+item.overlords_seal.tooltip.default=右擊認主印章！
+item.overlords_seal.tooltip=%1$s 的印章
+item.overlords_stamp.tooltip.default=右擊認主你的戳記！
+item.overlords_stamp.tooltip=%1$s 的戳記
+item.squad_editor.name=隊伍編制手冊
+item.sans_mask.name=Sans的面具
+item.crown.name=不死者之王的王冠
+item.skinsuit.name=偽裝皮膚
+item.skinsuit_mummy.name=木乃伊偽裝皮膚
+item.warrior_spawner.name=生成 骷髏戰士
+item.baby_spawner.name=生成 小骷髏
+item.converted_spawner.name=生成 轉換後的骷髏
+item.milk_bottle.name=牛奶瓶
+item.overlord_guide.name=不死者之王指南
+item.keychain_empty.name=鑰匙鏈
+item.keychain_occupied.name=§b鑰匙鏈§f
+item.rallying_horn.name=振臂號角
+itemGroup.overlord=不死者之王
+skeleton_maker.create=開始製造！
+skeleton_maker.warning.unclaimed=警告：這只骷髏將是無主的。
+skeleton_maker.warning.notmine=警告：這只骷髏不再屬於 %s。
+skeleton_maker.warning.suffocation=警告：你的骷髏製造臺上方有方塊。製作的骷髏可能會窒息。
+entity.overlord.skeleton_warrior.name=骷髏戰士
+entity.overlord.skeleton_baby.name=小骷髏
+entity.overlord.skeleton_converted.name=轉換骷髏
+entity.overlord.skeleton_curing.name=骷髏
+entity.skeleton_warrior.name=骷髏戰士
+entity.skeleton_baby.name=小骷髏
+entity.skeleton_converted.name=轉換骷髏
+entity.skeleton_curing.name=骷髏
+
+overlord.dootdoot=號角聲
+
+tooltip.placeclone=潛行+右鍵另一個骷髏替換你當前的內容。
+tooltip.copyclone=潛行+右鍵一個骷髏來複製。
+
+tooltip.skin=偽裝皮膚：
+tooltip.level=等級：
+tooltip.equipment=裝備：
+tooltip.name=名字：
+tooltip.attack_mode=攻擊模式：
+tooltip.movement_mode=移動模式：
+tooltip.squad=隊伍：
+tooltip.type=類型：
+
+skeleton.mode.aggressive=侵略
+skeleton.mode.defensive=防禦
+skeleton.mode.passive=被動
+
+skeleton.mode.stationed=站崗
+skeleton.mode.follower=跟隨
+skeleton.mode.base=巡邏區域
+
+overlords_seal.warning=這適用於你當前所有的骷髏。
+
+overlord.requestsent=你請求和 %s 聯盟。
+overlord.allyrequest=由 %s 發起的新盟友請求！輸入 /allyaccept 接受請求或 /allyreject 拒絕。
+overlord.alreadyrequested=你已經發出與 %s 的聯盟請求了。
+overlord.alreadyrequested.other=他們已經請求與你結盟。輸入 /allyaccept 來接受請求。
+overlord.alreadyallied=你已經與 %s 成為盟友。
+overlord.enemieswith=你和 %s 現在是敵人了！
+
+overlord.nothingpending=你沒有待回復的聯盟請求。
+
+overlord.allyaccepted=你現在與 %s 結盟了。
+overlord.allyaccept=%s 同意了你的聯盟請求！
+
+overlord.allyrejected=你拒絕了 %s 的聯盟請求。
+overlord.allyreject=%s 拒絕了你的聯盟請求。
+
+overlord.allyterminated=你與 %s 不再是盟友了。
+overlord.allytermination=%s 不再是你的盟友了。
+overlord.notallied=你與 %s 不再是聯盟關係了。
+
+overlord.allylist=你的盟友：
+overlord.nofriends=你現在沒有盟友。
+
+overlord.madeenemy=你將 %s 視作你的敵人。
+overlord.enemied=%s 已經將你視作敵人。
+overlord.noenemyallied=你不能將 %s 視作敵人，他們現在是你的盟友。
+overlord.allytriedenemy=%s 嘗試將你視作敵人，但你們現在是盟友。
+overlord.alreadyenemies=%s 已經是你的敵人了！
+
+overlord.enemyterminated=你不再將 %s 當做敵人。
+overlord.enemytermination=%s 不再將你當做敵人。
+overlord.notenemied=你不將 %s 當做敵人。
+
+overlord.enemylist=你的敵人：
+overlord.noenemies=你當前沒有敵人。
+
+overlord.all_squads=所有隊伍
+overlord.no_squad=無隊伍
+overlord.squad_editor=隊伍編制手冊
+
+overlord.armydeath=你的 %s 死於 %s 。
+
+cfg.helmet_damage=啟用在陽光下使盔甲受損
+cfg.helmet_damage.tooltip=啟用後骷髏軍隊的頭盔在陽光下會受損，最終損壞
+
+cfg.ghostly_skins=朦朧的偽裝皮膚
+cfg.ghostly_skins.tooltip=偽裝皮膚是半透明的
+
+cfg.skinsuitnametags=偽裝皮膚改名骷髏
+cfg.skinsuitnametags.tooltip=骷髏在套上偽裝皮膚後被改名？
+
+cfg.huntcreepers=狩獵苦力怕
+cfg.huntcreepers.tooltip=骷髏軍隊是否追殺苦力怕？
+
+cfg.suffocationwarning=戰士窒息警告
+cfg.suffocationwarning.tooltip=如果骷髏生成後會窒息在骷髏製造臺內提醒玩家？
+
+cfg.bonereq_warrior=骷髏戰士的骨頭需求
+cfg.bonereq_warrior.tooltip=製作骷髏戰士需要多少個骨頭？
+
+cfg.bonereq_baby=小骷髏的骨頭需求
+cfg.bonereq_baby.tooltip=製作小骷髏需要多少個骨頭？
+
+cfg.max_arrow_distance=弓的最大射擊距離
+cfg.max_arrow_distance.tooltip=控制你的骷髏戰士能用弓射多遠。
+
+cfg.teamhack=修改隊伍記分板
+cfg.teamhack.tooltip=讓每個玩家都有單獨的計分板隊伍。據我所知，這不會影響任何東西，但如果確實導致問題的話，你可以禁用它。
+
+cfg.xp_override=替換經驗球
+cfg.xp_overrice.tooltip=用自定義經驗球替換默認的經驗球。提高骷髏戰士的性能。據我所知，這不會影響任何東西，但如果確實導致問題的話，你可以禁用它。
+
+cfg.disable_friendly_fire=禁用友軍傷害
+cfg.disable_friendly_fire.tooltip=禁用友軍傷害。這意味著你與你的軍隊都不能對盟友造成傷害。
+
+advancements.overlord.root.title=不死者之王
+advancements.overlord.root.description=建立你的軍隊
+
+advancements.overlord.make_baby=媽媽的寶寶
+advancements.overlord.make_baby.desc=生成一個小骷髏
+
+advancements.overlord.summon_skeleton=你和什麼軍隊？
+advancements.overlord.summon_skeleton.desc=生成一個骷髏戰士
+
+advancements.overlord.convert_skeleton=徵兵
+advancements.overlord.convert_skeleton.desc=將一只骷髏轉換成你軍隊的一員
+
+advancements.overlord.drink_milk=有益於你的骨骼
+advancements.overlord.drink_milk.desc=給骷髏戰士牛奶桶或牛奶瓶
+
+advancements.overlord.level_up=這些升級...
+advancements.overlord.level_up.desc=升級一個骷髏戰士
+
+advancements.overlord.armed_skeleton=武裝與危險
+advancements.overlord.armed_skeleton.desc=給骷髏軍隊武器
+
+advancements.overlord.sally=出擊
+advancements.overlord.sally.desc=給骷髏軍隊穿上偽裝皮膚
+
+advancements.overlord.crusader=十字軍
+advancements.overlord.crusader.desc=將骷髏戰士打扮成十字軍（全套鎖子甲，白盾紅十字）
+
+advancements.overlord.drink_256_milk=只是一個位元組！
+advancements.overlord.drink_256_milk.desc=有一個骷髏戰士已經消耗了256桶牛奶
+
+advancements.overlord.drink_9001_milk=超過9000！
+advancements.overlord.drink_9001_milk.desc=有一個骷髏戰士已經消耗了9000桶牛奶
+
+advancements.overlord.alliance=友好建交
+advancements.overlord.alliance.desc=與別的玩家組成聯盟
+
+advancements.overlord.dealbreaker=毀約者
+advancements.overlord.dealbreaker.desc=與另一個玩家解除盟友關係
+
+advancements.overlord.warmonger=好戰者
+advancements.overlord.warmonger.desc=將另一個玩家視作你的敵人
+
+advancements.overlord.forgiver=原諒者
+advancements.overlord.forgiver.desc=不再將一個玩家當做你的敵人
+
+advancements.overlord.interference=不是我，你個白癡！
+advancements.overlord.interference.desc=被自己的骷髏戰士射中
+
+advancements.overlord.secondthoughts=可疑的轉換
+advancements.overlord.secondthoughts.desc=被你轉換過的骷髏射中
+
+advancements.overlord.war_dog=一動不動導致的一場戰爭
+advancements.overlord.war_dog.desc=寵物狼殺了軍隊的一個成員
+
+advancements.overlord.heya=Heya
+advancements.overlord.heya.desc=獲得一個幽靈朋友的臉...
+
+advancements.overlord.jingle_jingle=丁鈴噹啷
+advancements.overlord.jingle_jingle.desc=獲得一個空的鑰匙鏈
+
+advancements.overlord.carry_on=攜程旅遊
+advancements.overlord.carry_on.desc=將一只軍隊骷髏串上鑰匙鏈
+
+advancements.overlord.crown_me=我是國王！
+advancements.overlord.crown_me.desc=獲得不死者之王的王冠
+
+gui.save=保存
+
+overlord.guide.welcome=建立一只軍隊
+overlord.guide.1=製作骷髏
+overlord.guide.1.1=認領你的骷髏
+overlord.guide.1.1.1=你要做的第一件事是合成不死者之王的戳記或者不死者之王的印章。戳記比較便宜，是一次性用品，印章更貴，但能無限次使用。
+overlord.guide.1.1.2=合成後，它應該會獲得像附魔一樣的發光效果。如果沒有獲得，那麼你需要拿著印章/戳記右鍵表明你的所有權。
+overlord.guide.1.2=創建小骷髏
+overlord.guide.1.2.1=首先做一個小骷髏製造臺.
+overlord.guide.1.2.2=你需要將好幾樣物品放入小骷髏製造臺：\n*16 骨頭(可自定義數量)\n*1 牛奶桶或牛奶瓶\n*1 不死者之王的印章/戳記。(首先確保你已經認領過，不然小骷髏將不會聽從你的命令)
+overlord.guide.1.2.3=*你想讓你的小骷髏在出生時穿上的任何裝備（你可以隨時改變它的裝備）\n*偽裝皮膚，如果你想讓小骷髏在出生時就有的話
+overlord.guide.1.3=改變骷髏
+overlord.guide.1.3.1=注意：這是與僵屍村民相同的過程，不過目標是骷髏。\n1.）確信對方已獲得虛弱藥水效果。\n2.)用金蘋果右鍵。\n3.)整個過程需等待2到8分鐘。
+overlord.guide.1.4=創建骷髏戰士
+overlord.guide.1.4.1=首先做一個骷髏戰士製造臺.
+overlord.guide.1.4.2=你需要將好幾樣物品放入骷髏製造臺：\n*32 骨頭(可自定義數量)\n*2 牛奶桶或牛奶瓶(它會將牛奶儲存在其內部的儲罐中，並返回空桶/瓶)
+overlord.guide.1.4.3=*1 不死者之王的印章/戳記。(確保你已經認領過，不然骷髏戰士將不會聽從你的命令)\n*你想讓你的骷髏戰士在出生時穿上任何裝備（你可以隨時改變它的裝備)
+overlord.guide.1.4.4=*增強，如果你想讓骷髏戰士在出生時就有的話\n*偽裝皮膚，如果你想讓骷髏戰士在出生時就有的話
+overlord.guide.2=關於骷髏
+overlord.guide.2.1=小骷髏
+overlord.guide.2.1.1=最弱的骷髏種。只有8顆心的血量，當然也能裝備盔甲與武器，只能使用近戰攻擊。
+overlord.guide.2.2=轉換骷髏
+overlord.guide.2.2.1=一個中等水準的骷髏。只有20顆心的血量，可以裝備盔甲與武器，可使用弓，有9個背包位，能裝備增強。
+overlord.guide.2.3=骷髏戰士
+overlord.guide.2.3.1=整個mod內最強大的骷髏。有16顆心的初始血量，增加等級並喝牛奶後可以增長到20。可以裝備盔甲與武器，可使用弓，有9個背包位，能裝備增強，最重要的是，它能升級，升級能增加血量，速度，攻擊力，和移動步數。
+overlord.guide.3=與骷髏互動
+overlord.guide.3.1=治療你的骷髏
+overlord.guide.3.1.1=假如你的骷髏在戰鬥中受傷了，別擔心，這也是能治療的。只要拿著牛奶桶潛行+右鍵，或者向它扔牛奶瓶。對於任何能夠使用增強的軍隊成員，你可以裝備重生升級。對於骷髏戰士，當它們升級時將會受到治療。
+overlord.guide.3.2=升級你的骷髏戰士
+overlord.guide.3.2.1=要讓一個骷髏戰士變的更強大，你有2個選擇。\n1.)牛奶：\n首先，右鍵打開骷髏戰士的GUI。之後，將牛奶桶或牛奶瓶放在它們的背包內，以便於它們喝牛奶。
+overlord.guide.3.2.2=它們也會撿起地上的牛奶桶與牛奶瓶喝，如果背包內沒有空餘位置會將空瓶空桶扔出來。\n2.)戰鬥：\n你的骷髏戰士會從擊敗的生物獲得經驗，並以此來升級。
+overlord.guide.3.3=AI模式
+overlord.guide.3.3.1=你的軍隊成員可以選擇好幾種AI模式，這影響著它們不同的行為。主要決定著它們的移動方式與攻擊。
+overlord.guide.3.3.2=移動：\n*站崗 - 你的軍隊成員將不會移動和發動近戰攻擊。\n*跟隨 - 你的軍隊成員將始終跟隨在你附近，就像寵物狗一樣。\n*巡邏區域 - 你的軍隊成員將巡邏以設定點為中心的32格方塊半徑範圍。
+overlord.guide.3.3.3=攻擊：\n*侵略 - 你的軍隊成員將消滅所有可能的潛在危險。這包括未結盟的盟友，生物，以及任何它所攻擊的，與任何你所攻擊的。\n*防禦 - 你的戰士會擊退任何攻擊你和它們的生物。
+overlord.guide.3.3.4=*被動 - 你的軍隊成員崇尚和平主義，即使受到傷害也不會還手。
+overlord.guide.3.3.5=你能在每個骷髏、隊伍或整個軍隊的設置內看到這些AI模式。你可以拿著選擇好相應的分組設置與AI設置的不死者之王的印章右鍵隊伍或整個軍隊來應用此設置。
+overlord.guide.3.4=隊伍
+overlord.guide.3.4.1=隊伍允許你將軍隊成員進行分組，為了更方便的控制不同組的骷髏。你要先製作一本隊伍編制手冊，才能創建分組。
+overlord.guide.3.4.2=你最多可以分5個小組，你可以讓一個軍隊成員以隊長的身份控制整個隊伍的GUI。默認情況下，骷髏是不會分組的。
+overlord.guide.4=升級
+overlord.guide.4.1=偽裝皮膚
+overlord.guide.4.1.1=想讓你的骷髏看起來更像一個玩家或有個外殼？那麼怎麼防止它們被陽光灼傷呢？做一個偽裝皮膚吧，這可以滿足你的這兩個要求。
+overlord.guide.4.1.2=如果你不想讓它是史蒂夫的皮膚，你可以用鐵砧重命名物品，改成你想用的玩家的名字。當然，有大小寫區分的。
+overlord.guide.4.1.3=手持偽裝皮膚，潛行+右鍵骷髏來應用。\n拿著剪刀潛行+右鍵可以從骷髏身上移除偽裝皮膚。
+overlord.guide.4.2=增強
+overlord.guide.4.2.1=增強物品能給你的軍隊成員額外的獎勵。小骷髏不能裝備增強物品。\n基礎mod的增強物品的名單：\n*鐵錠 - 給予個體抗性提升\n*黑曜石 - 給予個體抗性提升，緩慢和火焰保護
+overlord.guide.4.2.2=*鐵砧 - 使個體下降迅速，並破壞任何降落地附近的東西。同樣也給予抗性提升\n*金蘋果 - 緩慢的生命回復\n*附魔金蘋果 - 快速的生命回復\n*凋靈骷髏頭顱 - 使攻擊帶上凋零傷害，並給予火焰保護
+overlord.guide.4.2.3=*糖 - 增加個體移動速度，但降低攻擊速度。\n*木乃伊偽裝皮膚 - 攻擊時受到饑餓效果，但會強化附近的骷髏。
+overlord.guide.4.2.ic2=*超頻升級 - 增加個體的移動速度和攻擊速度，但減少傷害。
+overlord.guide.5=其他玩家
+overlord.guide.5.1=聯盟
+overlord.guide.5.1.1=聯盟能讓其他的玩家成為你的朋友。當你和一個玩家進行聯盟時，你的骷髏將不會攻擊他，同樣它們也不會攻擊你。
+overlord.guide.5.1.2=你需要輸入 /ally <玩家名字> 才能與一個玩家進行聯盟。只有他們線上時才能使用。他們必須輸入 /allyaccept 來接受你的裏面請求。如果他們不想和你聯盟的話，他們有可能輸入 /allyreject 拒絕。
+overlord.guide.5.1.3=輸入 /allylist 查看當前的盟友。輸入 /allyremove <玩家名字> 來移除盟友。必須對方線上才能移除。
+overlord.guide.5.2=敵人
+overlord.guide.5.2.1=你或許想將一個玩家視作敵人。這麼做的話對方將無法向你發送聯盟請求，處於防禦模式下的軍隊成員發現他們時將會發起攻擊。
+overlord.guide.5.2.2=你需要輸入 /enemy <玩家名字> 才能這麼做。他們也必須線上。輸入 /enemylist 查看你當前的敵人。輸入 /enemyremove <玩家名字> 將其移除敵人名單。同樣，他們也要線上。
+overlord.guide.6=不死者之王的裝備
+overlord.guide.6.1=不死者之王的印章
+overlord.guide.6.1.1=不死者之王的印章允許你認領你的骷髏。此外，它也能為你整個軍隊或整個隊伍設置AI模式。只需右鍵單擊它即可打開GUI，餘下內容都有說明。
+overlord.guide.6.2=不死者之王的王冠
+overlord.guide.6.2.1=不死者之王的王冠允許你在不打開它們的GUI的情況下看到你軍隊成員的裝備。裝備後，你能看到它們增加的物品顯示在它們頭上。
+overlord.guide.6.3=鑰匙鏈
+overlord.guide.6.3.1=鑰匙鏈允許你運輸你的軍隊成員。手持空鑰匙鏈潛行+右鍵骷髏就能將將軍隊成員附加到鑰匙鏈上。右鍵方塊就能將其放出。
+overlord.guide.6.4=振臂號角
+overlord.guide.6.4.1=振臂號角允許你召喚附近的軍隊成員
