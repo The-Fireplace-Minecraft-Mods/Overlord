@@ -75,6 +75,13 @@
       "ore": "ingotGold"
     },
     "name": "INGOTGOLD"
+  }, 
+  {
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "name": "INGOTIRON"
   },
   {
     "ingredient": {
