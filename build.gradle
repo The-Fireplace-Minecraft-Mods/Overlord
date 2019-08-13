@@ -12,7 +12,7 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-        //classpath 'ModsIOUpload:ModsIOUpload:+'
+        classpath 'ModsIOUpload:ModsIOUpload:+'
     }
 }
 
@@ -25,7 +25,7 @@ apply plugin: 'net.cazzar.gradle.modsio'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
-version = "2.4.14"
+version = "2.5.0"
 group= "the_fireplace.overlord"
 archivesBaseName = "Overlord-1.12.2"
 
@@ -165,7 +165,7 @@ curseforge {
   }
 }
 
-/*modsIO {
+modsIO {
     key = project.hasProperty("modsioApiKey")? project.modsioApiKey : "empty"
     project{
 		artifact = new File(jar.destinationDir, archivesBaseName+"-"+version+".jar")
@@ -175,7 +175,7 @@ curseforge {
 		tag = ""
 		current = true
     }
-}*/
+}
 
 uploadArchives {
     repositories {

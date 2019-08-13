@@ -1,4 +1,2 @@
-Fix a few crashes
-Fix rallying horn's recipe (mcBegins2Snow)
-Create Traditional Chinese(繁體中文) language file. (mcBegins2Snow)
-Update zh_CN.lang (mcBegins2Snow)
+Attempt to fix occasional NPE when skeletons teleport away from combat
+

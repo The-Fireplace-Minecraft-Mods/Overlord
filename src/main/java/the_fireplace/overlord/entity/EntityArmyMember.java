@@ -130,7 +130,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 	 */
 	public void addAttackTasks() {
 		if (aiAttackOnCollide == null) {
-			aiAttackOnCollide = new EntityAIAttackMelee(this, 1.2D, false) {
+			aiAttackOnCollide = new EntityAIAttackMelee(this, 1.2D, true) {
 				@Override
 				public void resetTask() {
 					super.resetTask();
@@ -153,7 +153,8 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 						} else {
 							EntityArmyMember.this.setSwingingArms(false);
 						}
-						super.updateTask();
+						if(getAttackTarget() != null)
+							super.updateTask();
 					}
 				}
 			};
