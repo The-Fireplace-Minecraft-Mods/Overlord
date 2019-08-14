@@ -51,7 +51,7 @@ en2ud {
 dependencies {
 	compile 'com.leviathanstudio:CraftStudio:1.0.0.93-mc1.12-alpha:dev'
 	deobfCompile group: "mezz.jei", name: "jei_1.12.2", version: "4.11.0.212"
-	deobfCompile "info.amerifrance.guideapi:Guide-API:1.12-2.1.6-61"
+	deobfCompile "info.amerifrance.guideapi:Guide-API:1.12-2.1.8-63"
 	deobfProvided("codechicken:NotEnoughItems:1.12.2-2.4.1.238:universal") {
         exclude module: "jei_1.12.2"
 		//Old mappings
@@ -59,7 +59,7 @@ dependencies {
     }
 	//Manually do CCL so the game doesn't crash
 	deobfProvided "codechicken:CodeChickenLib:1.12.2-3.2.2.353:universal"
-	deobfCompile "net.industrial-craft:industrialcraft-2:2.8.73-ex112"
+	deobfCompile "net.industrial-craft:industrialcraft-2:2.8.170-ex112"
 	deobfCompile group: "info.journeymap", name: "journeymap-api", version: "1.12-1.4-SNAPSHOT", changing: true
     deobfProvided group: "slimeknights", name: "TConstruct", version: "1.12.2-2.10.1.87"
     deobfProvided group: "slimeknights.mantle", name: "Mantle", version: "1.12-1.3.2.24"
