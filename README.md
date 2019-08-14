@@ -33,13 +33,14 @@ You can also talk to me on [Discord](https://discord.gg/29aj3Ah)
 Developing with My Mod
 ----------------------
 
-If you want to use items or blocks from my mod, add support for, or even develop an addon for my mod, you can easily add it to your development environment! Most
+If you want to use items or blocks from my mod, add support for, or even develop an addon for my mod, you can easily add it to your development environment! ~~Most
 releases get uploaded to my maven repository.  
-So all you have to do to include the mod is add these lines *(in the appropriate places)* to your build.gradle
+So all you have to do to include the mod is add these lines *(in the appropriate places)* to your build.gradle~~
+Most builds on CurseForge have deobf and src builds in the "Additional Files" for each file. Those can be used until I get a new maven set up.
 
     repositories {
         maven { // The_Fireplace's Mods, and BrainStoneMod
-            url "http://maven.brainstonemod.com"
+            url "[removed, no longer working]"
         }
         // Other repos...
     }
