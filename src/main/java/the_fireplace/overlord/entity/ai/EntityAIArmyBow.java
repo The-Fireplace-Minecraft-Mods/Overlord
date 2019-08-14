@@ -71,9 +71,8 @@ public class EntityAIArmyBow extends EntityAIBase {
 			boolean canSee = this.armyMember.getEntitySenses().canSee(attackTarget);
 			boolean targetWithinVisibleTime = this.seeTime > 0;
 
-			if (canSee != targetWithinVisibleTime) {
+			if (canSee != targetWithinVisibleTime)
 				this.seeTime = 0;
-			}
 
 			if (canSee)
 				++this.seeTime;

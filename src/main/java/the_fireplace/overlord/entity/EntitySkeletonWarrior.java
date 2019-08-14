@@ -142,7 +142,8 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 						} else {
 							EntitySkeletonWarrior.this.setSwingingArms(false);
 						}
-						super.updateTask();
+						if(getAttackTarget() != null)
+							super.updateTask();
 					}
 				}
 			};
@@ -171,8 +172,8 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
-		if (this.getOwner() != null) {
-			if (this.getOwner().equals(player)) {
+		if (this.getOwnerId() != null) {
+			if (this.getOwnerId().equals(player.getUniqueID())) {
 				if (!player.isSneaking()) {
 					FMLNetworkHandler.openGui(player, Overlord.instance, hashCode(), world, (int) this.posX, (int) this.posY, (int) this.posZ);
 					return true;
@@ -193,7 +194,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 		return super.processInteract(player, hand);
 	}
 
-	@SuppressWarnings("UnnecessaryBoxing")
+	@SuppressWarnings({"UnnecessaryBoxing", "UnnecessaryCallToStringValueOf"})
 	@Override
 	protected void entityInit() {
 		super.entityInit();
@@ -286,25 +287,25 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 			}
 
 			if(!this.dead)
-			this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().grow(1.0D, 0.0D, 1.0D)).stream().filter(entityitem -> !entityitem.isDead && !entityitem.getItem().isEmpty() && !entityitem.cannotPickup()).forEach(entityitem -> {
-				ItemStack stack2 = inventory.addItem(entityitem.getItem());
-				if (!stack2.isEmpty()) {
-					if (stack2.getCount() != entityitem.getItem().getCount())
-						playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
-					entityitem.getItem().setCount(stack2.getCount());
-					if (stack2.getItem() == Items.MILK_BUCKET || stack2.getItem() == Overlord.milk_bottle) {
-						for (int i = 0; i < inventory.getSizeInventory(); i++) {
-							if (!inventory.getStackInSlot(i).isEmpty() && (inventory.getStackInSlot(i).getItem() == Items.BUCKET || inventory.getStackInSlot(i).getItem() == Items.GLASS_BOTTLE)) {
-								entityDropItem(inventory.getStackInSlot(i), 0.1F);
-								inventory.setInventorySlotContents(i, ItemStack.EMPTY);
+				this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().grow(1.0D, 0.0D, 1.0D)).stream().filter(entityitem -> !entityitem.isDead && !entityitem.getItem().isEmpty() && !entityitem.cannotPickup()).forEach(entityitem -> {
+					ItemStack stack2 = inventory.addItem(entityitem.getItem());
+					if (!stack2.isEmpty()) {
+						if (stack2.getCount() != entityitem.getItem().getCount())
+							playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+						entityitem.getItem().setCount(stack2.getCount());
+						if (stack2.getItem() == Items.MILK_BUCKET || stack2.getItem() == Overlord.milk_bottle) {
+							for (int i = 0; i < inventory.getSizeInventory(); i++) {
+								if (!inventory.getStackInSlot(i).isEmpty() && (inventory.getStackInSlot(i).getItem() == Items.BUCKET || inventory.getStackInSlot(i).getItem() == Items.GLASS_BOTTLE)) {
+									entityDropItem(inventory.getStackInSlot(i), 0.1F);
+									inventory.setInventorySlotContents(i, ItemStack.EMPTY);
+								}
 							}
 						}
+					} else {
+						entityitem.setDead();
+						playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
 					}
-				} else {
-					entityitem.setDead();
-					playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
-				}
-			});
+				});
 
 			if(!ConfigValues.XPOVERRIDE) {
 				for (EntityXPOrb xp : world.getEntitiesWithinAABB(EntityXPOrb.class, this.getEntityBoundingBox().grow(8, 5, 8))) {
@@ -773,7 +774,7 @@ public class EntitySkeletonWarrior extends EntityArmyMember implements ISkinsuit
 		return this.dataManager.get(SKINSUIT_NAME);
 	}
 
-	@SuppressWarnings({"UnnecessaryBoxing", "Duplicates"})
+	@SuppressWarnings({"UnnecessaryBoxing", "Duplicates", "UnnecessaryCallToStringValueOf"})
 	@Override
 	public void setSkinsuit(@Nonnull ItemStack stack, @Nonnull SkinType type) {
 		if (type.isNone()) {

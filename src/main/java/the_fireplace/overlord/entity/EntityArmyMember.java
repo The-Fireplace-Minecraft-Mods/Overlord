@@ -39,6 +39,7 @@ import the_fireplace.overlord.tools.Enemies;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -541,7 +542,7 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 			}
 
 			if (target instanceof EntityArmyMember)
-				if ((getAttackMode() < 2 && Enemies.getInstance().isNotEnemiesWith(((EntityArmyMember) target).getOwnerId(), getOwnerId())) || ((EntityArmyMember) target).getOwnerId().equals(getOwnerId()) || Alliances.getInstance().isAlliedTo(((EntityArmyMember) target).getOwnerId(), getOwnerId()))
+				if ((getAttackMode() < 2 && Enemies.getInstance().isNotEnemiesWith(((EntityArmyMember) target).getOwnerId(), getOwnerId())) || Objects.equals(((EntityArmyMember) target).getOwnerId(), getOwnerId()) || Alliances.getInstance().isAlliedTo(((EntityArmyMember) target).getOwnerId(), getOwnerId()))
 					return false;
 
 			return !(target instanceof EntityPlayer && owner instanceof EntityPlayer && !((EntityPlayer) owner).canAttackPlayer((EntityPlayer) target)) && (!(target instanceof EntityHorse) || !((EntityHorse) target).isTame());
@@ -555,5 +556,13 @@ public abstract class EntityArmyMember extends EntityCreature implements IEntity
 
 	public boolean willBeAttackedBy(EntityLiving mob) {
 		return false;
+	}
+
+	//Attempt to fix losing ai when switching weapons
+	@Override
+	public boolean replaceItemInInventory(int inventorySlot, ItemStack itemStackIn) {
+		boolean ret = super.replaceItemInInventory(inventorySlot, itemStackIn);
+		initEntityAI();
+		return ret;
 	}
 }
