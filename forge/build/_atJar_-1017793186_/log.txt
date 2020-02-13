@@ -1,5 +1,0 @@
-Args: "--inJar", "/home/lance/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.15.2-31.1.0/forge-1.15.2-31.1.0-injected.jar", "--outJar", "/home/lance/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.15.2-31.1.0_mapped_stable_60-1.15/forge-1.15.2-31.1.0_mapped_stable_60-1.15.jar", "--logFile", "accesstransform.log", "--atFile", "/home/lance/HDD2/Documents/Code/Minecraft/1.15.2/Overlord/forge/build/_atJar_-1017793186_/parent_at.cfg"
-Classpath: /home/lance/.gradle/caches/forge_gradle/maven_downloader/net/minecraftforge/accesstransformers/1.0.1-milestone.0.1+94458e7/accesstransformers-1.0.1-milestone.0.1+94458e7-fatjar.jar
-WorkDir: /home/lance/HDD2/Documents/Code/Minecraft/1.15.2/Overlord/forge/build/_atJar_-1017793186_
-Main: net.minecraftforge.accesstransformer.TransformerProcessor
-====================================
