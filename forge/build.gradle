@@ -1,0 +1,87 @@
+buildscript {
+    repositories {
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+    }
+}
+apply plugin: 'net.minecraftforge.gradle'
+
+//Forge-specific build code goes in this file: Dependencies, mappings/forge versions, manifest data, etc.
+
+allprojects {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+            srcDir '../common/src/main/java'
+        }
+        resources {
+            srcDir 'src/main/resources'
+            srcDir '../common/src/main/resources'
+        }
+    }
+}
+
+archivesBaseName = project.hasProperty("outputJarBaseName") ? project.outputJarBaseName : "forge"
+
+minecraft {
+    mappings channel: 'stable', version: '60-1.15'
+    
+    runs {
+        client = {
+            properties 'forge.logging.markers': 'SCAN,REGISTRIES,REGISTRYDUMP'
+            properties 'forge.logging.console.level': 'debug'
+            workingDirectory project.file('run').canonicalPath
+            source sourceSets.main
+        }
+        server = {
+            properties 'forge.logging.markers': 'SCAN,REGISTRIES,REGISTRYDUMP'
+            properties 'forge.logging.console.level': 'debug'
+            workingDirectory project.file('run').canonicalPath
+            source sourceSets.main
+        }
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+	minecraft 'net.minecraftforge:forge:1.15.2-31.1.0'
+}
+
+jar {
+    manifest {
+        attributes(["Specification-Title": "overlord",
+                    "Specification-Vendor": "The_Fireplace",
+                    "Specification-Version": "1",
+                    "Implementation-Title": project.name,
+                    "Implementation-Version": "${version}",
+                    "Implementation-Vendor" : "The_Fireplace",
+                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
+    }
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+}
+
+artifacts {
+    archives jar
+    archives deobfJar
+}

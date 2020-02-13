@@ -1,0 +1,1 @@
+This directory is for shared assets between Forge and Fabric versions of the mod.

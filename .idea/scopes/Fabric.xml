@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Fabric" pattern="lib:net.fabricmc..*" />
+</component>

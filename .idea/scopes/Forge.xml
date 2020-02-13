@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Forge" pattern="lib:net.minecraftforge..*" />
+</component>
