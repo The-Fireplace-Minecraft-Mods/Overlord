@@ -12,7 +12,7 @@ import the_fireplace.overlord.fabric.tags.OverlordBlockTags;
 import java.nio.file.Path;
 
 public class BlockTagsProvider extends AbstractTagProvider<Block> {
-    protected BlockTagsProvider(DataGenerator root) {
+    public BlockTagsProvider(DataGenerator root) {
         super(root, Registry.BLOCK);
     }
 

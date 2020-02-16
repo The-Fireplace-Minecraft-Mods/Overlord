@@ -18,7 +18,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class ItemTagsProvider extends AbstractTagProvider<Item> {
-    protected ItemTagsProvider(DataGenerator root) {
+    public ItemTagsProvider(DataGenerator root) {
         super(root, Registry.ITEM);
     }
 

@@ -25,6 +25,7 @@ import net.minecraft.util.BoundedIntUnaryOperator;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.registry.Registry;
+import the_fireplace.overlord.fabric.Overlord;
 import the_fireplace.overlord.fabric.init.OverlordBlocks;
 
 import java.util.Map;
@@ -53,12 +54,13 @@ public class BlockLootTableGenerator implements Consumer<BiConsumer<Identifier, 
 
         Set<Identifier> set = Sets.newHashSet();
 
-        for (Block block : Registry.BLOCK) {
+        for (Block block : OverlordBlocks.BLOCKS) {
             Identifier identifier = block.getDropTableId();
             if (identifier != LootTables.EMPTY && set.add(identifier)) {
                 LootTable.Builder builder5 = this.lootTables.remove(identifier);
                 if (builder5 == null) {
-                    throw new IllegalStateException(String.format("Missing loottable '%s' for '%s'", identifier, Registry.BLOCK.getId(block)));
+                    Overlord.LOGGER.error(String.format("Missing loottable '%s' for '%s'", identifier, Registry.BLOCK.getId(block)));
+                    continue;
                 }
 
                 identifierBuilderBiConsumer.accept(identifier, builder5);
@@ -115,11 +117,11 @@ public class BlockLootTableGenerator implements Consumer<BiConsumer<Identifier, 
     }
 
     private static LootTable.Builder createForPottedPlant(ItemConvertible itemConvertible) {
-        return LootTable.builder().withPool(addSurvivesExplosionLootCondition(Blocks.FLOWER_POT, LootPool.builder().withRolls(ConstantLootTableRange.create(1)).withEntry(ItemEntry.builder(Blocks.FLOWER_POT)))).withPool((LootPool.Builder)addSurvivesExplosionLootCondition(itemConvertible, LootPool.builder().withRolls(ConstantLootTableRange.create(1)).withEntry(ItemEntry.builder(itemConvertible))));
+        return LootTable.builder().withPool(addSurvivesExplosionLootCondition(Blocks.FLOWER_POT, LootPool.builder().withRolls(ConstantLootTableRange.create(1)).withEntry(ItemEntry.builder(Blocks.FLOWER_POT)))).withPool(addSurvivesExplosionLootCondition(itemConvertible, LootPool.builder().withRolls(ConstantLootTableRange.create(1)).withEntry(ItemEntry.builder(itemConvertible))));
     }
 
     private static LootTable.Builder createForSlabs(Block block) {
-        return LootTable.builder().withPool(LootPool.builder().withRolls(ConstantLootTableRange.create(1)).withEntry(addExplosionDecayLootFunction(block, ItemEntry.builder(block).withFunction(SetCountLootFunction.builder(ConstantLootTableRange.create(2)).withCondition(BlockStatePropertyLootCondition.builder(block).method_22584(StatePredicate.Builder.create().exactMatch(SlabBlock.TYPE, (Comparable) SlabType.DOUBLE)))))));
+        return LootTable.builder().withPool(LootPool.builder().withRolls(ConstantLootTableRange.create(1)).withEntry(addExplosionDecayLootFunction(block, ItemEntry.builder(block).withFunction(SetCountLootFunction.builder(ConstantLootTableRange.create(2)).withCondition(BlockStatePropertyLootCondition.builder(block).method_22584(StatePredicate.Builder.create().exactMatch(SlabBlock.TYPE, SlabType.DOUBLE)))))));
     }
 
     private static <T extends Comparable<T> & StringIdentifiable> LootTable.Builder createForMultiblock(Block block, Property<T> property, T comparable) {

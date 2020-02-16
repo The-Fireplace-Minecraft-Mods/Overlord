@@ -1,5 +1,6 @@
 package the_fireplace.overlord.fabric.init;
 
+import com.google.common.collect.ImmutableList;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tools.FabricToolTags;
 import net.minecraft.block.Block;
@@ -18,13 +19,14 @@ import the_fireplace.overlord.fabric.block.internal.CasketBlock;
 import static the_fireplace.overlord.fabric.Overlord.MODID;
 
 public class OverlordBlocks {
-
     public static final Block OAK_CASKET = new CasketBlock(FabricBlockSettings.copy(Blocks.OAK_PLANKS).build());
     public static final Block BLOOD_SOAKED_SOIL = new BloodSoakedSoil(FabricBlockSettings.of(Material.EARTH)
         .strength(0.5F, 0.1F)
         .sounds(BlockSoundGroup.WET_GRASS)
         .materialColor(MaterialColor.RED)
         .breakByTool(FabricToolTags.SHOVELS).build());
+
+    public static final ImmutableList<Block> BLOCKS = ImmutableList.of(OAK_CASKET, BLOOD_SOAKED_SOIL);
 
     public static void registerBlocks() {
         registerBlock("oak_casket", OAK_CASKET);

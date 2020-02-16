@@ -18,6 +18,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stat.Stats;
+import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
@@ -252,5 +253,12 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
             default:
                 return EAST_SHAPE;
         }
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
+        stateManager.add(PART);
+        stateManager.add(WATERLOGGED);
+        stateManager.add(FACING);
     }
 }

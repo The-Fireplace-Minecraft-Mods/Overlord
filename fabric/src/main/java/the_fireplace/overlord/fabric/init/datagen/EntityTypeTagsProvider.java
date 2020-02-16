@@ -10,7 +10,7 @@ import net.minecraft.util.registry.Registry;
 import java.nio.file.Path;
 
 public class EntityTypeTagsProvider extends AbstractTagProvider<EntityType<?>> {
-    protected EntityTypeTagsProvider(DataGenerator root) {
+    public EntityTypeTagsProvider(DataGenerator root) {
         super(root, Registry.ENTITY_TYPE);
     }
 

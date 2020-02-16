@@ -20,6 +20,7 @@ import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import the_fireplace.overlord.fabric.Overlord;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -52,10 +53,10 @@ public class LootTablesProvider implements DataProvider {
                 }
             });
         });
-        LootContextType var10002 = LootContextTypes.GENERIC;
-        Function<Identifier, LootCondition> var10003 = (identifierx) -> null;
+        LootContextType lootContext = LootContextTypes.GENERIC;
+        Function<Identifier, LootCondition> nullFunc = (identifierx) -> null;
         //map.getClass();
-        LootTableReporter lootTableReporter = new LootTableReporter(var10002, var10003, map::get);
+        LootTableReporter lootTableReporter = new LootTableReporter(lootContext, nullFunc, map::get);
         Set<Identifier> set = Sets.difference(LootTables.getAll(), map.keySet());
 
         for (Identifier identifier : set) {
@@ -70,7 +71,7 @@ public class LootTablesProvider implements DataProvider {
             multimap.forEach((string, string2) -> {
                 LOGGER.warn("Found validation problem in " + string + ": " + string2);
             });
-            throw new IllegalStateException("Failed to validate loot tables, see logs");
+            Overlord.LOGGER.error("Failed to validate loot tables, see logs");
         } else {
             map.forEach((identifierx, lootTable) -> {
                 Path path2 = getOutput(path, identifierx);
