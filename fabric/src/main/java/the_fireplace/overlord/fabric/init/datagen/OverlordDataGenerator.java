@@ -1,6 +1,7 @@
 package the_fireplace.overlord.fabric.init.datagen;
 
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.server.LootTablesProvider;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -13,6 +14,7 @@ public class OverlordDataGenerator {
         gen.install(new EntityTypeTagsProvider(gen));
         gen.install(new ItemTagsProvider(gen));
         gen.install(new RecipesProvider(gen));
+        gen.install(new LootTablesProvider(gen));
         try {
             gen.run();
         } catch(IOException e) {
