@@ -44,35 +44,35 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     private static final VoxelShape SOUTH_SHAPE = Stream.of(
-            Block.createCuboidShape(0, 0, 0, 16, 1, 16),
-            Block.createCuboidShape(0, 15, 0, 16, 16, 16),
-            Block.createCuboidShape(1, 1, 0, 2, 15, 15),
-            Block.createCuboidShape(2, 1, 14, 14, 15, 15),
-            Block.createCuboidShape(14, 1, 0, 15, 15, 15)
+        Block.createCuboidShape(0, 0, 0, 16, 1, 16),
+        Block.createCuboidShape(0, 15, 0, 16, 16, 16),
+        Block.createCuboidShape(1, 1, 0, 2, 15, 15),
+        Block.createCuboidShape(2, 1, 14, 14, 15, 15),
+        Block.createCuboidShape(14, 1, 0, 15, 15, 15)
     ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
 
     private static final VoxelShape NORTH_SHAPE = Stream.of(
-            Block.createCuboidShape(0, 0, 0, 16, 1, 16),
-            Block.createCuboidShape(0, 15, 0, 16, 16, 16),
-            Block.createCuboidShape(1, 1, 1, 2, 15, 16),
-            Block.createCuboidShape(2, 1, 15, 14, 15, 16),
-            Block.createCuboidShape(14, 1, 1, 15, 15, 16)
+        Block.createCuboidShape(0, 0, 0, 16, 1, 16),
+        Block.createCuboidShape(0, 15, 0, 16, 16, 16),
+        Block.createCuboidShape(14, 1, 1, 15, 15, 16),
+        Block.createCuboidShape(2, 1, 1, 14, 15, 2),
+        Block.createCuboidShape(1, 1, 1, 2, 15, 16)
     ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
 
     private static final VoxelShape EAST_SHAPE = Stream.of(
-            Block.createCuboidShape(0, 0, 0, 16, 1, 16),
-            Block.createCuboidShape(0, 15, 0, 16, 16, 16),
-            Block.createCuboidShape(15, 1, 2, 16, 15, 14),
-            Block.createCuboidShape(1, 1, 14, 16, 15, 15),
-            Block.createCuboidShape(1, 1, 1, 16, 15, 2)
+        Block.createCuboidShape(0, 0, 0, 16, 1, 16),
+        Block.createCuboidShape(0, 15, 0, 16, 16, 16),
+        Block.createCuboidShape(0, 1, 14, 15, 15, 15),
+        Block.createCuboidShape(14, 1, 2, 15, 15, 14),
+        Block.createCuboidShape(0, 1, 1, 15, 15, 2)
     ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
 
     private static final VoxelShape WEST_SHAPE = Stream.of(
-            Block.createCuboidShape(0, 0, 0, 16, 1, 16),
-            Block.createCuboidShape(0, 15, 0, 16, 16, 16),
-            Block.createCuboidShape(0, 1, 2, 1, 15, 14),
-            Block.createCuboidShape(0, 1, 14, 15, 15, 15),
-            Block.createCuboidShape(0, 1, 1, 15, 15, 2)
+        Block.createCuboidShape(0, 0, 0, 16, 1, 16),
+        Block.createCuboidShape(0, 15, 0, 16, 16, 16),
+        Block.createCuboidShape(1, 1, 1, 16, 15, 2),
+        Block.createCuboidShape(1, 1, 2, 2, 15, 14),
+        Block.createCuboidShape(1, 1, 14, 16, 15, 15)
     ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
 
     public CasketBlock(Settings settings) {

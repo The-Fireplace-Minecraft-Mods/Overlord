@@ -29,7 +29,7 @@ public class OverlordBlocks {
     public static final ImmutableList<Block> BLOCKS = ImmutableList.of(OAK_CASKET, BLOOD_SOAKED_SOIL);
 
     public static void registerBlocks() {
-        registerBlock("oak_casket", OAK_CASKET);
+        registerBlockWithItem("oak_casket", OAK_CASKET, ItemGroup.DECORATIONS);
         registerBlockWithItem("blood_soaked_soil", BLOOD_SOAKED_SOIL, ItemGroup.BUILDING_BLOCKS);
     }
 
