@@ -1,4 +1,4 @@
-package the_fireplace.overlord.fabric.model;
+package the_fireplace.overlord.model;
 
 import java.util.UUID;
 

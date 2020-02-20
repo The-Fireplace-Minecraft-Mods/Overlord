@@ -1,4 +1,4 @@
-package the_fireplace.overlord.fabric.model;
+package the_fireplace.overlord.model;
 
 import java.util.UUID;
 
@@ -35,11 +35,15 @@ public class AISettings {
     //How close the skeleton follows the player
     private byte followDistance = 8;
     private UUID patrolPosList = AIListManager.EMPTY_LIST_ID;
+    //Should the skeleton go from last directly to first or turn around and navigate the path in reverse?
+    private boolean patrolLoop = false;
     private Pos home = null;
     //Should the stationed skeleton return to the home position after walking away to attack
     private boolean stationedReturnHome = true;
     //The radius away from home the skeleton can go when attacking while stationed or wandering the area
     private byte moveRadius = 16;
+    //Should the skeleton actively explore when wandering?
+    private boolean exploringWander = false;
 
     //Tasks
     private boolean woodcutting = false;
@@ -48,6 +52,7 @@ public class AISettings {
     private boolean beekeeping = false;
     private boolean farming = false;
     private boolean building = false;
+    private boolean breeding = false;
     private boolean depositItems = false;
     private boolean withdrawItems = false;
     //Woodcutting settings
@@ -62,4 +67,6 @@ public class AISettings {
     //Beekeeping settings
     //Should the skeleton collect honey from hives that don't have smoke to calm them?
     private boolean harvestAngryHives = false;
+    //Breeding settings
+    private UUID breedingEntityList = AIListManager.ALL_ANIMALS_LIST_ID;
 }
