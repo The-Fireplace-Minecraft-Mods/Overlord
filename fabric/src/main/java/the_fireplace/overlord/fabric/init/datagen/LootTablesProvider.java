@@ -3,7 +3,6 @@ package the_fireplace.overlord.fabric.init.datagen;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.datafixers.util.Pair;
@@ -13,7 +12,6 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.loot.LootManager;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTableReporter;
-import net.minecraft.loot.LootTables;
 import net.minecraft.loot.condition.LootCondition;
 import net.minecraft.loot.context.LootContextType;
 import net.minecraft.loot.context.LootContextTypes;
@@ -26,7 +24,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -57,11 +54,6 @@ public class LootTablesProvider implements DataProvider {
         Function<Identifier, LootCondition> nullFunc = (identifierx) -> null;
         //map.getClass();
         LootTableReporter lootTableReporter = new LootTableReporter(lootContext, nullFunc, map::get);
-        Set<Identifier> set = Sets.difference(LootTables.getAll(), map.keySet());
-
-        for (Identifier identifier : set) {
-            lootTableReporter.report("Missing built-in table: " + identifier);
-        }
 
         map.forEach((identifierx, lootTable) -> {
             LootManager.check(lootTableReporter, identifierx, lootTable);
@@ -81,7 +73,6 @@ public class LootTablesProvider implements DataProvider {
                 } catch (IOException e) {
                     LOGGER.error("Couldn't save loot table {}", path2, e);
                 }
-
             });
         }
     }
