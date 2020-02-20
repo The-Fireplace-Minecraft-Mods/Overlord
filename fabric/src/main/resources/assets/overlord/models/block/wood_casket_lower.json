@@ -1,5 +1,8 @@
 {
 	"credit": "Made with Blockbench",
+	"textures": {
+		"particle": "#sides"
+	},
 	"elements": [
 		{
 			"name": "top",
@@ -53,4 +56,4 @@
 		}
 	],
 	"display": {}
-}
+},
