@@ -24,7 +24,8 @@ public class Overlord implements ModInitializer {
         OverlordItems.registerItems();
         //noinspection ConstantConditions//TODO Use environment variables for this
         if(true) {
-            DataGenerator gen = new DataGenerator(Paths.get("generated"), Collections.emptySet());
+            LOGGER.debug("Generating data...");
+            DataGenerator gen = new DataGenerator(Paths.get("common", "src", "main", "resources"), Collections.emptySet());
             gen.install(new BlockTagsProvider(gen));
             gen.install(new EntityTypeTagsProvider(gen));
             gen.install(new ItemTagsProvider(gen));

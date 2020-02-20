@@ -1,0 +1,11 @@
+{
+    "variants": {
+        "snowy=false": [
+            { "model": "overlord:block/blood_soaked_soil" },
+            { "model": "overlord:block/blood_soaked_soil", "y": 90 },
+            { "model": "overlord:block/blood_soaked_soil", "y": 180 },
+            { "model": "overlord:block/blood_soaked_soil", "y": 270 }
+        ],
+        "snowy=true":  { "model": "block/grass_block_snow" }
+    }
+}
