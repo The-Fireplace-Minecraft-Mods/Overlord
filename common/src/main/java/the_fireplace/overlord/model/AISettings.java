@@ -5,7 +5,7 @@ import java.util.UUID;
 public class AISettings {
     //Behaviors - don't depend on any category
     private boolean saveDamagedEquipment = false;
-    private UUID saveEquipmentList = AIListManager.ALL_EQUIPMENT_LIST;
+    private UUID saveEquipmentList = AIListManager.ALL_EQUIPMENT_LIST_ID;
     private boolean loadChunks = false;
     //Top level categories
     private boolean combat = true;
