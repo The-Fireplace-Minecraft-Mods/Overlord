@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Implementation-Title: forge
-Implementation-Version: 1.0.0
-Specification-Vendor: examplemodsareus
-Specification-Title: examplemod
-Implementation-Timestamp: 2019-12-11T18:07:55-0600
-Specification-Version: 1
-Implementation-Vendor: examplemodsareus
-
