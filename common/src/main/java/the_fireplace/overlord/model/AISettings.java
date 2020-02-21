@@ -20,15 +20,15 @@ public class AISettings {
     //Melee settings
     private boolean switchToRangedWhenFar = true;
     private byte rangedSwitchDistance = 4;
-    private TargetEntitySelector meleeTargets;
+    private TargetEntitySelector meleeTargets = new TargetEntitySelector();
     //Ranged settings
     private boolean switchToMeleeWhenNoArrows = true;
     private boolean switchToMeleeWhenClose = true;
     private byte meleeSwitchDistance = 3;
-    private TargetEntitySelector rangedTargets;
+    private TargetEntitySelector rangedTargets = new TargetEntitySelector();
     //Throw Item settings
     private UUID throwItemList = AIListManager.ALL_THROWABLES_LIST_ID;
-    private TargetEntitySelector throwTargets;
+    private TargetEntitySelector throwTargets = new TargetEntitySelector();
 
     //Movement modes
     private EnumMovementMode moveMode = EnumMovementMode.STATIONED;
