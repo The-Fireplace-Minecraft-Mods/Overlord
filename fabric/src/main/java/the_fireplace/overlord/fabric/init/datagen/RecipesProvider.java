@@ -55,7 +55,6 @@ public class RecipesProvider implements DataProvider {
 
             }
         });
-        this.saveRecipeAdvancement(dataCache, Advancement.Task.create().criterion("impossible", new ImpossibleCriterion.Conditions()).toJson(), path.resolve("data/minecraft/advancements/recipes/root.json"));
     }
 
     private void saveRecipe(DataCache dataCache, JsonObject jsonObject, Path path) {
