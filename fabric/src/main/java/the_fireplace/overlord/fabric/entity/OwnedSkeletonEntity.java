@@ -8,14 +8,16 @@ import net.minecraft.util.Arm;
 import net.minecraft.world.World;
 import the_fireplace.overlord.OverlordHelper;
 
+import java.util.Collections;
 import java.util.UUID;
 
 public class OwnedSkeletonEntity extends LivingEntity {
 
     private UUID owner = null, skinsuit = null;
+    private static int i = 0;
     //There are 5 growth phases, 0 being baby and 4 being fully grown.
-    private byte growthPhase = 0;
-    private boolean hasSkin = false, hasMuscles = false;
+    private byte growthPhase = (byte)(i++ % 5);
+    private boolean hasSkin = (i / 5) % 2 == 0, hasMuscles = (i / 5) % 3 == 0;
 
     public OwnedSkeletonEntity(EntityType<? extends LivingEntity> type, World world) {
         super(type, world);
@@ -23,12 +25,12 @@ public class OwnedSkeletonEntity extends LivingEntity {
 
     @Override
     public Iterable<ItemStack> getArmorItems() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
     public ItemStack getEquippedStack(EquipmentSlot slot) {
-        return null;
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -38,7 +40,7 @@ public class OwnedSkeletonEntity extends LivingEntity {
 
     @Override
     public Arm getMainArm() {
-        return null;
+        return Arm.RIGHT;
     }
 
     public void setGrowthPhase(byte newPhase) {
