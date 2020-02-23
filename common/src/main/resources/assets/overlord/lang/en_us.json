@@ -1,4 +1,7 @@
 {
+  "block.overlord.blood_soaked_soil": "Blood-Soaked Soil",
+  "block.overlord.oak_casket": "Oak Casket",
   "container.casket": "Casket",
-  "block.overlord.blood_soaked_soil": "Blood-Soaked Soil"
+  "entity.overlord.owned_skeleton": "Army Skeleton",
+  "item.overlord.owned_skeleton_spawn_egg": "Army Skeleton Spawn Egg"
 }
