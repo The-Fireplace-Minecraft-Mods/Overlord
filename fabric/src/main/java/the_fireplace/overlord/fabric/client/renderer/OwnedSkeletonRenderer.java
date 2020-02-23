@@ -28,7 +28,7 @@ import the_fireplace.overlord.fabric.entity.OwnedSkeletonEntity;
 @Environment(EnvType.CLIENT)
 public class OwnedSkeletonRenderer extends LivingEntityRenderer<OwnedSkeletonEntity, OwnedSkeletonModel> {
     public OwnedSkeletonRenderer(EntityRenderDispatcher dispatcher) {
-        super(dispatcher, new OwnedSkeletonModel(1.0f), 1);
+        super(dispatcher, new OwnedSkeletonModel(1.0f), 0.5f);
         this.addFeature(new ArmorBipedFeatureRenderer(this, new BipedEntityModel(0.5F), new BipedEntityModel(1.0F)));
         this.addFeature(new HeldItemFeatureRenderer(this));
         this.addFeature(new StuckArrowsFeatureRenderer(this));
@@ -61,8 +61,8 @@ public class OwnedSkeletonRenderer extends LivingEntityRenderer<OwnedSkeletonEnt
 
     @Override
     protected void scale(OwnedSkeletonEntity entity, MatrixStack matrices, float tickDelta) {
-        float g = 0.9375F;
-        matrices.scale(0.9375F, 0.9375F, 0.9375F);
+        float g = (entity.getGrowthPhase()+1) * 0.1f + 0.5f;
+        matrices.scale(g, g, g);
     }
 
     @Override
