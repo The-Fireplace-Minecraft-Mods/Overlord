@@ -151,7 +151,7 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
 
     @Override
     public BlockEntity createBlockEntity(BlockView view) {
-        return null;
+        return new CasketBlockEntity();
     }
 
     @Override
@@ -191,9 +191,7 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
 
     public static <T> T retrieve(BlockState state, IWorld world, BlockPos pos) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (!(blockEntity instanceof CasketBlockEntity)) {
-            return null;
-        } else {
+        if (blockEntity instanceof CasketBlockEntity) {
             BlockState blockState = world.getBlockState(pos);
             //TODO Figure out the head state and use its container
             if (blockState.getBlock() == state.getBlock()) {
@@ -204,8 +202,8 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
                     }
                 }
             }
-            return null;
         }
+        return null;
     }
 
     public static Inventory getInventory(BlockState blockState, World world, BlockPos blockPos) {

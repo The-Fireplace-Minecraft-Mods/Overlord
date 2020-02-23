@@ -10,7 +10,7 @@ import net.minecraft.tag.Tag;
 import net.minecraft.tag.TagContainer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import the_fireplace.overlord.fabric.Overlord;
+import the_fireplace.overlord.OverlordHelper;
 import the_fireplace.overlord.fabric.tags.OverlordBlockTags;
 import the_fireplace.overlord.fabric.tags.OverlordItemTags;
 
@@ -46,7 +46,7 @@ public class ItemTagsProvider extends AbstractTagProvider<Item> {
                 Block block = (Block) o;
                 Item item = block.asItem();
                 if (item == Items.AIR) {
-                    Overlord.LOGGER.warn("Itemless block copied to item tag: {}", Registry.BLOCK.getId(block));
+                    OverlordHelper.LOGGER.warn("Itemless block copied to item tag: {}", Registry.BLOCK.getId(block));
                 } else {
                     list.add(item);
                 }

@@ -16,7 +16,7 @@ import java.util.Objects;
 
 public class CasketBlockEntity extends LockableContainerBlockEntity {
     private DefaultedList<ItemStack> inventory;
-    protected CasketBlockEntity(BlockEntityType<?> blockEntityType) {
+    public CasketBlockEntity(BlockEntityType<?> blockEntityType) {
         super(blockEntityType);
         this.inventory = DefaultedList.ofSize(54, ItemStack.EMPTY);
     }

@@ -20,6 +20,9 @@
   "entrypoints": {
     "main": [
       "the_fireplace.overlord.fabric.Overlord"
+    ],
+    "client": [
+      "the_fireplace.overlord.fabric.client.OverlordClient"
     ]
   },
   "mixins": [
