@@ -1,6 +1,5 @@
 package the_fireplace.overlord.fabric.blockentity;
 
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,13 +10,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DefaultedList;
+import the_fireplace.overlord.fabric.init.OverlordBlockEntities;
 
 import java.util.Objects;
 
 public class CasketBlockEntity extends LockableContainerBlockEntity {
     private DefaultedList<ItemStack> inventory;
-    public CasketBlockEntity(BlockEntityType<?> blockEntityType) {
-        super(blockEntityType);
+    public CasketBlockEntity() {
+        super(OverlordBlockEntities.CASKET_BLOCK_ENTITY);
         this.inventory = DefaultedList.ofSize(54, ItemStack.EMPTY);
     }
 
