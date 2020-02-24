@@ -28,7 +28,7 @@ import the_fireplace.overlord.fabric.entity.OwnedSkeletonEntity;
 @Environment(EnvType.CLIENT)
 public class OwnedSkeletonRenderer extends LivingEntityRenderer<OwnedSkeletonEntity, OwnedSkeletonModel> {
     public OwnedSkeletonRenderer(EntityRenderDispatcher dispatcher) {
-        super(dispatcher, new OwnedSkeletonModel(1.0f), 0.5f);
+        super(dispatcher, new OwnedSkeletonModel(0.0F), 0.5F);
         this.addFeature(new ArmorBipedFeatureRenderer(this, new BipedEntityModel(0.5F), new BipedEntityModel(1.0F)));
         this.addFeature(new HeldItemFeatureRenderer(this));
         this.addFeature(new StuckArrowsFeatureRenderer(this));
@@ -68,6 +68,11 @@ public class OwnedSkeletonRenderer extends LivingEntityRenderer<OwnedSkeletonEnt
     @Override
     public void render(OwnedSkeletonEntity livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         setModelPose(livingEntity);
+        if(livingEntity.getGrowthPhase() == 4 && livingEntity.hasMuscles() && !this.getModel().isThicc()) {
+            this.getModel().setThicc(true);
+        } else if((livingEntity.getGrowthPhase() != 4 || !livingEntity.hasMuscles()) && this.getModel().isThicc()) {
+            this.getModel().setThicc(false);
+        }
         super.render(livingEntity, f, g, matrixStack, vertexConsumerProvider, i);
     }
 
