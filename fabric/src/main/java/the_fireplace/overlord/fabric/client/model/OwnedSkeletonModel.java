@@ -40,14 +40,14 @@ public class OwnedSkeletonModel extends BipedEntityModel<OwnedSkeletonEntity> {
     public void setAngles(OwnedSkeletonEntity mobEntity, float f, float g, float h, float i, float j) {
         super.setAngles(mobEntity, f, g, h, i, j);
         if (mobEntity.isMeleeAttacking()) {
-            float k = MathHelper.sin(this.handSwingProgress * 3.1415927F);
-            float l = MathHelper.sin((1.0F - (1.0F - this.handSwingProgress) * (1.0F - this.handSwingProgress)) * 3.1415927F);
+            float k = MathHelper.sin(this.handSwingProgress * (float)Math.PI);
+            float l = MathHelper.sin((1.0F - (1.0F - this.handSwingProgress) * (1.0F - this.handSwingProgress)) * (float)Math.PI);
             this.rightArm.roll = 0.0F;
             this.leftArm.roll = 0.0F;
             this.rightArm.yaw = -(0.1F - k * 0.6F);
             this.leftArm.yaw = 0.1F - k * 0.6F;
-            this.rightArm.pitch = -1.5707964F;
-            this.leftArm.pitch = -1.5707964F;
+            this.rightArm.pitch = (float)-Math.PI/2;
+            this.leftArm.pitch = (float)-Math.PI/2;
             ModelPart arm = this.rightArm;
             arm.pitch -= k * 1.2F - l * 0.4F;
             arm = this.leftArm;
