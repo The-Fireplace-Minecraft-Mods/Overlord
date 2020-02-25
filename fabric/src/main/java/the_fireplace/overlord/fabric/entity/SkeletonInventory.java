@@ -32,8 +32,8 @@ public class SkeletonInventory implements Inventory, Nameable {
     public final DefaultedList<ItemStack> offHand;
     public final OwnedSkeletonEntity skeleton;
     private final List<DefaultedList<ItemStack>> combinedInventory;
-    private static final int MAIN_HAND_SLOT = 40;
-    private static final int OFF_HAND_SLOT = 41;
+    public static final int MAIN_HAND_SLOT = 40;
+    public static final int OFF_HAND_SLOT = 41;
     private int changeCount;
 
     public SkeletonInventory(OwnedSkeletonEntity skeleton) {
@@ -150,7 +150,7 @@ public class SkeletonInventory implements Inventory, Nameable {
         }
     }
 
-    public void updateItems() {
+    public void tickItems() {
         for (DefaultedList<ItemStack> itemStacks : this.combinedInventory)
             for (int i = 0; i < itemStacks.size(); ++i)
                 if (!itemStacks.get(i).isEmpty())
