@@ -13,7 +13,6 @@ import net.minecraft.loot.*;
 import net.minecraft.loot.condition.*;
 import net.minecraft.loot.entry.DynamicEntry;
 import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.entry.LeafEntry;
 import net.minecraft.loot.entry.LootEntry;
 import net.minecraft.loot.function.*;
 import net.minecraft.predicate.NumberRange;
@@ -173,7 +172,7 @@ public class BlockLootTableGenerator implements Consumer<BiConsumer<Identifier, 
     }
 
     private static LootTable.Builder createForLeaves(Block leafBlock, Block sapling, float... saplingDropChances) {
-        return createForNeedingSilkTouchShears(leafBlock, addSurvivesExplosionLootCondition(leafBlock, ItemEntry.builder(sapling)).withCondition(TableBonusLootCondition.builder(Enchantments.FORTUNE, saplingDropChances))).withPool(LootPool.builder().withRolls(ConstantLootTableRange.create(1)).withCondition(DOESNT_NEED_SILK_TOUCH_SHEARS).withEntry(((LeafEntry.Builder)addExplosionDecayLootFunction(leafBlock, ItemEntry.builder(Items.STICK).withFunction(SetCountLootFunction.builder(UniformLootTableRange.between(1.0F, 2.0F))))).withCondition(TableBonusLootCondition.builder(Enchantments.FORTUNE, 0.02F, 0.022222223F, 0.025F, 0.033333335F, 0.1F))));
+        return createForNeedingSilkTouchShears(leafBlock, addSurvivesExplosionLootCondition(leafBlock, ItemEntry.builder(sapling)).withCondition(TableBonusLootCondition.builder(Enchantments.FORTUNE, saplingDropChances))).withPool(LootPool.builder().withRolls(ConstantLootTableRange.create(1)).withCondition(DOESNT_NEED_SILK_TOUCH_SHEARS).withEntry(addExplosionDecayLootFunction(leafBlock, ItemEntry.builder(Items.STICK).withFunction(SetCountLootFunction.builder(UniformLootTableRange.between(1.0F, 2.0F)))).withCondition(TableBonusLootCondition.builder(Enchantments.FORTUNE, 0.02F, 0.022222223F, 0.025F, 0.033333335F, 0.1F))));
     }
 
     private static LootTable.Builder createForOakLeaves(Block block, Block block2, float... fs) {

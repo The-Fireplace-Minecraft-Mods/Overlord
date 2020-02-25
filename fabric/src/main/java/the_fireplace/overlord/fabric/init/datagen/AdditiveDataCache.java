@@ -57,7 +57,7 @@ public class AdditiveDataCache extends DataCache {
 
     @Override
     public String getOldSha1(Path path) {
-        return (String)this.oldSha1.get(path);
+        return this.oldSha1.get(path);
     }
 
     @Override

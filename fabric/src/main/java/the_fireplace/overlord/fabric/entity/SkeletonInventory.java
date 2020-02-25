@@ -2,10 +2,7 @@ package the_fireplace.overlord.fabric.entity;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ArmorItem;
@@ -13,7 +10,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.tag.Tag;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -23,10 +19,10 @@ import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.crash.CrashReportSection;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class SkeletonInventory implements Inventory, Nameable {
@@ -62,11 +58,9 @@ public class SkeletonInventory implements Inventory, Nameable {
     }
 
     public int getEmptySlot() {
-        for(int i = 0; i < this.main.size(); ++i) {
-            if (this.main.get(i).isEmpty()) {
+        for(int i = 0; i < this.main.size(); ++i)
+            if (this.main.get(i).isEmpty())
                 return i;
-            }
-        }
 
         return -1;
     }
@@ -93,13 +87,11 @@ public class SkeletonInventory implements Inventory, Nameable {
                 j += l;
                 if (i != 0) {
                     itemStack.decrement(l);
-                    if (itemStack.isEmpty()) {
+                    if (itemStack.isEmpty())
                         this.setInvStack(k, ItemStack.EMPTY);
-                    }
 
-                    if (i > 0 && j >= i) {
+                    if (i > 0 && j >= i)
                         return j;
-                    }
                 }
             }
         }
@@ -109,9 +101,8 @@ public class SkeletonInventory implements Inventory, Nameable {
 
     private int addStack(ItemStack stack) {
         int i = this.getOccupiedSlotWithRoomForStack(stack);
-        if (i == -1) {
+        if (i == -1)
             i = this.getEmptySlot();
-        }
 
         return i == -1 ? stack.getCount() : this.addStack(i, stack);
     }
@@ -131,22 +122,18 @@ public class SkeletonInventory implements Inventory, Nameable {
         }
 
         int j = i;
-        if (i > itemStack.getMaxCount() - itemStack.getCount()) {
+        if (i > itemStack.getMaxCount() - itemStack.getCount())
             j = itemStack.getMaxCount() - itemStack.getCount();
-        }
 
-        if (j > this.getInvMaxStackAmount() - itemStack.getCount()) {
+        if (j > this.getInvMaxStackAmount() - itemStack.getCount())
             j = this.getInvMaxStackAmount() - itemStack.getCount();
-        }
 
-        if (j == 0) {
-            return i;
-        } else {
+        if (j != 0) {
             i -= j;
             itemStack.increment(j);
             itemStack.setCooldown(5);
-            return i;
         }
+        return i;
     }
 
     public int getOccupiedSlotWithRoomForStack(ItemStack stack) {
@@ -155,26 +142,19 @@ public class SkeletonInventory implements Inventory, Nameable {
         } else if (this.canStackAddMore(this.getInvStack(OFF_HAND_SLOT), stack)) {
             return OFF_HAND_SLOT;
         } else {
-            for(int i = 0; i < this.main.size(); ++i) {
-                if (this.canStackAddMore(this.main.get(i), stack)) {
+            for(int i = 0; i < this.main.size(); ++i)
+                if (this.canStackAddMore(this.main.get(i), stack))
                     return i;
-                }
-            }
 
             return -1;
         }
     }
 
     public void updateItems() {
-
-        for (DefaultedList<ItemStack> itemStacks : this.combinedInventory) {
-            for (int i = 0; i < itemStacks.size(); ++i) {
-                if (!itemStacks.get(i).isEmpty()) {
-                    ((ItemStack) itemStacks.get(i)).inventoryTick(this.player.world, this.player, i, MAIN_HAND_SLOT == i);
-                }
-            }
-        }
-
+        for (DefaultedList<ItemStack> itemStacks : this.combinedInventory)
+            for (int i = 0; i < itemStacks.size(); ++i)
+                if (!itemStacks.get(i).isEmpty())
+                    itemStacks.get(i).inventoryTick(this.skeleton.world, this.skeleton, i, MAIN_HAND_SLOT == i);
     }
 
     public boolean insertStack(ItemStack stack) {
@@ -187,13 +167,12 @@ public class SkeletonInventory implements Inventory, Nameable {
         } else {
             try {
                 if (stack.isDamaged()) {
-                    if (slot == -1) {
+                    if (slot == -1)
                         slot = this.getEmptySlot();
-                    }
 
                     if (slot >= 0) {
                         this.main.set(slot, stack.copy());
-                        ((ItemStack)this.main.get(slot)).setCooldown(5);
+                        this.main.get(slot).setCooldown(5);
                         stack.setCount(0);
                         return true;
                     } else {
@@ -212,14 +191,12 @@ public class SkeletonInventory implements Inventory, Nameable {
 
                     return stack.getCount() < i;
                 }
-            } catch (Throwable var6) {
-                CrashReport crashReport = CrashReport.create(var6, "Adding item to inventory");
+            } catch (Throwable t) {
+                CrashReport crashReport = CrashReport.create(t, "Adding item to inventory");
                 CrashReportSection crashReportSection = crashReport.addElement("Item being added");
                 crashReportSection.add("Item ID", Item.getRawId(stack.getItem()));
                 crashReportSection.add("Item data", stack.getDamage());
-                crashReportSection.add("Item name", () -> {
-                    return stack.getName().getString();
-                });
+                crashReportSection.add("Item name", () -> stack.getName().getString());
                 throw new CrashException(crashReport);
             }
         }
@@ -229,33 +206,25 @@ public class SkeletonInventory implements Inventory, Nameable {
         if (!world.isClient) {
             while(!stack.isEmpty()) {
                 int i = this.getOccupiedSlotWithRoomForStack(stack);
-                if (i == -1) {
+                if (i == -1)
                     i = this.getEmptySlot();
-                }
 
                 if (i == -1) {
-                    this.player.dropItem(stack, false);
+                    this.skeleton.dropItem(stack, false);
                     break;
                 }
 
                 int j = stack.getMaxCount() - this.getInvStack(i).getCount();
                 this.insertStack(i, stack.split(j));
             }
-
         }
     }
 
+    @Override
     public ItemStack takeInvStack(int slot, int amount) {
-        List<ItemStack> list = null;
-
-        DefaultedList<ItemStack> defaultedList;
-        for(Iterator<DefaultedList<ItemStack>> var4 = this.combinedInventory.iterator(); var4.hasNext(); slot -= defaultedList.size()) {
-            defaultedList = var4.next();
-            if (slot < defaultedList.size()) {
-                list = defaultedList;
-                break;
-            }
-        }
+        Pair<DefaultedList<ItemStack>, Integer> listSlot = getInvAndSlot(slot);
+        DefaultedList<ItemStack> list = listSlot.getKey();
+        slot = listSlot.getValue();
 
         return list != null && !list.get(slot).isEmpty() ? Inventories.splitStack(list, slot, amount) : ItemStack.EMPTY;
     }
@@ -271,17 +240,11 @@ public class SkeletonInventory implements Inventory, Nameable {
         }
     }
 
+    @Override
     public ItemStack removeInvStack(int slot) {
-        DefaultedList<ItemStack> defaultedList = null;
-
-        DefaultedList<ItemStack> defaultedList2;
-        for(Iterator<DefaultedList<ItemStack>> var3 = this.combinedInventory.iterator(); var3.hasNext(); slot -= defaultedList2.size()) {
-            defaultedList2 = var3.next();
-            if (slot < defaultedList2.size()) {
-                defaultedList = defaultedList2;
-                break;
-            }
-        }
+        Pair<DefaultedList<ItemStack>, Integer> listSlot = getInvAndSlot(slot);
+        DefaultedList<ItemStack> defaultedList = listSlot.getKey();
+        slot = listSlot.getValue();
 
         if (defaultedList != null && !defaultedList.get(slot).isEmpty()) {
             ItemStack itemStack = defaultedList.get(slot);
@@ -292,22 +255,28 @@ public class SkeletonInventory implements Inventory, Nameable {
         }
     }
 
+    @Override
     public void setInvStack(int slot, ItemStack stack) {
+        Pair<DefaultedList<ItemStack>, Integer> listSlot = getInvAndSlot(slot);
+        DefaultedList<ItemStack> defaultedList = listSlot.getKey();
+        slot = listSlot.getValue();
+
+        if (defaultedList != null)
+            defaultedList.set(slot, stack);
+    }
+
+    private Pair<DefaultedList<ItemStack>, Integer> getInvAndSlot(int slotIndex) {
         DefaultedList<ItemStack> defaultedList = null;
 
         DefaultedList<ItemStack> defaultedList2;
-        for(Iterator<DefaultedList<ItemStack>> var4 = this.combinedInventory.iterator(); var4.hasNext(); slot -= defaultedList2.size()) {
+        for(Iterator<DefaultedList<ItemStack>> var4 = this.combinedInventory.iterator(); var4.hasNext(); slotIndex -= defaultedList2.size()) {
             defaultedList2 = var4.next();
-            if (slot < defaultedList2.size()) {
+            if (slotIndex < defaultedList2.size()) {
                 defaultedList = defaultedList2;
                 break;
             }
         }
-
-        if (defaultedList != null) {
-            defaultedList.set(slot, stack);
-        }
-
+        return Pair.of(defaultedList, slotIndex);
     }
 
     public float getBlockBreakingSpeed(BlockState block) {
@@ -424,16 +393,9 @@ public class SkeletonInventory implements Inventory, Nameable {
 
     @Override
     public ItemStack getInvStack(int slot) {
-        List<ItemStack> list = null;
-
-        DefaultedList<ItemStack> defaultedList;
-        for(Iterator<DefaultedList<ItemStack>> var3 = this.combinedInventory.iterator(); var3.hasNext(); slot -= defaultedList.size()) {
-            defaultedList = var3.next();
-            if (slot < defaultedList.size()) {
-                list = defaultedList;
-                break;
-            }
-        }
+        Pair<DefaultedList<ItemStack>, Integer> listSlot = getInvAndSlot(slot);
+        DefaultedList<ItemStack> list = listSlot.getKey();
+        slot = listSlot.getValue();
 
         return list == null ? ItemStack.EMPTY : list.get(slot);
     }
