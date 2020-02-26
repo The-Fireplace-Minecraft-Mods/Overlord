@@ -73,6 +73,26 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
                 this.heal(1.0F);
 
         inventory.tickItems();
+        boolean inSunlight = this.isInDaylight();
+        //TODO skip if has skin
+        if (inSunlight) {
+            ItemStack itemStack = this.getEquippedStack(EquipmentSlot.HEAD);
+            if (!itemStack.isEmpty()) {
+                if (itemStack.isDamageable()) {
+                    itemStack.setDamage(itemStack.getDamage() + this.random.nextInt(2));
+                    if (itemStack.getDamage() >= itemStack.getMaxDamage()) {
+                        this.sendEquipmentBreakStatus(EquipmentSlot.HEAD);
+                        this.equipStack(EquipmentSlot.HEAD, ItemStack.EMPTY);
+                    }
+                }
+
+                inSunlight = false;
+            }
+
+            if (inSunlight) {
+                this.setOnFireFor(8);
+            }
+        }
         super.tickMovement();
     }
 
@@ -90,6 +110,22 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
 
         this.extinguish();
         this.setFlag(0, false);
+    }
+
+    @Override
+    protected void initAttributes() {
+        super.initAttributes();
+        this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
+    }
+
+    @Override
+    protected void playStepSound(BlockPos pos, BlockState state) {
+        this.playSound(getGrowthPhase() == 4 && hasMuscles() || hasSkin() ? SoundEvents.ENTITY_ZOMBIE_STEP : SoundEvents.ENTITY_SKELETON_STEP, 0.15F, 1.0F);
+    }
+
+    @Override
+    public EntityGroup getGroup() {
+        return EntityGroup.UNDEAD;
     }
 
     @Override
@@ -562,16 +598,16 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
     }
 
     @Override
-    public ItemStack getArrowType(ItemStack itemStack) {
-        if (!(itemStack.getItem() instanceof RangedWeaponItem)) {
+    public ItemStack getArrowType(ItemStack rangedWeaponStack) {
+        if (!(rangedWeaponStack.getItem() instanceof RangedWeaponItem)) {
             return ItemStack.EMPTY;
         } else {
-            Predicate<ItemStack> predicate = ((RangedWeaponItem)itemStack.getItem()).getHeldProjectiles();
-            ItemStack itemStack2 = RangedWeaponItem.getHeldProjectile(this, predicate);
-            if (!itemStack2.isEmpty()) {
-                return itemStack2;
+            Predicate<ItemStack> predicate = ((RangedWeaponItem)rangedWeaponStack.getItem()).getHeldProjectiles();
+            ItemStack projectileStack = RangedWeaponItem.getHeldProjectile(this, predicate);
+            if (!projectileStack.isEmpty()) {
+                return projectileStack;
             } else {
-                predicate = ((RangedWeaponItem)itemStack.getItem()).getProjectiles();
+                predicate = ((RangedWeaponItem)rangedWeaponStack.getItem()).getProjectiles();
 
                 for(int i = 0; i < this.inventory.getInvSize(); ++i) {
                     ItemStack itemStack3 = this.inventory.getInvStack(i);
