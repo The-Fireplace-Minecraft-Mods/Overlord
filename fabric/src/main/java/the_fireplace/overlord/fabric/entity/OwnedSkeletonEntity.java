@@ -656,14 +656,14 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
             float g;
             if (randomDirection) {
                 f = this.random.nextFloat() * 0.5F;
-                g = this.random.nextFloat() * 6.2831855F;
+                g = this.random.nextFloat() * (float) Math.PI*2;
                 itemEntity.setVelocity(-MathHelper.sin(g) * f, 0.20000000298023224D, MathHelper.cos(g) * f);
             } else {
                 g = MathHelper.sin(this.pitch * (float) Math.PI/180);
                 float j = MathHelper.cos(this.pitch * (float) Math.PI/180);
                 float k = MathHelper.sin(this.yaw * (float) Math.PI/180);
                 float l = MathHelper.cos(this.yaw * (float) Math.PI/180);
-                float m = this.random.nextFloat() * 6.2831855F;
+                float m = this.random.nextFloat() * (float) Math.PI*2;
                 float n = 0.02F * this.random.nextFloat();
                 itemEntity.setVelocity((double)(-k * j * 0.3F) + Math.cos(m) * (double)n, -g * 0.3F + 0.1F + (this.random.nextFloat() - this.random.nextFloat()) * 0.1F, (double)(l * j * 0.3F) + Math.sin(m) * (double)n);
             }
