@@ -56,12 +56,14 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
 
     private AISettings aiSettings = new AISettings();
     private SkeletonInventory inventory = new SkeletonInventory(this);
+    private OwnedSkeletonContainer container;
     private final ItemCooldownManager itemCooldownManager = new ItemCooldownManager();
     private boolean lefty;
 
     public OwnedSkeletonEntity(EntityType<? extends LivingEntity> type, World world) {
         super(type, world);
         lefty = world.random.nextBoolean();
+        container = new OwnedSkeletonContainer(inventory, !world.isClient, this);
     }
 
     @Override
@@ -718,5 +720,13 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
 
     public boolean isUsingEffectiveTool(BlockState block) {
         return block.getMaterial().canBreakByHand() || this.inventory.isUsingEffectiveTool(block);
+    }
+
+    public OwnedSkeletonContainer getContainer() {
+        return container;
+    }
+
+    public SkeletonInventory getInventory() {
+        return inventory;
     }
 }
