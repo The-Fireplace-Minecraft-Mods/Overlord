@@ -253,7 +253,8 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
             int i = 1 + MathHelper.floor(amount);
             Hand hand = this.getActiveHand();
             this.activeItemStack.damage(i, this, (playerEntity) -> {
-                //TODO send shield broken if needed
+                //TODO make sure this works
+                this.sendEquipmentBreakStatus(EquipmentSlot.OFFHAND);
             });
             if (this.activeItemStack.isEmpty()) {
                 if (hand == Hand.MAIN_HAND)

@@ -2,6 +2,7 @@ package the_fireplace.overlord.fabric.entity;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
@@ -413,17 +414,18 @@ public class SkeletonInventory implements Inventory, Nameable {
         return this.armor.get(slot);
     }
 
-    public void damageArmor(float armor) {
-        if (armor > 0.0F) {
-            armor /= 4.0F;
-            if (armor < 1.0F) {
-                armor = 1.0F;
+    public void damageArmor(float armorDamage) {
+        if (armorDamage > 0.0F) {
+            armorDamage /= 4.0F;
+            if (armorDamage < 1.0F) {
+                armorDamage = 1.0F;
             }
 
             for (ItemStack itemStack : this.armor) {
                 if (itemStack.getItem() instanceof ArmorItem) {
-                    itemStack.damage((int) armor, this.skeleton, (skeleton) -> {
-                        //TODO update clients that the armor broke if needed
+                    itemStack.damage((int) armorDamage, this.skeleton, (skeleton) -> {
+                        //TODO make sure this works
+                        skeleton.sendEquipmentBreakStatus(EquipmentSlot.values()[2+this.armor.indexOf(itemStack)]);
                     });
                 }
             }
