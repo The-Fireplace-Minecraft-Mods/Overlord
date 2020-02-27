@@ -15,6 +15,7 @@ import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.ItemCooldownManager;
+import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -73,27 +74,37 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
                 this.heal(1.0F);
 
         inventory.tickItems();
-        boolean inSunlight = this.isInDaylight();
-        //TODO skip if has skin
-        if (inSunlight) {
-            ItemStack itemStack = this.getEquippedStack(EquipmentSlot.HEAD);
-            if (!itemStack.isEmpty()) {
-                if (itemStack.isDamageable()) {
-                    itemStack.setDamage(itemStack.getDamage() + this.random.nextInt(2));
-                    if (itemStack.getDamage() >= itemStack.getMaxDamage()) {
-                        this.sendEquipmentBreakStatus(EquipmentSlot.HEAD);
-                        this.equipStack(EquipmentSlot.HEAD, ItemStack.EMPTY);
+        if(!hasSkin()) {
+            boolean inSunlight = this.isInDaylight();
+            if (inSunlight) {
+                ItemStack itemStack = this.getEquippedStack(EquipmentSlot.HEAD);
+                if (!itemStack.isEmpty()) {
+                    if (itemStack.isDamageable()) {
+                        itemStack.setDamage(itemStack.getDamage() + this.random.nextInt(2));
+                        if (itemStack.getDamage() >= itemStack.getMaxDamage()) {
+                            this.sendEquipmentBreakStatus(EquipmentSlot.HEAD);
+                            this.equipStack(EquipmentSlot.HEAD, ItemStack.EMPTY);
+                        }
                     }
+
+                    inSunlight = false;
                 }
 
-                inSunlight = false;
-            }
-
-            if (inSunlight) {
-                this.setOnFireFor(8);
+                if (inSunlight)
+                    this.setOnFireFor(8);
             }
         }
         super.tickMovement();
+    }
+
+    protected boolean isInDaylight() {
+        if (this.world.isDay() && !this.world.isClient) {
+            float f = this.getBrightnessAtEyes();
+            BlockPos blockPos = this.getVehicle() instanceof BoatEntity ? (new BlockPos(this.getX(), (double)Math.round(this.getY()), this.getZ())).up() : new BlockPos(this.getX(), (double)Math.round(this.getY()), this.getZ());
+            return f > 0.5F && this.random.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.world.isSkyVisible(blockPos);
+        }
+
+        return false;
     }
 
     @Override
