@@ -37,6 +37,19 @@ public class AIListManager {
             return ImmutableSortedSet.copyOf(OverlordHelper.getLoaderHelper().getMobIds()).asList();
         else if(ALL_ANIMALS_LIST_ID.equals(id))
             return ImmutableSortedSet.copyOf(OverlordHelper.getLoaderHelper().getAnimalIds()).asList();
-        return lists.containsKey(id) ? lists.get(id) : ImmutableList.of();
+        else if(ALL_EQUIPMENT_LIST_ID.equals(id))
+            return ImmutableSortedSet.copyOf(OverlordHelper.getLoaderHelper().getEquipmentIds()).asList();
+        else if(ALL_THROWABLES_LIST_ID.equals(id))
+            return ImmutableSortedSet.copyOf(OverlordHelper.getLoaderHelper().getThrowableIds()).asList();
+        else
+            return lists.containsKey(id) ? lists.get(id) : ImmutableList.of();
+    }
+
+    public static void save() {
+        //TODO
+    }
+
+    public static void load() {
+        //TODO
     }
 }

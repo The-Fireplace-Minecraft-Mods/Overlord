@@ -5,6 +5,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.server.ServerStartCallback;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.Item;
 import net.minecraft.util.registry.Registry;
 import the_fireplace.overlord.ILoaderHelper;
 import the_fireplace.overlord.OverlordHelper;
@@ -20,8 +21,10 @@ import java.util.List;
 
 public class Overlord implements ModInitializer, ILoaderHelper {
 
-    private static final List<String> mobIds = Lists.newArrayList();
-    private static final List<String> animalIds = Lists.newArrayList();
+    private static final List<String> mobIds = Lists.newArrayList(),
+            animalIds = Lists.newArrayList(),
+            equipmentIds = Lists.newArrayList(),
+            throwableIds = Lists.newArrayList();
 
     @Override
     public void onInitialize() {
@@ -54,6 +57,11 @@ public class Overlord implements ModInitializer, ILoaderHelper {
                 if (entityType.getCategory().isAnimal())
                     animalIds.add(Registry.ENTITY_TYPE.getId(entityType).toString());
             }
+            for(Item item: Registry.ITEM) {
+                if(item.isDamageable())
+                    equipmentIds.add(Registry.ITEM.getId(item).toString());
+            }
+            //TODO figure out how to find which items can be thrown
         });
     }
 
@@ -65,5 +73,19 @@ public class Overlord implements ModInitializer, ILoaderHelper {
     @Override
     public List<String> getAnimalIds() {
         return animalIds;
+    }
+
+    @Override
+    public List<String> getEquipmentIds() {
+        return equipmentIds;
+    }
+
+    @Override
+    public List<String> getThrowableIds() {
+        return throwableIds;
+    }
+
+    public static void addThrowableId(String id) {
+        throwableIds.add(id);
     }
 }
