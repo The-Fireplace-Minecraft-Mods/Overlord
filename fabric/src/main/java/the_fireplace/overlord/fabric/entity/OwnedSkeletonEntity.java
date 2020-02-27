@@ -73,6 +73,26 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
                 this.heal(1.0F);
 
         inventory.tickItems();
+        boolean inSunlight = this.isInDaylight();
+        //TODO skip if has skin
+        if (inSunlight) {
+            ItemStack itemStack = this.getEquippedStack(EquipmentSlot.HEAD);
+            if (!itemStack.isEmpty()) {
+                if (itemStack.isDamageable()) {
+                    itemStack.setDamage(itemStack.getDamage() + this.random.nextInt(2));
+                    if (itemStack.getDamage() >= itemStack.getMaxDamage()) {
+                        this.sendEquipmentBreakStatus(EquipmentSlot.HEAD);
+                        this.equipStack(EquipmentSlot.HEAD, ItemStack.EMPTY);
+                    }
+                }
+
+                inSunlight = false;
+            }
+
+            if (inSunlight) {
+                this.setOnFireFor(8);
+            }
+        }
         super.tickMovement();
     }
 
@@ -83,13 +103,29 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
         this.drop(source);
 
         if (source != null) {
-            this.setVelocity(-MathHelper.cos((this.knockbackVelocity + this.yaw) * 0.017453292F) * 0.1F, 0.10000000149011612D, -MathHelper.sin((this.knockbackVelocity + this.yaw) * 0.017453292F) * 0.1F);
+            this.setVelocity(-MathHelper.cos((this.knockbackVelocity + this.yaw) * (float) Math.PI/180) * 0.1F, 0.10000000149011612D, -MathHelper.sin((this.knockbackVelocity + this.yaw) * (float) Math.PI/180) * 0.1F);
         } else {
             this.setVelocity(0.0D, 0.1D, 0.0D);
         }
 
         this.extinguish();
         this.setFlag(0, false);
+    }
+
+    @Override
+    protected void initAttributes() {
+        super.initAttributes();
+        this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
+    }
+
+    @Override
+    protected void playStepSound(BlockPos pos, BlockState state) {
+        this.playSound(getGrowthPhase() == 4 && hasMuscles() || hasSkin() ? SoundEvents.ENTITY_ZOMBIE_STEP : SoundEvents.ENTITY_SKELETON_STEP, 0.15F, 1.0F);
+    }
+
+    @Override
+    public EntityGroup getGroup() {
+        return EntityGroup.UNDEAD;
     }
 
     @Override
@@ -225,14 +261,14 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
         if (!this.isInvulnerableTo(source)) {
             amount = this.applyArmorToDamage(source, amount);
             amount = this.applyEnchantmentsToDamage(source, amount);
-            float f = amount;
+            float preAbsorbAmount = amount;
             amount = Math.max(amount - this.getAbsorptionAmount(), 0.0F);
-            this.setAbsorptionAmount(this.getAbsorptionAmount() - (f - amount));
+            this.setAbsorptionAmount(this.getAbsorptionAmount() - (preAbsorbAmount - amount));
 
             if (amount != 0.0F) {
-                float h = this.getHealth();
+                float health = this.getHealth();
                 this.setHealth(this.getHealth() - amount);
-                this.getDamageTracker().onDamage(source, h, amount);
+                this.getDamageTracker().onDamage(source, health, amount);
             }
         }
     }
@@ -253,7 +289,6 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
                 this.resetLastAttackedTicks();
                 if (baseAttackDamage > 0.0F || attackDamage > 0.0F) {
                     boolean almostCooledDown = cooldownProgress > 0.9F;
-                    boolean bl2 = false;
                     int j = EnchantmentHelper.getKnockback(this);
 
                     boolean isCrit = almostCooledDown && this.fallDistance > 0.0F && !this.onGround && !this.isClimbing() && !this.isTouchingWater() && !this.hasStatusEffect(StatusEffects.BLINDNESS) && !this.hasVehicle() && target instanceof LivingEntity;
@@ -263,7 +298,7 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
                     baseAttackDamage += attackDamage;
                     boolean isSword = false;
                     double d = this.horizontalSpeed - this.prevHorizontalSpeed;
-                    if (almostCooledDown && !isCrit && !bl2 && this.onGround && d < (double)this.getMovementSpeed()) {
+                    if (almostCooledDown && !isCrit && this.onGround && d < (double) this.getMovementSpeed()) {
                         ItemStack itemStack = this.getStackInHand(Hand.MAIN_HAND);
                         if (itemStack.getItem() instanceof SwordItem)
                             isSword = true;
@@ -284,21 +319,21 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
                     boolean targetDamaged = target.damage(DamageSource.mob(this), baseAttackDamage);
                     if (targetDamaged) {
                         if (j > 0) {
-                            if (target instanceof LivingEntity) {
-                                ((LivingEntity)target).takeKnockback(this, (float)j * 0.5F, MathHelper.sin(this.yaw * 0.017453292F), -MathHelper.cos(this.yaw * 0.017453292F));
-                            } else {
-                                target.addVelocity(-MathHelper.sin(this.yaw * 0.017453292F) * (float)j * 0.5F, 0.1D, MathHelper.cos(this.yaw * 0.017453292F) * (float)j * 0.5F);
-                            }
+                            if (target instanceof LivingEntity)
+                                ((LivingEntity)target).takeKnockback(this, (float)j * 0.5F, MathHelper.sin(this.yaw * (float) Math.PI/180), -MathHelper.cos(this.yaw * (float) Math.PI/180));
+                            else
+                                target.addVelocity(-MathHelper.sin(this.yaw * (float) Math.PI/180) * (float)j * 0.5F, 0.1D, MathHelper.cos(this.yaw * (float) Math.PI/180) * (float)j * 0.5F);
 
                             this.setVelocity(this.getVelocity().multiply(0.6D, 1.0D, 0.6D));
                             this.setSprinting(false);
                         }
 
                         if (isSword) {
-                            float m = 1.0F + EnchantmentHelper.getSweepingMultiplier(this) * baseAttackDamage;
+                            float multiplier = 1.0F + EnchantmentHelper.getSweepingMultiplier(this) * baseAttackDamage;
                             List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, target.getBoundingBox().expand(1.0D, 0.25D, 1.0D));
-                            Iterator var19 = list.iterator();
+                            Iterator<LivingEntity> var19 = list.iterator();
 
+                            //TODO Rewrite this ugly code to look better and not need a label.
                             label166:
                             while(true) {
                                 LivingEntity livingEntity;
@@ -312,15 +347,15 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
                                                     break label166;
                                                 }
 
-                                                livingEntity = (LivingEntity)var19.next();
+                                                livingEntity = var19.next();
                                             } while(livingEntity == this);
                                         } while(livingEntity == target);
                                     } while(this.isTeammate(livingEntity));
                                 } while(livingEntity instanceof ArmorStandEntity && ((ArmorStandEntity)livingEntity).isMarker());
 
                                 if (this.squaredDistanceTo(livingEntity) < 9.0D) {
-                                    livingEntity.takeKnockback(this, 0.4F, MathHelper.sin(this.yaw * 0.017453292F), -MathHelper.cos(this.yaw * 0.017453292F));
-                                    livingEntity.damage(DamageSource.mob(this), m);
+                                    livingEntity.takeKnockback(this, 0.4F, MathHelper.sin(this.yaw * (float) Math.PI/180), -MathHelper.cos(this.yaw * (float) Math.PI/180));
+                                    livingEntity.damage(DamageSource.mob(this), multiplier);
                                 }
                             }
                         }
@@ -385,22 +420,21 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
         }
     }
 
+    @Override
     protected void attackLivingEntity(LivingEntity target) {
         this.attack(target);
     }
 
     public void disableShield(boolean sprinting) {
         float f = 0.25F + (float)EnchantmentHelper.getEfficiency(this) * 0.05F;
-        if (sprinting) {
+        if (sprinting)
             f += 0.75F;
-        }
 
         if (this.random.nextFloat() < f) {
             this.getItemCooldownManager().set(Items.SHIELD, 100);
             this.clearActiveItem();
             this.world.sendEntityStatus(this, (byte)30);
         }
-
     }
 
     public void addCritParticles(Entity target) {
@@ -414,16 +448,14 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
     }
 
     public void showSweepParticles() {
-        double d = -MathHelper.sin(this.yaw * 0.017453292F);
-        double e = MathHelper.cos(this.yaw * 0.017453292F);
+        double d = -MathHelper.sin(this.yaw * (float) Math.PI/180);
+        double e = MathHelper.cos(this.yaw * (float) Math.PI/180);
         if (this.world instanceof ServerWorld)
             ((ServerWorld)this.world).spawnParticles(ParticleTypes.SWEEP_ATTACK, this.getX() + d, this.getBodyY(0.5D), this.getZ() + e, 0, d, 0.0D, e, 0.0D);
     }
 
+    @Override
     public void travel(Vec3d movementInput) {
-        double d = this.getX();
-        double e = this.getY();
-        double f = this.getZ();
         double i;
         if (this.isSwimming() && !this.hasVehicle()) {
             i = this.getRotationVector().y;
@@ -505,17 +537,17 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
             this.inventory.setInvStack(slot, item);
             return true;
         } else {
-            EquipmentSlot equipmentSlot5;
+            EquipmentSlot equipmentSlot;
             if (slot == 100 + EquipmentSlot.HEAD.getEntitySlotId())
-                equipmentSlot5 = EquipmentSlot.HEAD;
+                equipmentSlot = EquipmentSlot.HEAD;
             else if (slot == 100 + EquipmentSlot.CHEST.getEntitySlotId())
-                equipmentSlot5 = EquipmentSlot.CHEST;
+                equipmentSlot = EquipmentSlot.CHEST;
             else if (slot == 100 + EquipmentSlot.LEGS.getEntitySlotId())
-                equipmentSlot5 = EquipmentSlot.LEGS;
+                equipmentSlot = EquipmentSlot.LEGS;
             else if (slot == 100 + EquipmentSlot.FEET.getEntitySlotId())
-                equipmentSlot5 = EquipmentSlot.FEET;
+                equipmentSlot = EquipmentSlot.FEET;
             else
-                equipmentSlot5 = null;
+                equipmentSlot = null;
 
             if (slot == 98) {
                 this.equipStack(EquipmentSlot.MAINHAND, item);
@@ -526,13 +558,13 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
             } else {
                 if (!item.isEmpty()) {
                     if (!(item.getItem() instanceof ArmorItem) && !(item.getItem() instanceof ElytraItem)) {
-                        if (equipmentSlot5 != EquipmentSlot.HEAD)
+                        if (equipmentSlot != EquipmentSlot.HEAD)
                             return false;
-                    } else if (MobEntity.getPreferredEquipmentSlot(item) != equipmentSlot5)
+                    } else if (MobEntity.getPreferredEquipmentSlot(item) != equipmentSlot)
                         return false;
                 }
 
-                this.inventory.setInvStack((equipmentSlot5 != null ? equipmentSlot5.getEntitySlotId() : 0) + this.inventory.main.size(), item);
+                this.inventory.setInvStack((equipmentSlot != null ? equipmentSlot.getEntitySlotId() : 0) + this.inventory.main.size(), item);
                 return true;
             }
         }
@@ -566,16 +598,16 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
     }
 
     @Override
-    public ItemStack getArrowType(ItemStack itemStack) {
-        if (!(itemStack.getItem() instanceof RangedWeaponItem)) {
+    public ItemStack getArrowType(ItemStack rangedWeaponStack) {
+        if (!(rangedWeaponStack.getItem() instanceof RangedWeaponItem)) {
             return ItemStack.EMPTY;
         } else {
-            Predicate<ItemStack> predicate = ((RangedWeaponItem)itemStack.getItem()).getHeldProjectiles();
-            ItemStack itemStack2 = RangedWeaponItem.getHeldProjectile(this, predicate);
-            if (!itemStack2.isEmpty()) {
-                return itemStack2;
+            Predicate<ItemStack> predicate = ((RangedWeaponItem)rangedWeaponStack.getItem()).getHeldProjectiles();
+            ItemStack projectileStack = RangedWeaponItem.getHeldProjectile(this, predicate);
+            if (!projectileStack.isEmpty()) {
+                return projectileStack;
             } else {
-                predicate = ((RangedWeaponItem)itemStack.getItem()).getProjectiles();
+                predicate = ((RangedWeaponItem)rangedWeaponStack.getItem()).getProjectiles();
 
                 for(int i = 0; i < this.inventory.getInvSize(); ++i) {
                     ItemStack itemStack3 = this.inventory.getInvStack(i);
@@ -641,34 +673,33 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
     }
 
     @Nullable
-    public ItemEntity dropItem(ItemStack stack, boolean bl) {
-        return this.dropItem(stack, false, bl);
+    public ItemEntity dropItem(ItemStack stack, boolean setThrower) {
+        return this.dropItem(stack, false, setThrower);
     }
 
     @Nullable
-    public ItemEntity dropItem(ItemStack stack, boolean bl, boolean bl2) {
+    public ItemEntity dropItem(ItemStack stack, boolean randomDirection, boolean setThrower) {
         if (stack.isEmpty()) {
             return null;
         } else {
             double d = this.getEyeY() - 0.30000001192092896D;
             ItemEntity itemEntity = new ItemEntity(this.world, this.getX(), d, this.getZ(), stack);
             itemEntity.setPickupDelay(40);
-            if (bl2) {
+            if (setThrower)
                 itemEntity.setThrower(this.getUuid());
-            }
 
             float f;
             float g;
-            if (bl) {
+            if (randomDirection) {
                 f = this.random.nextFloat() * 0.5F;
-                g = this.random.nextFloat() * 6.2831855F;
+                g = this.random.nextFloat() * (float) Math.PI*2;
                 itemEntity.setVelocity(-MathHelper.sin(g) * f, 0.20000000298023224D, MathHelper.cos(g) * f);
             } else {
-                g = MathHelper.sin(this.pitch * 0.017453292F);
-                float j = MathHelper.cos(this.pitch * 0.017453292F);
-                float k = MathHelper.sin(this.yaw * 0.017453292F);
-                float l = MathHelper.cos(this.yaw * 0.017453292F);
-                float m = this.random.nextFloat() * 6.2831855F;
+                g = MathHelper.sin(this.pitch * (float) Math.PI/180);
+                float j = MathHelper.cos(this.pitch * (float) Math.PI/180);
+                float k = MathHelper.sin(this.yaw * (float) Math.PI/180);
+                float l = MathHelper.cos(this.yaw * (float) Math.PI/180);
+                float m = this.random.nextFloat() * (float) Math.PI*2;
                 float n = 0.02F * this.random.nextFloat();
                 itemEntity.setVelocity((double)(-k * j * 0.3F) + Math.cos(m) * (double)n, -g * 0.3F + 0.1F + (this.random.nextFloat() - this.random.nextFloat()) * 0.1F, (double)(l * j * 0.3F) + Math.sin(m) * (double)n);
             }
@@ -678,44 +709,44 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
     }
 
     public float getBlockBreakingSpeed(BlockState block) {
-        float f = this.inventory.getBlockBreakingSpeed(block);
-        if (f > 1.0F) {
+        float breakSpeed = this.inventory.getBlockBreakingSpeed(block);
+        if (breakSpeed > 1.0F) {
             int i = EnchantmentHelper.getEfficiency(this);
             ItemStack itemStack = this.getMainHandStack();
             if (i > 0 && !itemStack.isEmpty())
-                f += (float)(i * i + 1);
+                breakSpeed += (float)(i * i + 1);
         }
 
         if (StatusEffectUtil.hasHaste(this))
-            f *= 1.0F + (float)(StatusEffectUtil.getHasteAmplifier(this) + 1) * 0.2F;
+            breakSpeed *= 1.0F + (float)(StatusEffectUtil.getHasteAmplifier(this) + 1) * 0.2F;
 
         if (this.hasStatusEffect(StatusEffects.MINING_FATIGUE)) {
-            float k;
+            float fatigueMultiplier;
             switch(Objects.requireNonNull(this.getStatusEffect(StatusEffects.MINING_FATIGUE)).getAmplifier()) {
                 case 0:
-                    k = 0.3F;
+                    fatigueMultiplier = 0.3F;
                     break;
                 case 1:
-                    k = 0.09F;
+                    fatigueMultiplier = 0.09F;
                     break;
                 case 2:
-                    k = 0.0027F;
+                    fatigueMultiplier = 0.0027F;
                     break;
                 case 3:
                 default:
-                    k = 8.1E-4F;
+                    fatigueMultiplier = 8.1E-4F;
             }
 
-            f *= k;
+            breakSpeed *= fatigueMultiplier;
         }
 
         if (this.isInFluid(FluidTags.WATER) && !EnchantmentHelper.hasAquaAffinity(this))
-            f /= 5.0F;
+            breakSpeed /= 5.0F;
 
         if (!this.onGround)
-            f /= 5.0F;
+            breakSpeed /= 5.0F;
 
-        return f;
+        return breakSpeed;
     }
 
     public boolean isUsingEffectiveTool(BlockState block) {
