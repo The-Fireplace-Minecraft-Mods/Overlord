@@ -65,7 +65,7 @@ public class SkeletonInventory implements Inventory, Nameable {
         return -1;
     }
 
-    public int method_7371(ItemStack itemStack) {
+    public int findSlotIndex(ItemStack itemStack) {
         for(int i = 0; i < this.main.size(); ++i) {
             ItemStack itemStack2 = this.main.get(i);
             if (!this.main.get(i).isEmpty() && this.areItemsEqual(itemStack, this.main.get(i)) && !this.main.get(i).isDamaged() && !itemStack2.hasEnchantments() && !itemStack2.hasCustomName()) {
