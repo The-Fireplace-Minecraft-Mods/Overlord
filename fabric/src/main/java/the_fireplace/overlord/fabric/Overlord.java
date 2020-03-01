@@ -5,6 +5,8 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.server.ServerStartCallback;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.registry.Registry;
 import the_fireplace.overlord.ILoaderHelper;
@@ -58,7 +60,13 @@ public class Overlord implements ModInitializer, ILoaderHelper {
                     animalIds.add(Registry.ENTITY_TYPE.getId(entityType).toString());
             }
             for(Item item: Registry.ITEM) {
-                if(item.isDamageable())
+                if(item.isDamageable() && (item instanceof ArmorItem
+                    || !item.getModifiers(EquipmentSlot.MAINHAND).isEmpty()
+                    || !item.getModifiers(EquipmentSlot.OFFHAND).isEmpty()
+                    || !item.getModifiers(EquipmentSlot.HEAD).isEmpty()
+                    || !item.getModifiers(EquipmentSlot.CHEST).isEmpty()
+                    || !item.getModifiers(EquipmentSlot.LEGS).isEmpty()
+                    || !item.getModifiers(EquipmentSlot.FEET).isEmpty()))
                     equipmentIds.add(Registry.ITEM.getId(item).toString());
             }
             //TODO figure out how to find which items can be thrown

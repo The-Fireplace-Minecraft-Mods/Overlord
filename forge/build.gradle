@@ -36,7 +36,7 @@ sourceSets {
 archivesBaseName = project.hasProperty("outputJarBaseName") ? project.outputJarBaseName : "forge"
 
 minecraft {
-    mappings channel: 'stable', version: '60-1.15'
+    mappings channel: 'snapshot', version: '20200227-mixed-1.15.2'
     
     runs {
         client = {
@@ -58,6 +58,10 @@ minecraft {
 repositories {
     flatDir {
         dirs 'libs'
+    }
+    //Yarn2Mcp
+    maven {
+        url "https://maven.tterrag.com/"
     }
 }
 

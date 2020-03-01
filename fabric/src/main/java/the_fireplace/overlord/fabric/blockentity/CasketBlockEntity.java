@@ -2,6 +2,7 @@ package the_fireplace.overlord.fabric.blockentity;
 
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.container.Container;
+import net.minecraft.container.GenericContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
@@ -27,8 +28,8 @@ public class CasketBlockEntity extends LockableContainerBlockEntity {
     }
 
     @Override
-    protected Container createContainer(int i, PlayerInventory playerInventory) {
-        return null;
+    protected Container createContainer(int syncId, PlayerInventory playerInventory) {
+        return GenericContainer.createGeneric9x6(syncId, playerInventory);
     }
 
     @Override
