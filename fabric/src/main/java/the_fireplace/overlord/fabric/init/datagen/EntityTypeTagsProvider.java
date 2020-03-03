@@ -3,9 +3,11 @@ package the_fireplace.overlord.fabric.init.datagen;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.server.AbstractTagProvider;
 import net.minecraft.entity.EntityType;
+import net.minecraft.tag.EntityTypeTags;
 import net.minecraft.tag.TagContainer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import the_fireplace.overlord.fabric.init.OverlordEntities;
 
 import java.nio.file.Path;
 
@@ -16,7 +18,8 @@ public class EntityTypeTagsProvider extends AbstractTagProvider<EntityType<?>> {
 
     @Override
     protected void configure() {
-        //TODO Add skeletons to skeletons
+        //TODO find out what exactly tagging the owned skeletons with this does
+        this.getOrCreateTagBuilder(EntityTypeTags.SKELETONS).add(OverlordEntities.OWNED_SKELETON_TYPE);
     }
 
     @Override

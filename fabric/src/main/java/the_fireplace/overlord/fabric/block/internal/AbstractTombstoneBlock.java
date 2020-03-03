@@ -13,7 +13,7 @@ import net.minecraft.world.BlockView;
 public abstract class AbstractTombstoneBlock extends HorizontalFacingBlock implements BlockEntityProvider, Waterloggable {
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
-    protected AbstractTombstoneBlock(Settings settings) {
+    public AbstractTombstoneBlock(Settings settings) {
         super(settings);
         this.setDefaultState(this.getStateManager().getDefaultState().with(WATERLOGGED, false));
     }

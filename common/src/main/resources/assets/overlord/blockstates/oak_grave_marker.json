@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": {"model": "overlord:block/oak_grave_marker"},
+    "facing=east": {"model": "overlord:block/oak_grave_marker", "y":  90},
+    "facing=south": {"model": "overlord:block/oak_grave_marker", "y":  180},
+    "facing=west": {"model": "overlord:block/oak_grave_marker", "y":  270}
+  }
+}

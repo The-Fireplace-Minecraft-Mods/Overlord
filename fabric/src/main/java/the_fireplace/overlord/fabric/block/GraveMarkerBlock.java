@@ -15,7 +15,6 @@ import the_fireplace.overlord.fabric.block.internal.AbstractTombstoneBlock;
 import java.util.stream.Stream;
 
 public class GraveMarkerBlock extends AbstractTombstoneBlock {
-
     private static final VoxelShape SOUTH_SHAPE = Stream.of(
             Block.createCuboidShape(7, 0, 7, 9, 12, 9),
             Block.createCuboidShape(3, 7, 9, 13, 10, 10)
@@ -36,7 +35,7 @@ public class GraveMarkerBlock extends AbstractTombstoneBlock {
             Block.createCuboidShape(6, 7, 3, 7, 10, 13)
     ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
 
-    protected GraveMarkerBlock(Settings settings) {
+    public GraveMarkerBlock(Settings settings) {
         super(settings);
     }
 

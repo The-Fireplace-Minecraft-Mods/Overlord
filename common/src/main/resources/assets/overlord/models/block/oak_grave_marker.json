@@ -1,0 +1,7 @@
+{
+	"parent": "overlord:block/grave_marker",
+	"textures": {
+		"sign": "block/oak_planks",
+		"pole": "block/stripped_oak_log"
+	}
+}

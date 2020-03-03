@@ -48,6 +48,7 @@ public class BlockLootTableGenerator implements Consumer<BiConsumer<Identifier, 
     @Override
     public void accept(BiConsumer<Identifier, LootTable.Builder> identifierBuilderBiConsumer) {
         registerForSelfDrop(OverlordBlocks.BLOOD_SOAKED_SOIL);
+        registerForSelfDrop(OverlordBlocks.OAK_GRAVE_MARKER);
 
 
 

@@ -3,7 +3,7 @@ package the_fireplace.overlord.fabric.block;
 import the_fireplace.overlord.fabric.block.internal.AbstractTombstoneBlock;
 
 public class TombstoneBlock extends AbstractTombstoneBlock {
-    protected TombstoneBlock(Settings settings) {
+    public TombstoneBlock(Settings settings) {
         super(settings);
     }
 }

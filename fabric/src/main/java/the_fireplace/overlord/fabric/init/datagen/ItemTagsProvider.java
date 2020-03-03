@@ -25,6 +25,7 @@ public class ItemTagsProvider extends AbstractTagProvider<Item> {
     @Override
     protected void configure() {
         this.copy(OverlordBlockTags.CASKETS, OverlordItemTags.CASKETS);
+        this.copy(OverlordBlockTags.GRAVE_MARKERS, OverlordItemTags.GRAVE_MARKERS);
     }
 
     protected void copy(Tag<Block> tag, Tag<Item> tag2) {

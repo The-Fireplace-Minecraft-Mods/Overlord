@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 public class RecipesProvider implements DataProvider {
     private static final Logger LOGGER = LogManager.getLogger("Overlord Recipe Generator");
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
-    private final net.minecraft.data.DataGenerator root;
+    private final DataGenerator root;
 
     public RecipesProvider(DataGenerator dataGenerator) {
         this.root = dataGenerator;
