@@ -10,20 +10,25 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import the_fireplace.overlord.OverlordHelper;
 
 import static net.minecraft.container.PlayerContainer.*;
 
 public class OwnedSkeletonContainer extends Container {
+    public static final Identifier EMPTY_WEAPON_SLOT = new Identifier(OverlordHelper.MODID, "item/empty_weapon_slot");
     private static final Identifier[] EMPTY_ARMOR_SLOT_TEXTURES = new Identifier[]{EMPTY_BOOTS_SLOT_TEXTURE, EMPTY_LEGGINGS_SLOT_TEXTURE, EMPTY_CHESTPLATE_SLOT_TEXTURE, EMPTY_HELMET_SLOT_TEXTURE};
     private static final EquipmentSlot[] EQUIPMENT_SLOT_ORDER = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     public final boolean onServer;
     private final OwnedSkeletonEntity owner;
-    public OwnedSkeletonContainer(SkeletonInventory inventory, boolean onServer, OwnedSkeletonEntity owner) {
+    private final SkeletonInventory inventory;
+    public OwnedSkeletonContainer(PlayerInventory playerInventory, boolean onServer, OwnedSkeletonEntity owner) {
         super(null, 0);
         this.onServer = onServer;
         this.owner = owner;
+        this.inventory = owner.getInventory();
 
         int n;
         int m;
@@ -54,21 +59,35 @@ public class OwnedSkeletonContainer extends Container {
             });
         }
 
+        for(n = 0; n < 4; ++n) {
+            for(m = 0; m < 9; ++m) {
+                this.addSlot(new Slot(inventory, m + n * 9, 8 + m * 18, 84 + n * 18));
+            }
+        }
+
         for(n = 0; n < 3; ++n) {
             for(m = 0; m < 9; ++m) {
-                this.addSlot(new Slot(inventory, m + (n + 1) * 9, 8 + m * 18, 84 + n * 18));
+                this.addSlot(new Slot(playerInventory, m + (n + 1) * 9, 8 + m * 18, 84 + 86 + n * 18));
             }
         }
 
         for(n = 0; n < 9; ++n) {
-            this.addSlot(new Slot(inventory, n, 8 + n * 18, 142));
+            this.addSlot(new Slot(playerInventory, n, 8 + n * 18, 142 + 86));
         }
 
-        this.addSlot(new Slot(inventory, 40, 77, 62) {
+        this.addSlot(new Slot(inventory, 41, 77, 62) {
             @Environment(EnvType.CLIENT)
             @Override
             public Pair<Identifier, Identifier> getBackgroundSprite() {
                 return Pair.of(PlayerContainer.BLOCK_ATLAS_TEXTURE, PlayerContainer.EMPTY_OFFHAND_ARMOR_SLOT);
+            }
+        });
+
+        this.addSlot(new Slot(inventory, 40, 77, 62 - 18) {
+            @Environment(EnvType.CLIENT)
+            @Override
+            public Pair<Identifier, Identifier> getBackgroundSprite() {
+                return Pair.of(PlayerContainer.BLOCK_ATLAS_TEXTURE, EMPTY_WEAPON_SLOT);
             }
         });
     }
@@ -76,7 +95,7 @@ public class OwnedSkeletonContainer extends Container {
     @Override
     public ItemStack transferSlot(PlayerEntity player, int invSlot) {
         ItemStack itemStack = ItemStack.EMPTY;
-        Slot slot = (Slot)this.slots.get(invSlot);
+        Slot slot = this.slots.get(invSlot);
         if (slot != null && slot.hasStack()) {
             ItemStack itemStack2 = slot.getStack();
             itemStack = itemStack2.copy();
@@ -137,7 +156,7 @@ public class OwnedSkeletonContainer extends Container {
 
     @Override
     public boolean canUse(PlayerEntity player) {
-        return true;
+        return owner.getOwnerId().equals(player.getUuid());
     }
 
     public OwnedSkeletonEntity getOwner() {

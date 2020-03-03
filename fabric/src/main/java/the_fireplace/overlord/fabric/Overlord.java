@@ -13,6 +13,7 @@ import the_fireplace.overlord.ILoaderHelper;
 import the_fireplace.overlord.OverlordHelper;
 import the_fireplace.overlord.fabric.init.OverlordBlockEntities;
 import the_fireplace.overlord.fabric.init.OverlordBlocks;
+import the_fireplace.overlord.fabric.init.OverlordEntities;
 import the_fireplace.overlord.fabric.init.OverlordItems;
 import the_fireplace.overlord.fabric.init.datagen.*;
 
@@ -35,6 +36,7 @@ public class Overlord implements ModInitializer, ILoaderHelper {
         OverlordBlocks.registerBlocks();
         OverlordItems.registerItems();
         OverlordBlockEntities.register();
+        OverlordEntities.register();
         //noinspection ConstantConditions//TODO Use environment variables for this
         if(false) {
             OverlordHelper.LOGGER.debug("Generating data...");

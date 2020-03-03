@@ -6,6 +6,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Identifier;
+import the_fireplace.overlord.OverlordHelper;
 import the_fireplace.overlord.fabric.entity.OwnedSkeletonContainer;
 import the_fireplace.overlord.fabric.entity.OwnedSkeletonEntity;
 import the_fireplace.overlord.fabric.entity.SkeletonInventory;
@@ -16,14 +18,17 @@ import static net.minecraft.client.gui.screen.ingame.InventoryScreen.drawEntity;
 
 @Environment(EnvType.CLIENT)
 public class OwnedSkeletonGui extends ContainerScreen<OwnedSkeletonContainer> {
+    public static final Identifier BACKGROUND_TEXTURE = new Identifier(OverlordHelper.MODID, "textures/gui/skeleton_inventory.png");
     private int mouseX;
     private int mouseY;
     private boolean isMouseDown;
     private SkeletonInventory inv;
     private OwnedSkeletonEntity entity;
     public OwnedSkeletonGui(OwnedSkeletonEntity skeleton) {
-        super(skeleton.getContainer(), Objects.requireNonNull(MinecraftClient.getInstance().player).inventory, new TranslatableText("entity.overlord.owned_skeleton"));
+        super(skeleton.getContainer(Objects.requireNonNull(MinecraftClient.getInstance().player).inventory), Objects.requireNonNull(MinecraftClient.getInstance().player).inventory, new TranslatableText("entity.overlord.owned_skeleton"));
         inv = skeleton.getInventory();
+        entity = skeleton;
+        containerHeight = 252;
     }
 
     @Override

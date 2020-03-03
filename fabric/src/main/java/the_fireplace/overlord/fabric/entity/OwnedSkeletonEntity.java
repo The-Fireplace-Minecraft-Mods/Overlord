@@ -3,6 +3,7 @@ package the_fireplace.overlord.fabric.entity;
 import com.google.common.collect.Lists;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.SharedConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -15,6 +16,8 @@ import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.ItemCooldownManager;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundTag;
@@ -37,6 +40,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import the_fireplace.overlord.OverlordHelper;
 import the_fireplace.overlord.api.Ownable;
+import the_fireplace.overlord.fabric.init.OverlordEntities;
 import the_fireplace.overlord.model.AISettings;
 
 import javax.annotation.Nullable;
@@ -57,14 +61,12 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
 
     private AISettings aiSettings = new AISettings();
     private SkeletonInventory inventory = new SkeletonInventory(this);
-    private OwnedSkeletonContainer container;
     private final ItemCooldownManager itemCooldownManager = new ItemCooldownManager();
     private boolean lefty;
 
     public OwnedSkeletonEntity(EntityType<? extends LivingEntity> type, World world) {
         super(type, world);
         lefty = world.random.nextBoolean();
-        container = new OwnedSkeletonContainer(inventory, !world.isClient, this);
     }
 
     @Override
@@ -105,6 +107,14 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
         }
 
         return false;
+    }
+
+    @Override
+    public boolean interact(PlayerEntity player, Hand hand) {
+        if(!player.world.isClient()) {
+            ContainerProviderRegistry.INSTANCE.openContainer(OverlordEntities.OWNED_SKELETON_ID, player, buf -> buf.writeUuid(this.getUuid()));
+        }
+        return true;
     }
 
     @Override
@@ -765,8 +775,8 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
         return block.getMaterial().canBreakByHand() || this.inventory.isUsingEffectiveTool(block);
     }
 
-    public OwnedSkeletonContainer getContainer() {
-        return container;
+    public OwnedSkeletonContainer getContainer(PlayerInventory playerInv) {
+        return new OwnedSkeletonContainer(playerInv, !world.isClient, this);
     }
 
     public SkeletonInventory getInventory() {
