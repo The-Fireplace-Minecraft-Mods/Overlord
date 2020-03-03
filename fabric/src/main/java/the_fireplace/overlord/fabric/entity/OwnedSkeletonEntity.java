@@ -111,7 +111,7 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
     public void onDeath(DamageSource source) {
         super.onDeath(source);
         this.refreshPosition();
-        this.drop(source);
+        //this.drop(source);
 
         if (source != null) {
             this.setVelocity(-MathHelper.cos((this.knockbackVelocity + this.yaw) * (float) Math.PI/180) * 0.1F, 0.10000000149011612D, -MathHelper.sin((this.knockbackVelocity + this.yaw) * (float) Math.PI/180) * 0.1F);
