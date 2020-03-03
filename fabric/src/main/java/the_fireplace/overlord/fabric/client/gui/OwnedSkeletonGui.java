@@ -15,13 +15,13 @@ import java.util.Objects;
 import static net.minecraft.client.gui.screen.ingame.InventoryScreen.drawEntity;
 
 @Environment(EnvType.CLIENT)
-public class GuiOwnedSkeleton extends ContainerScreen<OwnedSkeletonContainer> {
+public class OwnedSkeletonGui extends ContainerScreen<OwnedSkeletonContainer> {
     private int mouseX;
     private int mouseY;
     private boolean isMouseDown;
     private SkeletonInventory inv;
     private OwnedSkeletonEntity entity;
-    public GuiOwnedSkeleton(OwnedSkeletonEntity skeleton) {
+    public OwnedSkeletonGui(OwnedSkeletonEntity skeleton) {
         super(skeleton.getContainer(), Objects.requireNonNull(MinecraftClient.getInstance().player).inventory, new TranslatableText("entity.overlord.owned_skeleton"));
         inv = skeleton.getInventory();
     }
