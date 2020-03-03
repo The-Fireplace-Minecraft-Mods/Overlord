@@ -9,7 +9,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.container.GenericContainer;
 import net.minecraft.text.TranslatableText;
 import the_fireplace.overlord.fabric.client.gui.CasketGui;
+import the_fireplace.overlord.fabric.client.gui.OwnedSkeletonGui;
 import the_fireplace.overlord.fabric.client.renderer.OwnedSkeletonRenderer;
+import the_fireplace.overlord.fabric.entity.OwnedSkeletonContainer;
 import the_fireplace.overlord.fabric.init.OverlordBlockEntities;
 import the_fireplace.overlord.fabric.init.OverlordEntities;
 
@@ -25,5 +27,7 @@ public class OverlordClient implements ClientModInitializer {
         assert MinecraftClient.getInstance().player != null;
         ScreenProviderRegistry.INSTANCE.<GenericContainer>registerFactory(OverlordBlockEntities.CASKET_BLOCK_ENTITY_ID,
                 (container) -> new CasketGui(container, MinecraftClient.getInstance().player.inventory, new TranslatableText("container.casket")));
+        ScreenProviderRegistry.INSTANCE.<OwnedSkeletonContainer>registerFactory(OverlordEntities.OWNED_SKELETON_ID,
+                (container) -> new OwnedSkeletonGui(container.getOwner()));
     }
 }
