@@ -2,9 +2,9 @@ package the_fireplace.overlord.fabric.block.internal;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.container.Container;
@@ -36,6 +36,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import the_fireplace.overlord.fabric.blockentity.CasketBlockEntity;
+import the_fireplace.overlord.fabric.init.OverlordBlockEntities;
 
 import java.util.stream.Stream;
 
@@ -158,12 +159,16 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
         if (!world.isClient) {
-            BlockPos blockPos = pos.offset(state.get(FACING));
-            world.setBlockState(blockPos, state.with(PART, BedPart.HEAD), 3);
+            BlockPos headPos = pos.offset(state.get(FACING));
+            world.setBlockState(headPos, state.with(PART, BedPart.HEAD), 3);
             world.updateNeighbors(pos, Blocks.AIR);
             state.updateNeighborStates(world, pos, 3);
+            if(itemStack.hasCustomName()) {
+                BlockEntity blockEntity = world.getBlockEntity(headPos);
+                if(blockEntity instanceof CasketBlockEntity)
+                    ((CasketBlockEntity) blockEntity).setCustomName(itemStack.getName());
+            }
         }
-
     }
 
     @Override
@@ -182,37 +187,33 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient) {
-            NameableContainerFactory nameableContainerFactory = this.createContainerFactory(state, world, pos);
-            if (nameableContainerFactory != null)
-                player.openContainer(nameableContainerFactory);
+            //Always use the tile entity on the head
+            pos = state.get(PART).equals(BedPart.FOOT) ? pos.offset(state.get(FACING)) : pos;
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof CasketBlockEntity) {
+                BlockPos finalPos = pos;
+                ContainerProviderRegistry.INSTANCE.openContainer(OverlordBlockEntities.CASKET_BLOCK_ENTITY_ID, player, buf -> buf.writeBlockPos(finalPos));
+            }
         }
         return ActionResult.SUCCESS;
     }
 
-    public static <T> T retrieve(BlockState state, IWorld world, BlockPos pos) {
+    public static CasketBlockEntity getBlockEntity(BlockState state, IWorld world, BlockPos pos) {
+        if(state.get(PART).equals(BedPart.FOOT))
+            pos = pos.offset(state.get(FACING));
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof CasketBlockEntity) {
-            BlockState blockState = world.getBlockState(pos);
-            //TODO Figure out the head state and use its container
-            if (blockState.getBlock() == state.getBlock()) {
-                if (blockState.get(FACING) == state.get(FACING)) {
-                    BlockEntity blockEntity2 = world.getBlockEntity(pos);
-                    if (blockEntity2 instanceof ChestBlockEntity) {
-                        return null;
-                    }
-                }
-            }
-        }
+        if (blockEntity instanceof CasketBlockEntity)
+            return (CasketBlockEntity)blockEntity;
         return null;
     }
 
     public static Inventory getInventory(BlockState blockState, World world, BlockPos blockPos) {
-        return (Inventory)retrieve(blockState, world, blockPos);
+        return getBlockEntity(blockState, world, blockPos);
     }
 
     @Override
     public NameableContainerFactory createContainerFactory(BlockState state, World world, BlockPos pos) {
-        return (NameableContainerFactory)retrieve(state, world, pos);
+        return getBlockEntity(state, world, pos);
     }
 
     @Override

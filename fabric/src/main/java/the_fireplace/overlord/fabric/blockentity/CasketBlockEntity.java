@@ -29,7 +29,7 @@ public class CasketBlockEntity extends LockableContainerBlockEntity {
 
     @Override
     protected Container createContainer(int syncId, PlayerInventory playerInventory) {
-        return GenericContainer.createGeneric9x6(syncId, playerInventory);
+        return GenericContainer.createGeneric9x6(syncId, playerInventory, this);
     }
 
     @Override
