@@ -35,6 +35,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import the_fireplace.overlord.fabric.BlockUtils;
 import the_fireplace.overlord.fabric.blockentity.CasketBlockEntity;
 import the_fireplace.overlord.fabric.init.OverlordBlockEntities;
 
@@ -142,7 +143,7 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
 
     @Override
     public PistonBehavior getPistonBehavior(BlockState state) {
-        return PistonBehavior.DESTROY;
+        return PistonBehavior.BLOCK;
     }
 
     @Override
@@ -242,16 +243,7 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext ePos) {
         Direction direction = state.get(FACING);
         Direction direction2 = state.get(PART) == BedPart.HEAD ? direction : direction.getOpposite();
-        switch(direction2) {
-            case NORTH:
-                return NORTH_SHAPE;
-            case SOUTH:
-                return SOUTH_SHAPE;
-            case WEST:
-                return WEST_SHAPE;
-            default:
-                return EAST_SHAPE;
-        }
+        return BlockUtils.getVoxelShape(direction2, NORTH_SHAPE, SOUTH_SHAPE, WEST_SHAPE, EAST_SHAPE);
     }
 
     @Override

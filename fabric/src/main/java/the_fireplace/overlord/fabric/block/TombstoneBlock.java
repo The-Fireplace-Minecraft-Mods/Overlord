@@ -1,4 +1,9 @@
 package the_fireplace.overlord.fabric.block;
 
-public class TombstoneBlock {
+import the_fireplace.overlord.fabric.block.internal.AbstractTombstoneBlock;
+
+public class TombstoneBlock extends AbstractTombstoneBlock {
+    protected TombstoneBlock(Settings settings) {
+        super(settings);
+    }
 }
