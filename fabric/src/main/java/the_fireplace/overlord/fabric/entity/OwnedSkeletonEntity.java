@@ -64,9 +64,20 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
     private final ItemCooldownManager itemCooldownManager = new ItemCooldownManager();
     private boolean lefty;
 
+    /**
+     * Intended for internal use, but it technically works. Use {@link OwnedSkeletonEntity#create(World, UUID)} when possible.
+     */
     public OwnedSkeletonEntity(EntityType<? extends LivingEntity> type, World world) {
         super(type, world);
         lefty = world.random.nextBoolean();
+        //owner should never be null, so assign a default in case for whatever reason it doesn't get set after this constructor is used.
+        this.owner = UUID.fromString("0b1ec5ad-cb2a-43b7-995d-889320eb2e5b");
+    }
+
+    public static OwnedSkeletonEntity create(World world, UUID owner) {
+        OwnedSkeletonEntity e = new OwnedSkeletonEntity(OverlordEntities.OWNED_SKELETON_TYPE, world);
+        e.setOwner(owner);
+        return e;
     }
 
     @Override
@@ -781,5 +792,9 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
 
     public SkeletonInventory getInventory() {
         return inventory;
+    }
+
+    public void setOwner(UUID newOwner) {
+        this.owner = newOwner;
     }
 }
