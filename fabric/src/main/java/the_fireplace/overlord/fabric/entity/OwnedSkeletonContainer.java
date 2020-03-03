@@ -24,8 +24,8 @@ public class OwnedSkeletonContainer extends Container {
     public final boolean onServer;
     private final OwnedSkeletonEntity owner;
     private final SkeletonInventory inventory;
-    public OwnedSkeletonContainer(PlayerInventory playerInventory, boolean onServer, OwnedSkeletonEntity owner) {
-        super(null, 0);
+    public OwnedSkeletonContainer(PlayerInventory playerInventory, boolean onServer, OwnedSkeletonEntity owner, int syncId) {
+        super(null, syncId);
         this.onServer = onServer;
         this.owner = owner;
         this.inventory = owner.getInventory();
@@ -156,7 +156,8 @@ public class OwnedSkeletonContainer extends Container {
 
     @Override
     public boolean canUse(PlayerEntity player) {
-        return owner.getOwnerId().equals(player.getUuid());
+        return true;
+        //owner.getOwnerId().equals(player.getUuid())
     }
 
     public OwnedSkeletonEntity getOwner() {

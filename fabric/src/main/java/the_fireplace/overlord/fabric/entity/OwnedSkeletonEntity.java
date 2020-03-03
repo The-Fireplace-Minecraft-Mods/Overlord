@@ -775,8 +775,8 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
         return block.getMaterial().canBreakByHand() || this.inventory.isUsingEffectiveTool(block);
     }
 
-    public OwnedSkeletonContainer getContainer(PlayerInventory playerInv) {
-        return new OwnedSkeletonContainer(playerInv, !world.isClient, this);
+    public OwnedSkeletonContainer getContainer(PlayerInventory playerInv, int syncId) {
+        return new OwnedSkeletonContainer(playerInv, !world.isClient, this, syncId);
     }
 
     public SkeletonInventory getInventory() {

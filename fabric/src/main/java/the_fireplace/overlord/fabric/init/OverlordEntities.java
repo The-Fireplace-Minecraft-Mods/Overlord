@@ -25,7 +25,7 @@ public class OverlordEntities {
             final World world = player.world;
             final UUID skeletonId = buf.readUuid();
             List<Entity> entities = world.getEntities(player, player.getBoundingBox().expand(6), e -> e instanceof OwnedSkeletonEntity && e.getUuid().equals(skeletonId));
-            return ((OwnedSkeletonEntity)entities.get(0)).getContainer(player.inventory);
+            return ((OwnedSkeletonEntity)entities.get(0)).getContainer(player.inventory, syncId);
         });
     }
 }

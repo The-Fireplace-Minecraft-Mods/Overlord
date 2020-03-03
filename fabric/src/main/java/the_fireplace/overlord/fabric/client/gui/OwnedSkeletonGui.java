@@ -24,8 +24,8 @@ public class OwnedSkeletonGui extends ContainerScreen<OwnedSkeletonContainer> {
     private boolean isMouseDown;
     private SkeletonInventory inv;
     private OwnedSkeletonEntity entity;
-    public OwnedSkeletonGui(OwnedSkeletonEntity skeleton) {
-        super(skeleton.getContainer(Objects.requireNonNull(MinecraftClient.getInstance().player).inventory), Objects.requireNonNull(MinecraftClient.getInstance().player).inventory, new TranslatableText("entity.overlord.owned_skeleton"));
+    public OwnedSkeletonGui(OwnedSkeletonEntity skeleton, int syncId) {
+        super(skeleton.getContainer(Objects.requireNonNull(MinecraftClient.getInstance().player).inventory, syncId), Objects.requireNonNull(MinecraftClient.getInstance().player).inventory, new TranslatableText("entity.overlord.owned_skeleton"));
         inv = skeleton.getInventory();
         entity = skeleton;
         containerHeight = 252;

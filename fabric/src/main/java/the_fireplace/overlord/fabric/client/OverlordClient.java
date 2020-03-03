@@ -28,6 +28,6 @@ public class OverlordClient implements ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.<GenericContainer>registerFactory(OverlordBlockEntities.CASKET_BLOCK_ENTITY_ID,
                 (container) -> new CasketGui(container, MinecraftClient.getInstance().player.inventory, new TranslatableText("container.casket")));
         ScreenProviderRegistry.INSTANCE.<OwnedSkeletonContainer>registerFactory(OverlordEntities.OWNED_SKELETON_ID,
-                (container) -> new OwnedSkeletonGui(container.getOwner()));
+                (container) -> new OwnedSkeletonGui(container.getOwner(), 0));
     }
 }
