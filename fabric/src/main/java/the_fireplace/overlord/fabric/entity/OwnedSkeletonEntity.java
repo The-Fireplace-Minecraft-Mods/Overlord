@@ -122,9 +122,8 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
 
     @Override
     public boolean interact(PlayerEntity player, Hand hand) {
-        if(!player.world.isClient()) {
+        if(!player.world.isClient())
             ContainerProviderRegistry.INSTANCE.openContainer(OverlordEntities.OWNED_SKELETON_ID, player, buf -> buf.writeUuid(this.getUuid()));
-        }
         return true;
     }
 
@@ -200,6 +199,10 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
         this.inventory.deserialize(listTag);
         this.owner = tag.getUuid("Owner");
         this.lefty = tag.getBoolean("Lefty");
+        this.hasMuscles = tag.getBoolean("muscles");
+        this.hasSkin = tag.getBoolean("skin");
+        if(tag.get("skinsuit") != null)
+            this.skinsuit = tag.getUuid("skinsuit");
         //this.experienceProgress = tag.getFloat("XpP");
         //this.experienceLevel = tag.getInt("XpLevel");
         //this.totalExperience = tag.getInt("XpTotal");
@@ -212,6 +215,10 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
         tag.put("Inventory", this.inventory.serialize(new ListTag()));
         tag.putUuid("Owner", this.owner);
         tag.putBoolean("Lefty", this.lefty);
+        tag.putBoolean("muscles", this.hasMuscles);
+        tag.putBoolean("skin", this.hasSkin);
+        if(skinsuit != null)
+            tag.putUuid("skinsuit", this.skinsuit);
         //tag.putFloat("XpP", this.experienceProgress);
         //tag.putInt("XpLevel", this.experienceLevel);
         //tag.putInt("XpTotal", this.totalExperience);
@@ -275,7 +282,7 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
             Hand hand = this.getActiveHand();
             this.activeItemStack.damage(i, this, (playerEntity) -> {
                 //TODO make sure this works
-                this.sendEquipmentBreakStatus(EquipmentSlot.OFFHAND);
+                this.sendEquipmentBreakStatus(hand == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
             });
             if (this.activeItemStack.isEmpty()) {
                 if (hand == Hand.MAIN_HAND)
@@ -662,6 +669,11 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
             OverlordHelper.errorWithStacktrace("Attempt was made to set grown phase > 4!");
         }
         growthPhase = newPhase;
+    }
+
+    @Override
+    public EntityDimensions getDimensions(EntityPose pose) {
+        return super.getDimensions(pose).scaled(1-(0.1f*(4-growthPhase)));
     }
 
     public byte getGrowthPhase() {
