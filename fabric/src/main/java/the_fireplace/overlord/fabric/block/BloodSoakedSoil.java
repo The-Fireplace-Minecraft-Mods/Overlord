@@ -20,12 +20,15 @@ public class BloodSoakedSoil extends SnowyBlock implements Fertilizable {
 
     @Override
     public boolean isFertilizable(BlockView world, BlockPos pos, BlockState state, boolean isClient) {
-        return !state.get(SNOWY) && world.getBlockState(pos.up()).isAir() && world.getBlockState(pos.up(2)).isAir() && (!(world instanceof ServerWorld) || !((ServerWorld) world).getDimension().getType().equals(DimensionType.OVERWORLD) || ((ServerWorld) world).isSkyVisible(pos));
+        return !state.get(SNOWY)
+            && world.getBlockState(pos.up()).isAir()
+            && world.getBlockState(pos.up(2)).isAir()
+            && (!(world instanceof World) || ((World) world).isNight() || !((World) world).getDimension().getType().equals(DimensionType.OVERWORLD));
     }
 
     @Override
     public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
-        return world.getTimeOfDay() >= 12000;
+        return true;
     }
 
     @Override
@@ -34,7 +37,7 @@ public class BloodSoakedSoil extends SnowyBlock implements Fertilizable {
         ZombieEntity zombie = random.nextInt(10000) == 1 ? new ZombieVillagerEntity(EntityType.ZOMBIE_VILLAGER, world) : world.getDimension().getType().equals(DimensionType.THE_NETHER) ? new ZombiePigmanEntity(EntityType.ZOMBIE_PIGMAN, world) : new ZombieEntity(EntityType.ZOMBIE, world);
         if(random.nextInt(3) == 1)
             zombie.setBaby(true);
-        zombie.setPos(pos.getX(), pos.getY()+1, pos.getZ());
+        zombie.updatePosition(pos.getX(), pos.getY()+1, pos.getZ());
         world.spawnEntity(zombie);
     }
 }
