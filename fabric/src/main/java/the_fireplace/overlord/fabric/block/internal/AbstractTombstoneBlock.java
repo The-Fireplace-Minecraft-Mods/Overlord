@@ -5,9 +5,12 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 
 public abstract class AbstractTombstoneBlock extends HorizontalFacingBlock implements BlockEntityProvider, Waterloggable {
@@ -42,5 +45,14 @@ public abstract class AbstractTombstoneBlock extends HorizontalFacingBlock imple
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(WATERLOGGED);
         stateManager.add(FACING);
+    }
+
+    @SuppressWarnings("DuplicatedCode")
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        Direction direction = ctx.getPlayerFacing().getOpposite();
+        BlockPos blockPos = ctx.getBlockPos();
+        FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
+        return ctx.getWorld().getBlockState(blockPos).canReplace(ctx) ? this.getDefaultState().with(FACING, direction).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER) : null;
     }
 }

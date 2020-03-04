@@ -127,6 +127,7 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
         super.onBreak(world, pos, state, player);
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         Direction direction = ctx.getPlayerFacing();
