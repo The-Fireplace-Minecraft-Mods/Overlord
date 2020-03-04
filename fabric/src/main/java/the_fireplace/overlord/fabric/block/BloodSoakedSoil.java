@@ -23,7 +23,7 @@ public class BloodSoakedSoil extends SnowyBlock implements Fertilizable {
         return !state.get(SNOWY)
             && world.getBlockState(pos.up()).isAir()
             && world.getBlockState(pos.up(2)).isAir()
-            && (!(world instanceof World) || ((World) world).isNight() || !((World) world).getDimension().getType().equals(DimensionType.OVERWORLD));
+            && (!(world instanceof World) || !((World) world).isDay());
     }
 
     @Override
