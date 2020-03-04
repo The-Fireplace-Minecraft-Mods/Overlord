@@ -24,15 +24,13 @@ public class OwnedSkeletonModel extends BipedEntityModel<OwnedSkeletonEntity> {
         this.rightArm.addCuboid(thicc ? -3.0F : -1.0F, -2.0F, thicc ? -2.0F : -1.0F, scale, 12.0F, scale, false);
         this.rightArm.setPivot(-5.0F, thicc ? 2.5F : 2.0F, 0.0F);
         this.leftArm = new ModelPart(this, 40, 16);
-        this.leftArm.mirror = true;
-        this.leftArm.addCuboid(thicc ? -1.0F : -1.0F, -2.0F, thicc ? -2.0F : -1.0F, scale, 12.0F, scale, false);
+        this.leftArm.addCuboid(thicc ? -1.0F : -1.0F, -2.0F, thicc ? -2.0F : -1.0F, scale, 12.0F, scale, true);
         this.leftArm.setPivot(5.0F, thicc ? 2.5F : 2.0F, 0.0F);
         this.rightLeg = new ModelPart(this, 0, 16);
         this.rightLeg.addCuboid(thicc ? -2.0F : -1.0F, 0.0F, thicc ? -2.0F : -1.0F, scale, 12.0F, scale, false);
         this.rightLeg.setPivot(thicc ? -2.5F : -2.0F, 12.0F, 0.0F);
         this.leftLeg = new ModelPart(this, 0, 16);
-        this.leftLeg.mirror = true;
-        this.leftLeg.addCuboid(thicc ? -2.0F : -1.0F, 0.0F, thicc ? -2.0F : -1.0F, scale, 12.0F, scale, false);
+        this.leftLeg.addCuboid(thicc ? -2.0F : -1.0F, 0.0F, thicc ? -2.0F : -1.0F, scale, 12.0F, scale, true);
         this.leftLeg.setPivot(thicc ? 2.5F : 2.0F, 12.0F, 0.0F);
     }
 
