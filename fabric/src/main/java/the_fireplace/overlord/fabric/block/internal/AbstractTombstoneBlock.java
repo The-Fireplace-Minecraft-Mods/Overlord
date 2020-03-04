@@ -12,9 +12,11 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
+import the_fireplace.overlord.api.Tombstone;
 
-public abstract class AbstractTombstoneBlock extends HorizontalFacingBlock implements BlockEntityProvider, Waterloggable {
+public abstract class AbstractTombstoneBlock extends HorizontalFacingBlock implements BlockEntityProvider, Waterloggable, Tombstone {
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    protected String nameText = "";
 
     public AbstractTombstoneBlock(Settings settings) {
         super(settings);
@@ -54,5 +56,15 @@ public abstract class AbstractTombstoneBlock extends HorizontalFacingBlock imple
         BlockPos blockPos = ctx.getBlockPos();
         FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
         return ctx.getWorld().getBlockState(blockPos).canReplace(ctx) ? this.getDefaultState().with(FACING, direction).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER) : null;
+    }
+
+    @Override
+    public String getNameText() {
+        return nameText;
+    }
+
+    @Override
+    public void setNameText(String name) {
+        nameText = name;
     }
 }
