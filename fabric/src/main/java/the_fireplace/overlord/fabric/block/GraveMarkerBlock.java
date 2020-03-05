@@ -9,8 +9,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import the_fireplace.overlord.fabric.BlockUtils;
 import the_fireplace.overlord.fabric.block.internal.AbstractTombstoneBlock;
+import the_fireplace.overlord.fabric.util.BlockUtils;
 
 import java.util.stream.Stream;
 

@@ -26,6 +26,16 @@ public class ItemTagsProvider extends AbstractTagProvider<Item> {
     protected void configure() {
         this.copy(OverlordBlockTags.CASKETS, OverlordItemTags.CASKETS);
         this.copy(OverlordBlockTags.GRAVE_MARKERS, OverlordItemTags.GRAVE_MARKERS);
+        this.getOrCreateTagBuilder(OverlordItemTags.MUSCLE_MEAT).add(
+            Items.BEEF,
+            Items.RABBIT,
+            Items.MUTTON,
+            Items.PORKCHOP
+        );
+        this.getOrCreateTagBuilder(OverlordItemTags.FLESH).add(
+            Items.LEATHER,
+            Items.PHANTOM_MEMBRANE
+        );
     }
 
     protected void copy(Tag<Block> tag, Tag<Item> tag2) {

@@ -9,8 +9,6 @@ import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import the_fireplace.overlord.api.Tombstone;
-import the_fireplace.overlord.fabric.Overlord;
-import the_fireplace.overlord.fabric.init.OverlordBlockEntities;
 import the_fireplace.overlord.fabric.init.OverlordBlocks;
 
 import java.util.Objects;

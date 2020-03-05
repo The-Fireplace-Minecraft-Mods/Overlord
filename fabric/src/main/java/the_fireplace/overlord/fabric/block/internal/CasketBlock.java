@@ -35,9 +35,9 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import the_fireplace.overlord.fabric.BlockUtils;
 import the_fireplace.overlord.fabric.blockentity.CasketBlockEntity;
 import the_fireplace.overlord.fabric.init.OverlordBlockEntities;
+import the_fireplace.overlord.fabric.util.BlockUtils;
 
 import java.util.stream.Stream;
 

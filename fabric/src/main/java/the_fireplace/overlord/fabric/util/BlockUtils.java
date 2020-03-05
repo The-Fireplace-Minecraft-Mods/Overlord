@@ -1,4 +1,4 @@
-package the_fireplace.overlord.fabric;
+package the_fireplace.overlord.fabric.util;
 
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
