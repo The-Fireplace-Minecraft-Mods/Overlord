@@ -10,6 +10,8 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import the_fireplace.overlord.fabric.block.internal.AbstractTombstoneBlock;
+import the_fireplace.overlord.fabric.blockentity.GraveMarkerBlockEntity;
+import the_fireplace.overlord.fabric.blockentity.internal.TombstoneBlockEntity;
 import the_fireplace.overlord.fabric.util.BlockUtils;
 
 import java.util.stream.Stream;
@@ -37,6 +39,11 @@ public class GraveMarkerBlock extends AbstractTombstoneBlock {
 
     public GraveMarkerBlock(Settings settings) {
         super(settings);
+    }
+
+    @Override
+    public TombstoneBlockEntity createTombstone(BlockView view) {
+        return new GraveMarkerBlockEntity();
     }
 
     @Override

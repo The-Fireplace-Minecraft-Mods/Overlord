@@ -1,5 +1,6 @@
 package the_fireplace.overlord.fabric.blockentity;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -9,7 +10,9 @@ import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import the_fireplace.overlord.fabric.blockentity.internal.TombstoneBlockEntity;
+import the_fireplace.overlord.fabric.init.OverlordBlockEntities;
 import the_fireplace.overlord.fabric.init.OverlordBlocks;
+import the_fireplace.overlord.fabric.util.SkeletonBuilder;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -24,8 +27,8 @@ public class GraveMarkerBlockEntity extends TombstoneBlockEntity implements Tick
 
     private UUID owner = null;
 
-    public GraveMarkerBlockEntity(BlockEntityType<?> type) {
-        super(type);
+    public GraveMarkerBlockEntity() {
+        super(OverlordBlockEntities.GRAVE_MARKER_BLOCK_ENTITY);
     }
 
     @Override
@@ -56,7 +59,11 @@ public class GraveMarkerBlockEntity extends TombstoneBlockEntity implements Tick
                     BlockPos soilPos1 = casketPos.up(1);
                     BlockPos soilPos2 = soilPos1.offset(facing);
                     if(getWorld().getBlockState(soilPos1).getBlock().equals(OverlordBlocks.BLOOD_SOAKED_SOIL) && getWorld().getBlockState(soilPos2).getBlock().equals(OverlordBlocks.BLOOD_SOAKED_SOIL)) {
-                        //TODO spawn skeleton
+                        if(SkeletonBuilder.hasEssentialContents(casketEntity)) {
+                            SkeletonBuilder.build(casketEntity, casketEntity.getWorld(), this);
+                            getWorld().setBlockState(soilPos1, Blocks.COARSE_DIRT.getDefaultState());
+                            getWorld().setBlockState(soilPos2, Blocks.COARSE_DIRT.getDefaultState());
+                        }
                     }//TODO else if has that one torch I'm going to make
                 }
             }
