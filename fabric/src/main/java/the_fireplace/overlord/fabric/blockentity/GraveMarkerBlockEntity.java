@@ -8,13 +8,21 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import the_fireplace.overlord.api.Tombstone;
+import the_fireplace.overlord.fabric.blockentity.internal.TombstoneBlockEntity;
 import the_fireplace.overlord.fabric.init.OverlordBlocks;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.UUID;
 
-public class GraveMarkerBlockEntity extends BlockEntity implements Tombstone, Tickable {
+public class GraveMarkerBlockEntity extends TombstoneBlockEntity implements Tickable {
     private Text name = new LiteralText("");
+
+    public void setOwner(@Nullable UUID owner) {
+        this.owner = owner;
+    }
+
+    private UUID owner = null;
 
     public GraveMarkerBlockEntity(BlockEntityType<?> type) {
         super(type);
@@ -28,6 +36,12 @@ public class GraveMarkerBlockEntity extends BlockEntity implements Tombstone, Ti
     @Override
     public void setNameText(String name) {
         this.name = new LiteralText(name);
+    }
+
+    @Override
+    @Nullable
+    public UUID getOwner() {
+        return owner;
     }
 
     @Override
