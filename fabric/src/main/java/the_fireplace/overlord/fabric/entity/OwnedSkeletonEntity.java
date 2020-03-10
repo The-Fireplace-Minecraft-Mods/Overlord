@@ -52,12 +52,9 @@ import java.util.function.Predicate;
 
 public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
 
-    private UUID owner = null, skinsuit = null;
-    //TODO These initial values should not be random in the final mod, leaving them randomly set for testing purposes
-    private static int i = 0;
-    //There are 5 growth phases, 0 being baby and 4 being fully grown.
-    private byte growthPhase = (byte)(i++ % 5);
-    private boolean hasSkin = (i / 5) % 2 == 0, hasMuscles = (i / 5) % 3 == 0;
+    private UUID owner, skinsuit = null;
+    private byte growthPhase = 0;
+    private boolean hasSkin = false, hasMuscles = false;
 
     private AISettings aiSettings = new AISettings();
     private SkeletonInventory inventory = new SkeletonInventory(this);
@@ -74,9 +71,10 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
         this.owner = UUID.fromString("0b1ec5ad-cb2a-43b7-995d-889320eb2e5b");
     }
 
-    public static OwnedSkeletonEntity create(World world, UUID owner) {
+    public static OwnedSkeletonEntity create(World world, @Nullable UUID owner) {
         OwnedSkeletonEntity e = new OwnedSkeletonEntity(OverlordEntities.OWNED_SKELETON_TYPE, world);
-        e.setOwner(owner);
+        if(owner != null)
+            e.setOwner(owner);
         return e;
     }
 

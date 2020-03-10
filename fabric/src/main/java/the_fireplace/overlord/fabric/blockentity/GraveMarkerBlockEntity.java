@@ -3,13 +3,12 @@ package the_fireplace.overlord.fabric.blockentity;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import the_fireplace.overlord.fabric.blockentity.internal.TombstoneBlockEntity;
+import the_fireplace.overlord.fabric.entity.OwnedSkeletonEntity;
 import the_fireplace.overlord.fabric.init.OverlordBlockEntities;
 import the_fireplace.overlord.fabric.init.OverlordBlocks;
 import the_fireplace.overlord.fabric.util.SkeletonBuilder;
@@ -19,7 +18,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class GraveMarkerBlockEntity extends TombstoneBlockEntity implements Tickable {
-    private Text name = new LiteralText("");
+    private String name = "";
 
     public void setOwner(@Nullable UUID owner) {
         this.owner = owner;
@@ -38,7 +37,7 @@ public class GraveMarkerBlockEntity extends TombstoneBlockEntity implements Tick
 
     @Override
     public void setNameText(String name) {
-        this.name = new LiteralText(name);
+        this.name = name;
     }
 
     @Override
@@ -50,23 +49,44 @@ public class GraveMarkerBlockEntity extends TombstoneBlockEntity implements Tick
     @Override
     public void tick() {
         if(hasWorld() && !Objects.requireNonNull(getWorld()).isClient) {
-            if(getWorld().getTimeOfDay() >= 17500 && getWorld().getTimeOfDay() <= 18500 && getWorld().getTimeOfDay() % 200 == 0) {
-                Direction facing = this.getWorld().getBlockState(getPos()).get(HorizontalFacingBlock.FACING);
+            assert world != null;
+            if(world.getTimeOfDay() >= 17500 && world.getTimeOfDay() <= 18500 && world.getTimeOfDay() % 200 == 0) {
+                Direction facing = this.world.getBlockState(getPos()).get(HorizontalFacingBlock.FACING);
                 BlockPos casketPos = this.getPos().offset(facing).down(2);
-                BlockEntity blockEntity = getWorld().getBlockEntity(casketPos);
+                BlockEntity blockEntity = world.getBlockEntity(casketPos);
                 if(blockEntity instanceof CasketBlockEntity) {
                     CasketBlockEntity casketEntity = (CasketBlockEntity) blockEntity;
-                    BlockPos soilPos1 = casketPos.up(1);
+                    BlockPos soilPos1 = casketPos.up();
                     BlockPos soilPos2 = soilPos1.offset(facing);
-                    if(getWorld().getBlockState(soilPos1).getBlock().equals(OverlordBlocks.BLOOD_SOAKED_SOIL) && getWorld().getBlockState(soilPos2).getBlock().equals(OverlordBlocks.BLOOD_SOAKED_SOIL)) {
+                    if(world.getBlockState(soilPos1).getBlock().equals(OverlordBlocks.BLOOD_SOAKED_SOIL)
+                        && world.getBlockState(soilPos2).getBlock().equals(OverlordBlocks.BLOOD_SOAKED_SOIL)
+                        && world.getBlockState(soilPos1.up()).isAir()
+                        && world.getBlockState(soilPos1.up(2)).isAir()) {
                         if(SkeletonBuilder.hasEssentialContents(casketEntity)) {
-                            SkeletonBuilder.build(casketEntity, casketEntity.getWorld(), this);
-                            getWorld().setBlockState(soilPos1, Blocks.COARSE_DIRT.getDefaultState());
-                            getWorld().setBlockState(soilPos2, Blocks.COARSE_DIRT.getDefaultState());
+                            OwnedSkeletonEntity skeleton = SkeletonBuilder.build(casketEntity, casketEntity.getWorld(), this);
+                            skeleton.updatePosition(soilPos1.getX(), soilPos1.getY()+1, soilPos1.getZ());
+                            world.spawnEntity(skeleton);
+                            world.setBlockState(soilPos1, Blocks.COARSE_DIRT.getDefaultState());
+                            world.setBlockState(soilPos2, Blocks.COARSE_DIRT.getDefaultState());
                         }
                     }//TODO else if has that one torch I'm going to make
                 }
             }
         }
+    }
+
+    @Override
+    public CompoundTag toTag(CompoundTag tag) {
+        tag = super.toTag(tag);
+        tag.putUuid("owner", owner);
+        tag.putString("text", name);
+        return tag;
+    }
+
+    @Override
+    public void fromTag(CompoundTag tag) {
+        super.fromTag(tag);
+        this.owner = tag.getUuid("owner");
+        this.name = tag.getString("text");
     }
 }

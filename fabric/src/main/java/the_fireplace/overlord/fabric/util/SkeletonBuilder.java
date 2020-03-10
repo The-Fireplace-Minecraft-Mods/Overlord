@@ -8,7 +8,6 @@ import net.minecraft.item.Items;
 import net.minecraft.text.LiteralText;
 import net.minecraft.world.World;
 import the_fireplace.overlord.api.Tombstone;
-import the_fireplace.overlord.fabric.blockentity.CasketBlockEntity;
 import the_fireplace.overlord.fabric.entity.OwnedSkeletonEntity;
 import the_fireplace.overlord.fabric.tags.OverlordItemTags;
 
@@ -113,6 +112,8 @@ public class SkeletonBuilder {
             }
             entity.setCustomName(new LiteralText(tombstone.getNameText()));
         }
+        //TODO Armor
+        //TODO Weapons and Tools
         //TODO Augments?
         return entity;
     }
