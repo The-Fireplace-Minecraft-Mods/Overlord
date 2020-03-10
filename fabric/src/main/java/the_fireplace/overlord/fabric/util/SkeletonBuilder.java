@@ -1,17 +1,24 @@
 package the_fireplace.overlord.fabric.util;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.EntityGroup;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.text.LiteralText;
 import net.minecraft.world.World;
+import the_fireplace.overlord.OverlordHelper;
 import the_fireplace.overlord.api.Tombstone;
 import the_fireplace.overlord.fabric.entity.OwnedSkeletonEntity;
+import the_fireplace.overlord.fabric.entity.SkeletonInventory;
 import the_fireplace.overlord.fabric.tags.OverlordItemTags;
 
-import java.util.Objects;
+import java.util.*;
 
 public class SkeletonBuilder {
     public static final int REQUIRED_BONE_COUNT = 64;
@@ -92,6 +99,89 @@ public class SkeletonBuilder {
         }
     }
 
+    public static void findAndEquipArmor(OwnedSkeletonEntity entity, Inventory casket) {
+        Map<EquipmentSlot, Boolean> equipped = Maps.newHashMap();
+        equipped.put(EquipmentSlot.HEAD, false);
+        equipped.put(EquipmentSlot.CHEST, false);
+        equipped.put(EquipmentSlot.LEGS, false);
+        equipped.put(EquipmentSlot.FEET, false);
+        for(int slot=0;slot<casket.getInvSize();slot++) {
+            ItemStack stack = casket.getInvStack(slot);
+            if(stack.isEmpty())
+                continue;
+            for(Map.Entry<EquipmentSlot, Boolean> entry: Sets.newHashSet(equipped.entrySet()))
+                if(!entry.getValue() && MobEntity.getPreferredEquipmentSlot(stack).equals(entry.getKey())) {
+                    entity.equipStack(entry.getKey(), stack);
+                    casket.setInvStack(slot, ItemStack.EMPTY);
+                    equipped.put(entry.getKey(), true);
+                }
+            //Break if skeleton is fully armored.
+            if(!equipped.containsValue(false))
+                break;
+        }
+    }
+
+    public static void findAndEquipWeapons(OwnedSkeletonEntity entity, Inventory casket) {
+        Map<Integer, ItemStack> weaponSlots = Maps.newHashMap();
+        boolean equippedOffhand = false;
+        boolean hasBow = false;
+        boolean hasCrossbow = false;
+        for(int slot=0;slot<casket.getInvSize();slot++) {
+            ItemStack stack = casket.getInvStack(slot);
+            if(stack.isEmpty())
+                continue;
+            if(isMeleeWeapon(stack))
+                weaponSlots.put(slot, stack);
+            else if(!equippedOffhand && stack.getItem() instanceof ShieldItem) {
+                entity.equipStack(EquipmentSlot.OFFHAND, casket.removeInvStack(slot));
+                equippedOffhand = true;
+            } else if(!equippedOffhand && isRangedWeapon(stack)) {
+                entity.equipStack(EquipmentSlot.OFFHAND, casket.removeInvStack(slot));
+                equippedOffhand = true;
+                if(stack.getItem() instanceof CrossbowItem)
+                    hasCrossbow = true;
+                else
+                    hasBow = true;
+            }
+        }
+        List<Map.Entry<Integer, ItemStack>> m = Lists.newArrayList(weaponSlots.entrySet());
+        m.sort(Comparator.comparingDouble(o -> EnchantmentHelper.getAttackDamage(o.getValue(), EntityGroup.DEFAULT)));
+        if(!m.isEmpty()) {
+            //TODO Don't log, this is just to find out which end has the strongest weapon
+            OverlordHelper.LOGGER.info(m.get(0).getValue().toString());
+            OverlordHelper.LOGGER.info(m.get(m.size() - 1).getValue().toString());
+            entity.equipStack(EquipmentSlot.MAINHAND, casket.removeInvStack(m.get(0).getKey()));
+        }
+        //Collect weapons, tools
+        for(int slot=0;slot<casket.getInvSize();slot++) {
+            ItemStack stack = casket.getInvStack(slot);
+            if(stack.isEmpty())
+                continue;
+            if(isMeleeWeapon(stack)) {
+                entity.getInventory().insertStack(casket.getInvStack(slot));
+            } else if(isRangedWeapon(stack)) {
+                entity.getInventory().insertStack(casket.getInvStack(slot));
+                if(stack.getItem() instanceof CrossbowItem)
+                    hasCrossbow = true;
+                else
+                    hasBow = true;
+            }
+        }
+        //TODO Armor, ammo
+    }
+
+    public static boolean isMeleeWeapon(ItemStack stack) {
+        return EnchantmentHelper.getAttackDamage(stack, EntityGroup.DEFAULT) > 0;
+    }
+
+    public static boolean isRangedWeapon(ItemStack stack) {
+        return stack.getItem() instanceof RangedWeaponItem;
+    }
+
+    public static boolean isAmmo(ItemStack stack, boolean isCrossbow) {
+        return (isCrossbow && RangedWeaponItem.CROSSBOW_HELD_PROJECTILES.test(stack)) || RangedWeaponItem.BOW_PROJECTILES.test(stack);
+    }
+
     public static OwnedSkeletonEntity build(Inventory casket, World world, Tombstone tombstone) {
         OwnedSkeletonEntity entity = OwnedSkeletonEntity.create(world, tombstone.getOwner());
         removeEssentialContents(casket);
@@ -112,7 +202,7 @@ public class SkeletonBuilder {
             }
             entity.setCustomName(new LiteralText(tombstone.getNameText()));
         }
-        //TODO Armor
+        findAndEquipArmor(entity, casket);
         //TODO Weapons and Tools
         //TODO Augments?
         return entity;

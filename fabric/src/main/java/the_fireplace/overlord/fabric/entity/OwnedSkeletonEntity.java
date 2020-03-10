@@ -807,4 +807,8 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
     public void setOwner(UUID newOwner) {
         this.owner = newOwner;
     }
+
+    public AISettings getAiSettings() {
+        return aiSettings;
+    }
 }
