@@ -1,0 +1,6 @@
+{
+  "parent": "block/torch_wall",
+  "textures": {
+    "torch": "overlord:block/torch_of_the_dead"
+  }
+}

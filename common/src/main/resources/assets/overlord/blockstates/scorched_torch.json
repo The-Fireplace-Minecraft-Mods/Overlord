@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "overlord:block/scorched_torch" }
+  }
+}

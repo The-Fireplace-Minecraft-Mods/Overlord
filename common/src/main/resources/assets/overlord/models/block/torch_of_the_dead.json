@@ -1,0 +1,6 @@
+{
+  "parent": "block/template_torch",
+  "textures": {
+    "torch": "overlord:block/torch_of_the_dead"
+  }
+}
