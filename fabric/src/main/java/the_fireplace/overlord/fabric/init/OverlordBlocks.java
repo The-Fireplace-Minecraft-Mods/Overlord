@@ -13,8 +13,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import the_fireplace.overlord.fabric.block.BloodSoakedSoil;
-import the_fireplace.overlord.fabric.block.GraveMarkerBlock;
+import the_fireplace.overlord.fabric.block.*;
 import the_fireplace.overlord.fabric.block.internal.CasketBlock;
 
 import static the_fireplace.overlord.OverlordHelper.MODID;
@@ -27,13 +26,21 @@ public class OverlordBlocks {
         .sounds(BlockSoundGroup.WET_GRASS)
         .materialColor(MaterialColor.RED)
         .breakByTool(FabricToolTags.SHOVELS).build());
+    public static final Block SCORCHED_TORCH = new ScorchedTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).build());
+    public static final Block TORCH_OF_THE_DEAD = new DeadTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).build());
+    public static final Block WALL_SCORCHED_TORCH = new WallScorchedTorchBlock(FabricBlockSettings.copy(Blocks.WALL_TORCH).build());
+    public static final Block WALL_TORCH_OF_THE_DEAD = new WallDeadTorchBlock(FabricBlockSettings.copy(Blocks.WALL_TORCH).build());
 
-    public static final ImmutableList<Block> BLOCKS = ImmutableList.of(OAK_CASKET, BLOOD_SOAKED_SOIL, OAK_GRAVE_MARKER);
+    public static final ImmutableList<Block> BLOCKS = ImmutableList.of(OAK_CASKET, BLOOD_SOAKED_SOIL, OAK_GRAVE_MARKER, SCORCHED_TORCH, TORCH_OF_THE_DEAD, WALL_SCORCHED_TORCH, WALL_TORCH_OF_THE_DEAD);
 
     public static void registerBlocks() {
         registerBlockWithItem("oak_casket", OAK_CASKET, ItemGroup.DECORATIONS);
         registerBlockWithItem("oak_grave_marker", OAK_GRAVE_MARKER, ItemGroup.DECORATIONS);
         registerBlockWithItem("blood_soaked_soil", BLOOD_SOAKED_SOIL, ItemGroup.BUILDING_BLOCKS);
+        registerBlockWithItem("scorched_torch", SCORCHED_TORCH, ItemGroup.DECORATIONS);
+        registerBlockWithItem("torch_of_the_dead", TORCH_OF_THE_DEAD, ItemGroup.DECORATIONS);
+        registerBlock("wall_scorched_torch", WALL_SCORCHED_TORCH);
+        registerBlock("wall_torch_of_the_dead", WALL_TORCH_OF_THE_DEAD);
     }
 
     private static void registerBlock(String path, Block block) {

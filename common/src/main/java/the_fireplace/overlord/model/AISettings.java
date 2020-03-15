@@ -17,6 +17,7 @@ public class AISettings {
     private boolean ranged = true;
     private boolean block = true;
     private boolean throwItem = true;
+    private boolean onlyDefendPlayer = false;
     //Melee settings
     private boolean switchToRangedWhenFar = true;
     private byte rangedSwitchDistance = 4;

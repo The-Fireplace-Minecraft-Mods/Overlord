@@ -45,7 +45,7 @@ public class Overlord implements ModInitializer, ILoaderHelper {
         OverlordBlockEntities.register();
         OverlordEntities.register();
         //noinspection ConstantConditions//TODO Use environment variables for this
-        if(false) {
+        if(true) {
             OverlordHelper.LOGGER.debug("Generating data...");
             DataGenerator gen = new AdditiveDataGenerator(Paths.get("..", "..", "common", "src", "main", "resources"), Collections.emptySet());
             gen.install(new BlockTagsProvider(gen));

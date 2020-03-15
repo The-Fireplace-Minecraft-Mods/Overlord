@@ -50,7 +50,7 @@ public class GraveMarkerBlockEntity extends TombstoneBlockEntity implements Tick
     public void tick() {
         if(hasWorld() && !Objects.requireNonNull(getWorld()).isClient) {
             assert world != null;
-            if(world.getTimeOfDay() >= 17500 && world.getTimeOfDay() <= 18500 && world.getTimeOfDay() % 200 == 0) {
+            if(world.getTimeOfDay() >= 17500 && world.getTimeOfDay() <= 18500 && (world.getTimeOfDay()+100) % 200 == 0) {
                 Direction facing = this.world.getBlockState(getPos()).get(HorizontalFacingBlock.FACING);
                 BlockPos casketPos = this.getPos().offset(facing).down(2);
                 BlockEntity blockEntity = world.getBlockEntity(casketPos);

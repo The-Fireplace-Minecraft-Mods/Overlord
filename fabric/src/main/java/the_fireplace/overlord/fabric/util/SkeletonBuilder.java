@@ -114,11 +114,7 @@ public class SkeletonBuilder {
         //Sort armor prioritizing the high defense armors first
         List<Map.Entry<Integer, ItemStack>> m = Lists.newArrayList(armorSlots.entrySet());
         m.sort(Comparator.comparingDouble(o -> getMaxArmorValue(o.getValue())));
-        if(!m.isEmpty()) {
-            //TODO Don't log, this is just to find out which end has the strongest armor
-            OverlordHelper.LOGGER.info(m.get(0).getValue().toString());
-            OverlordHelper.LOGGER.info(m.get(m.size() - 1).getValue().toString());
-        } else //No armor, so nothing to do after this
+        if(m.isEmpty()) //No armor, so nothing to do after this
             return;
         Map<EquipmentSlot, Boolean> equipped = Maps.newHashMap();
         equipped.put(EquipmentSlot.HEAD, false);
@@ -217,11 +213,6 @@ public class SkeletonBuilder {
         //Sort armor prioritizing the high defense armors first
         List<Map.Entry<Integer, ItemStack>> m = Lists.newArrayList(armorSlots.entrySet());
         m.sort(Comparator.comparingDouble(o -> getMaxArmorValue(o.getValue())));
-        if(!m.isEmpty()) {
-            //TODO Don't log, this is just to find out which end has the strongest armor
-            OverlordHelper.LOGGER.info(m.get(0).getValue().toString());
-            OverlordHelper.LOGGER.info(m.get(m.size() - 1).getValue().toString());
-        }
         //Collect armor
         for(int slot: armorSlots.keySet())
             entity.getInventory().insertStack(casket.getInvStack(slot));
