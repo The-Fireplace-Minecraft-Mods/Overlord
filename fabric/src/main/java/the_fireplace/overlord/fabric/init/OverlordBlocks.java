@@ -37,8 +37,8 @@ public class OverlordBlocks {
         registerBlockWithItem("oak_casket", OAK_CASKET, ItemGroup.DECORATIONS);
         registerBlockWithItem("oak_grave_marker", OAK_GRAVE_MARKER, ItemGroup.DECORATIONS);
         registerBlockWithItem("blood_soaked_soil", BLOOD_SOAKED_SOIL, ItemGroup.BUILDING_BLOCKS);
-        registerBlockWithItem("scorched_torch", SCORCHED_TORCH, ItemGroup.DECORATIONS);
-        registerBlockWithItem("torch_of_the_dead", TORCH_OF_THE_DEAD, ItemGroup.DECORATIONS);
+        registerBlock("scorched_torch", SCORCHED_TORCH);
+        registerBlock("torch_of_the_dead", TORCH_OF_THE_DEAD);
         registerBlock("wall_scorched_torch", WALL_SCORCHED_TORCH);
         registerBlock("wall_torch_of_the_dead", WALL_TORCH_OF_THE_DEAD);
     }
