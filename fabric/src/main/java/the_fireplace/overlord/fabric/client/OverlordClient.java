@@ -4,6 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.minecraft.client.MinecraftClient;
@@ -12,11 +13,14 @@ import net.minecraft.container.GenericContainer;
 import net.minecraft.text.TranslatableText;
 import the_fireplace.overlord.fabric.client.gui.CasketGui;
 import the_fireplace.overlord.fabric.client.gui.OwnedSkeletonGui;
+import the_fireplace.overlord.fabric.client.particle.DeadFlameParticle;
+import the_fireplace.overlord.fabric.client.particle.ScorchedFlameParticle;
 import the_fireplace.overlord.fabric.client.renderer.OwnedSkeletonRenderer;
 import the_fireplace.overlord.fabric.entity.OwnedSkeletonContainer;
 import the_fireplace.overlord.fabric.init.OverlordBlockEntities;
 import the_fireplace.overlord.fabric.init.OverlordBlocks;
 import the_fireplace.overlord.fabric.init.OverlordEntities;
+import the_fireplace.overlord.fabric.init.OverlordParticleTypes;
 
 @Environment(EnvType.CLIENT)
 public class OverlordClient implements ClientModInitializer {
@@ -29,6 +33,8 @@ public class OverlordClient implements ClientModInitializer {
                 OverlordBlocks.TORCH_OF_THE_DEAD,
                 OverlordBlocks.WALL_SCORCHED_TORCH,
                 OverlordBlocks.WALL_TORCH_OF_THE_DEAD);
+        ParticleFactoryRegistry.getInstance().register(OverlordParticleTypes.DEAD_FLAME, DeadFlameParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(OverlordParticleTypes.SCORCHED_FLAME, ScorchedFlameParticle.Factory::new);
     }
 
     private void registerGuis() {
