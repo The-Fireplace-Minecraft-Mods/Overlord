@@ -114,12 +114,12 @@ public class OwnedSkeletonContainer extends Container {
                 if (!this.insertItem(itemStack2, 9, 45, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (equipmentSlot.getType() == EquipmentSlot.Type.ARMOR && !((Slot)this.slots.get(8 - equipmentSlot.getEntitySlotId())).hasStack()) {
+            } else if (equipmentSlot.getType() == EquipmentSlot.Type.ARMOR && !this.slots.get(8 - equipmentSlot.getEntitySlotId()).hasStack()) {
                 int i = 8 - equipmentSlot.getEntitySlotId();
                 if (!this.insertItem(itemStack2, i, i + 1, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (equipmentSlot == EquipmentSlot.OFFHAND && !((Slot)this.slots.get(45)).hasStack()) {
+            } else if (equipmentSlot == EquipmentSlot.OFFHAND && !this.slots.get(45).hasStack()) {
                 if (!this.insertItem(itemStack2, 45, 46, false)) {
                     return ItemStack.EMPTY;
                 }

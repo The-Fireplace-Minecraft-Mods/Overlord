@@ -113,19 +113,15 @@ public class SkeletonBuilder {
         }
         //Sort armor prioritizing the high defense armors first
         List<Map.Entry<Integer, ItemStack>> m = Lists.newArrayList(armorSlots.entrySet());
-        m.sort(Comparator.comparingDouble(o -> getMaxArmorValue(o.getValue())));
-        if(!m.isEmpty()) {
-            //TODO Don't log, this is just to find out which end has the strongest armor
-            OverlordHelper.LOGGER.info(m.get(0).getValue().toString());
-            OverlordHelper.LOGGER.info(m.get(m.size() - 1).getValue().toString());
-        } else //No armor, so nothing to do after this
+        if(m.isEmpty())
             return;
+        m.sort(Comparator.<Map.Entry<Integer, ItemStack>>comparingDouble(o -> getMaxArmorValue(o.getValue())).reversed());
         Map<EquipmentSlot, Boolean> equipped = Maps.newHashMap();
         equipped.put(EquipmentSlot.HEAD, false);
         equipped.put(EquipmentSlot.CHEST, false);
         equipped.put(EquipmentSlot.LEGS, false);
         equipped.put(EquipmentSlot.FEET, false);
-        for(Map.Entry<Integer, ItemStack> slotEntry: armorSlots.entrySet()) {
+        for(Map.Entry<Integer, ItemStack> slotEntry: m) {
             for(Map.Entry<EquipmentSlot, Boolean> entry: Sets.newHashSet(equipped.entrySet()))
                 if(!entry.getValue() && MobEntity.getPreferredEquipmentSlot(slotEntry.getValue()).equals(entry.getKey())) {
                     entity.equipStack(entry.getKey(), slotEntry.getValue());
@@ -163,21 +159,16 @@ public class SkeletonBuilder {
         }
         //Figure out which weapons deal the most damage and collect those first
         List<Map.Entry<Integer, ItemStack>> m = Lists.newArrayList(weaponSlots.entrySet());
-        m.sort(Comparator.comparingDouble(o -> EnchantmentHelper.getAttackDamage(o.getValue(), EntityGroup.DEFAULT)));
-        if(!m.isEmpty()) {
-            //TODO Don't log, this is just to find out which end has the strongest weapon
-            OverlordHelper.LOGGER.info(m.get(0).getValue().toString());
-            OverlordHelper.LOGGER.info(m.get(m.size() - 1).getValue().toString());
-            entity.equipStack(EquipmentSlot.MAINHAND, casket.removeInvStack(m.get(0).getKey()));
-        }
-        //Collect weapons, tools
+        m.sort(Comparator.<Map.Entry<Integer, ItemStack>>comparingDouble(o -> EnchantmentHelper.getAttackDamage(o.getValue(), EntityGroup.DEFAULT)).reversed());
+        //Collect melee weapons and tools
+        for(Map.Entry<Integer, ItemStack> slot: m)
+            entity.getInventory().insertStack(casket.getInvStack(slot.getKey()));
+        //Collect ranged weapons
         for(int slot=0;slot<casket.getInvSize();slot++) {
             ItemStack stack = casket.getInvStack(slot);
             if(stack.isEmpty())
                 continue;
-            if(isMeleeWeapon(stack)) {
-                entity.getInventory().insertStack(casket.getInvStack(slot));
-            } else if(isRangedWeapon(stack)) {
+            if(isRangedWeapon(stack)) {
                 entity.getInventory().insertStack(casket.getInvStack(slot));
                 if(stack.getItem() instanceof CrossbowItem)
                     hasCrossbow = true;
@@ -216,15 +207,10 @@ public class SkeletonBuilder {
         }
         //Sort armor prioritizing the high defense armors first
         List<Map.Entry<Integer, ItemStack>> m = Lists.newArrayList(armorSlots.entrySet());
-        m.sort(Comparator.comparingDouble(o -> getMaxArmorValue(o.getValue())));
-        if(!m.isEmpty()) {
-            //TODO Don't log, this is just to find out which end has the strongest armor
-            OverlordHelper.LOGGER.info(m.get(0).getValue().toString());
-            OverlordHelper.LOGGER.info(m.get(m.size() - 1).getValue().toString());
-        }
+        m.sort(Comparator.<Map.Entry<Integer, ItemStack>>comparingDouble(o -> getMaxArmorValue(o.getValue())).reversed());
         //Collect armor
-        for(int slot: armorSlots.keySet())
-            entity.getInventory().insertStack(casket.getInvStack(slot));
+        for(Map.Entry<Integer, ItemStack> slot: m)
+            entity.getInventory().insertStack(casket.getInvStack(slot.getKey()));
     }
 
 
@@ -276,7 +262,7 @@ public class SkeletonBuilder {
             entity.setHasSkin(true);
             removeSkin(casket);
         }
-        if(tombstone.getNameText() != null) {
+        if(tombstone.getNameText() != null && !tombstone.getNameText().isEmpty()) {
             if(hasSkin) {
                 GameProfile profile = Objects.requireNonNull(world.getServer()).getUserCache().findByName(tombstone.getNameText());
                 if (profile != null)
