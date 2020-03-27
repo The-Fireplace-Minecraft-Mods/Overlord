@@ -17,10 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import the_fireplace.overlord.ILoaderHelper;
 import the_fireplace.overlord.OverlordHelper;
-import the_fireplace.overlord.fabric.init.OverlordBlockEntities;
-import the_fireplace.overlord.fabric.init.OverlordBlocks;
-import the_fireplace.overlord.fabric.init.OverlordEntities;
-import the_fireplace.overlord.fabric.init.OverlordItems;
+import the_fireplace.overlord.fabric.init.*;
 import the_fireplace.overlord.fabric.init.datagen.*;
 import the_fireplace.overlord.fabric.tags.OverlordBlockTags;
 
@@ -44,8 +41,9 @@ public class Overlord implements ModInitializer, ILoaderHelper {
         OverlordItems.registerItems();
         OverlordBlockEntities.register();
         OverlordEntities.register();
+        OverlordParticleTypes.register();
         //noinspection ConstantConditions//TODO Use environment variables for this
-        if(false) {
+        if(true) {
             OverlordHelper.LOGGER.debug("Generating data...");
             DataGenerator gen = new AdditiveDataGenerator(Paths.get("..", "..", "common", "src", "main", "resources"), Collections.emptySet());
             gen.install(new BlockTagsProvider(gen));

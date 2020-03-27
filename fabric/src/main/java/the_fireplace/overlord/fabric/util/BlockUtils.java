@@ -12,6 +12,7 @@ public class BlockUtils {
                 return southShape;
             case WEST:
                 return westShape;
+            case EAST:
             default:
                 return eastShape;
         }

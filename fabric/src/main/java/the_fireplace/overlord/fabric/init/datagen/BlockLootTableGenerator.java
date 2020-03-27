@@ -49,7 +49,8 @@ public class BlockLootTableGenerator implements Consumer<BiConsumer<Identifier, 
     public void accept(BiConsumer<Identifier, LootTable.Builder> identifierBuilderBiConsumer) {
         registerForSelfDrop(OverlordBlocks.BLOOD_SOAKED_SOIL);
         registerForSelfDrop(OverlordBlocks.OAK_GRAVE_MARKER);
-
+        registerForSelfDrop(OverlordBlocks.SCORCHED_TORCH);
+        registerForSelfDrop(OverlordBlocks.TORCH_OF_THE_DEAD);
 
 
         Set<Identifier> set = Sets.newHashSet();

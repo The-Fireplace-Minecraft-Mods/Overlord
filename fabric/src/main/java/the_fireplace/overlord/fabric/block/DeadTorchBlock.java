@@ -11,8 +11,8 @@ import the_fireplace.overlord.fabric.init.OverlordParticleTypes;
 
 import java.util.Random;
 
-public class ScorchedTorchBlock extends TorchBlock {
-    public ScorchedTorchBlock(Settings settings) {
+public class DeadTorchBlock extends TorchBlock {
+    public DeadTorchBlock(Settings settings) {
         super(settings);
     }
 
@@ -23,6 +23,6 @@ public class ScorchedTorchBlock extends TorchBlock {
         double e = (double)pos.getY() + 0.7D;
         double f = (double)pos.getZ() + 0.5D;
         world.addParticle(ParticleTypes.SMOKE, d, e, f, 0.0D, 0.0D, 0.0D);
-        world.addParticle(OverlordParticleTypes.SCORCHED_FLAME, d, e, f, 0.0D, 0.0D, 0.0D);
+        world.addParticle(OverlordParticleTypes.DEAD_FLAME, d, e, f, 0.0D, 0.0D, 0.0D);
     }
 }
