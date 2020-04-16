@@ -80,9 +80,9 @@ public class ScorchedFlameParticle extends SpriteBillboardParticle {
 
         @Override
         public Particle createParticle(DefaultParticleType defaultParticleType, World world, double d, double e, double f, double g, double h, double i) {
-            ScorchedFlameParticle deadFlameParticle = new ScorchedFlameParticle(world, d, e, f, g, h, i);
-            deadFlameParticle.setSprite(this.spriteProvider);
-            return deadFlameParticle;
+            ScorchedFlameParticle scorchedFlameParticle = new ScorchedFlameParticle(world, d, e, f, g, h, i);
+            scorchedFlameParticle.setSprite(this.spriteProvider);
+            return scorchedFlameParticle;
         }
     }
 }
