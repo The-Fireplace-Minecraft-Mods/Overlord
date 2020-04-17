@@ -2,6 +2,7 @@ package the_fireplace.overlord.fabric.blockentity;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalFacingBlock;
+import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
@@ -58,6 +59,10 @@ public class GraveMarkerBlockEntity extends TombstoneBlockEntity implements Tick
                     CasketBlockEntity casketEntity = (CasketBlockEntity) blockEntity;
                     BlockPos soilPos1 = casketPos.up();
                     BlockPos soilPos2 = soilPos1.offset(facing);
+                    BlockPos torchPos1 = this.getPos().offset(facing.rotateYClockwise());
+                    BlockPos torchPos2 = this.getPos().offset(facing.rotateYCounterclockwise());
+                    BlockPos torchPos3 = torchPos1.offset(facing, 2);
+                    BlockPos torchPos4 = torchPos2.offset(facing, 2);
                     if(world.getBlockState(soilPos1).getBlock().equals(OverlordBlocks.BLOOD_SOAKED_SOIL)
                         && world.getBlockState(soilPos2).getBlock().equals(OverlordBlocks.BLOOD_SOAKED_SOIL)
                         && world.getBlockState(soilPos1.up()).isAir()
@@ -68,8 +73,25 @@ public class GraveMarkerBlockEntity extends TombstoneBlockEntity implements Tick
                             world.spawnEntity(skeleton);
                             world.setBlockState(soilPos1, Blocks.COARSE_DIRT.getDefaultState());
                             world.setBlockState(soilPos2, Blocks.COARSE_DIRT.getDefaultState());
+                            //TODO Dirt particles around skeleton
                         }
-                    }//TODO else if has that one torch I'm going to make
+                    } else if(world.getBlockState(torchPos1).getBlock().equals(OverlordBlocks.TORCH_OF_THE_DEAD)
+                        && world.getBlockState(torchPos2).getBlock().equals(OverlordBlocks.TORCH_OF_THE_DEAD)
+                        && world.getBlockState(torchPos3).getBlock().equals(OverlordBlocks.TORCH_OF_THE_DEAD)
+                        && world.getBlockState(torchPos4).getBlock().equals(OverlordBlocks.TORCH_OF_THE_DEAD)
+                        && (world.getBlockState(soilPos1).getMaterial().equals(Material.EARTH)
+                        || world.getBlockState(soilPos2).getMaterial().equals(Material.EARTH))) {
+                        if(SkeletonBuilder.hasEssentialContents(casketEntity)) {
+                            OwnedSkeletonEntity skeleton = SkeletonBuilder.build(casketEntity, casketEntity.getWorld(), this);
+                            skeleton.updatePosition(soilPos1.getX(), soilPos1.getY() + 1, soilPos1.getZ());
+                            world.spawnEntity(skeleton);
+                            world.setBlockState(torchPos1, OverlordBlocks.SCORCHED_TORCH.getDefaultState());
+                            world.setBlockState(torchPos2, OverlordBlocks.SCORCHED_TORCH.getDefaultState());
+                            world.setBlockState(torchPos3, OverlordBlocks.SCORCHED_TORCH.getDefaultState());
+                            world.setBlockState(torchPos4, OverlordBlocks.SCORCHED_TORCH.getDefaultState());
+                            //TODO Flame and/or dirt particles around skeleton
+                        }
+                    }
                 }
             }
         }
