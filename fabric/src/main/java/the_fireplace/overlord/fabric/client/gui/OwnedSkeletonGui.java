@@ -5,6 +5,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
+import net.minecraft.client.gui.widget.AbstractPressableButtonWidget;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import the_fireplace.overlord.OverlordHelper;
@@ -22,13 +24,26 @@ public class OwnedSkeletonGui extends ContainerScreen<OwnedSkeletonContainer> {
     private int mouseX;
     private int mouseY;
     private boolean isMouseDown;
-    private SkeletonInventory inv;
-    private OwnedSkeletonEntity entity;
+    private final SkeletonInventory inv;
+    private final OwnedSkeletonEntity entity;
     public OwnedSkeletonGui(OwnedSkeletonEntity skeleton, int syncId) {
         super(skeleton.getContainer(Objects.requireNonNull(MinecraftClient.getInstance().player).inventory, syncId), Objects.requireNonNull(MinecraftClient.getInstance().player).inventory, new TranslatableText("entity.overlord.owned_skeleton"));
         inv = skeleton.getInventory();
         entity = skeleton;
         containerHeight = 252;
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        //x, y, width, height
+        addButton(new AbstractPressableButtonWidget(x+109, y+58, 60, 20, I18n.translate("gui.overlord.owned_skeleton.orders")) {
+            @Override
+            public void onPress() {
+                assert OwnedSkeletonGui.this.minecraft != null;
+                OwnedSkeletonGui.this.minecraft.openScreen(new SkeletonOrdersGui());
+            }
+        });
     }
 
     @Override

@@ -8,5 +8,8 @@
   "block.overlord.wall_torch_of_the_dead": "Torch of the Dead",
   "container.casket": "Casket",
   "entity.overlord.owned_skeleton": "Army Skeleton",
-  "item.overlord.owned_skeleton_spawn_egg": "Army Skeleton Spawn Egg"
+  "item.overlord.owned_skeleton_spawn_egg": "Army Skeleton Spawn Egg",
+  "gui.overlord.owned_skeleton.orders": "Orders",
+  "gui.overlord.skeleton_orders": "Orders",
+  "gui.overlord.skeleton_orders.reset": "Reset to Default"
 }
