@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "overlord",
+  "version": "${version}",
+
+  "name": "Overlord",
+  "description": "Raise and command an army of skeletons.",
+  "authors": [
+    "The_Fireplace"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/overlord",
+    "sources": "https://github.com/The-Fireplace-Minecraft-Mods/Overlord"
+  },
+
+  "license": "GPL-3.0",
+  "icon": "assets/overlord/logo.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "the_fireplace.overlord.Overlord"
+    ],
+    "client": [
+      "the_fireplace.overlord.client.OverlordClient"
+    ]
+  },
+  "mixins": [
+    "overlord.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*",
+    "minecraft": "1.15.X"
+  }
+}

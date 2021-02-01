@@ -1,65 +1,89 @@
-import java.util.jar.Manifest
-import java.nio.file.*
-import java.nio.file.attribute.BasicFileAttributes
-import java.util.zip.ZipEntry
-import java.util.zip.ZipOutputStream
-
-buildscript {
-    repositories {
-        maven {
-            name = "Modmuss50"
-            url = "http://maven.modmuss50.me/"
-        }
-        jcenter()
-    }
-    dependencies {
-        classpath 'ModsIOUpload:ModsIOUpload:+'
-    }
-}
 plugins {
-	id 'java'
+    // Dependencies
+    id 'fabric-loom' version '0.5-SNAPSHOT'
+    // Mod Hosting Publish
     id "com.matthewprenger.cursegradle" version "1.4.0"
+    id "com.modrinth.minotaur" version "1.1.0"
+    // Maven Publish
+    id "com.jfrog.bintray" version "1.8.4"
+    id "maven-publish"
+    id "java"
+    id "java-library"
 }
-apply plugin: 'net.cazzar.gradle.modsio'
 
-version = "3.0.0"
-group = "the_fireplace.overlord"
-archivesBaseName = "Overlord-1.15.2"
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+archivesBaseName = project.archives_base_name
+version = "${project.mod_version}+${project.minecraft_version}"
+group = project.maven_group as String
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    modImplementation "io.github.prospector:modmenu:${project.modmenu_version}"
+    modApi("me.shedaniel.cloth:config-2:${project.clothconfig_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+    include "me.shedaniel.cloth:config-2:${project.clothconfig_version}"
+    modImplementation "the_fireplace.lib:Fireplace-Lib:${project.fireplacelib_version}"
+    include "the_fireplace.lib:Fireplace-Lib:${project.fireplacelib_version}"
+
+    compile "com.google.code.findbugs:jsr305:3.0.2"
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include "fabric.mod.json"
+        expand "version": project.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude "fabric.mod.json"
+    }
+}
+
+// ensure that the encoding is set to UTF-8, no matter what the system default is
+// this fixes some edge cases with special characters not displaying correctly
+// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+// if it is present.
+// If you remove this task, sources will not be generated.
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier.set("sources")
+    from sourceSets.main.allSource
+}
+
+jar {
+    from "LICENSE"
+}
 
 curseforge {
     apiKey = project.hasProperty("curseForgeApiKey") ? project.curseForgeApiKey : "empty"
     project {
-    	//Your curseforge project id here
         id = '251732'
         changelog = file('changelog.txt')
-        //release, beta, or alpha
-        releaseType = 'alpha'
-        addGameVersion '1.15.2'
+        releaseType = project.release_type
+        addGameVersion project.minecraft_version
         addGameVersion 'Java 8'
-        addGameVersion 'Forge'
         addGameVersion 'Fabric'
         mainArtifact(new File(new File(buildDir, "libs"), "$archivesBaseName-${version}.jar")) {
             displayName = "$archivesBaseName-$version"
-            relations{
-                //TODO list possibly relation types for newcomers?
-                //optionalLibrary 'yourSoftDepHere'
+            relations {
+                requiredDependency 'fabric-api'
+                embeddedLibrary 'fireplace-lib'
+                embeddedLibrary 'cloth-config'
+                optionalDependency 'modmenu'
             }
-        }
-        addArtifact(new File(new File(buildDir, "libs"), "$archivesBaseName-$version-forge-deobf.jar")) {
-            displayName = "$archivesBaseName-$version-forge-deobf"
-            changelog = "*This is a file for mod developers. If you don't know what to do with it, don't use it!*"
-        }
-        addArtifact(new File(new File(buildDir, "libs"), "$archivesBaseName-$version-fabric-dev.jar")) {
-            displayName = "$archivesBaseName-$version-fabric-dev"
-            changelog = "*This is a file for mod developers. If you don't know what to do with it, don't use it!*"
-        }
-        addArtifact(new File(new File(buildDir, "libs"), "$archivesBaseName-$version-fabric-sources.jar")) {
-            displayName = "$archivesBaseName-$version-fabric-sources"
-            changelog = "*This is a file for mod developers. If you don't know what to do with it, don't use it!*"
-        }
-        addArtifact(new File(new File(buildDir, "libs"), "$archivesBaseName-$version-fabric-sources-dev.jar")) {
-            displayName = "$archivesBaseName-$version-fabric-sources-dev"
-            changelog = "*This is a file for mod developers. If you don't know what to do with it, don't use it!*"
         }
     }
     options {
@@ -68,191 +92,41 @@ curseforge {
     }
 }
 
-//At the moment, mods.io does not support newer than 1.12.2, keeping this here in hopes that they one day add support for newer versions
-modsIO {
-    key = project.hasProperty("modsioApiKey")? project.modsioApiKey : "empty"
-    project{
-        artifact = new File(new File(buildDir, "libs"), "$archivesBaseName-${version}.jar")
-        modid = "1239"
-        minecraft = "1.15.2"
-        try{changelog = file('changelog.txt').text}catch(Exception ignored){changelog=""}
-        //Set the tag to beta, alpha, etc if it isn't a release
-        tag = ""
-        current = true
+import com.modrinth.minotaur.TaskModrinthUpload
+
+task publishModrinth (type: TaskModrinthUpload) {
+    token = project.hasProperty("modrinthApiKey") ? project.modrinthApiKey : "empty"
+    projectId = '000000'
+    versionNumber = version
+    versionName = project.mod_version
+    uploadFile = jar // This is the java jar task
+    changelog = file('changelog.txt').getText()
+    releaseType = project.release_type
+    addGameVersion(project.minecraft_version as String)
+    addLoader('fabric')
+}
+
+bintray {
+    user = project.hasProperty("bintrayUser") ? project.bintrayUser : "empty"
+    key = project.hasProperty("bintrayApiKey") ? project.bintrayApiKey : "empty"
+    setPublications("mavenJava")
+    publish = true
+    pkg {
+        repo = "mc-mods"
+        name = "grand-economy"
+        licenses = ["GPL-2.0"]
     }
 }
 
-task cfpublish(dependsOn: ['build', 'curseforge'])
+def remapSourcesJar = tasks.getByName("remapSourcesJar")
 
-///*********************************************************************************************************************
-/// Everything below this line is used to make the build work. Only touch if you know what you're doing.
-/// If you do know what you're doing and feel this could be improved, feel free to make a Pull Request to
-/// https://github.com/The-Fireplace-Minecraft-Mods/Fabric-Forge-Combined-Build
-///*********************************************************************************************************************
-
-void copyFiles(String dir) {
-    println("Copying $dir files...")
-    File outDir = new File("$buildDir/libs/$dir")
-    //Dev files are not merged, to help avoid developer confusion and/or accidentally importing the wrong loaders' files when developing for one loader or the other.
-    //So in the case of dev files, move them to the final output folder
-    File devOutDir = new File("$buildDir/libs")
-    if(!outDir.exists())
-        outDir.mkdirs()
-    File inDir = new File("$dir/build/libs")
-    inDir.listFiles().each { file ->
-        File outFile = null;
-        //Main file from either one
-        if(file.getName() == "$archivesBaseName-${version}.jar")
-            outFile = new File(outDir, file.getName())
-        //Developer file - include which loader it is for in the output filename
-        else
-            outFile = new File(devOutDir, file.getName().replaceAll("$archivesBaseName-$version", "$archivesBaseName-$version-$dir"))
-        if(outFile.exists())
-            outFile.delete()
-        Files.copy(file.toPath(), outFile.toPath())
-    }
-}
-
-void deleteDir(File file) {
-    File[] contents = file.listFiles();
-    if (contents != null)
-        for (File f: contents)
-            if (!Files.isSymbolicLink(f.toPath()))
-                deleteDir(f)
-    file.delete()
-}
-
-task createFinalJar {
-    inputs.files(fileTree("$buildDir/rebuild"))
-    outputs.file("$buildDir/libs/$archivesBaseName-${version}.jar")
-    doLast {
-        println("Creating the final jar...")
-        File f = new File("$buildDir/libs/$archivesBaseName-${version}.jar")
-
-        final Path sourceDir = Paths.get("$buildDir/rebuild");
-        try {
-            final ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(f))
-            Files.walkFileTree(sourceDir, new SimpleFileVisitor<Path>() {
-                @Override
-                FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
-                    try {
-                        Path targetFile = sourceDir.relativize(file)
-                        outputStream.putNextEntry(new ZipEntry(targetFile.toString()))
-                        byte[] bytes = Files.readAllBytes(file)
-                        outputStream.write(bytes, 0, bytes.length)
-                        outputStream.closeEntry()
-                    } catch (IOException e) {
-                        e.printStackTrace()
-                    }
-                    return FileVisitResult.CONTINUE
-                }
-            })
-            outputStream.close()
-        } catch (IOException e) {
-            e.printStackTrace()
-        }
-    }
-}
-
-task extractMainJars {
-    inputs.files(fileTree("$buildDir/libs"))
-    outputs.files(fileTree("$buildDir/rebuild"))
-    outputs.files(fileTree("$buildDir/tmp/expandedArchives"))
-    finalizedBy createFinalJar
-    doLast {
-        FileTree fabricTree = zipTree(new File("$buildDir/libs/fabric/$archivesBaseName-${version}.jar"))
-        FileTree forgeTree = zipTree(new File("$buildDir/libs/forge/$archivesBaseName-${version}.jar"))
-        File rebuildDir = new File("$buildDir/rebuild")
-        if (rebuildDir.exists()) {
-            println("Clearing old data...")
-            deleteDir(rebuildDir)
-        }
-        rebuildDir.mkdirs()
-        println("Extracting jars to merge...")
-        Manifest manifest = null
-        fabricTree.getFiles().each { file ->
-            String rebuildPath = file.getPath().replaceAll("$buildDir/tmp/expandedArchives/$archivesBaseName-${version}.jar_[0-z]+/", '')
-            //Make sure to properly merge the manifests of the jars
-            if (rebuildPath == "META-INF/MANIFEST.MF") {
-                FileInputStream inputStream = new FileInputStream(file)
-                manifest = new Manifest(inputStream)
-                inputStream.close()
-            } else {
-                File outFile = new File("$buildDir/rebuild/" + rebuildPath)
-                outFile.getParentFile().mkdirs()
-                //println("Extracting file to "+outFile.getPath())
-                Files.copy(file.toPath(), outFile.toPath())
+publishing {
+    publications {
+        mavenJava(MavenPublication.class) {
+            artifact(remapJar)
+            artifact(sourcesJar) {
+                builtBy(remapSourcesJar)
             }
         }
-        forgeTree.getFiles().each { file ->
-            String rebuildPath = file.getPath().replaceAll("$buildDir/tmp/expandedArchives/$archivesBaseName-${version}.jar_[0-z]+/", '')
-            //Make sure to properly merge the manifests of the jars
-            if (rebuildPath == "META-INF/MANIFEST.MF") {
-                FileInputStream inputStream = new FileInputStream(file)
-                if (manifest == null)
-                    manifest = new Manifest(inputStream)
-                else
-                    manifest.read(inputStream)
-                inputStream.close()
-            } else {
-                File outFile = new File("$buildDir/rebuild/" + rebuildPath)
-                outFile.getParentFile().mkdirs()
-                //println("Extracting file to "+outFile.getPath())
-                if (!outFile.exists())
-                    Files.copy(file.toPath(), outFile.toPath())
-                else if (outFile.getPath().contains("assets"))
-                    println("Skipping duplicate asset: " + outFile.toPath())
-                else
-                    System.err.println("Warning: Skipping duplicate file: " + outFile.toPath())
-            }
-        }
-        if (manifest != null) {
-            println("Creating manifest...")
-            File outFile = new File("$buildDir/rebuild/META-INF/MANIFEST.MF")
-            outFile.getParentFile().mkdirs()
-            FileOutputStream outputStream = new FileOutputStream(outFile)
-            manifest.write(outputStream)
-            outputStream.close()
-        }
-
-        //Do this because otherwise we end up with a lot of temporary files that never get cleared
-        deleteDir(new File("$buildDir/tmp/expandedArchives"))
     }
-}
-
-task copyFiles {
-    inputs.files(fileTree("forge/build/libs"))
-    inputs.files(fileTree("fabric/build/libs"))
-    outputs.files(fileTree("$buildDir/libs/forge"))
-    outputs.files(fileTree("$buildDir/libs/fabric"))
-    finalizedBy extractMainJars
-    doLast {
-        copyFiles("forge")
-        copyFiles("fabric")
-    }
-}
-
-task execBuilds {
-    inputs.files(fileTree('fabric'))
-    inputs.files(fileTree('forge'))
-    outputs.files(fileTree("forge/build/libs"))
-    outputs.files(fileTree("fabric/build/libs"))
-    finalizedBy copyFiles
-    doLast {
-        def sout = System.out, serr = System.err
-        def procFabric = "./gradlew build -Pversion=$version -Pgroup=$group -PoutputJarBaseName=$archivesBaseName".execute(null, new File("fabric"))
-        procFabric.consumeProcessOutput(sout, serr)
-        //TODO Test if concurrent even does it any differently
-        if (!project.hasProperty("concurrent") || !project.concurrent)
-            procFabric.waitForOrKill(1800000)
-        def procForge = "./gradlew build -Pversion=$version -Pgroup=$group -PoutputJarBaseName=$archivesBaseName".execute(null, new File("forge"))
-        procForge.consumeProcessOutput(sout, serr)
-        if (project.hasProperty("concurrent") && project.concurrent)
-            procFabric.waitForOrKill(1800000)
-        procForge.waitForOrKill(1800000)
-    }
-}
-
-build {
-    finalizedBy execBuilds
 }

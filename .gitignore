@@ -11,7 +11,4 @@ build
 *.ipr
 *.iws
 
-!.idea/scopes/
-!.idea/runConfigurations/
-
 logs/
