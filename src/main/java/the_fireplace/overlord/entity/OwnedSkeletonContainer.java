@@ -3,6 +3,8 @@ package the_fireplace.overlord.entity;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loom.util.FabricApiExtension;
 import net.minecraft.container.Container;
 import net.minecraft.container.PlayerContainer;
 import net.minecraft.container.Slot;
@@ -156,8 +158,7 @@ public class OwnedSkeletonContainer extends Container {
 
     @Override
     public boolean canUse(PlayerEntity player) {
-        return true;
-        //owner.getOwnerId().equals(player.getUuid())
+        return FabricLoader.getInstance().isDevelopmentEnvironment() || owner.getOwnerId().equals(player.getUuid());
     }
 
     public OwnedSkeletonEntity getOwner() {

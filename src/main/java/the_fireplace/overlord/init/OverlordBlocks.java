@@ -21,7 +21,7 @@ import static the_fireplace.overlord.OverlordHelper.MODID;
 public class OverlordBlocks {
     public static final Block OAK_CASKET = new CasketBlock(FabricBlockSettings.copy(Blocks.OAK_PLANKS).build());
     public static final Block OAK_GRAVE_MARKER = new GraveMarkerBlock(FabricBlockSettings.copy(Blocks.OAK_PLANKS).build());
-    public static final Block BLOOD_SOAKED_SOIL = new BloodSoakedSoil(FabricBlockSettings.of(Material.EARTH)
+    public static final Block BLOOD_SOAKED_SOIL = new BloodSoakedSoil(FabricBlockSettings.of(Material.SOIL)
         .strength(0.5F, 0.1F)
         .sounds(BlockSoundGroup.WET_GRASS)
         .materialColor(MaterialColor.RED)

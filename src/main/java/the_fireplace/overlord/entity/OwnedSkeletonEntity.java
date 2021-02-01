@@ -56,10 +56,12 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
     private byte growthPhase = 0;
     private boolean hasSkin = false, hasMuscles = false;
 
-    private AISettings aiSettings = new AISettings();
-    private SkeletonInventory inventory = new SkeletonInventory(this);
+    private final AISettings aiSettings = new AISettings();
+    private final SkeletonInventory inventory = new SkeletonInventory(this);
     private final ItemCooldownManager itemCooldownManager = new ItemCooldownManager();
     private boolean lefty;
+
+
 
     /**
      * Intended for internal use, but it technically works. Use {@link OwnedSkeletonEntity#create(World, UUID)} when possible.
@@ -85,7 +87,13 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
                 this.heal(1.0F);
 
         inventory.tickItems();
-        if(!hasSkin()) {
+        checkAndDealSunlightDamage();
+
+        super.tickMovement();
+    }
+
+    private void checkAndDealSunlightDamage() {
+        if (!hasSkin()) {
             boolean inSunlight = this.isInDaylight();
             if (inSunlight) {
                 ItemStack itemStack = this.getEquippedStack(EquipmentSlot.HEAD);
@@ -105,7 +113,6 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
                     this.setOnFireFor(8);
             }
         }
-        super.tickMovement();
     }
 
     protected boolean isInDaylight() {

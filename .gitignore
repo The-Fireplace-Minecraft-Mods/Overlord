@@ -12,3 +12,4 @@ build
 *.iws
 
 logs/
+/run/

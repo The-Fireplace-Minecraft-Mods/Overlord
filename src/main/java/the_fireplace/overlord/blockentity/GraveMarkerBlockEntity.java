@@ -79,8 +79,8 @@ public class GraveMarkerBlockEntity extends TombstoneBlockEntity implements Tick
                         && world.getBlockState(torchPos2).getBlock().equals(OverlordBlocks.TORCH_OF_THE_DEAD)
                         && world.getBlockState(torchPos3).getBlock().equals(OverlordBlocks.TORCH_OF_THE_DEAD)
                         && world.getBlockState(torchPos4).getBlock().equals(OverlordBlocks.TORCH_OF_THE_DEAD)
-                        && (world.getBlockState(soilPos1).getMaterial().equals(Material.EARTH)
-                        || world.getBlockState(soilPos2).getMaterial().equals(Material.EARTH))) {
+                        && (world.getBlockState(soilPos1).getMaterial().equals(Material.SOIL)
+                        || world.getBlockState(soilPos2).getMaterial().equals(Material.SOIL))) {
                         if(SkeletonBuilder.hasEssentialContents(casketEntity)) {
                             OwnedSkeletonEntity skeleton = SkeletonBuilder.build(casketEntity, casketEntity.getWorld(), this);
                             skeleton.updatePosition(soilPos1.getX(), soilPos1.getY() + 1, soilPos1.getZ());

@@ -7,6 +7,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.client.gui.widget.AbstractPressableButtonWidget;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import the_fireplace.overlord.OverlordHelper;
@@ -41,7 +43,7 @@ public class OwnedSkeletonGui extends ContainerScreen<OwnedSkeletonContainer> {
             @Override
             public void onPress() {
                 assert OwnedSkeletonGui.this.minecraft != null;
-                OwnedSkeletonGui.this.minecraft.openScreen(new SkeletonOrdersGui());
+                OwnedSkeletonGui.this.minecraft.openScreen(SkeletonOrdersGui.makeOrdersGui(OwnedSkeletonGui.this));
             }
         });
     }
