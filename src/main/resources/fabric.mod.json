@@ -10,10 +10,11 @@
   ],
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/overlord",
-    "sources": "https://github.com/The-Fireplace-Minecraft-Mods/Overlord"
+    "sources": "https://github.com/The-Fireplace-Minecraft-Mods/Overlord",
+    "issues": "https://github.com/The-Fireplace-Minecraft-Mods/Overlord/issues"
   },
 
-  "license": "GPL-3.0",
+  "license": "MPL-2.0",
   "icon": "assets/overlord/logo.png",
 
   "environment": "*",
@@ -32,6 +33,19 @@
   "depends": {
     "fabricloader": ">=0.4.0",
     "fabric": "*",
-    "minecraft": "1.15.X"
+    "minecraft": "1.15.X",
+    "fireplacelib": ">=3.2.0 <4"
+  },
+
+  "suggests": {
+    "modmenu": "*"
+  },
+
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/QXQYPj5"
+      }
+    }
   }
 }

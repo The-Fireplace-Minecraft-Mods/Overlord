@@ -1,14 +1,13 @@
 plugins {
     // Dependencies
-    id 'fabric-loom' version '0.5-SNAPSHOT'
+    id 'fabric-loom' version '0.6-SNAPSHOT'
     // Mod Hosting Publish
-    id "com.matthewprenger.cursegradle" version "1.4.0"
-    id "com.modrinth.minotaur" version "1.1.0"
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id 'com.modrinth.minotaur' version '1.1.0'
     // Maven Publish
-    id "com.jfrog.bintray" version "1.8.4"
-    id "maven-publish"
-    id "java"
-    id "java-library"
+    id 'maven'
+    id 'signing'
+    id 'io.codearte.nexus-staging' version '0.22.0'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -24,15 +23,21 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modImplementation "io.github.prospector:modmenu:${project.modmenu_version}"
+    modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
     modApi("me.shedaniel.cloth:config-2:${project.clothconfig_version}") {
         exclude(group: "net.fabricmc.fabric-api")
+        exclude(group: 'io.github.prospector')
     }
-    include "me.shedaniel.cloth:config-2:${project.clothconfig_version}"
-    modImplementation "the_fireplace.lib:Fireplace-Lib:${project.fireplacelib_version}"
-    include "the_fireplace.lib:Fireplace-Lib:${project.fireplacelib_version}"
+    modRuntime "dev.the-fireplace:Fireplace-Lib:${project.fireplacelib_version}"
+    modCompileOnly "dev.the-fireplace:Fireplace-Lib:${project.fireplacelib_version}:api"
+    modCompileOnly "dev.the-fireplace:Fireplace-Lib:${project.fireplacelib_version}:api-sources"
 
     compile "com.google.code.findbugs:jsr305:3.0.2"
+}
+
+repositories {
+    maven { url 'https://maven.shedaniel.me/' }
+    maven { url 'https://maven.terraformersmc.com/releases/' }
 }
 
 processResources {
@@ -63,69 +68,117 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
+task javadocJar(type: Jar, dependsOn: classes) {
+    archiveClassifier.set('javadoc')
+    from javadoc
+}
+
+task apiJar(type: Jar, dependsOn: classes) {
+    archiveClassifier.set('api')
+    from sourceSets.main.output
+    include 'dev/the_fireplace/overlord/api/**'
+}
+
+task apiSourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier.set('api-sources')
+    from sourceSets.main.allSource
+    include 'dev/the_fireplace/overlord/api/**'
+}
+
+artifacts {
+    archives jar, javadocJar, sourcesJar, apiJar, apiSourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+signArchives.dependsOn(remapSourcesJar)
+
 jar {
     from "LICENSE"
 }
 
-curseforge {
-    apiKey = project.hasProperty("curseForgeApiKey") ? project.curseForgeApiKey : "empty"
-    project {
-        id = '251732'
-        changelog = file('changelog.txt')
-        releaseType = project.release_type
-        addGameVersion project.minecraft_version
-        addGameVersion 'Java 8'
-        addGameVersion 'Fabric'
-        mainArtifact(new File(new File(buildDir, "libs"), "$archivesBaseName-${version}.jar")) {
-            displayName = "$archivesBaseName-$version"
-            relations {
-                requiredDependency 'fabric-api'
-                embeddedLibrary 'fireplace-lib'
-                embeddedLibrary 'cloth-config'
-                optionalDependency 'modmenu'
+if (hasProperty('curseForgeApiKey')) {
+    curseforge {
+        apiKey = curseForgeApiKey
+        project {
+            id = '251732'
+            changelog = file('changelog.txt')
+            releaseType = project.release_type
+            addGameVersion project.minecraft_version
+            addGameVersion 'Java 8'
+            addGameVersion 'Fabric'
+            mainArtifact(new File(new File(buildDir, "libs"), "$archivesBaseName-${version}.jar")) {
+                displayName = "$archivesBaseName-$version"
+                relations {
+                    requiredDependency 'fireplace-lib'
+                    optionalDependency 'cloth-config'
+                    optionalDependency 'modmenu'
+                }
             }
         }
-    }
-    options {
-        javaIntegration = false
-        forgeGradleIntegration = false
+        options {
+            javaIntegration = false
+            forgeGradleIntegration = false
+        }
     }
 }
 
 import com.modrinth.minotaur.TaskModrinthUpload
-
-task publishModrinth (type: TaskModrinthUpload) {
-    token = project.hasProperty("modrinthApiKey") ? project.modrinthApiKey : "empty"
-    projectId = '000000'
-    versionNumber = version
-    versionName = project.mod_version
-    uploadFile = jar // This is the java jar task
-    changelog = file('changelog.txt').getText()
-    releaseType = project.release_type
-    addGameVersion(project.minecraft_version as String)
-    addLoader('fabric')
-}
-
-bintray {
-    user = project.hasProperty("bintrayUser") ? project.bintrayUser : "empty"
-    key = project.hasProperty("bintrayApiKey") ? project.bintrayApiKey : "empty"
-    setPublications("mavenJava")
-    publish = true
-    pkg {
-        repo = "mc-mods"
-        name = "grand-economy"
-        licenses = ["GPL-2.0"]
+if (hasProperty('modrinthApiKey')) {
+    task publishModrinth(type: TaskModrinthUpload) {
+        token = modrinthApiKey
+        projectId = '00000000'
+        versionNumber = version
+        versionName = project.mod_version
+        uploadFile = new File(new File(buildDir, "libs"), "$archivesBaseName-${version}.jar")
+        changelog = file('changelog.txt').getText()
+        releaseType = project.release_type
+        addGameVersion(project.minecraft_version as String)
+        addLoader('fabric')
     }
 }
 
-def remapSourcesJar = tasks.getByName("remapSourcesJar")
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication.class) {
-            artifact(remapJar)
-            artifact(sourcesJar) {
-                builtBy(remapSourcesJar)
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'Overlord'
+                packaging 'jar'
+                description 'A Minecraft mod allowing you to raise and command an army of skeletons.'
+                url 'https://www.curseforge.com/minecraft/mc-mods/overlord'
+
+                scm {
+                    connection "scm:svn:https://github.com/The-Fireplace-Minecraft-Mods/${project.github_slug}.git"
+                    developerConnection "scm:svn:https://github.com/The-Fireplace-Minecraft-Mods/${project.github_slug}.git"
+                    url "https://github.com/The-Fireplace-Minecraft-Mods/${project.github_slug}"
+                }
+
+                licenses {
+                    license {
+                        name 'Mozilla Public License 2.0'
+                        url 'https://www.mozilla.org/en-US/MPL/2.0/'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'the_fireplace'
+                        name 'The_Fireplace'
+                        email 'the.f1repl4ce@gmail.com'
+                    }
+                }
             }
         }
     }

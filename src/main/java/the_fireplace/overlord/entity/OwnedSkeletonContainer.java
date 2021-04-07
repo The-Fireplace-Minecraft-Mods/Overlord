@@ -4,7 +4,6 @@ import com.mojang.datafixers.util.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loom.util.FabricApiExtension;
 import net.minecraft.container.Container;
 import net.minecraft.container.PlayerContainer;
 import net.minecraft.container.Slot;
