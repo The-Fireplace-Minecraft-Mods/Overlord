@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import the_fireplace.overlord.OverlordHelper;
+import the_fireplace.overlord.Overlord;
 
 public class OverlordParticleTypes {
     public static DefaultParticleType SCORCHED_FLAME;
@@ -15,6 +15,6 @@ public class OverlordParticleTypes {
     }
 
     private static DefaultParticleType register(String name) {
-        return Registry.register(Registry.PARTICLE_TYPE, new Identifier(OverlordHelper.MODID, name), FabricParticleTypes.simple());
+        return Registry.register(Registry.PARTICLE_TYPE, new Identifier(Overlord.MODID, name), FabricParticleTypes.simple());
     }
 }

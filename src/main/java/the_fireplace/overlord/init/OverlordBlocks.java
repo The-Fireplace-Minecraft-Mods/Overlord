@@ -16,7 +16,7 @@ import net.minecraft.util.registry.Registry;
 import the_fireplace.overlord.block.*;
 import the_fireplace.overlord.block.internal.CasketBlock;
 
-import static the_fireplace.overlord.OverlordHelper.MODID;
+import static the_fireplace.overlord.Overlord.MODID;
 
 public class OverlordBlocks {
     public static final Block OAK_CASKET = new CasketBlock(FabricBlockSettings.copy(Blocks.OAK_PLANKS).build());

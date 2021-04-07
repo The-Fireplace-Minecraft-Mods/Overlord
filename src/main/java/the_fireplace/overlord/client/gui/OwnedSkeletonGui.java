@@ -7,11 +7,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.client.gui.widget.AbstractPressableButtonWidget;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
-import the_fireplace.overlord.OverlordHelper;
+import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.entity.OwnedSkeletonContainer;
 import the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import the_fireplace.overlord.entity.SkeletonInventory;
@@ -22,7 +20,7 @@ import static net.minecraft.client.gui.screen.ingame.InventoryScreen.drawEntity;
 
 @Environment(EnvType.CLIENT)
 public class OwnedSkeletonGui extends ContainerScreen<OwnedSkeletonContainer> {
-    public static final Identifier BACKGROUND_TEXTURE = new Identifier(OverlordHelper.MODID, "textures/gui/skeleton_inventory.png");
+    public static final Identifier BACKGROUND_TEXTURE = new Identifier(Overlord.MODID, "textures/gui/skeleton_inventory.png");
     private int mouseX;
     private int mouseY;
     private boolean isMouseDown;

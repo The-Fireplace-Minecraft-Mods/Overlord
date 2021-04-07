@@ -14,7 +14,7 @@ import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.container.GenericContainer;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
-import the_fireplace.overlord.OverlordHelper;
+import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.client.gui.CasketGui;
 import the_fireplace.overlord.client.gui.OwnedSkeletonGui;
 import the_fireplace.overlord.client.particle.DeadFlameParticle;
@@ -40,8 +40,8 @@ public class OverlordClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(OverlordParticleTypes.DEAD_FLAME, DeadFlameParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(OverlordParticleTypes.SCORCHED_FLAME, ScorchedFlameParticle.Factory::new);
         ClientSpriteRegistryCallback.event(SpriteAtlasTexture.PARTICLE_ATLAS_TEX).register((atlasTexture, registry) -> {
-            registry.register(new Identifier(OverlordHelper.MODID, "particle/dead_flame"));
-            registry.register(new Identifier(OverlordHelper.MODID, "particle/scorched_flame"));
+            registry.register(new Identifier(Overlord.MODID, "particle/dead_flame"));
+            registry.register(new Identifier(Overlord.MODID, "particle/scorched_flame"));
         });
     }
 

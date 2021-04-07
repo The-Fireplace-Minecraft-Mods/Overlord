@@ -9,14 +9,14 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
-import the_fireplace.overlord.OverlordHelper;
+import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.entity.OwnedSkeletonEntity;
 
 import java.util.List;
 import java.util.UUID;
 
 public class OverlordEntities {
-    public static final Identifier OWNED_SKELETON_ID = new Identifier(OverlordHelper.MODID, "owned_skeleton");
+    public static final Identifier OWNED_SKELETON_ID = new Identifier(Overlord.MODID, "owned_skeleton");
     public static final EntityType<OwnedSkeletonEntity> OWNED_SKELETON_TYPE =
         Registry.register(Registry.ENTITY_TYPE, OWNED_SKELETON_ID,
             FabricEntityTypeBuilder.create(EntityCategory.MISC, OwnedSkeletonEntity::new).size(EntityDimensions.changing(1, 2)).build());

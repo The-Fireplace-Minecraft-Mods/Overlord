@@ -7,7 +7,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import the_fireplace.overlord.item.OwnedSkeletonSpawnEggItem;
 
-import static the_fireplace.overlord.OverlordHelper.MODID;
+import static the_fireplace.overlord.Overlord.MODID;
 
 public class OverlordItems {
 

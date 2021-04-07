@@ -38,8 +38,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
-import the_fireplace.overlord.OverlordHelper;
-import the_fireplace.overlord.api.Ownable;
+import the_fireplace.overlord.Overlord;
+import the_fireplace.overlord.api.mechanic.Ownable;
 import the_fireplace.overlord.init.OverlordEntities;
 import the_fireplace.overlord.model.AISettings;
 
@@ -668,10 +668,10 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
     public void setGrowthPhase(byte newPhase) {
         if(newPhase < 0) {
             newPhase = 0;
-            OverlordHelper.errorWithStacktrace("Attempt was made to set grown phase < 0!");
+            Overlord.errorWithStacktrace("Attempt was made to set grown phase < 0!");
         } else if(newPhase > 4) {
             newPhase = 4;
-            OverlordHelper.errorWithStacktrace("Attempt was made to set grown phase > 4!");
+            Overlord.errorWithStacktrace("Attempt was made to set grown phase > 4!");
         }
         growthPhase = newPhase;
     }

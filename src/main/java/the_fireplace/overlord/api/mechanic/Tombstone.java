@@ -1,4 +1,4 @@
-package the_fireplace.overlord.api;
+package the_fireplace.overlord.api.mechanic;
 
 import javax.annotation.Nullable;
 import java.util.UUID;

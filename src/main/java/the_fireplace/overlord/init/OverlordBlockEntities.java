@@ -6,7 +6,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
-import the_fireplace.overlord.OverlordHelper;
+import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.blockentity.CasketBlockEntity;
 import the_fireplace.overlord.blockentity.GraveMarkerBlockEntity;
 
@@ -14,10 +14,10 @@ import java.util.Objects;
 
 public class OverlordBlockEntities {
     public static BlockEntityType<CasketBlockEntity> CASKET_BLOCK_ENTITY;
-    public static final Identifier CASKET_BLOCK_ENTITY_ID = new Identifier(OverlordHelper.MODID, "casket");
+    public static final Identifier CASKET_BLOCK_ENTITY_ID = new Identifier(Overlord.MODID, "casket");
 
     public static BlockEntityType<GraveMarkerBlockEntity> GRAVE_MARKER_BLOCK_ENTITY;
-    public static final Identifier GRAVE_MARKER_BLOCK_ENTITY_ID = new Identifier(OverlordHelper.MODID, "grave_marker");
+    public static final Identifier GRAVE_MARKER_BLOCK_ENTITY_ID = new Identifier(Overlord.MODID, "grave_marker");
 
     public static void register() {
         CASKET_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, CASKET_BLOCK_ENTITY_ID,

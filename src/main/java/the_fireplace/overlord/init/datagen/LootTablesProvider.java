@@ -18,7 +18,7 @@ import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import the_fireplace.overlord.OverlordHelper;
+import the_fireplace.overlord.Overlord;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -57,7 +57,7 @@ public class LootTablesProvider implements DataProvider {
         Multimap<String, String> multimap = lootTableReporter.getMessages();
         if (!multimap.isEmpty()) {
             multimap.forEach((string, string2) -> LOGGER.warn("Found validation problem in " + string + ": " + string2));
-            OverlordHelper.LOGGER.error("Failed to validate loot tables, see logs");
+            Overlord.LOGGER.error("Failed to validate loot tables, see logs");
         } else {
             map.forEach((identifierx, lootTable) -> {
                 Path path2 = getOutput(path, identifierx);

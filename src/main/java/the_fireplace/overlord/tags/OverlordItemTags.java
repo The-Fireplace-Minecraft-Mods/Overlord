@@ -3,7 +3,7 @@ package the_fireplace.overlord.tags;
 import net.minecraft.item.Item;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
-import the_fireplace.overlord.OverlordHelper;
+import the_fireplace.overlord.Overlord;
 
 public final class OverlordItemTags {
     public static Tag<Item> CASKETS = build("caskets");
@@ -12,6 +12,6 @@ public final class OverlordItemTags {
     public static Tag<Item> MUSCLE_MEAT = build("muscle_meat");
 
     private static Tag<Item> build(String name) {
-        return new Tag.Builder<Item>().build(new Identifier(OverlordHelper.MODID, name));
+        return new Tag.Builder<Item>().build(new Identifier(Overlord.MODID, name));
     }
 }

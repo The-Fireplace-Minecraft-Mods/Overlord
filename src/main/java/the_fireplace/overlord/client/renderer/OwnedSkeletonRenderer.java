@@ -21,7 +21,7 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.UseAction;
-import the_fireplace.overlord.OverlordHelper;
+import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.client.model.OwnedSkeletonModel;
 import the_fireplace.overlord.entity.OwnedSkeletonEntity;
 
@@ -38,7 +38,7 @@ public class OwnedSkeletonRenderer extends LivingEntityRenderer<OwnedSkeletonEnt
     @Override
     public Identifier getTexture(OwnedSkeletonEntity entity) {
         if(!entity.hasSkin() && !entity.hasMuscles())
-            return new Identifier(OverlordHelper.MODID, "textures/entity/owned_skeleton/owned_skeleton.png");
+            return new Identifier(Overlord.MODID, "textures/entity/owned_skeleton/owned_skeleton.png");
         if(entity.getGrowthPhase() == 4 && entity.hasSkin() && entity.getSkinsuit() != null) {
             ClientPlayNetworkHandler net = MinecraftClient.getInstance().getNetworkHandler();
             if (net != null) {
@@ -46,17 +46,17 @@ public class OwnedSkeletonRenderer extends LivingEntityRenderer<OwnedSkeletonEnt
                 if(ple != null && ple.hasSkinTexture())
                     return ple.getSkinTexture();
                 else if(!entity.hasMuscles())
-                    return new Identifier(OverlordHelper.MODID, "textures/entity/owned_skeleton/owned_skeleton_skin_4.png");
+                    return new Identifier(Overlord.MODID, "textures/entity/owned_skeleton/owned_skeleton_skin_4.png");
                 else
-                    return new Identifier(OverlordHelper.MODID, "textures/entity/owned_skeleton/owned_skeleton_skin_muscles_4.png");
+                    return new Identifier(Overlord.MODID, "textures/entity/owned_skeleton/owned_skeleton_skin_muscles_4.png");
             }
         }
         if(entity.hasSkin() && !entity.hasMuscles())
-            return new Identifier(OverlordHelper.MODID, String.format("textures/entity/owned_skeleton/owned_skeleton_skin_%s.png", entity.getGrowthPhase()));
+            return new Identifier(Overlord.MODID, String.format("textures/entity/owned_skeleton/owned_skeleton_skin_%s.png", entity.getGrowthPhase()));
         else if(!entity.hasSkin() && entity.hasMuscles())
-            return new Identifier(OverlordHelper.MODID, String.format("textures/entity/owned_skeleton/owned_skeleton_muscles_%s.png", entity.getGrowthPhase()));
+            return new Identifier(Overlord.MODID, String.format("textures/entity/owned_skeleton/owned_skeleton_muscles_%s.png", entity.getGrowthPhase()));
         else
-            return new Identifier(OverlordHelper.MODID, String.format("textures/entity/owned_skeleton/owned_skeleton_skin_muscles_%s.png", entity.getGrowthPhase()));
+            return new Identifier(Overlord.MODID, String.format("textures/entity/owned_skeleton/owned_skeleton_skin_muscles_%s.png", entity.getGrowthPhase()));
     }
 
     @Override

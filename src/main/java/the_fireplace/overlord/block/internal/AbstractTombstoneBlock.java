@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import the_fireplace.overlord.api.Tombstone;
+import the_fireplace.overlord.api.mechanic.Tombstone;
 import the_fireplace.overlord.blockentity.internal.TombstoneBlockEntity;
 
 import javax.annotation.Nullable;

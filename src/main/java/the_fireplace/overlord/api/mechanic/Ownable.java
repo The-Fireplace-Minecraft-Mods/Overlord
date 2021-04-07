@@ -1,4 +1,4 @@
-package the_fireplace.overlord.api;
+package the_fireplace.overlord.api.mechanic;
 
 import java.util.UUID;
 

@@ -14,12 +14,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import the_fireplace.overlord.OverlordHelper;
+import the_fireplace.overlord.Overlord;
 
 import static net.minecraft.container.PlayerContainer.*;
 
 public class OwnedSkeletonContainer extends Container {
-    public static final Identifier EMPTY_WEAPON_SLOT = new Identifier(OverlordHelper.MODID, "item/empty_weapon_slot");
+    public static final Identifier EMPTY_WEAPON_SLOT = new Identifier(Overlord.MODID, "item/empty_weapon_slot");
     private static final Identifier[] EMPTY_ARMOR_SLOT_TEXTURES = new Identifier[]{EMPTY_BOOTS_SLOT_TEXTURE, EMPTY_LEGGINGS_SLOT_TEXTURE, EMPTY_CHESTPLATE_SLOT_TEXTURE, EMPTY_HELMET_SLOT_TEXTURE};
     private static final EquipmentSlot[] EQUIPMENT_SLOT_ORDER = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     public final boolean onServer;

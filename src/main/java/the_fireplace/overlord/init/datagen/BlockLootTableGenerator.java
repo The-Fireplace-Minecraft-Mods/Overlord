@@ -24,7 +24,7 @@ import net.minecraft.util.BoundedIntUnaryOperator;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.registry.Registry;
-import the_fireplace.overlord.OverlordHelper;
+import the_fireplace.overlord.Overlord;
 import the_fireplace.overlord.init.OverlordBlocks;
 
 import java.util.Map;
@@ -60,7 +60,7 @@ public class BlockLootTableGenerator implements Consumer<BiConsumer<Identifier, 
             if (identifier != LootTables.EMPTY && set.add(identifier)) {
                 LootTable.Builder builder5 = this.lootTables.remove(identifier);
                 if (builder5 == null) {
-                    OverlordHelper.LOGGER.error(String.format("Missing loottable '%s' for '%s'", identifier, Registry.BLOCK.getId(block)));
+                    Overlord.LOGGER.error(String.format("Missing loottable '%s' for '%s'", identifier, Registry.BLOCK.getId(block)));
                     continue;
                 }
 

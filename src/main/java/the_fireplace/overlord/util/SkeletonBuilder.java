@@ -15,8 +15,9 @@ import net.minecraft.item.*;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
-import the_fireplace.overlord.OverlordHelper;
-import the_fireplace.overlord.api.Tombstone;
+import the_fireplace.overlord.Overlord;
+import the_fireplace.overlord.api.internal.ThrowableRegistry;
+import the_fireplace.overlord.api.mechanic.Tombstone;
 import the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import the_fireplace.overlord.tags.OverlordItemTags;
 
@@ -162,8 +163,8 @@ public class SkeletonBuilder {
         m.sort(Comparator.comparingDouble(o -> EnchantmentHelper.getAttackDamage(o.getValue(), EntityGroup.DEFAULT)));
         if(!m.isEmpty()) {
             //TODO Don't log, this is just to find out which end has the strongest weapon
-            OverlordHelper.LOGGER.info(m.get(0).getValue().toString());
-            OverlordHelper.LOGGER.info(m.get(m.size() - 1).getValue().toString());
+            Overlord.LOGGER.info(m.get(0).getValue().toString());
+            Overlord.LOGGER.info(m.get(m.size() - 1).getValue().toString());
             entity.equipStack(EquipmentSlot.MAINHAND, casket.removeInvStack(m.get(0).getKey()));
         }
         //Collect weapons, tools
@@ -192,11 +193,11 @@ public class SkeletonBuilder {
             }
         }
         //Collect throwables
-        for(int slot=0;slot<casket.getInvSize();slot++) {
+        for (int slot=0;slot<casket.getInvSize();slot++) {
             ItemStack stack = casket.getInvStack(slot);
-            if(stack.isEmpty())
+            if (stack.isEmpty())
                 continue;
-            if(OverlordHelper.getLoaderHelper().getThrowableIds().contains(Registry.ITEM.getId(stack.getItem()).toString()))
+            if (ThrowableRegistry.getInstance().isThrowable(Registry.ITEM.getId(stack.getItem())))
                 entity.getInventory().insertStack(casket.getInvStack(slot));
         }
     }
