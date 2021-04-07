@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "the_fireplace.overlord.mixin",
+  "package": "dev.the_fireplace.overlord.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
   ],
