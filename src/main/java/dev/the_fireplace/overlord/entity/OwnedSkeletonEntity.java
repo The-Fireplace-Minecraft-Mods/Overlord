@@ -46,7 +46,6 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -494,34 +493,25 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
 
     private void dealSweepDamage(Entity target, float baseAttackDamage) {
         float multiplier = 1.0F + EnchantmentHelper.getSweepingMultiplier(this) * baseAttackDamage;
-        List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, target.getBoundingBox().expand(1.0D, 0.25D, 1.0D));
-        Iterator<LivingEntity> var19 = list.iterator();
-
-        //TODO Rewrite this ugly code to look better and not need a label.
-        label166:
-        while (true) {
-            LivingEntity livingEntity;
-            do {
-                do {
-                    do {
-                        do {
-                            if (!var19.hasNext()) {
-                                this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, this.getSoundCategory(), 1.0F, 1.0F);
-                                this.showSweepParticles();
-                                break label166;
-                            }
-
-                            livingEntity = var19.next();
-                        } while (livingEntity == this);
-                    } while (livingEntity == target);
-                } while (this.isTeammate(livingEntity));
-            } while (livingEntity instanceof ArmorStandEntity && ((ArmorStandEntity) livingEntity).isMarker());
+        List<LivingEntity> entitiesInSweepRange = this.world.getNonSpectatingEntities(LivingEntity.class, target.getBoundingBox().expand(1.0D, 0.25D, 1.0D));
+        for (LivingEntity livingEntity : entitiesInSweepRange) {
+            if (
+                livingEntity instanceof ArmorStandEntity && ((ArmorStandEntity) livingEntity).isMarker()
+                || this.isTeammate(livingEntity)
+                || livingEntity == target
+                || livingEntity == this
+            ) {
+                continue;
+            }
 
             if (this.squaredDistanceTo(livingEntity) < 9.0D) {
                 livingEntity.takeKnockback(this, 0.4F, MathHelper.sin(this.yaw * (float) Math.PI / 180), -MathHelper.cos(this.yaw * (float) Math.PI / 180));
                 livingEntity.damage(DamageSource.mob(this), multiplier);
             }
         }
+
+        this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, this.getSoundCategory(), 1.0F, 1.0F);
+        this.showSweepParticles();
     }
 
     private void knockbackTarget(Entity target, int knockback) {
