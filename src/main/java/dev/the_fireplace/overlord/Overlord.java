@@ -19,26 +19,28 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 public class Overlord implements ModInitializer {
-
     public static final String MODID = "overlord";
-    public static final Logger LOGGER = LogManager.getLogger("overlord");
+    private static final Logger LOGGER = LogManager.getLogger(MODID);
+    public static Logger getLogger() {
+        return LOGGER;
+    }
 
     public static void errorWithStacktrace(String message, Object... args) {
-        LOGGER.error(message, args);
+        getLogger().error(message, args);
         new Throwable().printStackTrace();
     }
 
     @Override
     public void onInitialize() {
-        LOGGER.debug("Preparing bones...");
+        getLogger().debug("Preparing bones...");
         OverlordBlocks.registerBlocks();
         OverlordItems.registerItems();
         OverlordBlockEntities.register();
         OverlordEntities.register();
         OverlordParticleTypes.register();
         //noinspection ConstantConditions//TODO Use environment variables for this
-        if(true) {
-            LOGGER.debug("Generating data...");
+        if (true) {
+            getLogger().debug("Generating data...");
             DataGenerator gen = DataGeneratorFactory.getInstance().createAdditive(Paths.get("..", "..", "common", "src", "main", "resources"));
             gen.install(new BlockTagsProvider(gen));
             gen.install(new EntityTypeTagsProvider(gen));
@@ -47,8 +49,8 @@ public class Overlord implements ModInitializer {
             gen.install(new LootTablesProvider(gen));
             try {
                 gen.run();
-            } catch(IOException e) {
-                e.printStackTrace();
+            } catch (IOException e) {
+                getLogger().error(e);
             }
         }
 

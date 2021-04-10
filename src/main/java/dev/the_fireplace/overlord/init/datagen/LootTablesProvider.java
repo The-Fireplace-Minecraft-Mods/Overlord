@@ -57,7 +57,7 @@ public class LootTablesProvider implements DataProvider {
         Multimap<String, String> multimap = lootTableReporter.getMessages();
         if (!multimap.isEmpty()) {
             multimap.forEach((string, string2) -> LOGGER.warn("Found validation problem in " + string + ": " + string2));
-            Overlord.LOGGER.error("Failed to validate loot tables, see logs");
+            Overlord.getLogger().error("Failed to validate loot tables, see logs");
         } else {
             map.forEach((identifierx, lootTable) -> {
                 Path path2 = getOutput(path, identifierx);

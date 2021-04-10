@@ -57,7 +57,7 @@ public class ItemTagsProvider extends AbstractTagProvider<Item> {
                 Block block = (Block) o;
                 Item item = block.asItem();
                 if (item == Items.AIR) {
-                    Overlord.LOGGER.warn("Itemless block copied to item tag: {}", Registry.BLOCK.getId(block));
+                    Overlord.getLogger().warn("Itemless block copied to item tag: {}", Registry.BLOCK.getId(block));
                 } else {
                     list.add(item);
                 }

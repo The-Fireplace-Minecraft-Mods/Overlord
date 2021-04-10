@@ -60,7 +60,7 @@ public class BlockLootTableGenerator implements Consumer<BiConsumer<Identifier, 
             if (identifier != LootTables.EMPTY && set.add(identifier)) {
                 LootTable.Builder builder5 = this.lootTables.remove(identifier);
                 if (builder5 == null) {
-                    Overlord.LOGGER.error(String.format("Missing loottable '%s' for '%s'", identifier, Registry.BLOCK.getId(block)));
+                    Overlord.getLogger().error(String.format("Missing loottable '%s' for '%s'", identifier, Registry.BLOCK.getId(block)));
                     continue;
                 }
 

@@ -163,8 +163,8 @@ public class SkeletonBuilder {
         m.sort(Comparator.comparingDouble(o -> EnchantmentHelper.getAttackDamage(o.getValue(), EntityGroup.DEFAULT)));
         if(!m.isEmpty()) {
             //TODO Don't log, this is just to find out which end has the strongest weapon
-            Overlord.LOGGER.info(m.get(0).getValue().toString());
-            Overlord.LOGGER.info(m.get(m.size() - 1).getValue().toString());
+            Overlord.getLogger().info(m.get(0).getValue().toString());
+            Overlord.getLogger().info(m.get(m.size() - 1).getValue().toString());
             entity.equipStack(EquipmentSlot.MAINHAND, casket.removeInvStack(m.get(0).getKey()));
         }
         //Collect weapons, tools
