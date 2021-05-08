@@ -12,8 +12,8 @@ import net.minecraft.util.math.MathHelper;
 @Environment(EnvType.CLIENT)
 public class OwnedSkeletonModel extends BipedEntityModel<OwnedSkeletonEntity> {
     private boolean thicc;
-    public OwnedSkeletonModel(float scale) {
-        super(scale);
+    public OwnedSkeletonModel() {
+        super(0);
         setThicc(false);
     }
 

@@ -45,10 +45,11 @@ import java.util.function.Predicate;
 
 public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
 
-    private UUID owner = UUID.fromString("0b1ec5ad-cb2a-43b7-995d-889320eb2e5b");
+    private UUID owner = new UUID(801295133947085751L, -7395604847578632613L);
     private UUID skinsuit = EmptyUUID.EMPTY_UUID;
     private byte growthPhase = 0;
-    private boolean hasSkin = false, hasMuscles = false;
+    private boolean hasSkin = false;
+    private boolean hasMuscles = false;
 
     private final AISettings aiSettings = new AISettings();
     private final SkeletonInventory inventory = new SkeletonInventory(this);
@@ -77,9 +78,11 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
 
     @Override
     public void tickMovement() {
-        if (this.world.getDifficulty() == Difficulty.PEACEFUL && this.world.getGameRules().getBoolean(GameRules.NATURAL_REGENERATION))
-            if (this.getHealth() < this.getMaximumHealth() && this.age % 20 == 0)
+        if (this.world.getDifficulty() == Difficulty.PEACEFUL && this.world.getGameRules().getBoolean(GameRules.NATURAL_REGENERATION)) {
+            if (this.getHealth() < this.getMaximumHealth() && this.age % 20 == 0) {
                 this.heal(1.0F);
+            }
+        }
 
         inventory.tickItems();
         if (!hasSkin() && DaylightDetector.getInstance().isInDaylight(this)) {
@@ -104,7 +107,11 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
         //this.drop(source);
 
         if (source != null) {
-            this.setVelocity(-MathHelper.cos((this.knockbackVelocity + this.yaw) * (float) Math.PI/180) * 0.1F, 0.10000000149011612D, -MathHelper.sin((this.knockbackVelocity + this.yaw) * (float) Math.PI/180) * 0.1F);
+            this.setVelocity(
+                -MathHelper.cos((this.knockbackVelocity + this.yaw) * (float) Math.PI/180) * 0.1f,
+                0.1f,
+                -MathHelper.sin((this.knockbackVelocity + this.yaw) * (float) Math.PI/180) * 0.1f
+            );
         } else {
             this.setVelocity(0.0D, 0.1D, 0.0D);
         }
@@ -184,14 +191,11 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
         this.inventory.deserialize(listTag);
         this.owner = tag.getUuid("Owner");
         this.lefty = tag.getBoolean("Lefty");
-        this.hasMuscles = tag.getBoolean("muscles");
-        this.hasSkin = tag.getBoolean("skin");
-        if (tag.get("skinsuit") != null) {
-            this.skinsuit = tag.getUuid("skinsuit");
+        this.hasMuscles = tag.getBoolean("Muscles");
+        this.hasSkin = tag.getBoolean("Skin");
+        if (tag.contains("Skinsuit")) {
+            this.skinsuit = tag.getUuid("Skinsuit");
         }
-        //this.experienceProgress = tag.getFloat("XpP");
-        //this.experienceLevel = tag.getInt("XpLevel");
-        //this.totalExperience = tag.getInt("XpTotal");
     }
 
     @Override
@@ -201,14 +205,11 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
         tag.put("Inventory", this.inventory.serialize(new ListTag()));
         tag.putUuid("Owner", this.owner);
         tag.putBoolean("Lefty", this.lefty);
-        tag.putBoolean("muscles", this.hasMuscles);
-        tag.putBoolean("skin", this.hasSkin);
+        tag.putBoolean("Muscles", this.hasMuscles);
+        tag.putBoolean("Skin", this.hasSkin);
         if (skinsuit != null) {
-            tag.putUuid("skinsuit", this.skinsuit);
+            tag.putUuid("Skinsuit", this.skinsuit);
         }
-        //tag.putFloat("XpP", this.experienceProgress);
-        //tag.putInt("XpLevel", this.experienceLevel);
-        //tag.putInt("XpTotal", this.totalExperience);
     }
 
     @Override

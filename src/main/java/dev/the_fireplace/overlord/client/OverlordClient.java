@@ -32,6 +32,10 @@ public class OverlordClient implements ClientModInitializer {
     public void onInitializeClient() {
         EntityRendererRegistry.INSTANCE.register(OverlordEntities.OWNED_SKELETON_TYPE, (erd, ctx) -> new OwnedSkeletonRenderer(erd));
         registerGuis();
+        registerParticles();
+    }
+
+    private void registerParticles() {
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(),
                 OverlordBlocks.SCORCHED_TORCH,
                 OverlordBlocks.TORCH_OF_THE_DEAD,

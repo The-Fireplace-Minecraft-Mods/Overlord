@@ -28,7 +28,7 @@ import net.minecraft.util.UseAction;
 @Environment(EnvType.CLIENT)
 public class OwnedSkeletonRenderer extends LivingEntityRenderer<OwnedSkeletonEntity, OwnedSkeletonModel> {
     public OwnedSkeletonRenderer(EntityRenderDispatcher dispatcher) {
-        super(dispatcher, new OwnedSkeletonModel(0.0F), 0.5F);
+        super(dispatcher, new OwnedSkeletonModel(), 0.5F);
         this.addFeature(new ArmorBipedFeatureRenderer(this, new BipedEntityModel(0.5F), new BipedEntityModel(1.0F)));
         this.addFeature(new HeldItemFeatureRenderer(this));
         this.addFeature(new StuckArrowsFeatureRenderer(this));
@@ -37,9 +37,10 @@ public class OwnedSkeletonRenderer extends LivingEntityRenderer<OwnedSkeletonEnt
 
     @Override
     public Identifier getTexture(OwnedSkeletonEntity entity) {
-        if(!entity.hasSkin() && !entity.hasMuscles())
+        this.shadowSize = 0.25f * entity.getGrowthPhase() / 4.0f + 0.25f;
+        if (!entity.hasSkin() && !entity.hasMuscles())
             return new Identifier(Overlord.MODID, "textures/entity/owned_skeleton/owned_skeleton.png");
-        if(entity.getGrowthPhase() == 4 && entity.hasSkin() && entity.getSkinsuit() != null) {
+        if (entity.getGrowthPhase() == 4 && entity.hasSkin() && entity.getSkinsuit() != null) {
             ClientPlayNetworkHandler net = MinecraftClient.getInstance().getNetworkHandler();
             if (net != null) {
                 PlayerListEntry ple = net.getPlayerListEntry(entity.getSkinsuit());
@@ -51,7 +52,7 @@ public class OwnedSkeletonRenderer extends LivingEntityRenderer<OwnedSkeletonEnt
                     return new Identifier(Overlord.MODID, "textures/entity/owned_skeleton/owned_skeleton_skin_muscles_4.png");
             }
         }
-        if(entity.hasSkin() && !entity.hasMuscles())
+        if (entity.hasSkin() && !entity.hasMuscles())
             return new Identifier(Overlord.MODID, String.format("textures/entity/owned_skeleton/owned_skeleton_skin_%s.png", entity.getGrowthPhase()));
         else if(!entity.hasSkin() && entity.hasMuscles())
             return new Identifier(Overlord.MODID, String.format("textures/entity/owned_skeleton/owned_skeleton_muscles_%s.png", entity.getGrowthPhase()));
