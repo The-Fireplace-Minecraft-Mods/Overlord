@@ -5,6 +5,10 @@ import dev.the_fireplace.lib.api.util.EmptyUUID;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.api.inventory.InventorySearcher;
 import dev.the_fireplace.overlord.api.mechanic.Ownable;
+import dev.the_fireplace.overlord.api.world.BreakSpeedModifiers;
+import dev.the_fireplace.overlord.api.world.DaylightDetector;
+import dev.the_fireplace.overlord.api.world.MeleeAttackExecutor;
+import dev.the_fireplace.overlord.api.world.UndeadDaylightDamager;
 import dev.the_fireplace.overlord.init.OverlordEntities;
 import dev.the_fireplace.overlord.model.AISettings;
 import net.fabricmc.api.EnvType;
@@ -15,27 +19,16 @@ import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.entity.effect.StatusEffectUtil;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.packet.s2c.play.EntityAnimationS2CPacket;
-import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.tag.FluidTags;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -47,7 +40,6 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -90,44 +82,11 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
                 this.heal(1.0F);
 
         inventory.tickItems();
-        checkAndDealSunlightDamage();
+        if (!hasSkin() && DaylightDetector.getInstance().isInDaylight(this)) {
+            UndeadDaylightDamager.getInstance().applyDamage(this);
+        }
 
         super.tickMovement();
-    }
-
-    private void checkAndDealSunlightDamage() {
-        if (!hasSkin()) {
-            boolean inSunlight = this.isInDaylight();
-            if (inSunlight) {
-                ItemStack itemStack = this.getEquippedStack(EquipmentSlot.HEAD);
-                if (!itemStack.isEmpty()) {
-                    if (itemStack.isDamageable()) {
-                        itemStack.setDamage(itemStack.getDamage() + this.random.nextInt(2));
-                        if (itemStack.getDamage() >= itemStack.getMaxDamage()) {
-                            this.sendEquipmentBreakStatus(EquipmentSlot.HEAD);
-                            this.equipStack(EquipmentSlot.HEAD, ItemStack.EMPTY);
-                        }
-                    }
-
-                    inSunlight = false;
-                }
-
-                if (inSunlight)
-                    this.setOnFireFor(8);
-            }
-        }
-    }
-
-    protected boolean isInDaylight() {
-        if (this.world.isDay() && !this.world.isClient) {
-            float brightnessAtEyes = this.getBrightnessAtEyes();
-            BlockPos blockPos = this.getVehicle() instanceof BoatEntity
-                ? (new BlockPos(this.getX(), (double)Math.round(this.getY()), this.getZ())).up()
-                : new BlockPos(this.getX(), (double)Math.round(this.getY()), this.getZ());
-            return brightnessAtEyes > 0.5F && this.random.nextFloat() * 30.0F < (brightnessAtEyes - 0.4F) * 2.0F && this.world.isSkyVisible(blockPos);
-        }
-
-        return false;
     }
 
     @Override
@@ -351,184 +310,11 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
         return amount;
     }
 
-    public void attack(Entity target) {
-        if (!target.isAttackable() || target.handleAttack(this)) {
-            return;
-        }
-        float baseAttackDamage = (float) this.getAttributeInstance(EntityAttributes.ATTACK_DAMAGE).getValue();
-        float attackDamage = EnchantmentHelper.getAttackDamage(
-            this.getMainHandStack(),
-            target instanceof LivingEntity
-                ? ((LivingEntity) target).getGroup()
-                : EntityGroup.DEFAULT
-        );
-
-        float cooldownProgress = this.getAttackCooldownProgress(0.5F);
-        baseAttackDamage *= 0.2F + cooldownProgress * cooldownProgress * 0.8F;
-        attackDamage *= cooldownProgress;
-        this.resetLastAttackedTicks();
-        if (baseAttackDamage <= 0.0F && attackDamage <= 0.0F) {
-            return;
-        }
-        boolean isNearFullStrength = cooldownProgress > 0.9F;
-        int knockbackAmount = EnchantmentHelper.getKnockback(this);
-
-        boolean isPerformingFallingAttack = isNearFullStrength
-            && this.fallDistance > 0.0F
-            && !this.onGround
-            && !this.isClimbing()
-            && !this.isTouchingWater()
-            && !this.hasStatusEffect(StatusEffects.BLINDNESS)
-            && !this.hasVehicle()
-            && target instanceof LivingEntity;
-        if (isPerformingFallingAttack) {
-            baseAttackDamage *= 1.5F;
-        }
-
-        baseAttackDamage += attackDamage;
-        boolean isSweepingSword = false;
-        double horizontalAcceleration = this.horizontalSpeed - this.prevHorizontalSpeed;
-        if (isNearFullStrength
-            && !isPerformingFallingAttack
-            && this.onGround
-            && horizontalAcceleration < (double) this.getMovementSpeed()
-        ) {
-            ItemStack itemStack = this.getStackInHand(Hand.MAIN_HAND);
-            if (itemStack.getItem() instanceof SwordItem) {
-                isSweepingSword = true;
-            }
-        }
-
-        float preDamageTargetHealth = 0.0F;
-        if (target instanceof LivingEntity) {
-            preDamageTargetHealth = ((LivingEntity) target).getHealth();
-        }
-
-        final Vec3d preDamageTargetVelocity = target.getVelocity();
-        boolean targetDamaged = target.damage(DamageSource.mob(this), baseAttackDamage);
-        if (targetDamaged) {
-            int fireAspectLevel = applyFireAspectToTarget(target);
-            knockbackTarget(target, knockbackAmount);
-            if (isSweepingSword) {
-                dealSweepDamage(target, baseAttackDamage);
-            }
-            sendPlayerTargetVelocityUpdate(target, preDamageTargetVelocity);
-
-            if (isPerformingFallingAttack) {
-                spawnFallingAttackIndicators(target);
-            } else if (!isSweepingSword) {
-                playStandardAttackSound(isNearFullStrength);
-            }
-
-            if (attackDamage > 0.0F) {
-                spawnStandardAttackParticles(target);
-            }
-
-            this.onAttacking(target);
-            if (target instanceof LivingEntity) {
-                EnchantmentHelper.onUserDamaged((LivingEntity) target, this);
-            }
-
-            EnchantmentHelper.onTargetDamaged(this, target);
-            ItemStack mainHandStack = this.getMainHandStack();
-            Entity targetEntity = target;
-            if (target instanceof EnderDragonPart) {
-                targetEntity = ((EnderDragonPart) target).owner;
-            }
-
-            if (!this.world.isClient && !mainHandStack.isEmpty() && targetEntity instanceof LivingEntity) {
-                mainHandStack.getItem().postHit(mainHandStack, (LivingEntity) targetEntity, this);
-                if (mainHandStack.isEmpty())
-                    this.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
-            }
-
-            if (target instanceof LivingEntity) {
-                float damageDealt = preDamageTargetHealth - ((LivingEntity) target).getHealth();
-                if (fireAspectLevel > 0) {
-                    target.setOnFireFor(fireAspectLevel * 4);
-                }
-
-                if (world instanceof ServerWorld && damageDealt > 2.0F) {
-                    spawnDamageIndicatorParticles((ServerWorld) world, target, damageDealt);
-                }
-            }
-        } else {
-            this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_NODAMAGE, this.getSoundCategory(), 1.0F, 1.0F);
-        }
-    }
-
-    private void spawnDamageIndicatorParticles(ServerWorld world, Entity target, double damageDealt) {
-        int particleCount = (int) (damageDealt * 0.5D);
-        world.spawnParticles(ParticleTypes.DAMAGE_INDICATOR, target.getX(), target.getBodyY(0.5D), target.getZ(), particleCount, 0.1D, 0.0D, 0.1D, 0.2D);
-    }
-
-    private int applyFireAspectToTarget(Entity target) {
-        int fireAspectLevel = EnchantmentHelper.getFireAspect(this);
-        if (fireAspectLevel > 0 && !target.isOnFire()) {
-            target.setOnFireFor(1);
-        }
-        return fireAspectLevel;
-    }
-
-    private void playStandardAttackSound(boolean isNearFullStrength) {
-        if (isNearFullStrength) {
-            this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_STRONG, this.getSoundCategory(), 1.0F, 1.0F);
-        } else {
-            this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_WEAK, this.getSoundCategory(), 1.0F, 1.0F);
-        }
-    }
-
-    private void spawnFallingAttackIndicators(Entity target) {
-        this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, this.getSoundCategory(), 1.0F, 1.0F);
-        this.addCritParticles(target);
-    }
-
-    private void sendPlayerTargetVelocityUpdate(Entity target, Vec3d targetVelocity) {
-        if (target instanceof ServerPlayerEntity && target.velocityModified) {
-            ((ServerPlayerEntity) target).networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(target));
-            target.velocityModified = false;
-            target.setVelocity(targetVelocity);
-        }
-    }
-
-    private void dealSweepDamage(Entity target, float baseAttackDamage) {
-        float multiplier = 1.0F + EnchantmentHelper.getSweepingMultiplier(this) * baseAttackDamage;
-        List<LivingEntity> entitiesInSweepRange = this.world.getNonSpectatingEntities(LivingEntity.class, target.getBoundingBox().expand(1.0D, 0.25D, 1.0D));
-        for (LivingEntity livingEntity : entitiesInSweepRange) {
-            if (
-                livingEntity instanceof ArmorStandEntity && ((ArmorStandEntity) livingEntity).isMarker()
-                || this.isTeammate(livingEntity)
-                || livingEntity == target
-                || livingEntity == this
-            ) {
-                continue;
-            }
-
-            if (this.squaredDistanceTo(livingEntity) < 9.0D) {
-                livingEntity.takeKnockback(this, 0.4F, MathHelper.sin(this.yaw * (float) Math.PI / 180), -MathHelper.cos(this.yaw * (float) Math.PI / 180));
-                livingEntity.damage(DamageSource.mob(this), multiplier);
-            }
-        }
-
-        this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, this.getSoundCategory(), 1.0F, 1.0F);
-        this.showSweepParticles();
-    }
-
-    private void knockbackTarget(Entity target, int knockback) {
-        if (knockback > 0) {
-            if (target instanceof LivingEntity)
-                ((LivingEntity) target).takeKnockback(this, (float) knockback * 0.5F, MathHelper.sin(this.yaw * (float) Math.PI / 180), -MathHelper.cos(this.yaw * (float) Math.PI / 180));
-            else
-                target.addVelocity(-MathHelper.sin(this.yaw * (float) Math.PI / 180) * (float) knockback * 0.5F, 0.1D, MathHelper.cos(this.yaw * (float) Math.PI / 180) * (float) knockback * 0.5F);
-
-            this.setVelocity(this.getVelocity().multiply(0.6D, 1.0D, 0.6D));
-            this.setSprinting(false);
-        }
-    }
 
     @Override
     protected void attackLivingEntity(LivingEntity target) {
-        this.attack(target);
+        MeleeAttackExecutor.getInstance().attack(this, target, getAttackCooldownProgress(0.5F));
+        resetLastAttackedTicks();
     }
 
     public void disableShield(boolean sprinting) {
@@ -544,23 +330,6 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
         }
     }
 
-    public void addCritParticles(Entity target) {
-        if(this.world instanceof ServerWorld)//TODO test that this works
-            ((ServerWorld)this.world).getChunkManager().sendToNearbyPlayers(this, new EntityAnimationS2CPacket(target, 4));
-    }
-
-    public void spawnStandardAttackParticles(Entity target) {
-        if(this.world instanceof ServerWorld)//TODO test that this works
-            ((ServerWorld)this.world).getChunkManager().sendToNearbyPlayers(this, new EntityAnimationS2CPacket(target, 5));
-    }
-
-    public void showSweepParticles() {
-        double d = -MathHelper.sin(this.yaw * (float) Math.PI/180);
-        double e = MathHelper.cos(this.yaw * (float) Math.PI/180);
-        if (this.world instanceof ServerWorld)
-            ((ServerWorld)this.world).spawnParticles(ParticleTypes.SWEEP_ATTACK, this.getX() + d, this.getBodyY(0.5D), this.getZ() + e, 0, d, 0.0D, e, 0.0D);
-    }
-
     @Override
     public void travel(Vec3d movementInput) {
         if (this.isSwimming() && !this.hasVehicle()) {
@@ -568,7 +337,7 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
             double verticalResistance = rotationY < -0.2D ? 0.085D : 0.06D;
             if (rotationY <= 0.0D
                 || this.jumping
-                || !this.world.getBlockState(new BlockPos(this.getX(), this.getY() + 1.0D - 0.1D, this.getZ())).getFluidState().isEmpty()
+                || !this.world.getBlockState(new BlockPos(this.getX(), this.getY() + 0.9, this.getZ())).getFluidState().isEmpty()
             ) {
                 Vec3d vec3d = this.getVelocity();
                 this.setVelocity(vec3d.add(0.0D, (rotationY - vec3d.y) * verticalResistance, 0.0D));
@@ -779,6 +548,7 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
     }
 
     public boolean isMeleeAttacking() {
+        //TODO
         return false;
     }
 
@@ -787,115 +557,10 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
         return owner;
     }
 
-    public boolean dropSelectedItem(boolean dropEntireStack) {
-        return this.dropItem(this.inventory.takeInvStack(SkeletonInventory.MAIN_HAND_SLOT, dropEntireStack && !this.inventory.getMainHandStack().isEmpty() ? this.inventory.getMainHandStack().getCount() : 1), false, true) != null;
-    }
-
-    @Nullable
-    public ItemEntity dropItem(ItemStack stack, boolean setThrower) {
-        return this.dropItem(stack, false, setThrower);
-    }
-
-    @Nullable
-    public ItemEntity dropItem(ItemStack stack, boolean randomDirection, boolean setThrower) {
-        if (stack.isEmpty()) {
-            return null;
-        }
-        double itemSpawnY = this.getEyeY() - 0.30000001192092896D;
-        ItemEntity itemEntity = new ItemEntity(this.world, this.getX(), itemSpawnY, this.getZ(), stack);
-        itemEntity.setPickupDelay(40);
-        if (setThrower)
-            itemEntity.setThrower(this.getUuid());
-
-        if (randomDirection) {
-            float horizontalVelocityMult = this.random.nextFloat() * 0.5F;
-            float horizontalDirection = this.random.nextFloat() * (float) Math.PI*2;
-            itemEntity.setVelocity(
-                -MathHelper.sin(horizontalDirection) * horizontalVelocityMult,
-                0.20000000298023224D,
-                MathHelper.cos(horizontalDirection) * horizontalVelocityMult
-            );
-        } else {
-            float g = MathHelper.sin(this.pitch * (float) Math.PI/180);
-            float j = MathHelper.cos(this.pitch * (float) Math.PI/180);
-            float k = MathHelper.sin(this.yaw * (float) Math.PI/180);
-            float l = MathHelper.cos(this.yaw * (float) Math.PI/180);
-            float m = this.random.nextFloat() * (float) Math.PI*2;
-            float n = 0.02F * this.random.nextFloat();
-            itemEntity.setVelocity(
-                (double)(-k * j * 0.3F) + Math.cos(m) * (double)n,
-                -g * 0.3F + 0.1F + (this.random.nextFloat() - this.random.nextFloat()) * 0.1F,
-                (double)(l * j * 0.3F) + Math.sin(m) * (double)n
-            );
-        }
-
-        return itemEntity;
-    }
-
     public float getBlockBreakingSpeed(BlockState block) {
         float breakSpeed = this.inventory.getBlockBreakingSpeed(block);
-        breakSpeed = applyEfficiencyToBreakSpeed(breakSpeed);
-        breakSpeed = applyHasteToBreakSpeed(breakSpeed);
-        breakSpeed = applyMiningFatigueToBreakSpeed(breakSpeed);
-        breakSpeed = applyWaterToBreakSpeed(breakSpeed);
-        breakSpeed = applyOffGroundToBreakSpeed(breakSpeed);
 
-        return breakSpeed;
-    }
-
-    private float applyOffGroundToBreakSpeed(float breakSpeed) {
-        if (!this.onGround) {
-            breakSpeed /= 5.0F;
-        }
-        return breakSpeed;
-    }
-
-    private float applyWaterToBreakSpeed(float breakSpeed) {
-        if (this.isInFluid(FluidTags.WATER) && !EnchantmentHelper.hasAquaAffinity(this)) {
-            breakSpeed /= 5.0F;
-        }
-        return breakSpeed;
-    }
-
-    private float applyEfficiencyToBreakSpeed(float breakSpeed) {
-        if (breakSpeed > 1.0F) {
-            int efficiencyLevel = EnchantmentHelper.getEfficiency(this);
-            ItemStack itemStack = this.getMainHandStack();
-            if (efficiencyLevel > 0 && !itemStack.isEmpty()) {
-                breakSpeed += (float) (efficiencyLevel * efficiencyLevel + 1);
-            }
-        }
-        return breakSpeed;
-    }
-
-    private float applyHasteToBreakSpeed(float breakSpeed) {
-        if (StatusEffectUtil.hasHaste(this)) {
-            breakSpeed *= 1.0F + (float) (StatusEffectUtil.getHasteAmplifier(this) + 1) * 0.2F;
-        }
-        return breakSpeed;
-    }
-
-    private float applyMiningFatigueToBreakSpeed(float breakSpeed) {
-        if (this.hasStatusEffect(StatusEffects.MINING_FATIGUE)) {
-            float fatigueMultiplier;
-            switch(Objects.requireNonNull(this.getStatusEffect(StatusEffects.MINING_FATIGUE)).getAmplifier()) {
-                case 0:
-                    fatigueMultiplier = 0.3F;
-                    break;
-                case 1:
-                    fatigueMultiplier = 0.09F;
-                    break;
-                case 2:
-                    fatigueMultiplier = 0.0027F;
-                    break;
-                case 3:
-                default:
-                    fatigueMultiplier = 8.1E-4F;
-            }
-
-            breakSpeed *= fatigueMultiplier;
-        }
-        return breakSpeed;
+        return BreakSpeedModifiers.getInstance().applyApplicable(this, breakSpeed);
     }
 
     public boolean isUsingEffectiveTool(BlockState block) {

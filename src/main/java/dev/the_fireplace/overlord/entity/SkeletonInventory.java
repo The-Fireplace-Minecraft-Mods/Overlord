@@ -1,6 +1,7 @@
 package dev.the_fireplace.overlord.entity;
 
 import com.google.common.collect.ImmutableList;
+import dev.the_fireplace.overlord.api.world.ItemDropper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
@@ -211,7 +212,7 @@ public class SkeletonInventory implements Inventory, Nameable {
                     i = this.getEmptySlot();
 
                 if (i == -1) {
-                    this.skeleton.dropItem(stack, false);
+                    ItemDropper.getInstance().dropItem(stack, this.skeleton);
                     break;
                 }
 
@@ -438,7 +439,7 @@ public class SkeletonInventory implements Inventory, Nameable {
             for (int i = 0; i < itemStacks.size(); ++i) {
                 ItemStack itemStack = itemStacks.get(i);
                 if (!itemStack.isEmpty()) {
-                    this.skeleton.dropItem(itemStack, true, false);
+                    ItemDropper.getInstance().dropItem(itemStack, this.skeleton);
                     itemStacks.set(i, ItemStack.EMPTY);
                 }
             }
