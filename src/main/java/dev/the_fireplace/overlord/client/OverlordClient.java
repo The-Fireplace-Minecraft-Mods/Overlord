@@ -33,6 +33,9 @@ public class OverlordClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(OverlordEntities.OWNED_SKELETON_TYPE, (erd, ctx) -> new OwnedSkeletonRenderer(erd));
         registerGuis();
         registerParticles();
+        ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEX).register((atlasTexture, registry) -> {
+            registry.register(OwnedSkeletonContainer.EMPTY_WEAPON_SLOT);
+        });
     }
 
     private void registerParticles() {
