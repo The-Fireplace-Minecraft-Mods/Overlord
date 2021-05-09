@@ -25,7 +25,10 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.*;
+import net.minecraft.item.AxeItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.RangedWeaponItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.sound.SoundEvent;
@@ -105,7 +108,6 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, AICont
     public void onDeath(DamageSource source) {
         super.onDeath(source);
         this.refreshPosition();
-        //this.drop(source);
 
         if (source != null) {
             this.setVelocity(
@@ -161,18 +163,17 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, AICont
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        if (hasPlayerlikeBody()) {
-            if (source == DamageSource.ON_FIRE) {
-                return SoundEvents.ENTITY_PLAYER_HURT_ON_FIRE;
-            } else if (source == DamageSource.DROWN) {
-                return SoundEvents.ENTITY_PLAYER_HURT_DROWN;
-            } else if (source == DamageSource.SWEET_BERRY_BUSH) {
-                return SoundEvents.ENTITY_PLAYER_HURT_SWEET_BERRY_BUSH;
-            } else {
-                return SoundEvents.ENTITY_PLAYER_HURT;
-            }
-        } else {
+        if (!hasPlayerlikeBody()) {
             return SoundEvents.ENTITY_SKELETON_HURT;
+        }
+        if (source == DamageSource.ON_FIRE) {
+            return SoundEvents.ENTITY_PLAYER_HURT_ON_FIRE;
+        } else if (source == DamageSource.DROWN) {
+            return SoundEvents.ENTITY_PLAYER_HURT_DROWN;
+        } else if (source == DamageSource.SWEET_BERRY_BUSH) {
+            return SoundEvents.ENTITY_PLAYER_HURT_SWEET_BERRY_BUSH;
+        } else {
+            return SoundEvents.ENTITY_PLAYER_HURT;
         }
     }
 
@@ -197,6 +198,9 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, AICont
         if (tag.contains("Skinsuit")) {
             this.skinsuit = tag.getUuid("Skinsuit");
         }
+        if (tag.contains("aiSettings")) {
+            this.aiSettings.readTag(tag.getCompound("aiSettings"));
+        }
     }
 
     @Override
@@ -211,6 +215,7 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, AICont
         if (skinsuit != null) {
             tag.putUuid("Skinsuit", this.skinsuit);
         }
+        tag.put("aiSettings", aiSettings.toTag());
     }
 
     @Override
@@ -230,29 +235,20 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, AICont
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if (this.isInvulnerableTo(source)) {
+        if (this.isInvulnerableTo(source) || this.getHealth() <= 0) {
             return false;
-        } else {
-            if (this.getHealth() <= 0.0F) {
-                return false;
-            } else {
-                if (source.isScaledWithDifficulty()) {
-                    if (this.world.getDifficulty() == Difficulty.PEACEFUL) {
-                        amount = 0.0F;
-                    }
-
-                    if (this.world.getDifficulty() == Difficulty.EASY) {
-                        amount = Math.min(amount / 2.0F + 1.0F, amount);
-                    }
-
-                    if (this.world.getDifficulty() == Difficulty.HARD) {
-                        amount = amount * 3.0F / 2.0F;
-                    }
-                }
-
-                return amount != 0.0F && super.damage(source, amount);
+        }
+        if (source.isScaledWithDifficulty()) {
+            if (this.world.getDifficulty() == Difficulty.PEACEFUL) {
+                amount = 0.0F;
+            } else if (this.world.getDifficulty() == Difficulty.EASY) {
+                amount = Math.min(amount / 2.0F + 1.0F, amount);
+            } else if (this.world.getDifficulty() == Difficulty.HARD) {
+                amount = amount * 3.0F / 2.0F;
             }
         }
+
+        return amount != 0.0F && super.damage(source, amount);
     }
 
     @Override
@@ -270,22 +266,23 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, AICont
 
     @Override
     protected void damageShield(float amount) {
-        if (amount >= 3.0F && this.activeItemStack.getItem() == Items.SHIELD) {
-            int i = 1 + MathHelper.floor(amount);
-            Hand hand = this.getActiveHand();
-            this.activeItemStack.damage(i, this, (playerEntity) -> {
-                //TODO make sure this works
-                this.sendEquipmentBreakStatus(hand == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
-            });
-            if (this.activeItemStack.isEmpty()) {
-                if (hand == Hand.MAIN_HAND)
-                    this.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
-                else
-                    this.equipStack(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
+        if (amount < 3 || this.activeItemStack.getItem() != Items.SHIELD) {
+            return;
+        }
+        int i = 1 + MathHelper.floor(amount);
+        Hand hand = this.getActiveHand();
+        this.activeItemStack.damage(i, this, (playerEntity) -> {
+            //TODO make sure this works
+            this.sendEquipmentBreakStatus(hand == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
+        });
+        if (this.activeItemStack.isEmpty()) {
+            if (hand == Hand.MAIN_HAND)
+                this.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+            else
+                this.equipStack(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
 
-                this.activeItemStack = ItemStack.EMPTY;
-                this.playSound(SoundEvents.ITEM_SHIELD_BREAK, 0.8F, 0.8F + this.world.random.nextFloat() * 0.4F);
-            }
+            this.activeItemStack = ItemStack.EMPTY;
+            this.playSound(SoundEvents.ITEM_SHIELD_BREAK, 0.8F, 0.8F + this.world.random.nextFloat() * 0.4F);
         }
     }
 
@@ -420,38 +417,32 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, AICont
         if (slot >= 0 && slot < this.inventory.main.size()) {
             this.inventory.setInvStack(slot, item);
             return true;
-        } else {
-            EquipmentSlot equipmentSlot;
-            if (slot == 100 + EquipmentSlot.HEAD.getEntitySlotId())
-                equipmentSlot = EquipmentSlot.HEAD;
-            else if (slot == 100 + EquipmentSlot.CHEST.getEntitySlotId())
-                equipmentSlot = EquipmentSlot.CHEST;
-            else if (slot == 100 + EquipmentSlot.LEGS.getEntitySlotId())
-                equipmentSlot = EquipmentSlot.LEGS;
-            else if (slot == 100 + EquipmentSlot.FEET.getEntitySlotId())
-                equipmentSlot = EquipmentSlot.FEET;
-            else
-                equipmentSlot = null;
-
-            if (slot == 98) {
-                this.equipStack(EquipmentSlot.MAINHAND, item);
-                return true;
-            } else if (slot == 99) {
-                this.equipStack(EquipmentSlot.OFFHAND, item);
-                return true;
-            } else {
-                if (!item.isEmpty()) {
-                    if (!(item.getItem() instanceof ArmorItem) && !(item.getItem() instanceof ElytraItem)) {
-                        if (equipmentSlot != EquipmentSlot.HEAD)
-                            return false;
-                    } else if (MobEntity.getPreferredEquipmentSlot(item) != equipmentSlot)
-                        return false;
-                }
-
-                this.inventory.setInvStack((equipmentSlot != null ? equipmentSlot.getEntitySlotId() : 0) + this.inventory.main.size(), item);
-                return true;
-            }
         }
+        EquipmentSlot equipmentSlot;
+        if (slot == 100 + EquipmentSlot.HEAD.getEntitySlotId())
+            equipmentSlot = EquipmentSlot.HEAD;
+        else if (slot == 100 + EquipmentSlot.CHEST.getEntitySlotId())
+            equipmentSlot = EquipmentSlot.CHEST;
+        else if (slot == 100 + EquipmentSlot.LEGS.getEntitySlotId())
+            equipmentSlot = EquipmentSlot.LEGS;
+        else if (slot == 100 + EquipmentSlot.FEET.getEntitySlotId())
+            equipmentSlot = EquipmentSlot.FEET;
+        else
+            equipmentSlot = null;
+
+        if (slot == 98) {
+            this.equipStack(EquipmentSlot.MAINHAND, item);
+            return true;
+        } else if (slot == 99) {
+            this.equipStack(EquipmentSlot.OFFHAND, item);
+            return true;
+        }
+        if (!item.isEmpty() && MobEntity.getPreferredEquipmentSlot(item) != equipmentSlot) {
+            return false;
+        }
+
+        this.inventory.setInvStack((equipmentSlot != null ? equipmentSlot.getEntitySlotId() : 0) + this.inventory.main.size(), item);
+        return true;
     }
 
     @Override
@@ -485,31 +476,29 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, AICont
     public ItemStack getArrowType(ItemStack rangedWeaponStack) {
         if (!(rangedWeaponStack.getItem() instanceof RangedWeaponItem)) {
             return ItemStack.EMPTY;
-        } else {
-            Predicate<ItemStack> predicate = ((RangedWeaponItem)rangedWeaponStack.getItem()).getHeldProjectiles();
-            ItemStack projectileStack = RangedWeaponItem.getHeldProjectile(this, predicate);
-            if (!projectileStack.isEmpty()) {
-                return projectileStack;
-            } else {
-                predicate = ((RangedWeaponItem)rangedWeaponStack.getItem()).getProjectiles();
+        }
+        Predicate<ItemStack> predicate = ((RangedWeaponItem)rangedWeaponStack.getItem()).getHeldProjectiles();
+        ItemStack projectileStack = RangedWeaponItem.getHeldProjectile(this, predicate);
+        if (!projectileStack.isEmpty()) {
+            return projectileStack;
+        }
+        predicate = ((RangedWeaponItem)rangedWeaponStack.getItem()).getProjectiles();
 
-                for (int i = 0; i < this.inventory.getInvSize(); ++i) {
-                    ItemStack itemStack3 = this.inventory.getInvStack(i);
-                    if (predicate.test(itemStack3)) {
-                        return itemStack3;
-                    }
-                }
-
-                return ItemStack.EMPTY;
+        for (int i = 0; i < this.inventory.getInvSize(); ++i) {
+            ItemStack itemStack3 = this.inventory.getInvStack(i);
+            if (predicate.test(itemStack3)) {
+                return itemStack3;
             }
         }
+
+        return ItemStack.EMPTY;
     }
 
     public void setGrowthPhase(byte newPhase) {
-        if(newPhase < 0) {
+        if (newPhase < 0) {
             newPhase = 0;
             Overlord.errorWithStacktrace("Attempt was made to set grown phase < 0!");
-        } else if(newPhase > 4) {
+        } else if (newPhase > 4) {
             newPhase = 4;
             Overlord.errorWithStacktrace("Attempt was made to set grown phase > 4!");
         }
