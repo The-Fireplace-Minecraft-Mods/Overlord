@@ -2,7 +2,6 @@ package dev.the_fireplace.overlord.model.aiconfig.combat;
 
 import dev.the_fireplace.overlord.model.AIListManager;
 import dev.the_fireplace.overlord.model.aiconfig.SettingsComponent;
-import dev.the_fireplace.overlord.model.aiconfig.TargetEntitySelector;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.UUID;
@@ -28,6 +27,11 @@ public class CombatCategory implements SettingsComponent {
     //Throw Item settings
     private UUID throwItemList = AIListManager.ALL_THROWABLES_LIST_ID;
     private final TargetEntitySelector throwTargets = new TargetEntitySelector();
+
+    private final Access access = new Access();
+    public Access getData() {
+        return access;
+    }
 
     @Override
     public CompoundTag toTag() {
@@ -107,6 +111,116 @@ public class CombatCategory implements SettingsComponent {
         }
         if (tag.contains("throwTargets")) {
             throwTargets.readTag(tag.getCompound("throwTargets"));
+        }
+    }
+
+    public final class Access {
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            CombatCategory.this.enabled = enabled;
+        }
+
+        public boolean isMelee() {
+            return melee;
+        }
+
+        public void setMelee(boolean melee) {
+            CombatCategory.this.melee = melee;
+        }
+
+        public boolean isRanged() {
+            return ranged;
+        }
+
+        public void setRanged(boolean ranged) {
+            CombatCategory.this.ranged = ranged;
+        }
+
+        public boolean isBlock() {
+            return block;
+        }
+
+        public void setBlock(boolean block) {
+            CombatCategory.this.block = block;
+        }
+
+        public boolean isThrowItem() {
+            return throwItem;
+        }
+
+        public void setThrowItem(boolean throwItem) {
+            CombatCategory.this.throwItem = throwItem;
+        }
+
+        public boolean isOnlyDefendPlayer() {
+            return onlyDefendPlayer;
+        }
+
+        public void setOnlyDefendPlayer(boolean onlyDefendPlayer) {
+            CombatCategory.this.onlyDefendPlayer = onlyDefendPlayer;
+        }
+
+        public boolean isSwitchToRangedWhenFar() {
+            return switchToRangedWhenFar;
+        }
+
+        public void setSwitchToRangedWhenFar(boolean switchToRangedWhenFar) {
+            CombatCategory.this.switchToRangedWhenFar = switchToRangedWhenFar;
+        }
+
+        public byte getRangedSwitchDistance() {
+            return rangedSwitchDistance;
+        }
+
+        public void setRangedSwitchDistance(byte rangedSwitchDistance) {
+            CombatCategory.this.rangedSwitchDistance = rangedSwitchDistance;
+        }
+
+        public TargetEntitySelector.Access getMeleeTargets() {
+            return meleeTargets.getData();
+        }
+
+        public boolean isSwitchToMeleeWhenNoAmmo() {
+            return switchToMeleeWhenNoAmmo;
+        }
+
+        public void setSwitchToMeleeWhenNoAmmo(boolean switchToMeleeWhenNoAmmo) {
+            CombatCategory.this.switchToMeleeWhenNoAmmo = switchToMeleeWhenNoAmmo;
+        }
+
+        public boolean isSwitchToMeleeWhenClose() {
+            return switchToMeleeWhenClose;
+        }
+
+        public void setSwitchToMeleeWhenClose(boolean switchToMeleeWhenClose) {
+            CombatCategory.this.switchToMeleeWhenClose = switchToMeleeWhenClose;
+        }
+
+        public byte getMeleeSwitchDistance() {
+            return meleeSwitchDistance;
+        }
+
+        public void setMeleeSwitchDistance(byte meleeSwitchDistance) {
+            CombatCategory.this.meleeSwitchDistance = meleeSwitchDistance;
+        }
+
+        public TargetEntitySelector.Access getRangedTargets() {
+            return rangedTargets.getData();
+        }
+
+        public UUID getThrowItemList() {
+            return throwItemList;
+        }
+
+        public void setThrowItemList(UUID throwItemList) {
+            CombatCategory.this.throwItemList = throwItemList;
+        }
+
+        public TargetEntitySelector.Access getThrowTargets() {
+            return throwTargets.getData();
         }
     }
 }

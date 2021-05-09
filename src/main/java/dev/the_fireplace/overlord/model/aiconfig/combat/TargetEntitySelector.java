@@ -1,4 +1,4 @@
-package dev.the_fireplace.overlord.model.aiconfig;
+package dev.the_fireplace.overlord.model.aiconfig.combat;
 
 import dev.the_fireplace.overlord.model.AIListManager;
 import net.minecraft.nbt.CompoundTag;
@@ -12,6 +12,12 @@ public class TargetEntitySelector {
     private UUID targetAnimalsList = AIListManager.ALL_ANIMALS_LIST_ID;
     private boolean targetMobs = true;
     private UUID targetMobsList = AIListManager.ALL_MOBS_LIST_ID;
+    
+    private final Access access = new Access();
+    
+    public Access getData() {
+        return access;
+    }
 
     public CompoundTag toTag() {
         CompoundTag tag = new CompoundTag();
@@ -44,6 +50,56 @@ public class TargetEntitySelector {
         }
         if (tag.contains("targetMobsList")) {
             targetMobsList = tag.getUuid("targetMobsList");
+        }
+    }
+    
+    public final class Access {
+        public boolean isTargetPlayers() {
+            return targetPlayers;
+        }
+
+        public void setTargetPlayers(boolean targetPlayers) {
+            TargetEntitySelector.this.targetPlayers = targetPlayers;
+        }
+
+        public UUID getTargetPlayersBlacklist() {
+            return targetPlayersBlacklist;
+        }
+
+        public void setTargetPlayersBlacklist(UUID targetPlayersBlacklist) {
+            TargetEntitySelector.this.targetPlayersBlacklist = targetPlayersBlacklist;
+        }
+
+        public boolean isTargetAnimals() {
+            return targetAnimals;
+        }
+
+        public void setTargetAnimals(boolean targetAnimals) {
+            TargetEntitySelector.this.targetAnimals = targetAnimals;
+        }
+
+        public UUID getTargetAnimalsList() {
+            return targetAnimalsList;
+        }
+
+        public void setTargetAnimalsList(UUID targetAnimalsList) {
+            TargetEntitySelector.this.targetAnimalsList = targetAnimalsList;
+        }
+
+        public boolean isTargetMobs() {
+            return targetMobs;
+        }
+
+        public void setTargetMobs(boolean targetMobs) {
+            TargetEntitySelector.this.targetMobs = targetMobs;
+        }
+
+        public UUID getTargetMobsList() {
+            return targetMobsList;
+        }
+
+        public void setTargetMobsList(UUID targetMobsList) {
+            TargetEntitySelector.this.targetMobsList = targetMobsList;
         }
     }
 }

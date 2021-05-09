@@ -2,6 +2,7 @@ package dev.the_fireplace.overlord.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.the_fireplace.overlord.Overlord;
+import dev.the_fireplace.overlord.api.client.OrdersGuiFactory;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonContainer;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import dev.the_fireplace.overlord.entity.SkeletonInventory;
@@ -27,7 +28,10 @@ public class OwnedSkeletonGui extends ContainerScreen<OwnedSkeletonContainer> {
     private final SkeletonInventory inv;
     private final OwnedSkeletonEntity entity;
     public OwnedSkeletonGui(OwnedSkeletonEntity skeleton, int syncId) {
-        super(skeleton.getContainer(Objects.requireNonNull(MinecraftClient.getInstance().player).inventory, syncId), Objects.requireNonNull(MinecraftClient.getInstance().player).inventory, new TranslatableText("entity.overlord.owned_skeleton"));
+        super(skeleton.getContainer(Objects.requireNonNull(MinecraftClient.getInstance().player).inventory, syncId),
+            Objects.requireNonNull(MinecraftClient.getInstance().player).inventory,
+            new TranslatableText("entity.overlord.owned_skeleton")
+        );
         inv = skeleton.getInventory();
         entity = skeleton;
         containerHeight = 252;
@@ -41,7 +45,8 @@ public class OwnedSkeletonGui extends ContainerScreen<OwnedSkeletonContainer> {
             @Override
             public void onPress() {
                 assert OwnedSkeletonGui.this.minecraft != null;
-                OwnedSkeletonGui.this.minecraft.openScreen(SkeletonOrdersGui.makeOrdersGui(OwnedSkeletonGui.this, entity));
+                //TODO check that the AI settings are properly synced - test with one player changing it then another looking to see what it is.
+                OwnedSkeletonGui.this.minecraft.openScreen(OrdersGuiFactory.getInstance().build(OwnedSkeletonGui.this, entity.getAiSettings()));
             }
         });
     }

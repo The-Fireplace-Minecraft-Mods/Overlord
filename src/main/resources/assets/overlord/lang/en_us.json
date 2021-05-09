@@ -10,6 +10,9 @@
   "entity.overlord.owned_skeleton": "Army Skeleton",
   "item.overlord.owned_skeleton_spawn_egg": "Army Skeleton Spawn Egg",
   "gui.overlord.owned_skeleton.orders": "Orders",
-  "gui.overlord.skeleton_orders": "Orders",
-  "gui.overlord.skeleton_orders.reset": "Reset to Default"
+  "gui.overlord.aisettings.name": "Orders",
+  "gui.overlord.aisettings.combat": "Combat",
+  "gui.overlord.aisettings.movement": "Movement",
+  "gui.overlord.aisettings.tasks": "Tasks",
+  "gui.overlord.aisettings.misc": "Misc"
 }

@@ -12,6 +12,12 @@ public class MiscCategory implements SettingsComponent {
     private UUID saveEquipmentList = AIListManager.ALL_EQUIPMENT_LIST_ID;
     private boolean loadChunks = false;
 
+    private final Access access = new Access();
+
+    public Access getData() {
+        return access;
+    }
+
     @Override
     public CompoundTag toTag() {
         CompoundTag tag = new CompoundTag();
@@ -33,6 +39,32 @@ public class MiscCategory implements SettingsComponent {
         }
         if (tag.contains("loadChunks")) {
             loadChunks = tag.getBoolean("loadChunks");
+        }
+    }
+
+    public final class Access {
+        public boolean isSaveDamagedEquipment() {
+            return saveDamagedEquipment;
+        }
+
+        public void setSaveDamagedEquipment(boolean saveDamagedEquipment) {
+            MiscCategory.this.saveDamagedEquipment = saveDamagedEquipment;
+        }
+
+        public UUID getSaveEquipmentList() {
+            return saveEquipmentList;
+        }
+
+        public void setSaveEquipmentList(UUID saveEquipmentList) {
+            MiscCategory.this.saveEquipmentList = saveEquipmentList;
+        }
+
+        public boolean isLoadChunks() {
+            return loadChunks;
+        }
+
+        public void setLoadChunks(boolean loadChunks) {
+            MiscCategory.this.loadChunks = loadChunks;
         }
     }
 }

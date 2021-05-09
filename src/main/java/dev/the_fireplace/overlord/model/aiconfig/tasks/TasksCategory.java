@@ -35,6 +35,12 @@ public class TasksCategory implements SettingsComponent {
     //Breeding settings
     private UUID breedingEntityList = AIListManager.ALL_ANIMALS_LIST_ID;
 
+    private final Access access = new Access();
+
+    public Access getData() {
+        return access;
+    }
+
     @Override
     public CompoundTag toTag() {
         CompoundTag tag = new CompoundTag();
@@ -116,6 +122,152 @@ public class TasksCategory implements SettingsComponent {
         }
         if (tag.contains("breedingEntityList")) {
             breedingEntityList = tag.getUuid("breedingEntityList");
+        }
+    }
+
+    public final class Access {
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            TasksCategory.this.enabled = enabled;
+        }
+
+        public boolean isWoodcutting() {
+            return woodcutting;
+        }
+
+        public void setWoodcutting(boolean woodcutting) {
+            TasksCategory.this.woodcutting = woodcutting;
+        }
+
+        public boolean isMining() {
+            return mining;
+        }
+
+        public void setMining(boolean mining) {
+            TasksCategory.this.mining = mining;
+        }
+
+        public boolean isDigging() {
+            return digging;
+        }
+
+        public void setDigging(boolean digging) {
+            TasksCategory.this.digging = digging;
+        }
+
+        public boolean isBeekeeping() {
+            return beekeeping;
+        }
+
+        public void setBeekeeping(boolean beekeeping) {
+            TasksCategory.this.beekeeping = beekeeping;
+        }
+
+        public boolean isFarming() {
+            return farming;
+        }
+
+        public void setFarming(boolean farming) {
+            TasksCategory.this.farming = farming;
+        }
+
+        public boolean isBuilding() {
+            return building;
+        }
+
+        public void setBuilding(boolean building) {
+            TasksCategory.this.building = building;
+        }
+
+        public boolean isBreeding() {
+            return breeding;
+        }
+
+        public void setBreeding(boolean breeding) {
+            TasksCategory.this.breeding = breeding;
+        }
+
+        public boolean isDepositItems() {
+            return depositItems;
+        }
+
+        public void setDepositItems(boolean depositItems) {
+            TasksCategory.this.depositItems = depositItems;
+        }
+
+        public boolean isWithdrawItems() {
+            return withdrawItems;
+        }
+
+        public void setWithdrawItems(boolean withdrawItems) {
+            TasksCategory.this.withdrawItems = withdrawItems;
+        }
+
+        public UUID getWoodcuttingBlockList() {
+            return woodcuttingBlockList;
+        }
+
+        public void setWoodcuttingBlockList(UUID woodcuttingBlockList) {
+            TasksCategory.this.woodcuttingBlockList = woodcuttingBlockList;
+        }
+
+        public boolean isWoodcuttingWithoutTools() {
+            return woodcuttingWithoutTools;
+        }
+
+        public void setWoodcuttingWithoutTools(boolean woodcuttingWithoutTools) {
+            TasksCategory.this.woodcuttingWithoutTools = woodcuttingWithoutTools;
+        }
+
+        public UUID getMiningBlockList() {
+            return miningBlockList;
+        }
+
+        public void setMiningBlockList(UUID miningBlockList) {
+            TasksCategory.this.miningBlockList = miningBlockList;
+        }
+
+        public boolean isMiningWithoutTools() {
+            return miningWithoutTools;
+        }
+
+        public void setMiningWithoutTools(boolean miningWithoutTools) {
+            TasksCategory.this.miningWithoutTools = miningWithoutTools;
+        }
+
+        public UUID getDiggingBlockList() {
+            return diggingBlockList;
+        }
+
+        public void setDiggingBlockList(UUID diggingBlockList) {
+            TasksCategory.this.diggingBlockList = diggingBlockList;
+        }
+
+        public boolean isDiggingWithoutTools() {
+            return diggingWithoutTools;
+        }
+
+        public void setDiggingWithoutTools(boolean diggingWithoutTools) {
+            TasksCategory.this.diggingWithoutTools = diggingWithoutTools;
+        }
+
+        public boolean isHarvestAngryHives() {
+            return harvestAngryHives;
+        }
+
+        public void setHarvestAngryHives(boolean harvestAngryHives) {
+            TasksCategory.this.harvestAngryHives = harvestAngryHives;
+        }
+
+        public UUID getBreedingEntityList() {
+            return breedingEntityList;
+        }
+
+        public void setBreedingEntityList(UUID breedingEntityList) {
+            TasksCategory.this.breedingEntityList = breedingEntityList;
         }
     }
 }

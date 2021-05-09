@@ -25,6 +25,12 @@ public class MovementCategory implements SettingsComponent {
     //Should the skeleton actively explore when wandering?
     private boolean exploringWander = false;
 
+    private final Access access = new Access();
+
+    public Access getData() {
+        return access;
+    }
+
     @Override
     public CompoundTag toTag() {
         CompoundTag tag = new CompoundTag();
@@ -75,6 +81,80 @@ public class MovementCategory implements SettingsComponent {
         }
         if (tag.contains("exploringWander")) {
             exploringWander = tag.getBoolean("exploringWander");
+        }
+    }
+
+    public final class Access {
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            MovementCategory.this.enabled = enabled;
+        }
+
+        public EnumMovementMode getMoveMode() {
+            return moveMode;
+        }
+
+        public void setMoveMode(EnumMovementMode moveMode) {
+            MovementCategory.this.moveMode = moveMode;
+        }
+
+        public byte getFollowDistance() {
+            return followDistance;
+        }
+
+        public void setFollowDistance(byte followDistance) {
+            MovementCategory.this.followDistance = followDistance;
+        }
+
+        public UUID getPatrolPosList() {
+            return patrolPosList;
+        }
+
+        public void setPatrolPosList(UUID patrolPosList) {
+            MovementCategory.this.patrolPosList = patrolPosList;
+        }
+
+        public boolean isPatrolLoop() {
+            return patrolLoop;
+        }
+
+        public void setPatrolLoop(boolean patrolLoop) {
+            MovementCategory.this.patrolLoop = patrolLoop;
+        }
+
+        public PositionSetting getHome() {
+            return home;
+        }
+
+        public void setHome(PositionSetting home) {
+            MovementCategory.this.home = home;
+        }
+
+        public boolean isStationedReturnHome() {
+            return stationedReturnHome;
+        }
+
+        public void setStationedReturnHome(boolean stationedReturnHome) {
+            MovementCategory.this.stationedReturnHome = stationedReturnHome;
+        }
+
+        public byte getMoveRadius() {
+            return moveRadius;
+        }
+
+        public void setMoveRadius(byte moveRadius) {
+            MovementCategory.this.moveRadius = moveRadius;
+        }
+
+        public boolean isExploringWander() {
+            return exploringWander;
+        }
+
+        public void setExploringWander(boolean exploringWander) {
+            MovementCategory.this.exploringWander = exploringWander;
         }
     }
 }

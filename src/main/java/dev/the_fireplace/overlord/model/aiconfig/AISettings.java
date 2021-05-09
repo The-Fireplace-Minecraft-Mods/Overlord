@@ -8,10 +8,10 @@ import net.minecraft.nbt.CompoundTag;
 
 public class AISettings implements SettingsComponent {
 
-    private MiscCategory misc = new MiscCategory();
-    private CombatCategory combat = new CombatCategory();
-    private MovementCategory movement = new MovementCategory();
-    private TasksCategory tasks = new TasksCategory();
+    private final MiscCategory misc = new MiscCategory();
+    private final CombatCategory combat = new CombatCategory();
+    private final MovementCategory movement = new MovementCategory();
+    private final TasksCategory tasks = new TasksCategory();
 
     @Override
     public CompoundTag toTag() {
@@ -31,13 +31,13 @@ public class AISettings implements SettingsComponent {
             misc.readTag(tag.getCompound("misc"));
         }
         if (tag.contains("combat")) {
-            misc.readTag(tag.getCompound("combat"));
+            combat.readTag(tag.getCompound("combat"));
         }
         if (tag.contains("movement")) {
-            misc.readTag(tag.getCompound("movement"));
+            movement.readTag(tag.getCompound("movement"));
         }
         if (tag.contains("tasks")) {
-            misc.readTag(tag.getCompound("tasks"));
+            tasks.readTag(tag.getCompound("tasks"));
         }
     }
 
