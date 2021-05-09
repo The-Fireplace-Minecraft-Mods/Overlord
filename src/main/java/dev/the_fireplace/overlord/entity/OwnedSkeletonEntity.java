@@ -98,10 +98,10 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, AICont
 
     @Override
     public boolean interact(PlayerEntity player, Hand hand) {
-        if (!player.world.isClient()) {
+        if (!player.world.isClient() && !player.isSneaking()) {
             ContainerProviderRegistry.INSTANCE.openContainer(OverlordEntities.OWNED_SKELETON_ID, player, buf -> buf.writeUuid(this.getUuid()));
         }
-        return true;
+        return !player.isSneaking();
     }
 
     @Override
