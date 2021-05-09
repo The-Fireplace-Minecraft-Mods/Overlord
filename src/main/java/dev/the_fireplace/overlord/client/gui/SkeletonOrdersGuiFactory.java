@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.client.gui;
 
 import dev.the_fireplace.lib.api.chat.TranslatorManager;
-import dev.the_fireplace.lib.api.client.ConfigScreenBuilder;
+import dev.the_fireplace.lib.api.client.AdvancedConfigScreenBuilder;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.api.client.OrdersGuiFactory;
 import dev.the_fireplace.overlord.model.aiconfig.AISettings;
@@ -10,6 +10,7 @@ import dev.the_fireplace.overlord.model.aiconfig.misc.MiscCategory;
 import dev.the_fireplace.overlord.model.aiconfig.movement.EnumMovementMode;
 import dev.the_fireplace.overlord.model.aiconfig.movement.MovementCategory;
 import dev.the_fireplace.overlord.model.aiconfig.tasks.TasksCategory;
+import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -18,9 +19,8 @@ import net.minecraft.client.gui.screen.Screen;
 import java.util.Arrays;
 import java.util.UUID;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
-public class SkeletonOrdersGuiFactory extends ConfigScreenBuilder implements OrdersGuiFactory {
+public class SkeletonOrdersGuiFactory extends AdvancedConfigScreenBuilder implements OrdersGuiFactory {
 	private static final String TRANSLATION_BASE = "gui." + Overlord.MODID + ".aisettings.";
 	private static final String OPTION_TRANSLATION_BASE = TRANSLATION_BASE + "option.";
 	@Deprecated
@@ -85,15 +85,14 @@ public class SkeletonOrdersGuiFactory extends ConfigScreenBuilder implements Ord
 			defaults.isEnabled(),
 			currentSettings::setEnabled
 		);
-		addStringDropdown(
+		AbstractConfigListEntry<?> moveModeEntry = addEnumDropdown(
 			entryBuilder,
 			movementCategory,
 			OPTION_TRANSLATION_BASE + "moveMode",
-			currentSettings.getMoveMode().toString(),
-			defaults.getMoveMode().toString(),
-			Arrays.stream(EnumMovementMode.values()).map(Enum::toString).collect(Collectors.toList()),
-			mode -> currentSettings.setMoveMode(EnumMovementMode.valueOf(mode)),
-			false
+			currentSettings.getMoveMode(),
+			defaults.getMoveMode(),
+			Arrays.asList(EnumMovementMode.values()),
+			currentSettings::setMoveMode
 		);
 	}
 

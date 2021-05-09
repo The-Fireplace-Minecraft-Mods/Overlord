@@ -14,5 +14,10 @@
   "gui.overlord.aisettings.combat": "Combat",
   "gui.overlord.aisettings.movement": "Movement",
   "gui.overlord.aisettings.tasks": "Tasks",
-  "gui.overlord.aisettings.misc": "Misc"
+  "gui.overlord.aisettings.misc": "Misc",
+  "gui.overlord.aisettings.option.enabled": "Enabled",
+  "gui.overlord.aisettings.option.moveMode": "Movement Mode",
+  "gui.overlord.aisettings.option.saveDamagedEquipment": "Save Damaged Equipment",
+  "gui.overlord.aisettings.option.saveEquipmentList": "Equipment to Save",
+  "gui.overlord.aisettings.option.loadChunks": "Load Chunks"
 }
