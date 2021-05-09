@@ -41,7 +41,7 @@ public class OwnedSkeletonGui extends ContainerScreen<OwnedSkeletonContainer> {
             @Override
             public void onPress() {
                 assert OwnedSkeletonGui.this.minecraft != null;
-                OwnedSkeletonGui.this.minecraft.openScreen(SkeletonOrdersGui.makeOrdersGui(OwnedSkeletonGui.this));
+                OwnedSkeletonGui.this.minecraft.openScreen(SkeletonOrdersGui.makeOrdersGui(OwnedSkeletonGui.this, entity));
             }
         });
     }

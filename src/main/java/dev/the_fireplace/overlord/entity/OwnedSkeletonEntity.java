@@ -4,13 +4,14 @@ import com.google.common.collect.Lists;
 import dev.the_fireplace.lib.api.util.EmptyUUID;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.api.inventory.InventorySearcher;
+import dev.the_fireplace.overlord.api.mechanic.AIControllable;
 import dev.the_fireplace.overlord.api.mechanic.Ownable;
 import dev.the_fireplace.overlord.api.world.BreakSpeedModifiers;
 import dev.the_fireplace.overlord.api.world.DaylightDetector;
 import dev.the_fireplace.overlord.api.world.MeleeAttackExecutor;
 import dev.the_fireplace.overlord.api.world.UndeadDaylightDamager;
 import dev.the_fireplace.overlord.init.OverlordEntities;
-import dev.the_fireplace.overlord.model.AISettings;
+import dev.the_fireplace.overlord.model.aiconfig.AISettings;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
@@ -43,7 +44,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
+public class OwnedSkeletonEntity extends LivingEntity implements Ownable, AIControllable {
 
     private UUID owner = new UUID(801295133947085751L, -7395604847578632613L);
     private UUID skinsuit = EmptyUUID.EMPTY_UUID;
@@ -581,6 +582,11 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable {
     }
 
     public AISettings getAiSettings() {
+        return aiSettings;
+    }
+
+    @Override
+    public AISettings getSettings() {
         return aiSettings;
     }
 }
