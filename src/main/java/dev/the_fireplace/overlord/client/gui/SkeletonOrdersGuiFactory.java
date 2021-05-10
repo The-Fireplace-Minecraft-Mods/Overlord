@@ -71,7 +71,8 @@ public class SkeletonOrdersGuiFactory extends AdvancedConfigScreenBuilder implem
 			OPTION_TRANSLATION_BASE + "enabled",
 			currentSettings.isEnabled(),
 			defaults.isEnabled(),
-			currentSettings::setEnabled
+			currentSettings::setEnabled,
+			(byte)0
 		);
 	}
 
@@ -83,7 +84,8 @@ public class SkeletonOrdersGuiFactory extends AdvancedConfigScreenBuilder implem
 			OPTION_TRANSLATION_BASE + "enabled",
 			currentSettings.isEnabled(),
 			defaults.isEnabled(),
-			currentSettings::setEnabled
+			currentSettings::setEnabled,
+			(byte)0
 		);
 		AbstractConfigListEntry<?> moveModeEntry = addEnumDropdown(
 			entryBuilder,
@@ -104,7 +106,8 @@ public class SkeletonOrdersGuiFactory extends AdvancedConfigScreenBuilder implem
 			OPTION_TRANSLATION_BASE + "enabled",
 			currentSettings.isEnabled(),
 			defaults.isEnabled(),
-			currentSettings::setEnabled
+			currentSettings::setEnabled,
+			(byte)0
 		);
 	}
 
