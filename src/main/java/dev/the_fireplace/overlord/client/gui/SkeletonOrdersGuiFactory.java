@@ -4,6 +4,7 @@ import dev.the_fireplace.lib.api.chat.TranslatorManager;
 import dev.the_fireplace.lib.api.client.AdvancedConfigScreenBuilder;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.api.client.OrdersGuiFactory;
+import dev.the_fireplace.overlord.api.entity.OrderableEntity;
 import dev.the_fireplace.overlord.model.aiconfig.AISettings;
 import dev.the_fireplace.overlord.model.aiconfig.combat.CombatCategory;
 import dev.the_fireplace.overlord.model.aiconfig.misc.MiscCategory;
@@ -33,12 +34,12 @@ public class SkeletonOrdersGuiFactory extends AdvancedConfigScreenBuilder implem
 	}
 
 	@Override
-	public Screen build(Screen parent, AISettings settings) {
+	public Screen build(Screen parent, OrderableEntity aiEntity) {
 		ConfigBuilder builder = ConfigBuilder.create()
 			.setParentScreen(parent)
 			.setTitle(translator.getTranslatedString(TRANSLATION_BASE + "name"));
 
-		buildCategories(builder, settings);
+		buildCategories(builder, aiEntity.getAISettings());
 
 		builder.setSavingRunnable(() -> {
 

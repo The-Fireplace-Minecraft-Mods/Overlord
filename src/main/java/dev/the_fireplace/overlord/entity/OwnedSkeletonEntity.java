@@ -3,8 +3,8 @@ package dev.the_fireplace.overlord.entity;
 import com.google.common.collect.Lists;
 import dev.the_fireplace.lib.api.util.EmptyUUID;
 import dev.the_fireplace.overlord.Overlord;
+import dev.the_fireplace.overlord.api.entity.OrderableEntity;
 import dev.the_fireplace.overlord.api.inventory.InventorySearcher;
-import dev.the_fireplace.overlord.api.mechanic.AIControllable;
 import dev.the_fireplace.overlord.api.mechanic.Ownable;
 import dev.the_fireplace.overlord.api.world.BreakSpeedModifiers;
 import dev.the_fireplace.overlord.api.world.DaylightDetector;
@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public class OwnedSkeletonEntity extends LivingEntity implements Ownable, AIControllable {
+public class OwnedSkeletonEntity extends LivingEntity implements Ownable, OrderableEntity {
 
     private UUID owner = new UUID(801295133947085751L, -7395604847578632613L);
     private UUID skinsuit = EmptyUUID.EMPTY_UUID;
@@ -570,12 +570,13 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, AICont
         this.owner = newOwner;
     }
 
-    public AISettings getAiSettings() {
+    @Override
+    public AISettings getAISettings() {
         return aiSettings;
     }
 
     @Override
-    public AISettings getSettings() {
-        return aiSettings;
+    public void updateAISettings(AISettings newSettings) {
+        aiSettings.readTag(newSettings.toTag());
     }
 }

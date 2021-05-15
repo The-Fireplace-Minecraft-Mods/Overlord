@@ -1,11 +1,13 @@
 package dev.the_fireplace.overlord;
 
 import dev.the_fireplace.lib.api.datagen.DataGeneratorFactory;
+import dev.the_fireplace.overlord.api.network.c2sPackets.GetOrdersPacket;
 import dev.the_fireplace.overlord.init.*;
 import dev.the_fireplace.overlord.init.datagen.*;
 import dev.the_fireplace.overlord.tags.OverlordBlockTags;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.Items;
@@ -38,6 +40,7 @@ public class Overlord implements ModInitializer {
         OverlordBlockEntities.register();
         OverlordEntities.register();
         OverlordParticleTypes.register();
+        registerPackets();
         //noinspection ConstantConditions//TODO Use environment variables for this
         if (true) {
             getLogger().debug("Generating data...");
@@ -70,5 +73,9 @@ public class Overlord implements ModInitializer {
             }
             return ActionResult.PASS;
         });
+    }
+
+    private void registerPackets() {
+        ServerPlayNetworking.registerGlobalReceiver(GetOrdersPacket.getInstance().getId(), GetOrdersPacket.getInstance());
     }
 }

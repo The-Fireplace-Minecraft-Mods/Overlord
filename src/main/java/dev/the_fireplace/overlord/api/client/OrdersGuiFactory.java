@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.api.client;
 
+import dev.the_fireplace.overlord.api.entity.OrderableEntity;
 import dev.the_fireplace.overlord.client.gui.SkeletonOrdersGuiFactory;
-import dev.the_fireplace.overlord.model.aiconfig.AISettings;
 import net.minecraft.client.gui.screen.Screen;
 
 public interface OrdersGuiFactory {
@@ -10,5 +10,5 @@ public interface OrdersGuiFactory {
         return SkeletonOrdersGuiFactory.INSTANCE;
     }
 
-    Screen build(Screen parent, AISettings settings);
+    Screen build(Screen parent, OrderableEntity aiEntity);
 }

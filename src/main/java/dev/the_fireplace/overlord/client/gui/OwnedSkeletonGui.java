@@ -2,7 +2,7 @@ package dev.the_fireplace.overlord.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.the_fireplace.overlord.Overlord;
-import dev.the_fireplace.overlord.api.client.OrdersGuiFactory;
+import dev.the_fireplace.overlord.api.client.GuiOpener;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonContainer;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import dev.the_fireplace.overlord.entity.SkeletonInventory;
@@ -45,8 +45,7 @@ public class OwnedSkeletonGui extends ContainerScreen<OwnedSkeletonContainer> {
             @Override
             public void onPress() {
                 assert OwnedSkeletonGui.this.minecraft != null;
-                //TODO check that the AI settings are properly synced - test with one player changing it then another looking to see what it is.
-                OwnedSkeletonGui.this.minecraft.openScreen(OrdersGuiFactory.getInstance().build(OwnedSkeletonGui.this, entity.getAiSettings()));
+                GuiOpener.getInstance().openOrdersGUI(entity);
             }
         });
     }
