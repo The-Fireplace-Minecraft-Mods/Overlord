@@ -1,5 +1,6 @@
 package dev.the_fireplace.overlord.impl.world;
 
+import dev.the_fireplace.overlord.api.world.EntitySpawner;
 import dev.the_fireplace.overlord.api.world.ItemDropper;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
@@ -14,6 +15,7 @@ public final class ItemDropperImpl implements ItemDropper {
     public static final ItemDropper INSTANCE = new ItemDropperImpl();
 
     private final Random random = new Random();
+    private final EntitySpawner spawner = EntitySpawner.getInstance();
 
     private ItemDropperImpl() {}
 
@@ -33,6 +35,8 @@ public final class ItemDropperImpl implements ItemDropper {
             0.2f,
             MathHelper.cos(horizontalDirection) * horizontalVelocityMult
         );
+
+        spawner.spawn(entity.getEntityWorld(), itemEntity);
         
         return itemEntity;
     }
@@ -58,6 +62,8 @@ public final class ItemDropperImpl implements ItemDropper {
             -g * 0.3f + 0.1f + (random.nextFloat() - random.nextFloat()) * 0.1f,
             (double)(l * j * 0.3f) + Math.sin(m) * (double)n
         );
+
+        spawner.spawn(entity.getEntityWorld(), itemEntity);
 
         return itemEntity;
     }
