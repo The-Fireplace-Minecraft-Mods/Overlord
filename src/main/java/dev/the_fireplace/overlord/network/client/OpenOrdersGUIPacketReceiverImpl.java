@@ -1,11 +1,11 @@
-package dev.the_fireplace.overlord.network.s2c;
+package dev.the_fireplace.overlord.network.client;
 
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.api.client.OrdersGuiFactory;
 import dev.the_fireplace.overlord.api.entity.OrderableEntity;
-import dev.the_fireplace.overlord.api.network.s2cPackets.OpenOrdersGUIPacket;
+import dev.the_fireplace.overlord.api.internal.network.ServerToClientPacketIDs;
+import dev.the_fireplace.overlord.api.internal.network.client.OpenOrdersGUIPacketReceiver;
 import dev.the_fireplace.overlord.model.aiconfig.AISettings;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -17,24 +17,15 @@ import net.minecraft.util.PacketByteBuf;
 
 import java.util.Objects;
 
-public final class OpenOrdersGUIPacketImpl implements OpenOrdersGUIPacket {
+public final class OpenOrdersGUIPacketReceiverImpl implements OpenOrdersGUIPacketReceiver {
     @Deprecated
-    public static final OpenOrdersGUIPacket INSTANCE = new OpenOrdersGUIPacketImpl();
-    private static final Identifier ID = new Identifier(Overlord.MODID, "open_ai_gui");
+    public static final OpenOrdersGUIPacketReceiver INSTANCE = new OpenOrdersGUIPacketReceiverImpl();
 
-    private OpenOrdersGUIPacketImpl() {}
+    private OpenOrdersGUIPacketReceiverImpl() {}
 
     @Override
     public Identifier getId() {
-        return ID;
-    }
-
-    @Override
-    public PacketByteBuf buildBuffer(int aiEntityID, AISettings entitySettings) {
-        PacketByteBuf buffer = PacketByteBufs.create();
-        buffer.writeCompoundTag(entitySettings.toTag());
-        buffer.writeInt(aiEntityID);
-        return buffer;
+        return ServerToClientPacketIDs.getInstance().openOrdersGuiPacketID();
     }
 
     @Override

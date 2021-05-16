@@ -1,6 +1,6 @@
-package dev.the_fireplace.overlord.api.client.network;
+package dev.the_fireplace.overlord.api.internal.network.client;
 
-import dev.the_fireplace.overlord.client.network.ClientPacketRegistryImpl;
+import dev.the_fireplace.overlord.network.client.ClientPacketRegistryImpl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 

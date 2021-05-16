@@ -1,6 +1,6 @@
-package dev.the_fireplace.overlord.api.network;
+package dev.the_fireplace.overlord.api.internal.network.server;
 
-import dev.the_fireplace.overlord.network.ServerPacketRegistryImpl;
+import dev.the_fireplace.overlord.network.server.ServerPacketRegistryImpl;
 
 public interface ServerPacketRegistry {
     @SuppressWarnings("deprecation")

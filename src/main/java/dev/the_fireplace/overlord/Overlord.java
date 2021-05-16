@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord;
 
 import dev.the_fireplace.lib.api.datagen.DataGeneratorFactory;
-import dev.the_fireplace.overlord.api.network.ServerPacketRegistry;
+import dev.the_fireplace.overlord.api.internal.network.server.ServerPacketRegistry;
 import dev.the_fireplace.overlord.init.*;
 import dev.the_fireplace.overlord.init.datagen.*;
 import dev.the_fireplace.overlord.tags.OverlordBlockTags;

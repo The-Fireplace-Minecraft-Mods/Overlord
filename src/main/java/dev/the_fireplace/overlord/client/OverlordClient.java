@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.client;
 
 import dev.the_fireplace.overlord.Overlord;
-import dev.the_fireplace.overlord.api.client.network.ClientPacketRegistry;
+import dev.the_fireplace.overlord.api.internal.network.client.ClientPacketRegistry;
 import dev.the_fireplace.overlord.client.gui.CasketGui;
 import dev.the_fireplace.overlord.client.gui.OwnedSkeletonGui;
 import dev.the_fireplace.overlord.client.particle.DeadFlameParticle;
@@ -34,10 +34,6 @@ public class OverlordClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(OverlordEntities.OWNED_SKELETON_TYPE, (erd, ctx) -> new OwnedSkeletonRenderer(erd));
         registerGuis();
         registerParticles();
-        registerPackets();
-    }
-
-    private void registerPackets() {
         ClientPacketRegistry.getInstance().registerPacketHandlers();
     }
 
