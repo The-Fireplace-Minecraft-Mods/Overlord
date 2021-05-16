@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.client;
 
 import dev.the_fireplace.overlord.Overlord;
-import dev.the_fireplace.overlord.api.network.s2cPackets.OpenOrdersGUIPacket;
+import dev.the_fireplace.overlord.api.client.network.ClientPacketRegistry;
 import dev.the_fireplace.overlord.client.gui.CasketGui;
 import dev.the_fireplace.overlord.client.gui.OwnedSkeletonGui;
 import dev.the_fireplace.overlord.client.particle.DeadFlameParticle;
@@ -16,7 +16,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
@@ -39,7 +38,7 @@ public class OverlordClient implements ClientModInitializer {
     }
 
     private void registerPackets() {
-        ClientPlayNetworking.registerGlobalReceiver(OpenOrdersGUIPacket.getInstance().getId(), OpenOrdersGUIPacket.getInstance());
+        ClientPacketRegistry.getInstance().registerPacketHandlers();
     }
 
     private void registerParticles() {
