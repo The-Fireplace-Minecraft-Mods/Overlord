@@ -576,7 +576,7 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, Ordera
     }
 
     @Override
-    public void updateAISettings(AISettings newSettings) {
+    public void updateAISettings(CompoundTag newSettings) {
         aiSettings.readTag(newSettings.toTag());
     }
 }

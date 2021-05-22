@@ -5,7 +5,6 @@ import dev.the_fireplace.overlord.api.client.OrdersGuiFactory;
 import dev.the_fireplace.overlord.api.entity.OrderableEntity;
 import dev.the_fireplace.overlord.api.internal.network.ServerToClientPacketIDs;
 import dev.the_fireplace.overlord.api.internal.network.client.OpenOrdersGUIPacketReceiver;
-import dev.the_fireplace.overlord.model.aiconfig.AISettings;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -44,9 +43,7 @@ public final class OpenOrdersGUIPacketReceiverImpl implements OpenOrdersGUIPacke
             Overlord.getLogger().error("Received open orders packet with null ai settings!");
             return;
         }
-        AISettings newSettings = new AISettings();
-        newSettings.readTag(aiCompound);
-        ((OrderableEntity) entity).updateAISettings(newSettings);
+        ((OrderableEntity) entity).updateAISettings(aiCompound);
         Screen parentScreen = client.currentScreen;
         if (parentScreen == null) {
             Overlord.getLogger().warn("Parent screen is null, attempting to open orders GUI anyways!");

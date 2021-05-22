@@ -9,4 +9,5 @@ public interface ClientToServerPacketIDs {
         return OverlordPackets.INSTANCE;
     }
     Identifier getOrdersPacketID();
+    Identifier saveAiPacketID();
 }

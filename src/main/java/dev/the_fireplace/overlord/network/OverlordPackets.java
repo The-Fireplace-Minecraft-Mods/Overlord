@@ -27,6 +27,11 @@ public final class OverlordPackets implements ClientToServerPacketIDs, ServerToC
     }
 
     @Override
+    public Identifier saveAiPacketID() {
+        return UPDATED_AI_PACKET_ID;
+    }
+
+    @Override
     public Identifier openOrdersGuiPacketID() {
         return OPEN_ORDERS_GUI_ID;
     }

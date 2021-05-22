@@ -5,6 +5,8 @@ import dev.the_fireplace.lib.api.client.AdvancedConfigScreenBuilder;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.api.client.OrdersGuiFactory;
 import dev.the_fireplace.overlord.api.entity.OrderableEntity;
+import dev.the_fireplace.overlord.api.internal.network.ClientToServerPacketIDs;
+import dev.the_fireplace.overlord.api.internal.network.client.SaveAIPacketBufferBuilder;
 import dev.the_fireplace.overlord.model.aiconfig.AISettings;
 import dev.the_fireplace.overlord.model.aiconfig.combat.CombatCategory;
 import dev.the_fireplace.overlord.model.aiconfig.misc.MiscCategory;
@@ -15,6 +17,7 @@ import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.screen.Screen;
 
 import java.util.Arrays;
@@ -41,9 +44,10 @@ public class SkeletonOrdersGuiFactory extends AdvancedConfigScreenBuilder implem
 
 		buildCategories(builder, aiEntity.getAISettings());
 
-		builder.setSavingRunnable(() -> {
-
-		});
+		builder.setSavingRunnable(() -> ClientPlayNetworking.send(
+			ClientToServerPacketIDs.getInstance().saveAiPacketID(),
+			SaveAIPacketBufferBuilder.getInstance().build(aiEntity)
+		));
 
 		return builder.build();
 	}
