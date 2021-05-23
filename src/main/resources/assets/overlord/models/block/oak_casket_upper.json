@@ -1,7 +1,6 @@
 {
 	"parent": "overlord:block/wood_casket_upper",
 	"textures": {
-		"sides": "block/oak_planks",
-		"topbottom": "block/stripped_oak_log"
+		"particle": "block/oak_planks"
 	}
 }

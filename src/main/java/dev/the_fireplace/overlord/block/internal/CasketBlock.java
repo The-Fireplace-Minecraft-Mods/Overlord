@@ -39,6 +39,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 public class CasketBlock extends HorizontalFacingBlock implements BlockEntityProvider, Waterloggable {
@@ -82,6 +83,7 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
         this.setDefaultState(this.getStateManager().getDefaultState().with(PART, BedPart.FOOT).with(WATERLOGGED, false));
     }
 
+    @Nullable
     public static Direction getDirection(BlockView world, BlockPos pos) {
         BlockState blockState = world.getBlockState(pos);
         return blockState.getBlock() instanceof CasketBlock ? blockState.get(FACING) : null;
@@ -149,7 +151,7 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+        return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
@@ -165,9 +167,9 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
             world.setBlockState(headPos, state.with(PART, BedPart.HEAD), 3);
             world.updateNeighbors(pos, Blocks.AIR);
             state.updateNeighborStates(world, pos, 3);
-            if(itemStack.hasCustomName()) {
+            if (itemStack.hasCustomName()) {
                 BlockEntity blockEntity = world.getBlockEntity(headPos);
-                if(blockEntity instanceof CasketBlockEntity)
+                if (blockEntity instanceof CasketBlockEntity)
                     ((CasketBlockEntity) blockEntity).setCustomName(itemStack.getName());
             }
         }

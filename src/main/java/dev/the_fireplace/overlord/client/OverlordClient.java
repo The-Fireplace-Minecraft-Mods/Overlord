@@ -4,6 +4,7 @@ import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.api.internal.network.client.ClientPacketRegistry;
 import dev.the_fireplace.overlord.client.gui.CasketGui;
 import dev.the_fireplace.overlord.client.gui.OwnedSkeletonGui;
+import dev.the_fireplace.overlord.client.model.tile.CasketBlockEntityRenderer;
 import dev.the_fireplace.overlord.client.particle.DeadFlameParticle;
 import dev.the_fireplace.overlord.client.particle.ScorchedFlameParticle;
 import dev.the_fireplace.overlord.client.renderer.OwnedSkeletonRenderer;
@@ -17,6 +18,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
@@ -38,6 +40,7 @@ public class OverlordClient implements ClientModInitializer {
     }
 
     private void registerParticles() {
+        BlockEntityRendererRegistry.INSTANCE.register(OverlordBlockEntities.CASKET_BLOCK_ENTITY, CasketBlockEntityRenderer::new);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(),
                 OverlordBlocks.SCORCHED_TORCH,
                 OverlordBlocks.TORCH_OF_THE_DEAD,
@@ -48,6 +51,9 @@ public class OverlordClient implements ClientModInitializer {
         ClientSpriteRegistryCallback.event(SpriteAtlasTexture.PARTICLE_ATLAS_TEX).register((atlasTexture, registry) -> {
             registry.register(new Identifier(Overlord.MODID, "particle/dead_flame"));
             registry.register(new Identifier(Overlord.MODID, "particle/scorched_flame"));
+        });
+        ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEX).register((atlasTexture, registry) -> {
+            registry.register(new Identifier(Overlord.MODID, "block/casket"));
         });
     }
 
