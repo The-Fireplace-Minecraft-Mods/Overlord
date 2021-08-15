@@ -1,5 +1,3 @@
-
-
 package dev.the_fireplace.overlord.client.model.tile;
 
 import dev.the_fireplace.overlord.Overlord;

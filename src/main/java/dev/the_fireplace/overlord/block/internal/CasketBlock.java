@@ -43,8 +43,8 @@ import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 public class CasketBlock extends HorizontalFacingBlock implements BlockEntityProvider, Waterloggable {
-    public static final EnumProperty<BedPart> PART = Properties.BED_PART;
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    private static final EnumProperty<BedPart> PART = Properties.BED_PART;
+    private static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     private static final VoxelShape SOUTH_SHAPE = Stream.of(
         Block.createCuboidShape(0, 0, 0, 16, 1, 16),
