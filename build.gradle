@@ -1,13 +1,14 @@
+//file:noinspection GroovyAssignabilityCheck
 plugins {
     // Dependencies
-    id 'fabric-loom' version '0.6-SNAPSHOT'
+    id 'fabric-loom' version '0.9-SNAPSHOT'
     // Mod Hosting Publish
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id 'com.modrinth.minotaur' version '1.1.0'
     // Maven Publish
-    id 'maven'
+    id 'maven-publish'
     id 'signing'
-    id 'io.codearte.nexus-staging' version '0.22.0'
+    id 'io.codearte.nexus-staging' version '0.30.0'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -15,7 +16,13 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
 version = "${project.mod_version}+${project.minecraft_version}"
-group = project.maven_group as String
+group = project.maven_group
+
+repositories {
+    maven { url 'https://maven.shedaniel.me/' }
+    maven { url 'https://maven.terraformersmc.com/releases/' }
+    flatDir { dirs 'lib' }
+}
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -23,83 +30,37 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-    modApi("me.shedaniel.cloth:config-2:${project.clothconfig_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-        exclude(group: 'io.github.prospector')
-    }
-    modRuntime "dev.the-fireplace:Fireplace-Lib:${project.fireplacelib_version}"
     modCompileOnly "dev.the-fireplace:Fireplace-Lib:${project.fireplacelib_version}:api"
-    modCompileOnly "dev.the-fireplace:Fireplace-Lib:${project.fireplacelib_version}:api-sources"
+    modRuntime "dev.the-fireplace:Fireplace-Lib:${project.fireplacelib_version}"
+    annotationProcessor "dev.the-fireplace:Annotated-DI:${project.annotateddi_version}:processor"
 
-    compile "com.google.code.findbugs:jsr305:3.0.2"
-}
-
-repositories {
-    maven { url 'https://maven.shedaniel.me/' }
-    maven { url 'https://maven.terraformersmc.com/releases/' }
-    flatDir {
-        dirs 'lib'
-    }
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
 }
 
 processResources {
-    inputs.property "version", project.version
+    inputs.property 'version', project.version
 
-    from(sourceSets.main.resources.srcDirs) {
-        include "fabric.mod.json"
-        expand "version": project.version
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "fabric.mod.json"
+    filesMatching('fabric.mod.json') {
+        expand 'version': project.version
     }
 }
 
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = 'UTF-8'
+    it.options.release.set(8)
 }
 
-// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-// if it is present.
-// If you remove this task, sources will not be generated.
-task sourcesJar(type: Jar, dependsOn: classes) {
-    archiveClassifier.set("sources")
-    from sourceSets.main.allSource
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
-task javadocJar(type: Jar, dependsOn: classes) {
-    archiveClassifier.set('javadoc')
-    from javadoc
-}
-
-task apiJar(type: Jar, dependsOn: classes) {
-    archiveClassifier.set('api')
-    from sourceSets.main.output
-    include 'dev/the_fireplace/overlord/api/**'
-}
-
-task apiSourcesJar(type: Jar, dependsOn: classes) {
-    archiveClassifier.set('api-sources')
-    from sourceSets.main.allSource
-    include 'dev/the_fireplace/overlord/api/**'
-}
-
-artifacts {
-    archives jar, javadocJar, sourcesJar, apiJar, apiSourcesJar
-}
-
-signing {
-    sign configurations.archives
-}
-
-signArchives.dependsOn(remapSourcesJar)
+javadoc.options.addStringOption('Xdoclint:none', '-quiet')
 
 jar {
-    from "LICENSE"
+    from('LICENSE') {
+        rename { "${it}_${project.archivesBaseName}"}
+    }
 }
 
 if (hasProperty('curseForgeApiKey')) {
@@ -112,7 +73,7 @@ if (hasProperty('curseForgeApiKey')) {
             addGameVersion project.minecraft_version
             addGameVersion 'Java 8'
             addGameVersion 'Fabric'
-            mainArtifact(new File(new File(buildDir, "libs"), "$archivesBaseName-${version}.jar")) {
+            mainArtifact(new File(new File(buildDir, 'libs'), "$archivesBaseName-${version}.jar")) {
                 displayName = "$archivesBaseName-$version"
                 relations {
                     requiredDependency 'fireplace-lib'
@@ -135,7 +96,7 @@ if (hasProperty('modrinthApiKey')) {
         projectId = '00000000'
         versionNumber = version
         versionName = project.mod_version
-        uploadFile = new File(new File(buildDir, "libs"), "$archivesBaseName-${version}.jar")
+        uploadFile = new File(new File(buildDir, 'libs'), "$archivesBaseName-${version}.jar")
         changelog = file('changelog.txt').getText()
         releaseType = project.release_type
         addGameVersion(project.minecraft_version as String)
@@ -143,46 +104,59 @@ if (hasProperty('modrinthApiKey')) {
     }
 }
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            pom.project {
-                name 'Overlord'
-                packaging 'jar'
-                description 'A Minecraft mod allowing you to raise and command an army of skeletons.'
-                url 'https://www.curseforge.com/minecraft/mc-mods/overlord'
-
-                scm {
-                    connection "scm:svn:https://github.com/The-Fireplace-Minecraft-Mods/${project.github_slug}.git"
-                    developerConnection "scm:svn:https://github.com/The-Fireplace-Minecraft-Mods/${project.github_slug}.git"
-                    url "https://github.com/The-Fireplace-Minecraft-Mods/${project.github_slug}"
+if (hasProperty('nexusUsername')) {
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                artifact(remapJar) {
+                    builtBy remapJar
                 }
-
-                licenses {
-                    license {
-                        name 'Mozilla Public License 2.0'
-                        url 'https://www.mozilla.org/en-US/MPL/2.0/'
+                artifact(sourcesJar) {
+                    builtBy remapSourcesJar
+                }
+                artifact javadocJar
+                pom {
+                    name = 'Overlord'
+                    packaging = 'jar'
+                    description = 'A Minecraft mod allowing you to raise and command an army of skeletons.'
+                    url = 'https://www.curseforge.com/minecraft/mc-mods/overlord'
+                    scm {
+                        connection = "scm:svn:https://github.com/The-Fireplace-Minecraft-Mods/${project.github_slug}.git"
+                        developerConnection = "scm:svn:https://github.com/The-Fireplace-Minecraft-Mods/${project.github_slug}.git"
+                        url = "https://github.com/The-Fireplace-Minecraft-Mods/${project.github_slug}"
                     }
-                }
 
-                developers {
-                    developer {
-                        id 'the_fireplace'
-                        name 'The_Fireplace'
-                        email 'the.f1repl4ce@gmail.com'
+                    licenses {
+                        license {
+                            name = 'Mozilla Public License 2.0'
+                            url = 'https://www.mozilla.org/en-US/MPL/2.0/'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = 'the_fireplace'
+                            name = 'The_Fireplace'
+                            email = 'the.f1repl4ce@gmail.com'
+                        }
                     }
                 }
             }
         }
+        repositories {
+            maven {
+                def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+                def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                credentials {
+                    username = nexusUsername
+                    password = nexusPassword
+                }
+            }
+        }
+    }
+
+    signing {
+        sign publishing.publications.mavenJava
     }
 }

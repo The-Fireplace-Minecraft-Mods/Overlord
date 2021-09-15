@@ -1,5 +1,4 @@
 # gradle
-
 .gradle/
 build/
 out/
@@ -7,11 +6,9 @@ classes/
 logs/
 
 # eclipse
-
 *.launch
 
 # idea
-
 .idea/
 *.iml
 *.ipr
@@ -26,6 +23,6 @@ bin/
 .project
 
 # fabric
-
-run/
-lib
+/run/
+/lib/
+/src/main/resources/.cache/

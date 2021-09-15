@@ -1,0 +1,1 @@
+./gradlew build curseforge publishModrinth publish closeAndReleaseRepository
