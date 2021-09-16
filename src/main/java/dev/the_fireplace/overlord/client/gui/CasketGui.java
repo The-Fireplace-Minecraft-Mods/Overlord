@@ -6,15 +6,15 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.container.GenericContainer;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class CasketGui extends ContainerScreen<GenericContainer> {
     private static final Identifier TEXTURE = new Identifier("textures/gui/container/generic_54.png");
 
-    public CasketGui(GenericContainer container, PlayerInventory playerInventory, Text title) {
-        super(container, playerInventory, title);
+    public CasketGui(GenericContainer container, PlayerInventory playerInventory) {
+        super(container, playerInventory, new TranslatableText("container.casket"));
         this.containerHeight = 114 + 6 * 18;
     }
 

@@ -1,78 +1,82 @@
 package dev.the_fireplace.overlord.client.gui;
 
-import dev.the_fireplace.lib.api.chat.TranslatorManager;
-import dev.the_fireplace.lib.api.client.AdvancedConfigScreenBuilder;
+import dev.the_fireplace.annotateddi.api.di.Implementation;
+import dev.the_fireplace.lib.api.chat.injectables.TranslatorFactory;
+import dev.the_fireplace.lib.api.chat.interfaces.Translator;
+import dev.the_fireplace.lib.api.client.injectables.ConfigScreenBuilderFactory;
+import dev.the_fireplace.lib.api.client.interfaces.ConfigScreenBuilder;
 import dev.the_fireplace.overlord.Overlord;
-import dev.the_fireplace.overlord.api.client.OrdersGuiFactory;
-import dev.the_fireplace.overlord.api.entity.OrderableEntity;
-import dev.the_fireplace.overlord.api.internal.network.ClientToServerPacketIDs;
-import dev.the_fireplace.overlord.api.internal.network.client.SaveAIPacketBufferBuilder;
+import dev.the_fireplace.overlord.domain.client.OrdersGuiFactory;
+import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
+import dev.the_fireplace.overlord.domain.internal.network.ClientToServerPacketIDs;
+import dev.the_fireplace.overlord.domain.internal.network.client.SaveAIPacketBufferBuilder;
 import dev.the_fireplace.overlord.model.aiconfig.AISettings;
 import dev.the_fireplace.overlord.model.aiconfig.combat.CombatCategory;
 import dev.the_fireplace.overlord.model.aiconfig.misc.MiscCategory;
 import dev.the_fireplace.overlord.model.aiconfig.movement.EnumMovementMode;
 import dev.the_fireplace.overlord.model.aiconfig.movement.MovementCategory;
 import dev.the_fireplace.overlord.model.aiconfig.tasks.TasksCategory;
-import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
-import me.shedaniel.clothconfig2.api.ConfigBuilder;
-import me.shedaniel.clothconfig2.api.ConfigCategory;
-import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.screen.Screen;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class SkeletonOrdersGuiFactory extends AdvancedConfigScreenBuilder implements OrdersGuiFactory {
+@Environment(EnvType.CLIENT)
+@Implementation
+public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 	private static final String TRANSLATION_BASE = "gui." + Overlord.MODID + ".aisettings.";
 	private static final String OPTION_TRANSLATION_BASE = TRANSLATION_BASE + "option.";
-	@Deprecated
-	public static final SkeletonOrdersGuiFactory INSTANCE = new SkeletonOrdersGuiFactory();
 
 	private final AISettings defaultSettings = new AISettings();
+	private final Translator translator;
+	private final ConfigScreenBuilderFactory configScreenBuilderFactory;
+	private ConfigScreenBuilder screenBuilder;
 
-	private SkeletonOrdersGuiFactory() {
-		super(TranslatorManager.getInstance().getTranslator(Overlord.MODID));
+	@Inject
+	public SkeletonOrdersGuiFactory(TranslatorFactory translatorFactory, ConfigScreenBuilderFactory configScreenBuilderFactory) {
+		this.translator = translatorFactory.getTranslator(Overlord.MODID);
+		this.configScreenBuilderFactory = configScreenBuilderFactory;
 	}
 
 	@Override
 	public Screen build(Screen parent, OrderableEntity aiEntity) {
-		ConfigBuilder builder = ConfigBuilder.create()
-			.setParentScreen(parent)
-			.setTitle(translator.getTranslatedString(TRANSLATION_BASE + "name"));
+		this.screenBuilder = configScreenBuilderFactory.create(
+			translator,
+			TRANSLATION_BASE + "name",
+			TRANSLATION_BASE + "combat",
+			parent,
+			() -> ClientPlayNetworking.send(
+				ClientToServerPacketIDs.getInstance().saveAiPacketID(),
+				SaveAIPacketBufferBuilder.getInstance().build(aiEntity)
+			)
+		);
 
-		buildCategories(builder, aiEntity.getAISettings());
+		buildCategories(aiEntity.getAISettings());
 
-		builder.setSavingRunnable(() -> ClientPlayNetworking.send(
-			ClientToServerPacketIDs.getInstance().saveAiPacketID(),
-			SaveAIPacketBufferBuilder.getInstance().build(aiEntity)
-		));
-
-		return builder.build();
+		return this.screenBuilder.build();
 	}
 
-	private void buildCategories(ConfigBuilder builder, AISettings currentSettings) {
-		ConfigEntryBuilder entryBuilder = builder.entryBuilder();
+	private void buildCategories(AISettings currentSettings) {
+		addCombatSettings(currentSettings.getCombat().getData());
 
-		ConfigCategory combat = builder.getOrCreateCategory(translator.getTranslatedString(TRANSLATION_BASE + "combat"));
-		addCombatSettings(entryBuilder, combat, currentSettings.getCombat().getData());
+		this.screenBuilder.startCategory(TRANSLATION_BASE + "movement");
+		addMovementSettings(currentSettings.getMovement().getData());
 
-		ConfigCategory movement = builder.getOrCreateCategory(translator.getTranslatedString(TRANSLATION_BASE + "movement"));
-		addMovementSettings(entryBuilder, movement, currentSettings.getMovement().getData());
+		this.screenBuilder.startCategory(TRANSLATION_BASE + "tasks");
+		addTasksSettings(currentSettings.getTasks().getData());
 
-		ConfigCategory tasks = builder.getOrCreateCategory(translator.getTranslatedString(TRANSLATION_BASE + "tasks"));
-		addTasksSettings(entryBuilder, tasks, currentSettings.getTasks().getData());
-
-		ConfigCategory misc = builder.getOrCreateCategory(translator.getTranslatedString(TRANSLATION_BASE + "misc"));
-		addMiscSettings(entryBuilder, misc, currentSettings.getMisc().getData());
+		this.screenBuilder.startCategory(TRANSLATION_BASE + "misc");
+		addMiscSettings(currentSettings.getMisc().getData());
 	}
 
-	private void addCombatSettings(ConfigEntryBuilder entryBuilder, ConfigCategory combatCategory, CombatCategory.Access currentSettings) {
+	private void addCombatSettings(CombatCategory.Access currentSettings) {
 		CombatCategory.Access defaults = defaultSettings.getCombat().getData();
-		addBoolToggle(
-			entryBuilder,
-			combatCategory,
+		this.screenBuilder.addBoolToggle(
 			OPTION_TRANSLATION_BASE + "enabled",
 			currentSettings.isEnabled(),
 			defaults.isEnabled(),
@@ -81,20 +85,16 @@ public class SkeletonOrdersGuiFactory extends AdvancedConfigScreenBuilder implem
 		);
 	}
 
-	private void addMovementSettings(ConfigEntryBuilder entryBuilder, ConfigCategory movementCategory, MovementCategory.Access currentSettings) {
+	private void addMovementSettings(MovementCategory.Access currentSettings) {
 		MovementCategory.Access defaults = defaultSettings.getMovement().getData();
-		addBoolToggle(
-			entryBuilder,
-			movementCategory,
+		this.screenBuilder.addBoolToggle(
 			OPTION_TRANSLATION_BASE + "enabled",
 			currentSettings.isEnabled(),
 			defaults.isEnabled(),
 			currentSettings::setEnabled,
 			(byte)0
 		);
-		AbstractConfigListEntry<?> moveModeEntry = addEnumDropdown(
-			entryBuilder,
-			movementCategory,
+		this.screenBuilder.addEnumDropdown(
 			OPTION_TRANSLATION_BASE + "moveMode",
 			currentSettings.getMoveMode(),
 			defaults.getMoveMode(),
@@ -103,11 +103,9 @@ public class SkeletonOrdersGuiFactory extends AdvancedConfigScreenBuilder implem
 		);
 	}
 
-	private void addTasksSettings(ConfigEntryBuilder entryBuilder, ConfigCategory tasksCategory, TasksCategory.Access currentSettings) {
+	private void addTasksSettings(TasksCategory.Access currentSettings) {
 		TasksCategory.Access defaults = defaultSettings.getTasks().getData();
-		addBoolToggle(
-			entryBuilder,
-			tasksCategory,
+		this.screenBuilder.addBoolToggle(
 			OPTION_TRANSLATION_BASE + "enabled",
 			currentSettings.isEnabled(),
 			defaults.isEnabled(),
@@ -116,27 +114,21 @@ public class SkeletonOrdersGuiFactory extends AdvancedConfigScreenBuilder implem
 		);
 	}
 
-	private void addMiscSettings(ConfigEntryBuilder entryBuilder, ConfigCategory miscCategory, MiscCategory.Access currentSettings) {
+	private void addMiscSettings(MiscCategory.Access currentSettings) {
 		MiscCategory.Access defaults = defaultSettings.getMisc().getData();
-		addBoolToggle(
-			entryBuilder,
-			miscCategory,
+		this.screenBuilder.addBoolToggle(
 			OPTION_TRANSLATION_BASE + "saveDamagedEquipment",
 			currentSettings.isSaveDamagedEquipment(),
 			defaults.isSaveDamagedEquipment(),
 			currentSettings::setSaveDamagedEquipment
 		);
 		addUniversalList(
-			entryBuilder,
-			miscCategory,
 			OPTION_TRANSLATION_BASE + "saveEquipmentList",
 			currentSettings.getSaveEquipmentList(),
 			defaults.getSaveEquipmentList(),
 			currentSettings::setSaveEquipmentList
 		);
-		addBoolToggle(
-			entryBuilder,
-			miscCategory,
+		this.screenBuilder.addBoolToggle(
 			OPTION_TRANSLATION_BASE + "loadChunks",
 			currentSettings.isLoadChunks(),
 			defaults.isLoadChunks(),
@@ -145,8 +137,6 @@ public class SkeletonOrdersGuiFactory extends AdvancedConfigScreenBuilder implem
 	}
 
 	protected void addUniversalList(
-		ConfigEntryBuilder entryBuilder,
-		ConfigCategory category,
 		String optionTranslationBase,
 		UUID currentValue,
 		UUID defaultValue,
@@ -154,9 +144,7 @@ public class SkeletonOrdersGuiFactory extends AdvancedConfigScreenBuilder implem
 	) {
 		//TODO Probably button that opens List selector GUI
 		// Temporarily showing it as a string.
-		addStringField(
-			entryBuilder,
-			category,
+		this.screenBuilder.addStringField(
 			optionTranslationBase,
 			currentValue.toString(),
 			defaultValue.toString(),

@@ -1,0 +1,8 @@
+package dev.the_fireplace.overlord.domain.internal.network;
+
+import net.minecraft.util.Identifier;
+
+public interface ClientToServerPacketIDs {
+    Identifier getOrdersPacketID();
+    Identifier saveAiPacketID();
+}

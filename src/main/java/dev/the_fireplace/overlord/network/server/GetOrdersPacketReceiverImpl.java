@@ -1,11 +1,12 @@
 package dev.the_fireplace.overlord.network.server;
 
+import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.Overlord;
-import dev.the_fireplace.overlord.api.entity.OrderableEntity;
-import dev.the_fireplace.overlord.api.internal.network.ClientToServerPacketIDs;
-import dev.the_fireplace.overlord.api.internal.network.ServerToClientPacketIDs;
-import dev.the_fireplace.overlord.api.internal.network.server.GetOrdersPacketReceiver;
-import dev.the_fireplace.overlord.api.internal.network.server.OpenOrdersGUIBufferBuilder;
+import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
+import dev.the_fireplace.overlord.domain.internal.network.ClientToServerPacketIDs;
+import dev.the_fireplace.overlord.domain.internal.network.ServerToClientPacketIDs;
+import dev.the_fireplace.overlord.domain.internal.network.server.GetOrdersPacketReceiver;
+import dev.the_fireplace.overlord.domain.internal.network.server.OpenOrdersGUIBufferBuilder;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
@@ -14,17 +15,24 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
+import javax.inject.Inject;
 import java.util.Objects;
 
+@Implementation
 public final class GetOrdersPacketReceiverImpl implements GetOrdersPacketReceiver {
-    @Deprecated
-    public static final GetOrdersPacketReceiver INSTANCE = new GetOrdersPacketReceiverImpl();
 
-    private GetOrdersPacketReceiverImpl() {}
+    private final ClientToServerPacketIDs clientToServerPacketIDs;
+    private final ServerToClientPacketIDs serverToClientPacketIDs;
+
+    @Inject
+    public GetOrdersPacketReceiverImpl(ClientToServerPacketIDs clientToServerPacketIDs, ServerToClientPacketIDs serverToClientPacketIDs) {
+        this.clientToServerPacketIDs = clientToServerPacketIDs;
+        this.serverToClientPacketIDs = serverToClientPacketIDs;
+    }
 
     @Override
     public Identifier getId() {
-        return ClientToServerPacketIDs.getInstance().getOrdersPacketID();
+        return clientToServerPacketIDs.getOrdersPacketID();
     }
 
     @Override
@@ -39,6 +47,6 @@ public final class GetOrdersPacketReceiverImpl implements GetOrdersPacketReceive
         }
 
         PacketByteBuf ordersPacketBuffer = OpenOrdersGUIBufferBuilder.getInstance().build(entityId, ((OrderableEntity) entity).getAISettings());
-        responseSender.sendPacket(ServerToClientPacketIDs.getInstance().openOrdersGuiPacketID(), ordersPacketBuffer);
+        responseSender.sendPacket(serverToClientPacketIDs.openOrdersGuiPacketID(), ordersPacketBuffer);
     }
 }

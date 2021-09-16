@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.entity;
 
 import com.google.common.collect.ImmutableList;
-import dev.the_fireplace.overlord.api.world.ItemDropper;
+import dev.the_fireplace.overlord.domain.world.ItemDropper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;

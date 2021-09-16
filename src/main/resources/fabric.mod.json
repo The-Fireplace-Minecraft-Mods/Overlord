@@ -19,10 +19,10 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [
+    "di-main": [
       "dev.the_fireplace.overlord.Overlord"
     ],
-    "client": [
+    "di-client": [
       "dev.the_fireplace.overlord.client.OverlordClient"
     ]
   },
@@ -34,7 +34,7 @@
     "fabricloader": ">=0.4.0",
     "fabric": "*",
     "minecraft": "1.15.X",
-    "fireplacelib": ">=3.2.0 <4"
+    "fireplacelib": ">=5.7 <6"
   },
 
   "suggests": {

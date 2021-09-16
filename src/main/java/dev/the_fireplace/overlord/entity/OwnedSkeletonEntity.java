@@ -1,15 +1,17 @@
 package dev.the_fireplace.overlord.entity;
 
 import com.google.common.collect.Lists;
-import dev.the_fireplace.lib.api.util.EmptyUUID;
+import com.google.inject.Injector;
+import dev.the_fireplace.annotateddi.api.DIContainer;
+import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.Overlord;
-import dev.the_fireplace.overlord.api.entity.OrderableEntity;
-import dev.the_fireplace.overlord.api.inventory.InventorySearcher;
-import dev.the_fireplace.overlord.api.mechanic.Ownable;
-import dev.the_fireplace.overlord.api.world.BreakSpeedModifiers;
-import dev.the_fireplace.overlord.api.world.DaylightDetector;
-import dev.the_fireplace.overlord.api.world.MeleeAttackExecutor;
-import dev.the_fireplace.overlord.api.world.UndeadDaylightDamager;
+import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
+import dev.the_fireplace.overlord.domain.inventory.InventorySearcher;
+import dev.the_fireplace.overlord.domain.mechanic.Ownable;
+import dev.the_fireplace.overlord.domain.world.BreakSpeedModifiers;
+import dev.the_fireplace.overlord.domain.world.DaylightDetector;
+import dev.the_fireplace.overlord.domain.world.MeleeAttackExecutor;
+import dev.the_fireplace.overlord.domain.world.UndeadDaylightDamager;
 import dev.the_fireplace.overlord.init.OverlordEntities;
 import dev.the_fireplace.overlord.model.aiconfig.AISettings;
 import net.fabricmc.api.EnvType;
@@ -50,7 +52,7 @@ import java.util.function.Predicate;
 public class OwnedSkeletonEntity extends LivingEntity implements Ownable, OrderableEntity {
 
     private UUID owner = new UUID(801295133947085751L, -7395604847578632613L);
-    private UUID skinsuit = EmptyUUID.EMPTY_UUID;
+    private UUID skinsuit;
     private byte growthPhase = 0;
     private boolean hasSkin = false;
     private boolean hasMuscles = false;
@@ -60,7 +62,11 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, Ordera
     private final ItemCooldownManager itemCooldownManager = new ItemCooldownManager();
     private boolean lefty;
 
-    private final InventorySearcher inventorySearcher = InventorySearcher.getInstance();
+    private final DaylightDetector daylightDetector;
+    private final UndeadDaylightDamager undeadDaylightDamager;
+    private final MeleeAttackExecutor meleeAttackExecutor;
+    private final BreakSpeedModifiers breakSpeedModifiers;
+    private final InventorySearcher inventorySearcher;
 
     /**
      * @deprecated Only public because Minecraft requires it to be. Use the factory.
@@ -70,6 +76,12 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, Ordera
     public OwnedSkeletonEntity(EntityType<? extends LivingEntity> type, World world) {
         super(type, world);
         lefty = world.random.nextBoolean();
+        Injector injector = DIContainer.get();
+        daylightDetector = injector.getInstance(DaylightDetector.class);
+        undeadDaylightDamager = injector.getInstance(UndeadDaylightDamager.class);
+        meleeAttackExecutor = injector.getInstance(MeleeAttackExecutor.class);
+        breakSpeedModifiers = injector.getInstance(BreakSpeedModifiers.class);
+        inventorySearcher = injector.getInstance(InventorySearcher.class);
     }
 
     public static OwnedSkeletonEntity create(World world, @Nullable UUID owner) {
@@ -82,18 +94,25 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, Ordera
 
     @Override
     public void tickMovement() {
+        tickRegeneration();
+        this.getInventory().tickItems();
+        tickDaylight();
+
+        super.tickMovement();
+    }
+
+    private void tickRegeneration() {
         if (this.world.getDifficulty() == Difficulty.PEACEFUL && this.world.getGameRules().getBoolean(GameRules.NATURAL_REGENERATION)) {
             if (this.getHealth() < this.getMaximumHealth() && this.age % 20 == 0) {
                 this.heal(1.0F);
             }
         }
+    }
 
-        inventory.tickItems();
-        if (!hasSkin() && DaylightDetector.getInstance().isInDaylight(this)) {
-            UndeadDaylightDamager.getInstance().applyDamage(this);
+    private void tickDaylight() {
+        if (!this.hasSkin() && daylightDetector.isInDaylight(this)) {
+            undeadDaylightDamager.applyDamage(this);
         }
-
-        super.tickMovement();
     }
 
     @Override
@@ -212,9 +231,7 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, Ordera
         tag.putBoolean("Lefty", this.lefty);
         tag.putBoolean("Muscles", this.hasMuscles);
         tag.putBoolean("Skin", this.hasSkin);
-        if (skinsuit != null) {
-            tag.putUuid("Skinsuit", this.skinsuit);
-        }
+        tag.putUuid("Skinsuit", this.getSkinsuit());
         tag.put("aiSettings", aiSettings.toTag());
     }
 
@@ -312,7 +329,7 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, Ordera
 
     @Override
     protected void attackLivingEntity(LivingEntity target) {
-        MeleeAttackExecutor.getInstance().attack(this, target, getAttackCooldownProgress(0.5F));
+        meleeAttackExecutor.attack(this, target, getAttackCooldownProgress(0.5F));
         resetLastAttackedTicks();
     }
 
@@ -519,7 +536,7 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, Ordera
     }
 
     public UUID getSkinsuit() {
-        return skinsuit;
+        return skinsuit == null ? DIContainer.get().getInstance(EmptyUUID.class).get() : skinsuit;
     }
 
     public boolean hasSkin() {
@@ -551,7 +568,7 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, Ordera
     public float getBlockBreakingSpeed(BlockState block) {
         float breakSpeed = this.inventory.getBlockBreakingSpeed(block);
 
-        return BreakSpeedModifiers.getInstance().applyApplicable(this, breakSpeed);
+        return breakSpeedModifiers.applyApplicable(this, breakSpeed);
     }
 
     public boolean isUsingEffectiveTool(BlockState block) {

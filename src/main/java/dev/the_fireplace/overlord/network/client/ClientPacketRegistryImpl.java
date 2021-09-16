@@ -1,19 +1,31 @@
 package dev.the_fireplace.overlord.network.client;
 
-import dev.the_fireplace.lib.api.network.client.ClientPacketReceiverRegistry;
-import dev.the_fireplace.overlord.api.internal.network.client.ClientPacketRegistry;
-import dev.the_fireplace.overlord.api.internal.network.client.OpenOrdersGUIPacketReceiver;
+import dev.the_fireplace.annotateddi.api.di.Implementation;
+import dev.the_fireplace.lib.api.network.injectables.ClientPacketReceiverRegistry;
+import dev.the_fireplace.overlord.domain.internal.network.client.ClientPacketRegistry;
+import dev.the_fireplace.overlord.domain.internal.network.client.OpenOrdersGUIPacketReceiver;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
+import javax.inject.Inject;
+
+@Environment(EnvType.CLIENT)
+@Implementation
 public final class ClientPacketRegistryImpl implements ClientPacketRegistry {
-    @Deprecated
-    public static final ClientPacketRegistry INSTANCE = new ClientPacketRegistryImpl();
+    private final ClientPacketReceiverRegistry registry;
+    private final OpenOrdersGUIPacketReceiver openOrdersGUIPacketReceiver;
 
-    private final ClientPacketReceiverRegistry registry = ClientPacketReceiverRegistry.getInstance();
-
-    private ClientPacketRegistryImpl() {}
+    @Inject
+    public ClientPacketRegistryImpl(
+        ClientPacketReceiverRegistry registry,
+        OpenOrdersGUIPacketReceiver openOrdersGUIPacketReceiver
+    ) {
+        this.registry = registry;
+        this.openOrdersGUIPacketReceiver = openOrdersGUIPacketReceiver;
+    }
 
     @Override
     public void registerPacketHandlers() {
-        registry.register(OpenOrdersGUIPacketReceiver.getInstance());
+        registry.register(openOrdersGUIPacketReceiver);
     }
 }

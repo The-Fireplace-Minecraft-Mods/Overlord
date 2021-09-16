@@ -1,9 +1,10 @@
 package dev.the_fireplace.overlord.network.server;
 
+import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.Overlord;
-import dev.the_fireplace.overlord.api.entity.OrderableEntity;
-import dev.the_fireplace.overlord.api.internal.network.ClientToServerPacketIDs;
-import dev.the_fireplace.overlord.api.internal.network.server.SaveAIPacketReceiver;
+import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
+import dev.the_fireplace.overlord.domain.internal.network.ClientToServerPacketIDs;
+import dev.the_fireplace.overlord.domain.internal.network.server.SaveAIPacketReceiver;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundTag;
@@ -13,17 +14,22 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
+import javax.inject.Inject;
 import java.util.Objects;
 
+@Implementation
 public final class SaveAIPacketReceiverImpl implements SaveAIPacketReceiver {
-    @Deprecated
-    public static final SaveAIPacketReceiver INSTANCE = new SaveAIPacketReceiverImpl();
 
-    private SaveAIPacketReceiverImpl() {}
+    private final ClientToServerPacketIDs clientToServerPacketIDs;
+
+    @Inject
+    private SaveAIPacketReceiverImpl(ClientToServerPacketIDs clientToServerPacketIDs) {
+        this.clientToServerPacketIDs = clientToServerPacketIDs;
+    }
 
     @Override
     public Identifier getId() {
-        return ClientToServerPacketIDs.getInstance().saveAiPacketID();
+        return clientToServerPacketIDs.saveAiPacketID();
     }
 
     @Override

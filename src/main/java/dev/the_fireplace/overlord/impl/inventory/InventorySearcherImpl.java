@@ -1,6 +1,7 @@
 package dev.the_fireplace.overlord.impl.inventory;
 
-import dev.the_fireplace.overlord.api.inventory.InventorySearcher;
+import dev.the_fireplace.annotateddi.api.di.Implementation;
+import dev.the_fireplace.overlord.domain.inventory.InventorySearcher;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -15,11 +16,8 @@ import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
+@Implementation
 public final class InventorySearcherImpl implements InventorySearcher {
-    @Deprecated
-    public static final InventorySearcher INSTANCE = new InventorySearcherImpl();
-    private InventorySearcherImpl(){}
-
     @Override
     public List<Integer> findSlotsMatching(Inventory container, Predicate<ItemStack> matcher) {
         IntList slotList = new IntArrayList();

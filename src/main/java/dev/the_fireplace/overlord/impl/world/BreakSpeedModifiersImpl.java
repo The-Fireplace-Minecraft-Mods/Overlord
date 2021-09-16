@@ -1,6 +1,7 @@
 package dev.the_fireplace.overlord.impl.world;
 
-import dev.the_fireplace.overlord.api.world.BreakSpeedModifiers;
+import dev.the_fireplace.annotateddi.api.di.Implementation;
+import dev.the_fireplace.overlord.domain.world.BreakSpeedModifiers;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectUtil;
@@ -10,11 +11,8 @@ import net.minecraft.tag.FluidTags;
 
 import java.util.Objects;
 
+@Implementation
 public final class BreakSpeedModifiersImpl implements BreakSpeedModifiers {
-    @Deprecated
-    public static final BreakSpeedModifiers INSTANCE = new BreakSpeedModifiersImpl();
-    private BreakSpeedModifiersImpl() {}
-    
     @Override
     public float applyApplicable(LivingEntity entity, float baseBreakSpeed) {
         float breakSpeed = applyEfficiencyToBreakSpeed(entity, baseBreakSpeed);

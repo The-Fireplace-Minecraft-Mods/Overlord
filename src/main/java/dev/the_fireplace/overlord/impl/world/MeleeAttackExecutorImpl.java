@@ -1,6 +1,7 @@
 package dev.the_fireplace.overlord.impl.world;
 
-import dev.the_fireplace.overlord.api.world.MeleeAttackExecutor;
+import dev.the_fireplace.annotateddi.api.di.Implementation;
+import dev.the_fireplace.overlord.domain.world.MeleeAttackExecutor;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityGroup;
@@ -24,12 +25,8 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.List;
 
+@Implementation
 public final class MeleeAttackExecutorImpl implements MeleeAttackExecutor {
-    @Deprecated
-    public static final MeleeAttackExecutor INSTANCE = new MeleeAttackExecutorImpl();
-
-    private MeleeAttackExecutorImpl() {}
-
     @Override
     public void attack(LivingEntity attacker, Entity target) {
         attack(attacker, target, 1);

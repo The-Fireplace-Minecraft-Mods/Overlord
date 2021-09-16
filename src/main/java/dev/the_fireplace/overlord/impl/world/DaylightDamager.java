@@ -1,19 +1,16 @@
 package dev.the_fireplace.overlord.impl.world;
 
-import dev.the_fireplace.overlord.api.world.UndeadDaylightDamager;
+import dev.the_fireplace.annotateddi.api.di.Implementation;
+import dev.the_fireplace.overlord.domain.world.UndeadDaylightDamager;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 
 import java.util.Random;
 
+@Implementation
 public final class DaylightDamager implements UndeadDaylightDamager {
-    @Deprecated
-    public static final UndeadDaylightDamager INSTANCE = new DaylightDamager();
-
     private final Random random = new Random();
-
-    private DaylightDamager() {}
 
     @Override
     public void applyDamage(LivingEntity entity) {

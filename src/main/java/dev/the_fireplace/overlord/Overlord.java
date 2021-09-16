@@ -1,11 +1,12 @@
 package dev.the_fireplace.overlord;
 
-import dev.the_fireplace.lib.api.datagen.DataGeneratorFactory;
-import dev.the_fireplace.overlord.api.internal.network.server.ServerPacketRegistry;
+import com.google.inject.Injector;
+import dev.the_fireplace.annotateddi.api.entrypoints.DIModInitializer;
+import dev.the_fireplace.lib.api.datagen.injectables.DataGeneratorFactory;
+import dev.the_fireplace.overlord.domain.internal.network.server.ServerPacketRegistry;
 import dev.the_fireplace.overlord.init.*;
 import dev.the_fireplace.overlord.init.datagen.*;
 import dev.the_fireplace.overlord.tags.OverlordBlockTags;
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.damage.DamageSource;
@@ -19,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-public class Overlord implements ModInitializer {
+public class Overlord implements DIModInitializer {
     public static final String MODID = "overlord";
     private static final Logger LOGGER = LogManager.getLogger(MODID);
     public static Logger getLogger() {
@@ -32,7 +33,7 @@ public class Overlord implements ModInitializer {
     }
 
     @Override
-    public void onInitialize() {
+    public void onInitialize(Injector diContainer) {
         getLogger().debug("Preparing bones...");
         OverlordBlocks.registerBlocks();
         OverlordItems.registerItems();
@@ -43,7 +44,7 @@ public class Overlord implements ModInitializer {
         //noinspection ConstantConditions//TODO Use environment variables for this
         if (true) {
             getLogger().debug("Generating data...");
-            DataGenerator gen = DataGeneratorFactory.getInstance().createAdditive(Paths.get("..", "..", "common", "src", "main", "resources"));
+            DataGenerator gen = diContainer.getInstance(DataGeneratorFactory.class).createAdditive(Paths.get("..", "..", "common", "src", "main", "resources"));
             gen.install(new BlockTagsProvider(gen));
             gen.install(new EntityTypeTagsProvider(gen));
             gen.install(new ItemTagsProvider(gen));

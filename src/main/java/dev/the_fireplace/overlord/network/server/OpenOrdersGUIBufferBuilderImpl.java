@@ -1,16 +1,13 @@
 package dev.the_fireplace.overlord.network.server;
 
-import dev.the_fireplace.overlord.api.internal.network.server.OpenOrdersGUIBufferBuilder;
+import dev.the_fireplace.annotateddi.api.di.Implementation;
+import dev.the_fireplace.overlord.domain.internal.network.server.OpenOrdersGUIBufferBuilder;
 import dev.the_fireplace.overlord.model.aiconfig.AISettings;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.util.PacketByteBuf;
 
+@Implementation
 public final class OpenOrdersGUIBufferBuilderImpl implements OpenOrdersGUIBufferBuilder {
-    @Deprecated
-    public static final OpenOrdersGUIBufferBuilder INSTANCE = new OpenOrdersGUIBufferBuilderImpl();
-
-    private OpenOrdersGUIBufferBuilderImpl() {}
-
     @Override
     public PacketByteBuf build(int aiEntityID, AISettings entitySettings) {
         PacketByteBuf buffer = PacketByteBufs.create();

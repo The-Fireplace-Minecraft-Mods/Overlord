@@ -1,15 +1,16 @@
 package dev.the_fireplace.overlord.network;
 
+import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.Overlord;
-import dev.the_fireplace.overlord.api.internal.network.ClientToServerPacketIDs;
-import dev.the_fireplace.overlord.api.internal.network.ServerToClientPacketIDs;
+import dev.the_fireplace.overlord.domain.internal.network.ClientToServerPacketIDs;
+import dev.the_fireplace.overlord.domain.internal.network.ServerToClientPacketIDs;
 import net.minecraft.util.Identifier;
 
+@Implementation({
+    "dev.the_fireplace.overlord.domain.internal.network.ClientToServerPacketIDs",
+    "dev.the_fireplace.overlord.domain.internal.network.ServerToClientPacketIDs",
+})
 public final class OverlordPackets implements ClientToServerPacketIDs, ServerToClientPacketIDs {
-    @Deprecated
-    public static final OverlordPackets INSTANCE = new OverlordPackets();
-
-    private OverlordPackets() {}
     //S2C
     private static final Identifier OPEN_SKELETON_GUI_PACKET_ID = new Identifier(Overlord.MODID, "open_skeleton_gui");
     private static final Identifier OPEN_CASKET_GUI_PACKET_ID = new Identifier(Overlord.MODID, "open_casket_gui");

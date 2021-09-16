@@ -1,10 +1,13 @@
 package dev.the_fireplace.overlord.network.client;
 
+import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.Overlord;
-import dev.the_fireplace.overlord.api.client.OrdersGuiFactory;
-import dev.the_fireplace.overlord.api.entity.OrderableEntity;
-import dev.the_fireplace.overlord.api.internal.network.ServerToClientPacketIDs;
-import dev.the_fireplace.overlord.api.internal.network.client.OpenOrdersGUIPacketReceiver;
+import dev.the_fireplace.overlord.domain.client.OrdersGuiFactory;
+import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
+import dev.the_fireplace.overlord.domain.internal.network.ServerToClientPacketIDs;
+import dev.the_fireplace.overlord.domain.internal.network.client.OpenOrdersGUIPacketReceiver;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -14,17 +17,25 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
+import javax.inject.Inject;
 import java.util.Objects;
 
+@Environment(EnvType.CLIENT)
+@Implementation
 public final class OpenOrdersGUIPacketReceiverImpl implements OpenOrdersGUIPacketReceiver {
-    @Deprecated
-    public static final OpenOrdersGUIPacketReceiver INSTANCE = new OpenOrdersGUIPacketReceiverImpl();
 
-    private OpenOrdersGUIPacketReceiverImpl() {}
+    private final ServerToClientPacketIDs serverToClientPacketIDs;
+    private final OrdersGuiFactory ordersGuiFactory;
+
+    @Inject
+    public OpenOrdersGUIPacketReceiverImpl(ServerToClientPacketIDs serverToClientPacketIDs, OrdersGuiFactory ordersGuiFactory) {
+        this.serverToClientPacketIDs = serverToClientPacketIDs;
+        this.ordersGuiFactory = ordersGuiFactory;
+    }
 
     @Override
     public Identifier getId() {
-        return ServerToClientPacketIDs.getInstance().openOrdersGuiPacketID();
+        return serverToClientPacketIDs.openOrdersGuiPacketID();
     }
 
     @Override
@@ -48,7 +59,6 @@ public final class OpenOrdersGUIPacketReceiverImpl implements OpenOrdersGUIPacke
         if (parentScreen == null) {
             Overlord.getLogger().warn("Parent screen is null, attempting to open orders GUI anyways!");
         }
-        //noinspection ConstantConditions
-        client.openScreen(OrdersGuiFactory.getInstance().build(parentScreen, (OrderableEntity) entity));
+        client.openScreen(ordersGuiFactory.build(parentScreen, (OrderableEntity) entity));
     }
 }

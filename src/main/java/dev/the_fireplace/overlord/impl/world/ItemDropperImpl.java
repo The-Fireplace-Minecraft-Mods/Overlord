@@ -1,23 +1,27 @@
 package dev.the_fireplace.overlord.impl.world;
 
-import dev.the_fireplace.overlord.api.world.EntitySpawner;
-import dev.the_fireplace.overlord.api.world.ItemDropper;
+import dev.the_fireplace.annotateddi.api.di.Implementation;
+import dev.the_fireplace.overlord.domain.world.EntitySpawner;
+import dev.the_fireplace.overlord.domain.world.ItemDropper;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.Random;
 
+@Implementation
 public final class ItemDropperImpl implements ItemDropper {
-    @Deprecated
-    public static final ItemDropper INSTANCE = new ItemDropperImpl();
 
     private final Random random = new Random();
-    private final EntitySpawner spawner = EntitySpawner.getInstance();
+    private final EntitySpawner spawner;
 
-    private ItemDropperImpl() {}
+    @Inject
+    public ItemDropperImpl(EntitySpawner spawner) {
+        this.spawner = spawner;
+    }
 
     @Override
     @Nullable
