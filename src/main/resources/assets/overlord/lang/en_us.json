@@ -19,5 +19,8 @@
   "gui.overlord.aisettings.option.moveMode": "Movement Mode",
   "gui.overlord.aisettings.option.saveDamagedEquipment": "Save Damaged Equipment",
   "gui.overlord.aisettings.option.saveEquipmentList": "Equipment to Save",
-  "gui.overlord.aisettings.option.loadChunks": "Load Chunks"
+  "gui.overlord.aisettings.option.loadChunks": "Load Chunks",
+  "gui.overlord.aisettings.option.task.woodcutting": "Woodcutting",
+  "gui.overlord.aisettings.option.task.woodcuttingWithoutTools": "Cut Wood Without Tools",
+  "gui.overlord.aisettings.option.task.woodcuttingBlockList": "Woodcutting Block Targets"
 }

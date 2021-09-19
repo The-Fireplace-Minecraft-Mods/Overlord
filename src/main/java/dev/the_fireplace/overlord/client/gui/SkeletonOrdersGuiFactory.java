@@ -31,6 +31,7 @@ import java.util.function.Consumer;
 public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 	private static final String TRANSLATION_BASE = "gui." + Overlord.MODID + ".aisettings.";
 	private static final String OPTION_TRANSLATION_BASE = TRANSLATION_BASE + "option.";
+	private static final String TASK_TRANSLATION_BASE = OPTION_TRANSLATION_BASE + "task.";
 
 	private final AISettings defaultSettings = new AISettings();
 	private final Translator translator;
@@ -114,13 +115,40 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 
 	private void addTasksSettings(TasksCategory currentSettings) {
 		TasksCategory defaults = defaultSettings.getTasks();
+		String enabledTranslationKey = OPTION_TRANSLATION_BASE + "enabled";
 		this.screenBuilder.addBoolToggle(
-			OPTION_TRANSLATION_BASE + "enabled",
+			enabledTranslationKey,
 			currentSettings.isEnabled(),
 			defaults.isEnabled(),
 			currentSettings::setEnabled,
 			(byte) 0
 		);
+		String woodcuttingTranslationKey = TASK_TRANSLATION_BASE + "woodcutting";
+		this.screenBuilder.addBoolToggle(
+			woodcuttingTranslationKey,
+			currentSettings.isWoodcutting(),
+			defaults.isWoodcutting(),
+			currentSettings::setWoodcutting,
+			(byte) 0
+		);
+		String woodcuttingBlockListTranslationKey = TASK_TRANSLATION_BASE + "woodcuttingBlockList";
+		this.addUniversalList(
+			woodcuttingBlockListTranslationKey,
+			currentSettings.getWoodcuttingBlockList(),
+			defaults.getWoodcuttingBlockList(),
+			currentSettings::setWoodcuttingBlockList
+		);
+		String woodcuttingWithoutToolsTranslationKey = TASK_TRANSLATION_BASE + "woodcuttingWithoutTools";
+		this.screenBuilder.addBoolToggle(
+			woodcuttingWithoutToolsTranslationKey,
+			currentSettings.isWoodcuttingWithoutTools(),
+			defaults.isWoodcuttingWithoutTools(),
+			currentSettings::setWoodcuttingWithoutTools,
+			(byte) 0
+		);
+		this.screenBuilder.addOptionDependency(enabledTranslationKey, woodcuttingTranslationKey, enabled -> (boolean) enabled);
+		this.screenBuilder.addOptionDependency(woodcuttingTranslationKey, woodcuttingBlockListTranslationKey, enabled -> (boolean) enabled);
+		this.screenBuilder.addOptionDependency(woodcuttingTranslationKey, woodcuttingWithoutToolsTranslationKey, enabled -> (boolean) enabled);
 	}
 
 	private void addMiscSettings(MiscCategory currentSettings) {
@@ -152,12 +180,5 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 		Consumer<UUID> saveFunction
 	) {
 		//TODO Probably button that opens List selector GUI
-		// Temporarily showing it as a string.
-		this.screenBuilder.addStringField(
-			optionTranslationBase,
-			currentValue.toString(),
-			defaultValue.toString(),
-			s -> saveFunction.accept(UUID.fromString(s))
-		);
 	}
 }
