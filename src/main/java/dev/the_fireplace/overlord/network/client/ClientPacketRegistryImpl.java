@@ -2,8 +2,8 @@ package dev.the_fireplace.overlord.network.client;
 
 import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.lib.api.network.injectables.ClientPacketReceiverRegistry;
-import dev.the_fireplace.overlord.domain.internal.network.client.ClientPacketRegistry;
-import dev.the_fireplace.overlord.domain.internal.network.client.OpenOrdersGUIPacketReceiver;
+import dev.the_fireplace.overlord.domain.network.client.ClientPacketRegistry;
+import dev.the_fireplace.overlord.domain.network.client.OpenOrdersGUIPacketReceiver;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 

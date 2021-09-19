@@ -4,9 +4,9 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedSet;
-import dev.the_fireplace.overlord.domain.internal.EntityRegistry;
-import dev.the_fireplace.overlord.domain.internal.EquipmentRegistry;
-import dev.the_fireplace.overlord.domain.internal.ThrowableRegistry;
+import dev.the_fireplace.overlord.domain.registry.EntityRegistry;
+import dev.the_fireplace.overlord.domain.registry.EquipmentRegistry;
+import dev.the_fireplace.overlord.domain.registry.ThrowableRegistry;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.core.util.UuidUtil;
 

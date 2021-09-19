@@ -1,4 +1,4 @@
-package dev.the_fireplace.overlord.domain.internal.network.client;
+package dev.the_fireplace.overlord.domain.network.client;
 
 import dev.the_fireplace.lib.api.network.interfaces.ClientPacketReceiver;
 import net.fabricmc.api.EnvType;

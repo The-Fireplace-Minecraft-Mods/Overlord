@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.impl.registry;
 
 import dev.the_fireplace.annotateddi.api.di.Implementation;
-import dev.the_fireplace.overlord.domain.internal.ThrowableRegistry;
+import dev.the_fireplace.overlord.domain.registry.ThrowableRegistry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 

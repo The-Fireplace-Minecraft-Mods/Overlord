@@ -1,4 +1,4 @@
-package dev.the_fireplace.overlord.domain.internal;
+package dev.the_fireplace.overlord.domain.registry;
 
 import net.minecraft.util.Identifier;
 

@@ -8,7 +8,7 @@ import dev.the_fireplace.overlord.client.gui.OwnedSkeletonGui;
 import dev.the_fireplace.overlord.client.particle.DeadFlameParticle;
 import dev.the_fireplace.overlord.client.particle.ScorchedFlameParticle;
 import dev.the_fireplace.overlord.client.renderer.OwnedSkeletonRenderer;
-import dev.the_fireplace.overlord.domain.internal.network.client.ClientPacketRegistry;
+import dev.the_fireplace.overlord.domain.network.client.ClientPacketRegistry;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonContainer;
 import dev.the_fireplace.overlord.init.OverlordBlockEntities;
 import dev.the_fireplace.overlord.init.OverlordBlocks;

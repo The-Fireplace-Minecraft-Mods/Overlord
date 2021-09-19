@@ -3,7 +3,7 @@ package dev.the_fireplace.overlord;
 import com.google.inject.Injector;
 import dev.the_fireplace.annotateddi.api.entrypoints.DIModInitializer;
 import dev.the_fireplace.lib.api.datagen.injectables.DataGeneratorFactory;
-import dev.the_fireplace.overlord.domain.internal.network.server.ServerPacketRegistry;
+import dev.the_fireplace.overlord.domain.network.server.ServerPacketRegistry;
 import dev.the_fireplace.overlord.init.*;
 import dev.the_fireplace.overlord.init.datagen.*;
 import dev.the_fireplace.overlord.tags.OverlordBlockTags;

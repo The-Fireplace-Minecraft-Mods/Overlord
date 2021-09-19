@@ -2,7 +2,7 @@ package dev.the_fireplace.overlord.impl.registry;
 
 import com.google.common.collect.Lists;
 import dev.the_fireplace.annotateddi.api.di.Implementation;
-import dev.the_fireplace.overlord.domain.internal.EntityRegistry;
+import dev.the_fireplace.overlord.domain.registry.EntityRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;

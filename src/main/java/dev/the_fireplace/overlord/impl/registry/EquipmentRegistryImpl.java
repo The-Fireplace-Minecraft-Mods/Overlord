@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.impl.registry;
 
 import dev.the_fireplace.annotateddi.api.di.Implementation;
-import dev.the_fireplace.overlord.domain.internal.EquipmentRegistry;
+import dev.the_fireplace.overlord.domain.registry.EquipmentRegistry;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;

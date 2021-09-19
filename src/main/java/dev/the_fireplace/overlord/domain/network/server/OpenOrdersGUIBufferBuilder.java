@@ -1,4 +1,4 @@
-package dev.the_fireplace.overlord.domain.internal.network.server;
+package dev.the_fireplace.overlord.domain.network.server;
 
 import dev.the_fireplace.overlord.model.aiconfig.AISettings;
 import net.minecraft.util.PacketByteBuf;

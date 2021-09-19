@@ -2,13 +2,13 @@ package dev.the_fireplace.overlord.network;
 
 import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.Overlord;
-import dev.the_fireplace.overlord.domain.internal.network.ClientToServerPacketIDs;
-import dev.the_fireplace.overlord.domain.internal.network.ServerToClientPacketIDs;
+import dev.the_fireplace.overlord.domain.network.ClientToServerPacketIDs;
+import dev.the_fireplace.overlord.domain.network.ServerToClientPacketIDs;
 import net.minecraft.util.Identifier;
 
 @Implementation({
-    "dev.the_fireplace.overlord.domain.internal.network.ClientToServerPacketIDs",
-    "dev.the_fireplace.overlord.domain.internal.network.ServerToClientPacketIDs",
+    "dev.the_fireplace.overlord.domain.network.ClientToServerPacketIDs",
+    "dev.the_fireplace.overlord.domain.network.ServerToClientPacketIDs",
 })
 public final class OverlordPackets implements ClientToServerPacketIDs, ServerToClientPacketIDs {
     //S2C
