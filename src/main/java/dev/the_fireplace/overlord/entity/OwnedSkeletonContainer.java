@@ -1,26 +1,16 @@
 package dev.the_fireplace.overlord.entity;
 
-import com.mojang.datafixers.util.Pair;
-import dev.the_fireplace.overlord.Overlord;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import dev.the_fireplace.overlord.container.ContainerEquipmentSlot;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.container.Container;
-import net.minecraft.container.PlayerContainer;
 import net.minecraft.container.Slot;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-
-import static net.minecraft.container.PlayerContainer.*;
 
 public class OwnedSkeletonContainer extends Container {
-    public static final Identifier EMPTY_WEAPON_SLOT = new Identifier(Overlord.MODID, "item/empty_weapon_slot");
-    private static final Identifier[] EMPTY_ARMOR_SLOT_TEXTURES = new Identifier[]{EMPTY_BOOTS_SLOT_TEXTURE, EMPTY_LEGGINGS_SLOT_TEXTURE, EMPTY_CHESTPLATE_SLOT_TEXTURE, EMPTY_HELMET_SLOT_TEXTURE};
     private static final EquipmentSlot[] EQUIPMENT_SLOT_ORDER = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     public final boolean onServer;
     private final OwnedSkeletonEntity owner;
@@ -31,67 +21,72 @@ public class OwnedSkeletonContainer extends Container {
         this.owner = owner;
         this.inventory = owner.getInventory();
 
-        int n;
-        int m;
-        for(n = 0; n < 4; ++n) {
-            final EquipmentSlot equipmentSlot = EQUIPMENT_SLOT_ORDER[n];
-            this.addSlot(new Slot(inventory, 39 - n, 8, 8 + n * 18) {
-                @Override
-                public int getMaxStackAmount() {
-                    return 1;
-                }
-
-                @Override
-                public boolean canInsert(ItemStack stack) {
-                    return equipmentSlot == MobEntity.getPreferredEquipmentSlot(stack);
-                }
-
-                @Override
-                public boolean canTakeItems(PlayerEntity playerEntity) {
-                    ItemStack itemStack = this.getStack();
-                    return (itemStack.isEmpty() || playerEntity.isCreative() || !EnchantmentHelper.hasBindingCurse(itemStack)) && super.canTakeItems(playerEntity);
-                }
-
-                @Environment(EnvType.CLIENT)
-                @Override
-                public Pair<Identifier, Identifier> getBackgroundSprite() {
-                    return Pair.of(BLOCK_ATLAS_TEXTURE, EMPTY_ARMOR_SLOT_TEXTURES[equipmentSlot.getEntitySlotId()]);
-                }
-            });
-        }
-
-        for(n = 0; n < 4; ++n) {
-            for(m = 0; m < 9; ++m) {
-                this.addSlot(new Slot(inventory, m + n * 9, 8 + m * 18, 84 + n * 18));
-            }
-        }
-
-        for(n = 0; n < 3; ++n) {
-            for(m = 0; m < 9; ++m) {
-                this.addSlot(new Slot(playerInventory, m + (n + 1) * 9, 8 + m * 18, 84 + 86 + n * 18));
-            }
-        }
-
-        for(n = 0; n < 9; ++n) {
-            this.addSlot(new Slot(playerInventory, n, 8 + n * 18, 142 + 86));
-        }
-
-        this.addSlot(new Slot(inventory, 41, 77, 62) {
-            @Environment(EnvType.CLIENT)
-            @Override
-            public Pair<Identifier, Identifier> getBackgroundSprite() {
-                return Pair.of(PlayerContainer.BLOCK_ATLAS_TEXTURE, PlayerContainer.EMPTY_OFFHAND_ARMOR_SLOT);
-            }
-        });
-
-        this.addSlot(new Slot(inventory, 40, 77, 62 - 18) {
-            @Environment(EnvType.CLIENT)
-            @Override
-            public Pair<Identifier, Identifier> getBackgroundSprite() {
-                return Pair.of(PlayerContainer.BLOCK_ATLAS_TEXTURE, EMPTY_WEAPON_SLOT);
-            }
-        });
+        addSlots(playerInventory);
     }
+
+    //region addSlots
+    private void addSlots(PlayerInventory playerInventory) {
+        addSkeletonSlots();
+        addPlayerSlots(playerInventory);
+    }
+
+    private void addSkeletonSlots() {
+        addSkeletonEquipmentSlots();
+        addSkeletonInventorySlots();
+    }
+
+    private void addSkeletonEquipmentSlots() {
+        for (int yIndex = 0; yIndex < 4; ++yIndex) {
+            this.addSlot(new ContainerEquipmentSlot(
+                EQUIPMENT_SLOT_ORDER[yIndex],
+                inventory,
+                39 - yIndex,
+                8,
+                8 + yIndex * 18
+            ));
+        }
+
+        this.addSlot(new ContainerEquipmentSlot(EquipmentSlot.MAINHAND, inventory, 40, 77, 62 - 18));
+        this.addSlot(new ContainerEquipmentSlot(EquipmentSlot.OFFHAND, inventory, 41, 77, 62));
+    }
+
+    private void addSkeletonInventorySlots() {
+        for (int yIndex = 0; yIndex < 4; ++yIndex) {
+            for (int xIndex = 0; xIndex < 9; ++xIndex) {
+                this.addSlot(new Slot(
+                    inventory,
+                    xIndex + yIndex * 9,
+                    8 + xIndex * 18,
+                    84 + yIndex * 18
+                ));
+            }
+        }
+    }
+
+    private void addPlayerSlots(PlayerInventory playerInventory) {
+        addPlayerInventorySlots(playerInventory);
+        addPlayerHotbarSlots(playerInventory);
+    }
+
+    private void addPlayerInventorySlots(PlayerInventory playerInventory) {
+        for (int yIndex = 0; yIndex < 3; ++yIndex) {
+            for (int xIndex = 0; xIndex < 9; ++xIndex) {
+                this.addSlot(new Slot(
+                    playerInventory,
+                    xIndex + (yIndex + 1) * 9,
+                    8 + xIndex * 18,
+                    84 + 86 + yIndex * 18
+                ));
+            }
+        }
+    }
+
+    private void addPlayerHotbarSlots(PlayerInventory playerInventory) {
+        for (int xIndex = 0; xIndex < 9; ++xIndex) {
+            this.addSlot(new Slot(playerInventory, xIndex, 8 + xIndex * 18, 142 + 86));
+        }
+    }
+    //endregion
 
     @Override
     public ItemStack transferSlot(PlayerEntity player, int invSlot) {
