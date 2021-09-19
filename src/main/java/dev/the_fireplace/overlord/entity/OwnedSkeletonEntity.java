@@ -93,6 +93,11 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, Ordera
     }
 
     @Override
+    public void tick() {
+        super.tick();
+    }
+
+    @Override
     public void tickMovement() {
         tickRegeneration();
         this.getInventory().tickItems();

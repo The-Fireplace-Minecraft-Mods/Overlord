@@ -35,12 +35,21 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 	private final AISettings defaultSettings = new AISettings();
 	private final Translator translator;
 	private final ConfigScreenBuilderFactory configScreenBuilderFactory;
+	private final ClientToServerPacketIDs clientToServerPacketIDs;
+	private final SaveAIPacketBufferBuilder saveAIPacketBufferBuilder;
 	private ConfigScreenBuilder screenBuilder;
 
 	@Inject
-	public SkeletonOrdersGuiFactory(TranslatorFactory translatorFactory, ConfigScreenBuilderFactory configScreenBuilderFactory) {
+	public SkeletonOrdersGuiFactory(
+		TranslatorFactory translatorFactory,
+		ConfigScreenBuilderFactory configScreenBuilderFactory,
+		ClientToServerPacketIDs clientToServerPacketIDs,
+		SaveAIPacketBufferBuilder saveAIPacketBufferBuilder
+	) {
 		this.translator = translatorFactory.getTranslator(Overlord.MODID);
 		this.configScreenBuilderFactory = configScreenBuilderFactory;
+		this.clientToServerPacketIDs = clientToServerPacketIDs;
+		this.saveAIPacketBufferBuilder = saveAIPacketBufferBuilder;
 	}
 
 	@Override
@@ -51,8 +60,8 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 			TRANSLATION_BASE + "combat",
 			parent,
 			() -> ClientPlayNetworking.send(
-				ClientToServerPacketIDs.getInstance().saveAiPacketID(),
-				SaveAIPacketBufferBuilder.getInstance().build(aiEntity)
+				clientToServerPacketIDs.saveAiPacketID(),
+				saveAIPacketBufferBuilder.build(aiEntity)
 			)
 		);
 

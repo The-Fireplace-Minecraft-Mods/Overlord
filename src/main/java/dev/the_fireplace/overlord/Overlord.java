@@ -40,7 +40,7 @@ public class Overlord implements DIModInitializer {
         OverlordBlockEntities.register();
         OverlordEntities.register();
         OverlordParticleTypes.register();
-        ServerPacketRegistry.getInstance().registerPacketHandlers();
+        diContainer.getInstance(ServerPacketRegistry.class).registerPacketHandlers();
         //noinspection ConstantConditions//TODO Use environment variables for this
         if (true) {
             getLogger().debug("Generating data...");

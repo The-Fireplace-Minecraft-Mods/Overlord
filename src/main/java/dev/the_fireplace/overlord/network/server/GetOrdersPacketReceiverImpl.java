@@ -23,11 +23,17 @@ public final class GetOrdersPacketReceiverImpl implements GetOrdersPacketReceive
 
     private final ClientToServerPacketIDs clientToServerPacketIDs;
     private final ServerToClientPacketIDs serverToClientPacketIDs;
+    private final OpenOrdersGUIBufferBuilder openOrdersGUIBufferBuilder;
 
     @Inject
-    public GetOrdersPacketReceiverImpl(ClientToServerPacketIDs clientToServerPacketIDs, ServerToClientPacketIDs serverToClientPacketIDs) {
+    public GetOrdersPacketReceiverImpl(
+        ClientToServerPacketIDs clientToServerPacketIDs,
+        ServerToClientPacketIDs serverToClientPacketIDs,
+        OpenOrdersGUIBufferBuilder openOrdersGUIBufferBuilder
+    ) {
         this.clientToServerPacketIDs = clientToServerPacketIDs;
         this.serverToClientPacketIDs = serverToClientPacketIDs;
+        this.openOrdersGUIBufferBuilder = openOrdersGUIBufferBuilder;
     }
 
     @Override
@@ -46,7 +52,7 @@ public final class GetOrdersPacketReceiverImpl implements GetOrdersPacketReceive
             return;
         }
 
-        PacketByteBuf ordersPacketBuffer = OpenOrdersGUIBufferBuilder.getInstance().build(entityId, ((OrderableEntity) entity).getAISettings());
+        PacketByteBuf ordersPacketBuffer = openOrdersGUIBufferBuilder.build(entityId, ((OrderableEntity) entity).getAISettings());
         responseSender.sendPacket(serverToClientPacketIDs.openOrdersGuiPacketID(), ordersPacketBuffer);
     }
 }

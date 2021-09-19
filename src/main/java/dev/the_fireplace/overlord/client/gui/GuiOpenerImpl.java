@@ -9,11 +9,23 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
+import javax.inject.Inject;
+
 @Implementation
 @Environment(EnvType.CLIENT)
-public final class GuiOpenerImpl implements GuiOpener {
+public final class GuiOpenerImpl implements GuiOpener
+{
+    private final ClientToServerPacketIDs clientToServerPacketIDs;
+    private final GetOrdersPacketBufferBuilder getOrdersPacketBufferBuilder;
+
+    @Inject
+    public GuiOpenerImpl(ClientToServerPacketIDs clientToServerPacketIDs, GetOrdersPacketBufferBuilder getOrdersPacketBufferBuilder) {
+        this.clientToServerPacketIDs = clientToServerPacketIDs;
+        this.getOrdersPacketBufferBuilder = getOrdersPacketBufferBuilder;
+    }
+
     @Override
     public void openOrdersGUI(OrderableEntity entity) {
-        ClientPlayNetworking.send(ClientToServerPacketIDs.getInstance().getOrdersPacketID(), GetOrdersPacketBufferBuilder.getInstance().build(entity.getEntityId()));
+        ClientPlayNetworking.send(clientToServerPacketIDs.getOrdersPacketID(), getOrdersPacketBufferBuilder.build(entity.getEntityId()));
     }
 }

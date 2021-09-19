@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.mojang.authlib.GameProfile;
+import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.domain.internal.ThrowableRegistry;
 import dev.the_fireplace.overlord.domain.mechanic.Tombstone;
@@ -197,7 +198,7 @@ public class SkeletonBuilder {
             ItemStack stack = casket.getInvStack(slot);
             if (stack.isEmpty())
                 continue;
-            if (ThrowableRegistry.getInstance().isThrowable(Registry.ITEM.getId(stack.getItem())))
+            if (DIContainer.get().getInstance(ThrowableRegistry.class).isThrowable(Registry.ITEM.getId(stack.getItem())))
                 entity.getInventory().insertStack(casket.getInvStack(slot));
         }
     }
