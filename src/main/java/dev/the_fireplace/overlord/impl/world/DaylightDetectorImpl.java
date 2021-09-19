@@ -1,5 +1,6 @@
 package dev.the_fireplace.overlord.impl.world;
 
+import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.domain.world.DaylightDetector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.vehicle.BoatEntity;
@@ -8,6 +9,7 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
+@Implementation
 public final class DaylightDetectorImpl implements DaylightDetector {
     private final Random random = new Random();
     
