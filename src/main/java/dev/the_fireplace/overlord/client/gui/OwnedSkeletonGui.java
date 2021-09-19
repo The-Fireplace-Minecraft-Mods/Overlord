@@ -6,7 +6,6 @@ import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.domain.client.GuiOpener;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonContainer;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
-import dev.the_fireplace.overlord.entity.SkeletonInventory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
@@ -23,8 +22,6 @@ public class OwnedSkeletonGui extends ContainerScreen<OwnedSkeletonContainer> {
     public static final Identifier BACKGROUND_TEXTURE = new Identifier(Overlord.MODID, "textures/gui/skeleton_inventory.png");
     private int mouseX;
     private int mouseY;
-    private boolean isMouseDown;
-    private final SkeletonInventory inv;
     private final OwnedSkeletonEntity entity;
     private final GuiOpener guiOpener;
     public OwnedSkeletonGui(OwnedSkeletonEntity skeleton, PlayerInventory playerInventory, int syncId) {
@@ -33,7 +30,6 @@ public class OwnedSkeletonGui extends ContainerScreen<OwnedSkeletonContainer> {
             playerInventory,
             new TranslatableText("entity.overlord.owned_skeleton")
         );
-        inv = skeleton.getInventory();
         entity = skeleton;
         containerHeight = 252;
         this.guiOpener = DIContainer.get().getInstance(GuiOpener.class);
