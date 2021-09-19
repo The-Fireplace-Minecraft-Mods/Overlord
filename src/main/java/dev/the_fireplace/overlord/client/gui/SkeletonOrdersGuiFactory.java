@@ -71,7 +71,7 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 	}
 
 	private void buildCategories(AISettings currentSettings) {
-		addCombatSettings(currentSettings.getCombat().getData());
+		addCombatSettings(currentSettings.getCombat());
 
 		this.screenBuilder.startCategory(TRANSLATION_BASE + "movement");
 		addMovementSettings(currentSettings.getMovement().getData());
@@ -83,14 +83,14 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 		addMiscSettings(currentSettings.getMisc().getData());
 	}
 
-	private void addCombatSettings(CombatCategory.Access currentSettings) {
-		CombatCategory.Access defaults = defaultSettings.getCombat().getData();
+	private void addCombatSettings(CombatCategory currentSettings) {
+		CombatCategory defaults = defaultSettings.getCombat();
 		this.screenBuilder.addBoolToggle(
 			OPTION_TRANSLATION_BASE + "enabled",
 			currentSettings.isEnabled(),
 			defaults.isEnabled(),
 			currentSettings::setEnabled,
-			(byte)0
+			(byte) 0
 		);
 	}
 
