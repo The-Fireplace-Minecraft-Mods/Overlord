@@ -74,13 +74,13 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 		addCombatSettings(currentSettings.getCombat());
 
 		this.screenBuilder.startCategory(TRANSLATION_BASE + "movement");
-		addMovementSettings(currentSettings.getMovement().getData());
+		addMovementSettings(currentSettings.getMovement());
 
 		this.screenBuilder.startCategory(TRANSLATION_BASE + "tasks");
-		addTasksSettings(currentSettings.getTasks().getData());
+		addTasksSettings(currentSettings.getTasks());
 
 		this.screenBuilder.startCategory(TRANSLATION_BASE + "misc");
-		addMiscSettings(currentSettings.getMisc().getData());
+		addMiscSettings(currentSettings.getMisc());
 	}
 
 	private void addCombatSettings(CombatCategory currentSettings) {
@@ -94,14 +94,14 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 		);
 	}
 
-	private void addMovementSettings(MovementCategory.Access currentSettings) {
-		MovementCategory.Access defaults = defaultSettings.getMovement().getData();
+	private void addMovementSettings(MovementCategory currentSettings) {
+		MovementCategory defaults = defaultSettings.getMovement();
 		this.screenBuilder.addBoolToggle(
 			OPTION_TRANSLATION_BASE + "enabled",
 			currentSettings.isEnabled(),
 			defaults.isEnabled(),
 			currentSettings::setEnabled,
-			(byte)0
+			(byte) 0
 		);
 		this.screenBuilder.addEnumDropdown(
 			OPTION_TRANSLATION_BASE + "moveMode",
@@ -112,19 +112,19 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 		);
 	}
 
-	private void addTasksSettings(TasksCategory.Access currentSettings) {
-		TasksCategory.Access defaults = defaultSettings.getTasks().getData();
+	private void addTasksSettings(TasksCategory currentSettings) {
+		TasksCategory defaults = defaultSettings.getTasks();
 		this.screenBuilder.addBoolToggle(
 			OPTION_TRANSLATION_BASE + "enabled",
 			currentSettings.isEnabled(),
 			defaults.isEnabled(),
 			currentSettings::setEnabled,
-			(byte)0
+			(byte) 0
 		);
 	}
 
-	private void addMiscSettings(MiscCategory.Access currentSettings) {
-		MiscCategory.Access defaults = defaultSettings.getMisc().getData();
+	private void addMiscSettings(MiscCategory currentSettings) {
+		MiscCategory defaults = defaultSettings.getMisc();
 		this.screenBuilder.addBoolToggle(
 			OPTION_TRANSLATION_BASE + "saveDamagedEquipment",
 			currentSettings.isSaveDamagedEquipment(),

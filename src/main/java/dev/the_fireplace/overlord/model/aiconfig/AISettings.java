@@ -3,16 +3,19 @@ package dev.the_fireplace.overlord.model.aiconfig;
 import dev.the_fireplace.overlord.model.aiconfig.combat.CombatCategory;
 import dev.the_fireplace.overlord.model.aiconfig.combat.CombatCategoryImpl;
 import dev.the_fireplace.overlord.model.aiconfig.misc.MiscCategory;
+import dev.the_fireplace.overlord.model.aiconfig.misc.MiscCategoryImpl;
 import dev.the_fireplace.overlord.model.aiconfig.movement.MovementCategory;
+import dev.the_fireplace.overlord.model.aiconfig.movement.MovementCategoryImpl;
 import dev.the_fireplace.overlord.model.aiconfig.tasks.TasksCategory;
+import dev.the_fireplace.overlord.model.aiconfig.tasks.TasksCategoryImpl;
 import net.minecraft.nbt.CompoundTag;
 
 public class AISettings implements SettingsComponent {
 
-    private final MiscCategory misc = new MiscCategory();
+    private final MiscCategoryImpl misc = new MiscCategoryImpl();
     private final CombatCategoryImpl combat = new CombatCategoryImpl();
-    private final MovementCategory movement = new MovementCategory();
-    private final TasksCategory tasks = new TasksCategory();
+    private final MovementCategoryImpl movement = new MovementCategoryImpl();
+    private final TasksCategoryImpl tasks = new TasksCategoryImpl();
 
     @Override
     public CompoundTag toTag() {
