@@ -5,7 +5,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -35,6 +34,10 @@ public class OwnedSkeletonContainer extends Container {
         addSkeletonInventorySlots();
     }
 
+    /**
+     * Inventory indexes 36-41
+     * Slot IDs 0-5
+     */
     private void addSkeletonEquipmentSlots() {
         for (int yIndex = 0; yIndex < 4; ++yIndex) {
             this.addSlot(new ContainerEquipmentSlot(
@@ -50,6 +53,10 @@ public class OwnedSkeletonContainer extends Container {
         this.addSlot(new ContainerEquipmentSlot(EquipmentSlot.OFFHAND, inventory, 41, 77, 62));
     }
 
+    /**
+     * Inventory indexes 0-35
+     * Slot IDs 6-41
+     */
     private void addSkeletonInventorySlots() {
         for (int yIndex = 0; yIndex < 4; ++yIndex) {
             for (int xIndex = 0; xIndex < 9; ++xIndex) {
@@ -68,6 +75,10 @@ public class OwnedSkeletonContainer extends Container {
         addPlayerHotbarSlots(playerInventory);
     }
 
+    /**
+     * Inventory indexes 9-35
+     * Slot IDs 42-68
+     */
     private void addPlayerInventorySlots(PlayerInventory playerInventory) {
         for (int yIndex = 0; yIndex < 3; ++yIndex) {
             for (int xIndex = 0; xIndex < 9; ++xIndex) {
@@ -81,6 +92,10 @@ public class OwnedSkeletonContainer extends Container {
         }
     }
 
+    /**
+     * Inventory indexes 0-8
+     * Slot IDs 69-77
+     */
     private void addPlayerHotbarSlots(PlayerInventory playerInventory) {
         for (int xIndex = 0; xIndex < 9; ++xIndex) {
             this.addSlot(new Slot(playerInventory, xIndex, 8 + xIndex * 18, 142 + 86));
@@ -95,40 +110,21 @@ public class OwnedSkeletonContainer extends Container {
         if (slot != null && slot.hasStack()) {
             ItemStack itemStack2 = slot.getStack();
             itemStack = itemStack2.copy();
-            EquipmentSlot equipmentSlot = MobEntity.getPreferredEquipmentSlot(itemStack);
-            if (invSlot == 0) {
-                if (!this.insertItem(itemStack2, 9, 45, true)) {
+            int minSkeletonSlot = 0;
+            int maxSkeletonSlot = 41;
+            int minPlayerSlot = 42;
+            int maxPlayerSlot = 77;
+            //TODO prioritize weapon slot only for weapons, off hand only for ammo/shields
+            if (invSlot <= maxSkeletonSlot) {
+                // Transfer from skeleton to player
+                if (!this.insertItem(itemStack2, minPlayerSlot, maxPlayerSlot, false)) {
                     return ItemStack.EMPTY;
                 }
-
-                slot.onStackChanged(itemStack2, itemStack);
-            } else if (invSlot >= 1 && invSlot < 5) {
-                if (!this.insertItem(itemStack2, 9, 45, false)) {
+            } else {
+                // Transfer from player to skeleton
+                if (!this.insertItem(itemStack2, minSkeletonSlot, maxSkeletonSlot, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (invSlot >= 5 && invSlot < 9) {
-                if (!this.insertItem(itemStack2, 9, 45, false)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (equipmentSlot.getType() == EquipmentSlot.Type.ARMOR && !this.slots.get(8 - equipmentSlot.getEntitySlotId()).hasStack()) {
-                int i = 8 - equipmentSlot.getEntitySlotId();
-                if (!this.insertItem(itemStack2, i, i + 1, false)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (equipmentSlot == EquipmentSlot.OFFHAND && !this.slots.get(45).hasStack()) {
-                if (!this.insertItem(itemStack2, 45, 46, false)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (invSlot >= 9 && invSlot < 36) {
-                if (!this.insertItem(itemStack2, 36, 45, false)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (invSlot >= 36 && invSlot < 45) {
-                if (!this.insertItem(itemStack2, 9, 36, false)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (!this.insertItem(itemStack2, 9, 45, false)) {
-                return ItemStack.EMPTY;
             }
 
             if (itemStack2.isEmpty()) {
@@ -139,11 +135,6 @@ public class OwnedSkeletonContainer extends Container {
 
             if (itemStack2.getCount() == itemStack.getCount()) {
                 return ItemStack.EMPTY;
-            }
-
-            ItemStack itemStack3 = slot.onTakeItem(player, itemStack2);
-            if (invSlot == 0) {
-                player.dropItem(itemStack3, false);
             }
         }
 
