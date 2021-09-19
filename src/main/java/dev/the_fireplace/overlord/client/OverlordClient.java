@@ -24,6 +24,7 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.container.GenericContainer;
@@ -31,7 +32,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
-public class OverlordClient implements ClientDIModInitializer {
+public final class OverlordClient implements ClientDIModInitializer {
     @Override
     public void onInitializeClient(Injector diContainer) {
         registerEntityRenderers();
@@ -63,18 +64,24 @@ public class OverlordClient implements ClientDIModInitializer {
     }
 
     private void registerGuis() {
-        assert MinecraftClient.getInstance().player != null;
-        PlayerInventory playerInventory = MinecraftClient.getInstance().player.inventory;
         ScreenProviderRegistry.INSTANCE.<GenericContainer>registerFactory(
             OverlordBlockEntities.CASKET_BLOCK_ENTITY_ID,
-            (container) -> new CasketGui(container, playerInventory)
+            (container) -> new CasketGui(container, getClientPlayerInventory())
         );
         ScreenProviderRegistry.INSTANCE.<OwnedSkeletonContainer>registerFactory(
             OverlordEntities.OWNED_SKELETON_ID,
-            (container) -> new OwnedSkeletonGui(container.getOwner(), playerInventory, 0)
+            (container) -> new OwnedSkeletonGui(container.getOwner(), getClientPlayerInventory(), 0)
         );
         ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEX).register((atlasTexture, registry) -> {
             registry.register(OwnedSkeletonContainer.EMPTY_WEAPON_SLOT);
         });
+    }
+
+    private PlayerInventory getClientPlayerInventory() {
+        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        if (player == null) {
+            throw new IllegalStateException("Tried getting client player when it was null!");
+        }
+        return player.inventory;
     }
 }
