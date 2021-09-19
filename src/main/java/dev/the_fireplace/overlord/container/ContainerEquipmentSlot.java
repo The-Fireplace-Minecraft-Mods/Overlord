@@ -36,6 +36,7 @@ public class ContainerEquipmentSlot extends Slot
     }
 
     private EquipmentSlot getPreferredEquipmentSlot(ItemStack stack) {
+        //TODO put ammo in the off hand
         return MobEntity.getPreferredEquipmentSlot(stack);
     }
 

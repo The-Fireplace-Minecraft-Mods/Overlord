@@ -8,6 +8,7 @@ import dev.the_fireplace.overlord.client.gui.OwnedSkeletonGui;
 import dev.the_fireplace.overlord.client.particle.DeadFlameParticle;
 import dev.the_fireplace.overlord.client.particle.ScorchedFlameParticle;
 import dev.the_fireplace.overlord.client.renderer.OwnedSkeletonRenderer;
+import dev.the_fireplace.overlord.container.ContainerEquipmentSlot;
 import dev.the_fireplace.overlord.domain.network.client.ClientPacketRegistry;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonContainer;
 import dev.the_fireplace.overlord.init.OverlordBlockEntities;
@@ -64,10 +65,10 @@ public final class OverlordClient implements ClientDIModInitializer {
         );
         ScreenProviderRegistry.INSTANCE.<OwnedSkeletonContainer>registerFactory(
             OverlordEntities.OWNED_SKELETON_ID,
-            (container) -> new OwnedSkeletonGui(container.getOwner(), getClientPlayerInventory(), 0)
+            (container) -> new OwnedSkeletonGui(container.getOwner(), getClientPlayerInventory(), container.syncId)
         );
         ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEX).register((atlasTexture, registry) -> {
-            registry.register(OwnedSkeletonContainer.EMPTY_WEAPON_SLOT);
+            registry.register(ContainerEquipmentSlot.EMPTY_WEAPON_SLOT_TEXTURE);
         });
     }
 
