@@ -22,7 +22,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.screen.Screen;
 
 import javax.inject.Inject;
-import java.util.Arrays;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -90,9 +89,8 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 			OPTION_TRANSLATION_BASE + "enabled",
 			currentSettings.isEnabled(),
 			defaults.isEnabled(),
-			currentSettings::setEnabled,
-			(byte) 0
-		);
+			currentSettings::setEnabled
+		).setDescriptionRowCount((byte) 0);
 	}
 
 	private void addMovementSettings(MovementCategory currentSettings) {
@@ -101,54 +99,43 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 			OPTION_TRANSLATION_BASE + "enabled",
 			currentSettings.isEnabled(),
 			defaults.isEnabled(),
-			currentSettings::setEnabled,
-			(byte) 0
-		);
+			currentSettings::setEnabled
+		).setDescriptionRowCount((byte) 0);
 		this.screenBuilder.addEnumDropdown(
 			OPTION_TRANSLATION_BASE + "moveMode",
 			currentSettings.getMoveMode(),
 			defaults.getMoveMode(),
-			Arrays.asList(EnumMovementMode.values()),
+			EnumMovementMode.values(),
 			currentSettings::setMoveMode
 		);
 	}
 
 	private void addTasksSettings(TasksCategory currentSettings) {
 		TasksCategory defaults = defaultSettings.getTasks();
-		String enabledTranslationKey = OPTION_TRANSLATION_BASE + "enabled";
 		this.screenBuilder.addBoolToggle(
-			enabledTranslationKey,
+			OPTION_TRANSLATION_BASE + "enabled",
 			currentSettings.isEnabled(),
 			defaults.isEnabled(),
-			currentSettings::setEnabled,
-			(byte) 0
-		);
-		String woodcuttingTranslationKey = TASK_TRANSLATION_BASE + "woodcutting";
+			currentSettings::setEnabled
+		).setDescriptionRowCount((byte) 0);
 		this.screenBuilder.addBoolToggle(
-			woodcuttingTranslationKey,
+			TASK_TRANSLATION_BASE + "woodcutting",
 			currentSettings.isWoodcutting(),
 			defaults.isWoodcutting(),
-			currentSettings::setWoodcutting,
-			(byte) 0
-		);
-		String woodcuttingBlockListTranslationKey = TASK_TRANSLATION_BASE + "woodcuttingBlockList";
+			currentSettings::setWoodcutting
+		).setDescriptionRowCount((byte) 0);
 		this.addUniversalList(
-			woodcuttingBlockListTranslationKey,
+			TASK_TRANSLATION_BASE + "woodcuttingBlockList",
 			currentSettings.getWoodcuttingBlockList(),
 			defaults.getWoodcuttingBlockList(),
 			currentSettings::setWoodcuttingBlockList
 		);
-		String woodcuttingWithoutToolsTranslationKey = TASK_TRANSLATION_BASE + "woodcuttingWithoutTools";
 		this.screenBuilder.addBoolToggle(
-			woodcuttingWithoutToolsTranslationKey,
+			TASK_TRANSLATION_BASE + "woodcuttingWithoutTools",
 			currentSettings.isWoodcuttingWithoutTools(),
 			defaults.isWoodcuttingWithoutTools(),
-			currentSettings::setWoodcuttingWithoutTools,
-			(byte) 0
-		);
-		this.screenBuilder.addOptionDependency(enabledTranslationKey, woodcuttingTranslationKey, enabled -> (boolean) enabled);
-		this.screenBuilder.addOptionDependency(woodcuttingTranslationKey, woodcuttingBlockListTranslationKey, enabled -> (boolean) enabled);
-		this.screenBuilder.addOptionDependency(woodcuttingTranslationKey, woodcuttingWithoutToolsTranslationKey, enabled -> (boolean) enabled);
+			currentSettings::setWoodcuttingWithoutTools
+		).setDescriptionRowCount((byte) 0);
 	}
 
 	private void addMiscSettings(MiscCategory currentSettings) {
