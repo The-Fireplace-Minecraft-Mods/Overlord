@@ -2,6 +2,7 @@ package dev.the_fireplace.overlord.client;
 
 import com.google.inject.Injector;
 import dev.the_fireplace.annotateddi.api.entrypoints.ClientDIModInitializer;
+import dev.the_fireplace.lib.api.datagen.injectables.DataGeneratorFactory;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.client.gui.CasketGui;
 import dev.the_fireplace.overlord.client.gui.OwnedSkeletonGui;
@@ -15,6 +16,7 @@ import dev.the_fireplace.overlord.init.OverlordBlockEntities;
 import dev.the_fireplace.overlord.init.OverlordBlocks;
 import dev.the_fireplace.overlord.init.OverlordEntities;
 import dev.the_fireplace.overlord.init.OverlordParticleTypes;
+import dev.the_fireplace.overlord.init.datagen.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -27,8 +29,12 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.container.GenericContainer;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.Identifier;
+
+import java.io.IOException;
+import java.nio.file.Paths;
 
 @Environment(EnvType.CLIENT)
 public final class OverlordClient implements ClientDIModInitializer {
@@ -38,6 +44,21 @@ public final class OverlordClient implements ClientDIModInitializer {
         registerGuis();
         registerParticles();
         diContainer.getInstance(ClientPacketRegistry.class).registerPacketHandlers();
+        //noinspection ConstantConditions//TODO Use environment variables for this
+        if (true) {
+            Overlord.getLogger().debug("Generating data...");
+            DataGenerator gen = diContainer.getInstance(DataGeneratorFactory.class).createAdditive(Paths.get("..", "..", "common", "src", "main", "resources"));
+            gen.install(new BlockTagsProvider(gen));
+            gen.install(new EntityTypeTagsProvider(gen));
+            gen.install(new ItemTagsProvider(gen));
+            gen.install(new RecipesProvider(gen));
+            gen.install(new LootTablesProvider(gen));
+            try {
+                gen.run();
+            } catch (IOException e) {
+                Overlord.getLogger().error(e);
+            }
+        }
     }
 
     private void registerEntityRenderers() {

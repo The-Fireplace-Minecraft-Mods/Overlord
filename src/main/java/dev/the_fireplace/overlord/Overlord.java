@@ -2,13 +2,10 @@ package dev.the_fireplace.overlord;
 
 import com.google.inject.Injector;
 import dev.the_fireplace.annotateddi.api.entrypoints.DIModInitializer;
-import dev.the_fireplace.lib.api.datagen.injectables.DataGeneratorFactory;
 import dev.the_fireplace.overlord.domain.network.server.ServerPacketRegistry;
 import dev.the_fireplace.overlord.init.*;
-import dev.the_fireplace.overlord.init.datagen.*;
 import dev.the_fireplace.overlord.tags.OverlordBlockTags;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -17,12 +14,10 @@ import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
-import java.nio.file.Paths;
-
-public class Overlord implements DIModInitializer {
+public final class Overlord implements DIModInitializer {
     public static final String MODID = "overlord";
     private static final Logger LOGGER = LogManager.getLogger(MODID);
+
     public static Logger getLogger() {
         return LOGGER;
     }
@@ -41,21 +36,6 @@ public class Overlord implements DIModInitializer {
         OverlordEntities.register();
         OverlordParticleTypes.register();
         diContainer.getInstance(ServerPacketRegistry.class).registerPacketHandlers();
-        //noinspection ConstantConditions//TODO Use environment variables for this
-        if (true) {
-            getLogger().debug("Generating data...");
-            DataGenerator gen = diContainer.getInstance(DataGeneratorFactory.class).createAdditive(Paths.get("..", "..", "common", "src", "main", "resources"));
-            gen.install(new BlockTagsProvider(gen));
-            gen.install(new EntityTypeTagsProvider(gen));
-            gen.install(new ItemTagsProvider(gen));
-            gen.install(new RecipesProvider(gen));
-            gen.install(new LootTablesProvider(gen));
-            try {
-                gen.run();
-            } catch (IOException e) {
-                getLogger().error(e);
-            }
-        }
 
         UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             //TODO Come up with a more permanent solution, shearing any animal will be problematic for compatibility
