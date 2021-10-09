@@ -34,7 +34,7 @@
     "fabricloader": ">=0.4.0",
     "fabric": "*",
     "minecraft": "1.15.X",
-    "fireplacelib": ">=5.7 <6"
+    "fireplacelib": ">=6.0.5 <7"
   },
 
   "suggests": {

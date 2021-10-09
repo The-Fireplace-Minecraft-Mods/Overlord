@@ -5,6 +5,8 @@ import dev.the_fireplace.lib.api.chat.injectables.TranslatorFactory;
 import dev.the_fireplace.lib.api.chat.interfaces.Translator;
 import dev.the_fireplace.lib.api.client.injectables.ConfigScreenBuilderFactory;
 import dev.the_fireplace.lib.api.client.interfaces.ConfigScreenBuilder;
+import dev.the_fireplace.lib.api.client.interfaces.CustomButtonBuilder;
+import dev.the_fireplace.lib.api.client.interfaces.OptionBuilder;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.client.gui.listbuilder.ListBuilderGui;
 import dev.the_fireplace.overlord.domain.client.OrdersGuiFactory;
@@ -31,7 +33,10 @@ import java.util.function.Consumer;
 public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 	private static final String TRANSLATION_BASE = "gui." + Overlord.MODID + ".aisettings.";
 	private static final String OPTION_TRANSLATION_BASE = TRANSLATION_BASE + "option.";
+	private static final String COMBAT_TRANSLATION_BASE = OPTION_TRANSLATION_BASE + "combat.";
+	private static final String MOVEMENT_TRANSLATION_BASE = OPTION_TRANSLATION_BASE + "movement.";
 	private static final String TASK_TRANSLATION_BASE = OPTION_TRANSLATION_BASE + "task.";
+	private static final String MISC_TRANSLATION_BASE = OPTION_TRANSLATION_BASE + "misc.";
 
 	private final AISettings defaultSettings = new AISettings();
 	private final Translator translator;
@@ -72,29 +77,109 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 	}
 
 	private void buildCategories(AISettings currentSettings) {
-		addCombatSettings(currentSettings.getCombat());
+		addCombatCategory(currentSettings.getCombat());
 
 		this.screenBuilder.startCategory(TRANSLATION_BASE + "movement");
-		addMovementSettings(currentSettings.getMovement());
+		addMovementCategory(currentSettings.getMovement());
 
 		this.screenBuilder.startCategory(TRANSLATION_BASE + "tasks");
-		addTasksSettings(currentSettings.getTasks());
+		addTasksCategory(currentSettings.getTasks());
 
 		this.screenBuilder.startCategory(TRANSLATION_BASE + "misc");
-		addMiscSettings(currentSettings.getMisc());
+		addMiscCategory(currentSettings.getMisc());
 	}
 
-	private void addCombatSettings(CombatCategory currentSettings) {
+	private void addCombatCategory(CombatCategory currentSettings) {
 		CombatCategory defaults = defaultSettings.getCombat();
-		this.screenBuilder.addBoolToggle(
+		OptionBuilder<Boolean> enabled = this.screenBuilder.addBoolToggle(
 			OPTION_TRANSLATION_BASE + "enabled",
 			currentSettings.isEnabled(),
 			defaults.isEnabled(),
 			currentSettings::setEnabled
 		).setDescriptionRowCount((byte) 0);
+		this.screenBuilder.addBoolToggle(
+			COMBAT_TRANSLATION_BASE + "onlyDefend",
+			currentSettings.isOnlyDefendPlayer(),
+			defaults.isOnlyDefendPlayer(),
+			currentSettings::setOnlyDefendPlayer
+		).addDependency(enabled);
+		addMeleeSettings(currentSettings, defaults, enabled);
+		addRangedSettings(currentSettings, defaults, enabled);
+		addThrowSettings(currentSettings, defaults, enabled);
 	}
 
-	private void addMovementSettings(MovementCategory currentSettings) {
+	private void addMeleeSettings(CombatCategory currentSettings, CombatCategory defaults, OptionBuilder<Boolean> enabled) {
+		OptionBuilder<Boolean> meleeEnabled = this.screenBuilder.addBoolToggle(
+			COMBAT_TRANSLATION_BASE + "melee",
+			currentSettings.isMelee(),
+			defaults.isMelee(),
+			currentSettings::setMelee
+		).setDescriptionRowCount((byte) 0).addDependency(enabled);
+		this.screenBuilder.startSubCategory(TRANSLATION_BASE + "combat.meleeSwitching");
+		this.screenBuilder.addBoolToggle(
+			COMBAT_TRANSLATION_BASE + "switchToMeleeWhenNoAmmo",
+			currentSettings.isSwitchToMeleeWhenNoAmmo(),
+			defaults.isSwitchToMeleeWhenNoAmmo(),
+			currentSettings::setSwitchToMeleeWhenNoAmmo
+		).setDescriptionRowCount((byte) 0).addDependency(meleeEnabled);
+		OptionBuilder<Boolean> switchToMeleeWhenClose = this.screenBuilder.addBoolToggle(
+			COMBAT_TRANSLATION_BASE + "switchToMeleeWhenClose",
+			currentSettings.isSwitchToMeleeWhenClose(),
+			defaults.isSwitchToMeleeWhenClose(),
+			currentSettings::setSwitchToMeleeWhenClose
+		).setDescriptionRowCount((byte) 0).addDependency(meleeEnabled);
+		this.screenBuilder.addByteSlider(
+			COMBAT_TRANSLATION_BASE + "switchToMeleeDistance",
+			currentSettings.getMeleeSwitchDistance(),
+			defaults.getMeleeSwitchDistance(),
+			currentSettings::setMeleeSwitchDistance,
+			(byte) 1,
+			Byte.MAX_VALUE
+		).setDescriptionRowCount((byte) 0).addDependency(switchToMeleeWhenClose);
+		this.screenBuilder.endSubCategory();
+	}
+
+	private void addRangedSettings(CombatCategory currentSettings, CombatCategory defaults, OptionBuilder<Boolean> enabled) {
+		OptionBuilder<Boolean> rangedEnabled = this.screenBuilder.addBoolToggle(
+			COMBAT_TRANSLATION_BASE + "ranged",
+			currentSettings.isRanged(),
+			defaults.isRanged(),
+			currentSettings::setRanged
+		).setDescriptionRowCount((byte) 0).addDependency(enabled);
+		this.screenBuilder.startSubCategory(TRANSLATION_BASE + "combat.rangedSwitching");
+		OptionBuilder<Boolean> switchToRangedWhenFar = this.screenBuilder.addBoolToggle(
+			COMBAT_TRANSLATION_BASE + "switchToRangedWhenFar",
+			currentSettings.isSwitchToRangedWhenFar(),
+			defaults.isSwitchToRangedWhenFar(),
+			currentSettings::setSwitchToRangedWhenFar
+		).setDescriptionRowCount((byte) 0).addDependency(rangedEnabled);
+		this.screenBuilder.addByteSlider(
+			COMBAT_TRANSLATION_BASE + "switchToRangedDistance",
+			currentSettings.getRangedSwitchDistance(),
+			defaults.getRangedSwitchDistance(),
+			currentSettings::setRangedSwitchDistance,
+			(byte) 2,
+			Byte.MAX_VALUE
+		).setDescriptionRowCount((byte) 0).addDependency(switchToRangedWhenFar);
+		this.screenBuilder.endSubCategory();
+	}
+
+	private void addThrowSettings(CombatCategory currentSettings, CombatCategory defaults, OptionBuilder<Boolean> enabled) {
+		OptionBuilder<Boolean> throwItemsEnabled = this.screenBuilder.addBoolToggle(
+			COMBAT_TRANSLATION_BASE + "throwItems",
+			currentSettings.isThrowItem(),
+			defaults.isThrowItem(),
+			currentSettings::setThrowItem
+		).setDescriptionRowCount((byte) 0).addDependency(enabled);
+		this.addUniversalList(
+			COMBAT_TRANSLATION_BASE + "thrownItemList",
+			currentSettings.getThrowItemList(),
+			defaults.getThrowItemList(),
+			currentSettings::setThrowItemList
+		).addDependency(throwItemsEnabled);
+	}
+
+	private void addMovementCategory(MovementCategory currentSettings) {
 		MovementCategory defaults = defaultSettings.getMovement();
 		this.screenBuilder.addBoolToggle(
 			OPTION_TRANSLATION_BASE + "enabled",
@@ -103,7 +188,7 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 			currentSettings::setEnabled
 		).setDescriptionRowCount((byte) 0);
 		this.screenBuilder.addEnumDropdown(
-			OPTION_TRANSLATION_BASE + "moveMode",
+			MOVEMENT_TRANSLATION_BASE + "moveMode",
 			currentSettings.getMoveMode(),
 			defaults.getMoveMode(),
 			EnumMovementMode.values(),
@@ -111,7 +196,7 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 		);
 	}
 
-	private void addTasksSettings(TasksCategory currentSettings) {
+	private void addTasksCategory(TasksCategory currentSettings) {
 		TasksCategory defaults = defaultSettings.getTasks();
 		this.screenBuilder.addBoolToggle(
 			OPTION_TRANSLATION_BASE + "enabled",
@@ -119,7 +204,7 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 			defaults.isEnabled(),
 			currentSettings::setEnabled
 		).setDescriptionRowCount((byte) 0);
-		this.screenBuilder.addBoolToggle(
+		OptionBuilder<Boolean> woodcutting = this.screenBuilder.addBoolToggle(
 			TASK_TRANSLATION_BASE + "woodcutting",
 			currentSettings.isWoodcutting(),
 			defaults.isWoodcutting(),
@@ -130,44 +215,44 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 			currentSettings.getWoodcuttingBlockList(),
 			defaults.getWoodcuttingBlockList(),
 			currentSettings::setWoodcuttingBlockList
-		);
+		).addDependency(woodcutting);
 		this.screenBuilder.addBoolToggle(
 			TASK_TRANSLATION_BASE + "woodcuttingWithoutTools",
 			currentSettings.isWoodcuttingWithoutTools(),
 			defaults.isWoodcuttingWithoutTools(),
 			currentSettings::setWoodcuttingWithoutTools
-		).setDescriptionRowCount((byte) 0);
+		).setDescriptionRowCount((byte) 0).addDependency(woodcutting);
 	}
 
-	private void addMiscSettings(MiscCategory currentSettings) {
+	private void addMiscCategory(MiscCategory currentSettings) {
 		MiscCategory defaults = defaultSettings.getMisc();
-		this.screenBuilder.addBoolToggle(
-			OPTION_TRANSLATION_BASE + "saveDamagedEquipment",
+		OptionBuilder<Boolean> saveDamagedEquipment = this.screenBuilder.addBoolToggle(
+			MISC_TRANSLATION_BASE + "saveDamagedEquipment",
 			currentSettings.isSaveDamagedEquipment(),
 			defaults.isSaveDamagedEquipment(),
 			currentSettings::setSaveDamagedEquipment
 		);
 		addUniversalList(
-			OPTION_TRANSLATION_BASE + "saveEquipmentList",
+			MISC_TRANSLATION_BASE + "saveEquipmentList",
 			currentSettings.getSaveEquipmentList(),
 			defaults.getSaveEquipmentList(),
 			currentSettings::setSaveEquipmentList
-		);
+		).addDependency(saveDamagedEquipment);
 		this.screenBuilder.addBoolToggle(
-			OPTION_TRANSLATION_BASE + "loadChunks",
+			MISC_TRANSLATION_BASE + "loadChunks",
 			currentSettings.isLoadChunks(),
 			defaults.isLoadChunks(),
 			currentSettings::setLoadChunks
 		);
 	}
 
-	private void addUniversalList(
+	private CustomButtonBuilder<String> addUniversalList(
 		String optionTranslationBase,
 		UUID currentValue,
 		UUID defaultValue,
 		Consumer<UUID> saveFunction
 	) {
-		this.screenBuilder.addCustomOptionButton(
+		return this.screenBuilder.addCustomOptionButton(
 			optionTranslationBase,
 			currentValue.toString(),
 			defaultValue.toString(),
