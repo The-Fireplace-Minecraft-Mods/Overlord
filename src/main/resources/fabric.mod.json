@@ -37,10 +37,6 @@
     "fireplacelib": ">=6.0.5 <7"
   },
 
-  "suggests": {
-    "modmenu": "*"
-  },
-
   "custom": {
     "modmenu": {
       "links": {
