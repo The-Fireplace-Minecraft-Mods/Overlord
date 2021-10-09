@@ -23,8 +23,7 @@ public final class Overlord implements DIModInitializer {
     }
 
     public static void errorWithStacktrace(String message, Object... args) {
-        getLogger().error(message, args);
-        new Throwable().printStackTrace();
+        getLogger().error(String.format(message, args), new Throwable());
     }
 
     @Override

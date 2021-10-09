@@ -6,6 +6,7 @@ import dev.the_fireplace.lib.api.chat.interfaces.Translator;
 import dev.the_fireplace.lib.api.client.injectables.ConfigScreenBuilderFactory;
 import dev.the_fireplace.lib.api.client.interfaces.ConfigScreenBuilder;
 import dev.the_fireplace.overlord.Overlord;
+import dev.the_fireplace.overlord.client.gui.listbuilder.ListBuilderGui;
 import dev.the_fireplace.overlord.domain.client.OrdersGuiFactory;
 import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
 import dev.the_fireplace.overlord.domain.network.ClientToServerPacketIDs;
@@ -160,12 +161,18 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 		);
 	}
 
-	protected void addUniversalList(
+	private void addUniversalList(
 		String optionTranslationBase,
 		UUID currentValue,
 		UUID defaultValue,
 		Consumer<UUID> saveFunction
 	) {
-		//TODO Probably button that opens List selector GUI
+		this.screenBuilder.addCustomOptionButton(
+			optionTranslationBase,
+			currentValue.toString(),
+			defaultValue.toString(),
+			stringValue -> saveFunction.accept(UUID.fromString(stringValue)),
+			(parent, current) -> new ListBuilderGui(translator.getTranslatedText(optionTranslationBase), parent, current)
+		);
 	}
 }
