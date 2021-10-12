@@ -47,7 +47,7 @@ public final class OverlordClient implements ClientDIModInitializer {
         //noinspection ConstantConditions//TODO Use environment variables for this
         if (true) {
             Overlord.getLogger().debug("Generating data...");
-            DataGenerator gen = diContainer.getInstance(DataGeneratorFactory.class).createAdditive(Paths.get("..", "..", "common", "src", "main", "resources"));
+            DataGenerator gen = diContainer.getInstance(DataGeneratorFactory.class).createAdditive(Paths.get("..", "src", "main", "resources"));
             gen.install(new BlockTagsProvider(gen));
             gen.install(new EntityTypeTagsProvider(gen));
             gen.install(new ItemTagsProvider(gen));
