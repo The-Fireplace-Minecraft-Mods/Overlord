@@ -30,6 +30,7 @@
   "gui.overlord.aisettings.option.combat.throwItems": "Enable Throwing Items",
   "gui.overlord.aisettings.option.combat.thrownItemList": "Items to Throw",
   "gui.overlord.aisettings.option.movement.moveMode": "Movement Mode",
+  "gui.overlord.aisettings.option.movement.followDistance": "Follow Distance",
   "gui.overlord.aisettings.option.task.woodcutting": "Woodcutting",
   "gui.overlord.aisettings.option.task.woodcuttingWithoutTools": "Cut Wood Without Tools",
   "gui.overlord.aisettings.option.task.woodcuttingBlockList": "Woodcutting Block Targets",

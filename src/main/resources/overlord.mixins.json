@@ -3,6 +3,7 @@
   "package": "dev.the_fireplace.overlord.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "GoalSelectorAccessor"
   ],
   "client": [
   ],

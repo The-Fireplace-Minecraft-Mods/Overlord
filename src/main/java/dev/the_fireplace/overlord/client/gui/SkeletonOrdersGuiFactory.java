@@ -187,13 +187,22 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 			defaults.isEnabled(),
 			currentSettings::setEnabled
 		).setDescriptionRowCount((byte) 0);
-		this.screenBuilder.addEnumDropdown(
+		OptionBuilder<EnumMovementMode> movementMode = this.screenBuilder.addEnumDropdown(
 			MOVEMENT_TRANSLATION_BASE + "moveMode",
 			currentSettings.getMoveMode(),
 			defaults.getMoveMode(),
 			EnumMovementMode.values(),
 			currentSettings::setMoveMode
 		);
+		this.screenBuilder.addByteSlider(
+				MOVEMENT_TRANSLATION_BASE + "followDistance",
+				currentSettings.getFollowDistance(),
+				defaults.getFollowDistance(),
+				currentSettings::setFollowDistance,
+				(byte) 1,
+				Byte.MAX_VALUE
+			).addDependency(movementMode, mode -> mode == EnumMovementMode.FOLLOW)
+			.setDescriptionRowCount((byte) 0);
 	}
 
 	private void addTasksCategory(TasksCategory currentSettings) {

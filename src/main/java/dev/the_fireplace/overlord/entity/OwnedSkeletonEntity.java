@@ -5,15 +5,12 @@ import com.google.inject.Injector;
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.Overlord;
-import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
 import dev.the_fireplace.overlord.domain.inventory.InventorySearcher;
-import dev.the_fireplace.overlord.domain.mechanic.Ownable;
 import dev.the_fireplace.overlord.domain.world.BreakSpeedModifiers;
 import dev.the_fireplace.overlord.domain.world.DaylightDetector;
 import dev.the_fireplace.overlord.domain.world.MeleeAttackExecutor;
 import dev.the_fireplace.overlord.domain.world.UndeadDaylightDamager;
 import dev.the_fireplace.overlord.init.OverlordEntities;
-import dev.the_fireplace.overlord.model.aiconfig.AISettings;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
@@ -33,6 +30,7 @@ import net.minecraft.item.Items;
 import net.minecraft.item.RangedWeaponItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Arm;
@@ -49,7 +47,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public class OwnedSkeletonEntity extends LivingEntity implements Ownable, OrderableEntity {
+public class OwnedSkeletonEntity extends ArmyEntity
+{
 
     private UUID owner = new UUID(801295133947085751L, -7395604847578632613L);
     private UUID skinsuit;
@@ -57,7 +56,6 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, Ordera
     private boolean hasSkin = false;
     private boolean hasMuscles = false;
 
-    private final AISettings aiSettings = new AISettings();
     private final SkeletonInventory inventory = new SkeletonInventory(this);
     private final ItemCooldownManager itemCooldownManager = new ItemCooldownManager();
     private boolean lefty;
@@ -73,7 +71,7 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, Ordera
      * Intended for internal use, but it technically works. Use {@link OwnedSkeletonEntity#create(World, UUID)} when possible.
      */
     @Deprecated
-    public OwnedSkeletonEntity(EntityType<? extends LivingEntity> type, World world) {
+    public OwnedSkeletonEntity(EntityType<? extends OwnedSkeletonEntity> type, World world) {
         super(type, world);
         lefty = world.random.nextBoolean();
         Injector injector = DIContainer.get();
@@ -116,7 +114,7 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, Ordera
     }
 
     @Override
-    public boolean interact(PlayerEntity player, Hand hand) {
+    public boolean interactMob(PlayerEntity player, Hand hand) {
         if (!player.world.isClient() && !player.isSneaking()) {
             ContainerProviderRegistry.INSTANCE.openContainer(OverlordEntities.OWNED_SKELETON_ID, player, buf -> buf.writeUuid(this.getUuid()));
         }
@@ -208,18 +206,14 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, Ordera
     @Override
     public void readCustomDataFromTag(CompoundTag tag) {
         super.readCustomDataFromTag(tag);
-        ListTag listTag = tag.getList("Inventory", 10);
-        this.inventory.deserialize(listTag);
+        ListTag inventoryTag = tag.getList("Inventory", 10);
+        this.inventory.deserialize(inventoryTag);
         this.owner = tag.getUuid("Owner");
         this.lefty = tag.getBoolean("Lefty");
         this.hasMuscles = tag.getBoolean("Muscles");
         this.hasSkin = tag.getBoolean("Skin");
-        if (tag.contains("Skinsuit")) {
-            this.skinsuit = tag.getUuid("Skinsuit");
-        }
-        if (tag.contains("aiSettings")) {
-            this.aiSettings.readTag(tag.getCompound("aiSettings"));
-        }
+        this.skinsuit = tag.getUuid("Skinsuit");
+        this.updateAISettings(tag.getCompound("aiSettings"));
     }
 
     @Override
@@ -565,6 +559,16 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, Ordera
         return owner;
     }
 
+    @Nullable
+    @Override
+    public Entity getOwner() {
+        if (this.world == null || !(world instanceof ServerWorld)) {
+            return null;
+        }
+
+        return ((ServerWorld) this.world).getEntity(this.getOwnerId());
+    }
+
     public float getBlockBreakingSpeed(BlockState block) {
         float breakSpeed = this.inventory.getBlockBreakingSpeed(block);
 
@@ -585,15 +589,5 @@ public class OwnedSkeletonEntity extends LivingEntity implements Ownable, Ordera
 
     public void setOwner(UUID newOwner) {
         this.owner = newOwner;
-    }
-
-    @Override
-    public AISettings getAISettings() {
-        return aiSettings;
-    }
-
-    @Override
-    public void updateAISettings(CompoundTag newSettings) {
-        aiSettings.readTag(newSettings);
     }
 }

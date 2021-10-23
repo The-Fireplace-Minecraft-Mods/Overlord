@@ -11,7 +11,7 @@ public interface MovementCategory {
 
     void setMoveMode(EnumMovementMode moveMode);
 
-    byte getFollowDistance();
+    byte getFollowDistance();//TODO min/max follow distance?
 
     void setFollowDistance(byte followDistance);
 
