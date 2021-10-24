@@ -8,7 +8,8 @@ import dev.the_fireplace.lib.api.client.interfaces.ConfigScreenBuilder;
 import dev.the_fireplace.lib.api.client.interfaces.CustomButtonBuilder;
 import dev.the_fireplace.lib.api.client.interfaces.OptionBuilder;
 import dev.the_fireplace.overlord.Overlord;
-import dev.the_fireplace.overlord.client.gui.listbuilder.ListBuilderGui;
+import dev.the_fireplace.overlord.client.gui.config.PositionSelectorGui;
+import dev.the_fireplace.overlord.client.gui.config.listbuilder.ListBuilderGui;
 import dev.the_fireplace.overlord.domain.client.OrdersGuiFactory;
 import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
 import dev.the_fireplace.overlord.domain.network.ClientToServerPacketIDs;
@@ -18,6 +19,7 @@ import dev.the_fireplace.overlord.model.aiconfig.combat.CombatCategory;
 import dev.the_fireplace.overlord.model.aiconfig.misc.MiscCategory;
 import dev.the_fireplace.overlord.model.aiconfig.movement.EnumMovementMode;
 import dev.the_fireplace.overlord.model.aiconfig.movement.MovementCategory;
+import dev.the_fireplace.overlord.model.aiconfig.movement.PositionSetting;
 import dev.the_fireplace.overlord.model.aiconfig.tasks.TasksCategory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -181,7 +183,7 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 
 	private void addMovementCategory(MovementCategory currentSettings) {
 		MovementCategory defaults = defaultSettings.getMovement();
-		this.screenBuilder.addBoolToggle(
+		OptionBuilder<Boolean> enabled = this.screenBuilder.addBoolToggle(
 			OPTION_TRANSLATION_BASE + "enabled",
 			currentSettings.isEnabled(),
 			defaults.isEnabled(),
@@ -193,16 +195,58 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 			defaults.getMoveMode(),
 			EnumMovementMode.values(),
 			currentSettings::setMoveMode
-		);
+		).addDependency(enabled);
 		this.screenBuilder.addByteSlider(
-				MOVEMENT_TRANSLATION_BASE + "followDistance",
-				currentSettings.getFollowDistance(),
-				defaults.getFollowDistance(),
-				currentSettings::setFollowDistance,
+				MOVEMENT_TRANSLATION_BASE + "minimumFollowDistance",
+				currentSettings.getMinimumFollowDistance(),
+				defaults.getMinimumFollowDistance(),
+				currentSettings::setMinimumFollowDistance,
 				(byte) 1,
 				Byte.MAX_VALUE
-			).addDependency(movementMode, mode -> mode == EnumMovementMode.FOLLOW)
+			)
+			.addDependency(movementMode, mode -> mode == EnumMovementMode.FOLLOW)
 			.setDescriptionRowCount((byte) 0);
+		this.screenBuilder.addByteSlider(
+				MOVEMENT_TRANSLATION_BASE + "maximumFollowDistance",
+				currentSettings.getMaximumFollowDistance(),
+				defaults.getMaximumFollowDistance(),
+				currentSettings::setMaximumFollowDistance,
+				(byte) 1,
+				Byte.MAX_VALUE
+			)
+			.addDependency(movementMode, mode -> mode == EnumMovementMode.FOLLOW)
+			.setDescriptionRowCount((byte) 0);
+		OptionBuilder<Boolean> isExploringWander = this.screenBuilder.addBoolToggle(
+				MOVEMENT_TRANSLATION_BASE + "exploringWander",
+				currentSettings.isExploringWander(),
+				defaults.isExploringWander(),
+				currentSettings::setExploringWander
+			)
+			.addDependency(movementMode, mode -> mode == EnumMovementMode.WANDER)
+			.setDescriptionRowCount((byte) 2);
+		this.screenBuilder.addByteSlider(
+				MOVEMENT_TRANSLATION_BASE + "wanderRadius",
+				currentSettings.getMoveRadius(),
+				defaults.getMoveRadius(),
+				currentSettings::setMoveRadius,
+				(byte) 2,
+				Byte.MAX_VALUE
+			)
+			.addDependency(movementMode, mode -> mode == EnumMovementMode.WANDER)
+			.addDependency(isExploringWander, explore -> !explore);
+		this.screenBuilder.addBoolToggle(
+				MOVEMENT_TRANSLATION_BASE + "returnHome",
+				currentSettings.isStationedReturnHome(),
+				defaults.isStationedReturnHome(),
+				currentSettings::setStationedReturnHome
+			)
+			.addDependency(movementMode, mode -> mode == EnumMovementMode.STATIONED);
+		this.addPositionSetting(
+			MOVEMENT_TRANSLATION_BASE + "home",
+			currentSettings.getHome(),
+			defaults.getHome(),
+			currentSettings::setHome
+		).addDependency(movementMode, mode -> mode == EnumMovementMode.STATIONED || mode == EnumMovementMode.WANDER);
 	}
 
 	private void addTasksCategory(TasksCategory currentSettings) {
@@ -267,6 +311,21 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 			defaultValue.toString(),
 			stringValue -> saveFunction.accept(UUID.fromString(stringValue)),
 			(parent, current) -> new ListBuilderGui(translator.getTranslatedText(optionTranslationBase), parent, current)
+		);
+	}
+
+	private CustomButtonBuilder<String> addPositionSetting(
+		String optionTranslationBase,
+		PositionSetting currentValue,
+		PositionSetting defaultValue,
+		Consumer<PositionSetting> saveFunction
+	) {
+		return this.screenBuilder.addCustomOptionButton(
+			optionTranslationBase,
+			currentValue.toString(),
+			defaultValue.toString(),
+			stringValue -> saveFunction.accept(PositionSetting.fromString(stringValue)),
+			(parent, current) -> new PositionSelectorGui(translator.getTranslatedText(optionTranslationBase), parent, current)
 		);
 	}
 }

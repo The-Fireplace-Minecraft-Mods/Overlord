@@ -4,7 +4,11 @@ import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
 import dev.the_fireplace.overlord.domain.mechanic.Ownable;
 import dev.the_fireplace.overlord.entity.ai.GoalSelectorHelper;
 import dev.the_fireplace.overlord.entity.ai.goal.FollowOwnerGoal;
+import dev.the_fireplace.overlord.entity.ai.goal.ReturnHomeGoal;
+import dev.the_fireplace.overlord.entity.ai.goal.WanderAroundHomeGoal;
 import dev.the_fireplace.overlord.model.aiconfig.AISettings;
+import dev.the_fireplace.overlord.model.aiconfig.movement.MovementCategory;
+import dev.the_fireplace.overlord.model.aiconfig.movement.PositionSetting;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
@@ -14,6 +18,8 @@ import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.TurtleEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -42,27 +48,41 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
         }
         int goalWeight = 1;
         if (aiSettings.getMovement().isEnabled()) {
+            MovementCategory movement = this.aiSettings.getMovement();
             if (this.isUndead()) {
                 this.goalSelector.add(goalWeight++, new AvoidSunlightGoal(this));
                 this.goalSelector.add(goalWeight++, new EscapeSunlightGoal(this, 1.0D));
             }
-            switch (aiSettings.getMovement().getMoveMode()) {
+            PositionSetting homeSetting = movement.getHome();
+            Vec3d home = new Vec3d(homeSetting.getX(), homeSetting.getY(), homeSetting.getZ());
+            switch (movement.getMoveMode()) {
                 case FOLLOW:
-                    byte followDistance = this.aiSettings.getMovement().getFollowDistance();
-                    this.goalSelector.add(goalWeight++, new FollowOwnerGoal(this, 1.0D, followDistance - 1, followDistance + 1, true));
+                    byte minimumFollowDistance = movement.getMinimumFollowDistance();
+                    byte maximumFollowDistance = movement.getMaximumFollowDistance();
+                    this.goalSelector.add(goalWeight++, new FollowOwnerGoal(this, 1.0D, minimumFollowDistance, maximumFollowDistance, true));
                     break;
                 case PATROL:
                     //TODO patrol goal
                     break;
                 case WANDER:
-                    this.goalSelector.add(goalWeight++, new WanderAroundFarGoal(this, 1.0D));
+                    if (movement.isExploringWander()) {
+                        this.goalSelector.add(goalWeight++, new WanderAroundGoal(this, 1.0D));
+                    } else {
+                        this.goalSelector.add(goalWeight++, new WanderAroundHomeGoal(this, 1.0D, home, movement.getMoveRadius()));
+                    }
                     break;
                 case STATIONED:
+                    //TODO how will they wander away to attack?
+                    if (movement.isStationedReturnHome()) {
+                        this.goalSelector.add(goalWeight++, new ReturnHomeGoal(this, 1.0D, home));
+                    }
                     break;
             }
         }
         this.goalSelector.add(goalWeight, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
-        this.goalSelector.add(goalWeight, new LookAtEntityGoal(this, MobEntity.class, 8.0F));
+        if (aiSettings.getCombat().isEnabled()) {
+            this.goalSelector.add(goalWeight, new LookAtEntityGoal(this, MobEntity.class, 8.0F));
+        }
         this.goalSelector.add(goalWeight, new LookAroundGoal(this));
 
         int targetGoalWeight = 1;
@@ -82,6 +102,11 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
     public void updateAISettings(CompoundTag newSettings) {
         aiSettings.readTag(newSettings);
         reloadGoals();
+    }
+
+    public BlockPos getHome() {
+        PositionSetting homeSetting = aiSettings.getMovement().getHome();
+        return new BlockPos(homeSetting.getX(), homeSetting.getY(), homeSetting.getZ());
     }
 
     @Override

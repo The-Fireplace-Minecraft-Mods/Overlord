@@ -2,7 +2,8 @@ package dev.the_fireplace.overlord.model.aiconfig.movement;
 
 import java.util.UUID;
 
-public interface MovementCategory {
+public interface MovementCategory
+{
     boolean isEnabled();
 
     void setEnabled(boolean enabled);
@@ -11,9 +12,13 @@ public interface MovementCategory {
 
     void setMoveMode(EnumMovementMode moveMode);
 
-    byte getFollowDistance();//TODO min/max follow distance?
+    byte getMinimumFollowDistance();
 
-    void setFollowDistance(byte followDistance);
+    void setMinimumFollowDistance(byte followDistance);
+
+    byte getMaximumFollowDistance();
+
+    void setMaximumFollowDistance(byte followDistance);
 
     UUID getPatrolPosList();
 

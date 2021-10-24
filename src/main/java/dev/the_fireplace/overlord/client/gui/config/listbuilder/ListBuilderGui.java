@@ -1,4 +1,4 @@
-package dev.the_fireplace.overlord.client.gui.listbuilder;
+package dev.the_fireplace.overlord.client.gui.config.listbuilder;
 
 import dev.the_fireplace.lib.api.client.interfaces.CustomButtonScreen;
 import io.netty.util.concurrent.DefaultEventExecutor;

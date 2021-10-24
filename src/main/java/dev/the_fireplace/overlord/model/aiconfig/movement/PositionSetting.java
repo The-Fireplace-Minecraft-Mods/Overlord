@@ -3,10 +3,14 @@ package dev.the_fireplace.overlord.model.aiconfig.movement;
 import dev.the_fireplace.overlord.model.aiconfig.SettingsComponent;
 import net.minecraft.nbt.CompoundTag;
 
-public class PositionSetting implements SettingsComponent {
+public class PositionSetting implements SettingsComponent
+{
+    private static final String SEPARATOR = ",";
+
     private int x;
     private int y;
     private int z;
+
     public PositionSetting(int x, int y, int z) {
         this.x = x;
         this.y = y;
@@ -47,5 +51,22 @@ public class PositionSetting implements SettingsComponent {
         if (tag.contains("z")) {
             z = tag.getInt("z");
         }
+    }
+
+    public static PositionSetting fromString(String string) {
+        String[] positionNumbers = string.split(SEPARATOR);
+        if (positionNumbers.length != 3) {
+            throw new Error("Invalid position string! " + string);
+        }
+        try {
+            return new PositionSetting(Integer.parseInt(positionNumbers[0]), Integer.parseInt(positionNumbers[1]), Integer.parseInt(positionNumbers[2]));
+        } catch (NumberFormatException e) {
+            throw new Error("Invalid position string! " + string, e);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return x + SEPARATOR + y + SEPARATOR + z;
     }
 }

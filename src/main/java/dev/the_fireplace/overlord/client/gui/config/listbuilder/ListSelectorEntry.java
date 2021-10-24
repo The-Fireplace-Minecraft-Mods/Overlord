@@ -1,4 +1,4 @@
-package dev.the_fireplace.overlord.client.gui.listbuilder;
+package dev.the_fireplace.overlord.client.gui.config.listbuilder;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;

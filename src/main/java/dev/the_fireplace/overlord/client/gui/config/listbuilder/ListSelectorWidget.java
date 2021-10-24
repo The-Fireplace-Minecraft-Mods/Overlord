@@ -1,4 +1,4 @@
-package dev.the_fireplace.overlord.client.gui.listbuilder;
+package dev.the_fireplace.overlord.client.gui.config.listbuilder;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;

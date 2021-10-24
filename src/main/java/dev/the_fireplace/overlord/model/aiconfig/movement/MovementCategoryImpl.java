@@ -6,14 +6,16 @@ import net.minecraft.nbt.CompoundTag;
 
 import java.util.UUID;
 
-public final class MovementCategoryImpl implements SettingsComponent, MovementCategory {
+public final class MovementCategoryImpl implements SettingsComponent, MovementCategory
+{
 
     private boolean enabled = true;
 
     //Movement modes
     private EnumMovementMode moveMode = EnumMovementMode.STATIONED;
     //How close the skeleton follows the player
-    private byte followDistance = 8;
+    private byte minimumFollowDistance = 6;
+    private byte maximumFollowDistance = 8;
     private UUID patrolPosList = AIListManager.EMPTY_LIST_ID;
     //Should the skeleton go from last directly to first or turn around and navigate the path in reverse?
     private boolean patrolLoop = false;
@@ -31,7 +33,7 @@ public final class MovementCategoryImpl implements SettingsComponent, MovementCa
 
         tag.putBoolean("enabled", enabled);
         tag.putString("moveMode", moveMode.toString());
-        tag.putByte("followDistance", followDistance);
+        tag.putByte("followDistance", minimumFollowDistance);
         tag.putUuid("patrolPosList", patrolPosList);
         tag.putBoolean("patrolLoop", patrolLoop);
         if (home != null) {
@@ -52,8 +54,11 @@ public final class MovementCategoryImpl implements SettingsComponent, MovementCa
         if (tag.contains("moveMode")) {
             moveMode = EnumMovementMode.valueOf(tag.getString("moveMode"));
         }
-        if (tag.contains("followDistance")) {
-            followDistance = tag.getByte("followDistance");
+        if (tag.contains("minimumFollowDistance")) {
+            minimumFollowDistance = tag.getByte("minimumFollowDistance");
+        }
+        if (tag.contains("maximumFollowDistance")) {
+            minimumFollowDistance = tag.getByte("maximumFollowDistance");
         }
         if (tag.contains("patrolPosList")) {
             patrolPosList = tag.getUuid("patrolPosList");
@@ -99,13 +104,23 @@ public final class MovementCategoryImpl implements SettingsComponent, MovementCa
     }
 
     @Override
-    public byte getFollowDistance() {
-        return followDistance;
+    public byte getMinimumFollowDistance() {
+        return this.minimumFollowDistance;
     }
 
     @Override
-    public void setFollowDistance(byte followDistance) {
-        this.followDistance = followDistance;
+    public void setMinimumFollowDistance(byte followDistance) {
+        this.minimumFollowDistance = followDistance;
+    }
+
+    @Override
+    public byte getMaximumFollowDistance() {
+        return this.maximumFollowDistance;
+    }
+
+    @Override
+    public void setMaximumFollowDistance(byte followDistance) {
+        this.maximumFollowDistance = followDistance;
     }
 
     @Override
