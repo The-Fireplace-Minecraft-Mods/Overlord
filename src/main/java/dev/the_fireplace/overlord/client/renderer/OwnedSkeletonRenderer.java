@@ -3,6 +3,7 @@ package dev.the_fireplace.overlord.client.renderer;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.client.model.OwnedSkeletonModel;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
+import dev.the_fireplace.overlord.entity.SkeletonGrowthPhase;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -38,19 +39,21 @@ public class OwnedSkeletonRenderer extends LivingEntityRenderer<OwnedSkeletonEnt
 
     @Override
     public Identifier getTexture(OwnedSkeletonEntity entity) {
-        this.shadowSize = 0.25f * entity.getGrowthPhase() / 4.0f + 0.25f;
-        if (!entity.hasSkin() && !entity.hasMuscles())
+        this.shadowSize = 0.25f * entity.getGrowthPhase().ordinal() / 4.0f + 0.25f;
+        if (!entity.hasSkin() && !entity.hasMuscles()) {
             return new Identifier(Overlord.MODID, "textures/entity/owned_skeleton/owned_skeleton.png");
-        if (entity.getGrowthPhase() == 4 && entity.hasSkin() && entity.getSkinsuit() != null) {
+        }
+        if (entity.getGrowthPhase() == SkeletonGrowthPhase.ADULT && entity.hasSkin() && entity.getSkinsuit() != null) {
             ClientPlayNetworkHandler net = MinecraftClient.getInstance().getNetworkHandler();
             if (net != null) {
                 PlayerListEntry ple = net.getPlayerListEntry(entity.getSkinsuit());
-                if(ple != null && ple.hasSkinTexture())
+                if (ple != null && ple.hasSkinTexture()) {
                     return ple.getSkinTexture();
-                else if(!entity.hasMuscles())
+                } else if (!entity.hasMuscles()) {
                     return new Identifier(Overlord.MODID, "textures/entity/owned_skeleton/owned_skeleton_skin_4.png");
-                else
+                } else {
                     return new Identifier(Overlord.MODID, "textures/entity/owned_skeleton/owned_skeleton_skin_muscles_4.png");
+                }
             }
         }
         if (entity.hasSkin() && !entity.hasMuscles())
@@ -63,16 +66,16 @@ public class OwnedSkeletonRenderer extends LivingEntityRenderer<OwnedSkeletonEnt
 
     @Override
     protected void scale(OwnedSkeletonEntity entity, MatrixStack matrices, float tickDelta) {
-        float g = (entity.getGrowthPhase()+1) * 0.1f + 0.5f;
+        float g = (entity.getGrowthPhase().ordinal() + 1) * 0.1f + 0.5f;
         matrices.scale(g, g, g);
     }
 
     @Override
     public void render(OwnedSkeletonEntity livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         setModelPose(livingEntity);
-        if(livingEntity.getGrowthPhase() == 4 && livingEntity.hasMuscles() && !this.getModel().isThicc()) {
+        if (livingEntity.getGrowthPhase() == SkeletonGrowthPhase.ADULT && livingEntity.hasMuscles() && !this.getModel().isThicc()) {
             this.getModel().setThicc(true);
-        } else if((livingEntity.getGrowthPhase() != 4 || !livingEntity.hasMuscles()) && this.getModel().isThicc()) {
+        } else if ((livingEntity.getGrowthPhase() != SkeletonGrowthPhase.ADULT || !livingEntity.hasMuscles()) && this.getModel().isThicc()) {
             this.getModel().setThicc(false);
         }
         super.render(livingEntity, f, g, matrixStack, vertexConsumerProvider, i);

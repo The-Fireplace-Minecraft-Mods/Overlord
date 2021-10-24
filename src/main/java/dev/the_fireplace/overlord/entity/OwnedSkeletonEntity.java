@@ -10,24 +10,30 @@ import dev.the_fireplace.overlord.domain.world.BreakSpeedModifiers;
 import dev.the_fireplace.overlord.domain.world.DaylightDetector;
 import dev.the_fireplace.overlord.domain.world.MeleeAttackExecutor;
 import dev.the_fireplace.overlord.domain.world.UndeadDaylightDamager;
+import dev.the_fireplace.overlord.entity.ai.goal.AIEquipmentHelper;
 import dev.the_fireplace.overlord.init.OverlordEntities;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.SharedConstants;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.mob.IllagerEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.AxeItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.RangedWeaponItem;
+import net.minecraft.entity.projectile.Projectile;
+import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.world.ServerWorld;
@@ -37,6 +43,7 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
@@ -45,14 +52,14 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Predicate;
 
-public class OwnedSkeletonEntity extends ArmyEntity
+public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, CrossbowUser
 {
+    private static final TrackedData<Boolean> CHARGING = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     private UUID owner = new UUID(801295133947085751L, -7395604847578632613L);
     private UUID skinsuit;
-    private byte growthPhase = 0;
+    private SkeletonGrowthPhase growthPhase = SkeletonGrowthPhase.BABY;
     private boolean hasSkin = false;
     private boolean hasMuscles = false;
 
@@ -65,6 +72,7 @@ public class OwnedSkeletonEntity extends ArmyEntity
     private final MeleeAttackExecutor meleeAttackExecutor;
     private final BreakSpeedModifiers breakSpeedModifiers;
     private final InventorySearcher inventorySearcher;
+    private final AIEquipmentHelper equipmentHelper;
 
     /**
      * @deprecated Only public because Minecraft requires it to be. Use the factory.
@@ -80,6 +88,7 @@ public class OwnedSkeletonEntity extends ArmyEntity
         meleeAttackExecutor = injector.getInstance(MeleeAttackExecutor.class);
         breakSpeedModifiers = injector.getInstance(BreakSpeedModifiers.class);
         inventorySearcher = injector.getInstance(InventorySearcher.class);
+        equipmentHelper = injector.getInstance(AIEquipmentHelper.class);
     }
 
     public static OwnedSkeletonEntity create(World world, @Nullable UUID owner) {
@@ -128,9 +137,9 @@ public class OwnedSkeletonEntity extends ArmyEntity
 
         if (source != null) {
             this.setVelocity(
-                -MathHelper.cos((this.knockbackVelocity + this.yaw) * (float) Math.PI/180) * 0.1f,
+                -MathHelper.cos((this.knockbackVelocity + this.yaw) * (float) Math.PI / 180) * 0.1f,
                 0.1f,
-                -MathHelper.sin((this.knockbackVelocity + this.yaw) * (float) Math.PI/180) * 0.1f
+                -MathHelper.sin((this.knockbackVelocity + this.yaw) * (float) Math.PI / 180) * 0.1f
             );
         } else {
             this.setVelocity(0.0D, 0.1D, 0.0D);
@@ -147,6 +156,38 @@ public class OwnedSkeletonEntity extends ArmyEntity
     }
 
     @Override
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(CHARGING, false);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public boolean isCharging() {
+        return this.dataTracker.get(CHARGING);
+    }
+
+    @Override
+    public void setCharging(boolean charging) {
+        this.dataTracker.set(CHARGING, charging);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public IllagerEntity.State getState() {
+        if (this.isCharging()) {
+            return IllagerEntity.State.CROSSBOW_CHARGE;
+        } else if (this.isHolding(Items.CROSSBOW)) {
+            return IllagerEntity.State.CROSSBOW_HOLD;
+        } else {
+            return this.isAttacking() ? IllagerEntity.State.ATTACKING : IllagerEntity.State.NEUTRAL;
+        }
+    }
+
+    @Override
+    public boolean isTeammate(Entity other) {
+        return super.isTeammate(other) || other.getUuid().equals(getOwnerId());
+    }
+
+    @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
         this.playSound(getStepSound(), 0.15F, 1.0F);
     }
@@ -156,7 +197,7 @@ public class OwnedSkeletonEntity extends ArmyEntity
     }
 
     private boolean hasPaddedFeet() {
-        return getGrowthPhase() == 4 && hasMuscles() || hasSkin();
+        return (getGrowthPhase() == SkeletonGrowthPhase.ADULT && hasMuscles()) || hasSkin();
     }
 
     @Override
@@ -173,7 +214,7 @@ public class OwnedSkeletonEntity extends ArmyEntity
 
     private void vanishCursedItems() {
         List<Integer> slots = inventorySearcher.findSlotsMatching(inventory, EnchantmentHelper::hasVanishingCurse);
-        for (int slot: slots) {
+        for (int slot : slots) {
             this.inventory.removeInvStack(slot);
         }
     }
@@ -200,7 +241,7 @@ public class OwnedSkeletonEntity extends ArmyEntity
     }
 
     private boolean hasPlayerlikeBody() {
-        return hasMuscles() && getGrowthPhase() >= 3;
+        return hasMuscles() && getGrowthPhase().ordinal() >= SkeletonGrowthPhase.TEEN.ordinal();
     }
 
     @Override
@@ -213,6 +254,7 @@ public class OwnedSkeletonEntity extends ArmyEntity
         this.hasMuscles = tag.getBoolean("Muscles");
         this.hasSkin = tag.getBoolean("Skin");
         this.skinsuit = tag.getUuid("Skinsuit");
+        this.growthPhase = SkeletonGrowthPhase.values()[tag.getInt("GrowthPhase")];
         this.updateAISettings(tag.getCompound("aiSettings"));
     }
 
@@ -227,6 +269,7 @@ public class OwnedSkeletonEntity extends ArmyEntity
         tag.putBoolean("Skin", this.hasSkin);
         tag.putUuid("Skinsuit", this.getSkinsuit());
         tag.put("aiSettings", aiSettings.toTag());
+        tag.putInt("GrowthPhase", growthPhase.ordinal());
     }
 
     @Override
@@ -287,10 +330,11 @@ public class OwnedSkeletonEntity extends ArmyEntity
             this.sendEquipmentBreakStatus(hand == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
         });
         if (this.activeItemStack.isEmpty()) {
-            if (hand == Hand.MAIN_HAND)
+            if (hand == Hand.MAIN_HAND) {
                 this.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
-            else
+            } else {
                 this.equipStack(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
+            }
 
             this.activeItemStack = ItemStack.EMPTY;
             this.playSound(SoundEvents.ITEM_SHIELD_BREAK, 0.8F, 0.8F + this.world.random.nextFloat() * 0.4F);
@@ -328,7 +372,7 @@ public class OwnedSkeletonEntity extends ArmyEntity
     }
 
     public void disableShield(boolean sprinting) {
-        float f = 0.25F + (float)EnchantmentHelper.getEfficiency(this) * 0.05F;
+        float f = 0.25F + (float) EnchantmentHelper.getEfficiency(this) * 0.05F;
         if (sprinting) {
             f += 0.75F;
         }
@@ -336,7 +380,7 @@ public class OwnedSkeletonEntity extends ArmyEntity
         if (this.random.nextFloat() < f) {
             this.getItemCooldownManager().set(Items.SHIELD, 100);
             this.clearActiveItem();
-            this.world.sendEntityStatus(this, (byte)30);
+            this.world.sendEntityStatus(this, (byte) 30);
         }
     }
 
@@ -363,7 +407,7 @@ public class OwnedSkeletonEntity extends ArmyEntity
 
     @Override
     public float getMovementSpeed() {
-        return (float)this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).getValue();
+        return (float) this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).getValue();
     }
 
     @Override
@@ -408,9 +452,28 @@ public class OwnedSkeletonEntity extends ArmyEntity
         }
     }
 
+    @Override
     public boolean giveItemStack(ItemStack stack) {
         this.onEquipStack(stack);
         return this.inventory.insertStack(stack);
+    }
+
+    @Override
+    public byte getEquipmentSwapTicks() {
+        switch (this.getGrowthPhase()) {
+            case BABY:
+                return 40;
+            case CHILD:
+                return 30;
+            case PRETEEN:
+                return 20;
+            case TEEN:
+                return 10;
+            case ADULT:
+                return 5;
+        }
+
+        throw new IllegalStateException("Growth phase not found!");
     }
 
     @Override
@@ -430,16 +493,17 @@ public class OwnedSkeletonEntity extends ArmyEntity
             return true;
         }
         EquipmentSlot equipmentSlot;
-        if (slot == 100 + EquipmentSlot.HEAD.getEntitySlotId())
+        if (slot == 100 + EquipmentSlot.HEAD.getEntitySlotId()) {
             equipmentSlot = EquipmentSlot.HEAD;
-        else if (slot == 100 + EquipmentSlot.CHEST.getEntitySlotId())
+        } else if (slot == 100 + EquipmentSlot.CHEST.getEntitySlotId()) {
             equipmentSlot = EquipmentSlot.CHEST;
-        else if (slot == 100 + EquipmentSlot.LEGS.getEntitySlotId())
+        } else if (slot == 100 + EquipmentSlot.LEGS.getEntitySlotId()) {
             equipmentSlot = EquipmentSlot.LEGS;
-        else if (slot == 100 + EquipmentSlot.FEET.getEntitySlotId())
+        } else if (slot == 100 + EquipmentSlot.FEET.getEntitySlotId()) {
             equipmentSlot = EquipmentSlot.FEET;
-        else
+        } else {
             equipmentSlot = null;
+        }
 
         if (slot == 98) {
             this.equipStack(EquipmentSlot.MAINHAND, item);
@@ -462,11 +526,11 @@ public class OwnedSkeletonEntity extends ArmyEntity
     }
 
     public float getAttackCooldownProgressPerTick() {
-        return (float)(1.0D / this.getAttributeInstance(EntityAttributes.ATTACK_SPEED).getValue() * 20.0D);
+        return (float) (1.0D / this.getAttributeInstance(EntityAttributes.ATTACK_SPEED).getValue() * 20.0D);
     }
 
     public float getAttackCooldownProgress(float baseTime) {
-        return MathHelper.clamp(((float)this.lastAttackedTicks + baseTime) / this.getAttackCooldownProgressPerTick(), 0.0F, 1.0F);
+        return MathHelper.clamp(((float) this.lastAttackedTicks + baseTime) / this.getAttackCooldownProgressPerTick(), 0.0F, 1.0F);
     }
 
     public void resetLastAttackedTicks() {
@@ -485,43 +549,23 @@ public class OwnedSkeletonEntity extends ArmyEntity
 
     @Override
     public ItemStack getArrowType(ItemStack rangedWeaponStack) {
-        if (!(rangedWeaponStack.getItem() instanceof RangedWeaponItem)) {
-            return ItemStack.EMPTY;
-        }
-        Predicate<ItemStack> predicate = ((RangedWeaponItem)rangedWeaponStack.getItem()).getHeldProjectiles();
-        ItemStack projectileStack = RangedWeaponItem.getHeldProjectile(this, predicate);
-        if (!projectileStack.isEmpty()) {
-            return projectileStack;
-        }
-        predicate = ((RangedWeaponItem)rangedWeaponStack.getItem()).getProjectiles();
-
-        for (int i = 0; i < this.inventory.getInvSize(); ++i) {
-            ItemStack itemStack3 = this.inventory.getInvStack(i);
-            if (predicate.test(itemStack3)) {
-                return itemStack3;
-            }
+        if (equipmentHelper.hasAmmoEquipped(this)) {
+            return getOffHandStack();
         }
 
         return ItemStack.EMPTY;
     }
 
-    public void setGrowthPhase(byte newPhase) {
-        if (newPhase < 0) {
-            newPhase = 0;
-            Overlord.errorWithStacktrace("Attempt was made to set grown phase < 0!");
-        } else if (newPhase > 4) {
-            newPhase = 4;
-            Overlord.errorWithStacktrace("Attempt was made to set grown phase > 4!");
-        }
+    public void setGrowthPhase(SkeletonGrowthPhase newPhase) {
         growthPhase = newPhase;
     }
 
     @Override
     public EntityDimensions getDimensions(EntityPose pose) {
-        return super.getDimensions(pose).scaled(1-(0.1f*(4-growthPhase)));
+        return super.getDimensions(pose).scaled(1 - (0.1f * (4 - growthPhase.ordinal())));
     }
 
-    public byte getGrowthPhase() {
+    public SkeletonGrowthPhase getGrowthPhase() {
         return growthPhase;
     }
 
@@ -583,11 +627,74 @@ public class OwnedSkeletonEntity extends ArmyEntity
         return new OwnedSkeletonContainer(playerInv, !world.isClient, this, syncId);
     }
 
+    @Override
     public SkeletonInventory getInventory() {
         return inventory;
     }
 
     public void setOwner(UUID newOwner) {
         this.owner = newOwner;
+    }
+
+    @Override
+    public void shoot(LivingEntity target, ItemStack crossbow, Projectile projectile, float multiShotSpray) {
+        shootCrossbow(target, projectile, multiShotSpray);
+    }
+
+    private void shootCrossbow(LivingEntity target, Projectile projectile, float multiShotSpray) {
+        if (!(projectile instanceof Entity)) {
+            Overlord.getLogger().warn("Projectile is not an entity! {}", projectile.getClass());
+            return;
+        }
+        Entity entity = (Entity) projectile;
+        double d = target.getX() - this.getX();
+        double e = target.getZ() - this.getZ();
+        double f = MathHelper.sqrt(d * d + e * e);
+        double g = target.getBodyY(1.0 / 3.0) - entity.getY() + f * 0.2;
+        Vector3f vector3f = this.getProjectileVelocity(new Vec3d(d, g, e), multiShotSpray);
+        projectile.setVelocity(vector3f.getX(), vector3f.getY(), vector3f.getZ(), 1.6F, (float) (14 - this.world.getDifficulty().getId() * 4));
+        this.playSound(SoundEvents.ITEM_CROSSBOW_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+    }
+
+    private Vector3f getProjectileVelocity(Vec3d vec3d, float multiShotSpray) {
+        Vec3d vec3d2 = vec3d.normalize();
+        Vec3d vec3d3 = vec3d2.crossProduct(new Vec3d(0.0D, 1.0D, 0.0D));
+        if (vec3d3.lengthSquared() <= 1.0E-7D) {
+            vec3d3 = vec3d2.crossProduct(this.getOppositeRotationVector(1.0F));
+        }
+
+        Quaternion quaternion = new Quaternion(new Vector3f(vec3d3), 90.0F, true);
+        Vector3f vector3f = new Vector3f(vec3d2);
+        vector3f.rotate(quaternion);
+        Quaternion quaternion2 = new Quaternion(vector3f, multiShotSpray, true);
+        Vector3f vector3f2 = new Vector3f(vec3d2);
+        vector3f2.rotate(quaternion2);
+        return vector3f2;
+    }
+
+    @Override
+    public void attack(LivingEntity target, float f) {
+        ItemStack mainHandStack = this.getMainHandStack();
+        if (mainHandStack.getItem() instanceof CrossbowItem) {//TODO adjust numbers as needed
+            CrossbowItem.shootAll(this.world, this, Hand.MAIN_HAND, mainHandStack, 1.6F, (float) (14 - this.world.getDifficulty().getId() * 4));
+        } else if (mainHandStack.getItem() instanceof BowItem) {
+            shootBow(target, f);
+        }
+    }
+
+    public void shootBow(LivingEntity target, float f) {
+        ItemStack arrowStack = this.getArrowType(this.getMainHandStack());
+        ProjectileEntity projectileEntity = this.createArrowProjectile(arrowStack, f);
+        double d = target.getX() - this.getX();
+        double e = target.getBodyY(1.0 / 3.0) - projectileEntity.getY();
+        double g = target.getZ() - this.getZ();
+        double h = MathHelper.sqrt(d * d + g * g);
+        projectileEntity.setVelocity(d, e + h * 0.2, g, 1.6F, (float) (14 - this.world.getDifficulty().getId() * 4));
+        this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+        this.world.spawnEntity(projectileEntity);
+    }
+
+    protected ProjectileEntity createArrowProjectile(ItemStack arrow, float f) {
+        return ProjectileUtil.createArrowProjectile(this, arrow, f);
     }
 }

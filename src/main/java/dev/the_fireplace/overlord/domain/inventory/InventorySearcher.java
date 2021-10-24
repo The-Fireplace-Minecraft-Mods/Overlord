@@ -9,7 +9,12 @@ import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 
 public interface InventorySearcher {
+    boolean hasSlotMatching(Inventory container, Predicate<ItemStack> matcher);
+
     List<Integer> findSlotsMatching(Inventory container, Predicate<ItemStack> matcher);
+
+    Map<Integer, Integer> findSlotsMatchingByPriority(Inventory container, Predicate<ItemStack> matcher, ToIntFunction<ItemStack> priorityMapper);
+
     Map<Integer, Integer> getSlotsByPriority(Inventory container, ToIntFunction<ItemStack> priorityMapper);
     Map<Integer, Integer> getSlotsByPriorityOverZero(Inventory container, ToIntFunction<ItemStack> priorityMapper);
 }

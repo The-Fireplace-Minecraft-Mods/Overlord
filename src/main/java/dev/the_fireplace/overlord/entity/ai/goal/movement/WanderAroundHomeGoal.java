@@ -1,4 +1,4 @@
-package dev.the_fireplace.overlord.entity.ai.goal;
+package dev.the_fireplace.overlord.entity.ai.goal.movement;
 
 import dev.the_fireplace.overlord.entity.ArmyEntity;
 import net.minecraft.entity.ai.TargetFinder;

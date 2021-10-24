@@ -17,7 +17,19 @@ import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 @Implementation
-public final class InventorySearcherImpl implements InventorySearcher {
+public final class InventorySearcherImpl implements InventorySearcher
+{
+    @Override
+    public boolean hasSlotMatching(Inventory container, Predicate<ItemStack> matcher) {
+        for (int slot = 0; slot < container.getInvSize(); slot++) {
+            if (matcher.test(container.getInvStack(slot))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     @Override
     public List<Integer> findSlotsMatching(Inventory container, Predicate<ItemStack> matcher) {
         IntList slotList = new IntArrayList();
@@ -27,10 +39,37 @@ public final class InventorySearcherImpl implements InventorySearcher {
                 slotList.add(slot);
             }
         }
-        
+
         return slotList;
     }
 
+    /**
+     * @return Map of slot -> priority
+     */
+    @Override
+    public Map<Integer, Integer> findSlotsMatchingByPriority(Inventory container, Predicate<ItemStack> matcher, ToIntFunction<ItemStack> priorityMapper) {
+        IntList slotList = new IntArrayList();
+
+        for (int slot = 0; slot < container.getInvSize(); slot++) {
+            if (matcher.test(container.getInvStack(slot))) {
+                slotList.add(slot);
+            }
+        }
+
+        Map<Integer, Integer> slotPriorityMap = new Int2IntOpenHashMap();
+
+        for (int slot : slotList) {
+            slotPriorityMap.put(slot, priorityMapper.applyAsInt(container.getInvStack(slot)));
+        }
+
+        slotPriorityMap = sortByValue(slotPriorityMap);
+
+        return slotPriorityMap;
+    }
+
+    /**
+     * @return Map of slot -> priority
+     */
     @Override
     public Map<Integer, Integer> getSlotsByPriority(Inventory container, ToIntFunction<ItemStack> priorityMapper) {
         Map<Integer, Integer> slotPriorityMap = new Int2IntOpenHashMap();
@@ -44,6 +83,9 @@ public final class InventorySearcherImpl implements InventorySearcher {
         return slotPriorityMap;
     }
 
+    /**
+     * @return Map of slot -> priority
+     */
     @Override
     public Map<Integer, Integer> getSlotsByPriorityOverZero(Inventory container, ToIntFunction<ItemStack> priorityMapper) {
         Map<Integer, Integer> slotPriorityMap = new Int2IntOpenHashMap();
@@ -60,6 +102,9 @@ public final class InventorySearcherImpl implements InventorySearcher {
         return slotPriorityMap;
     }
 
+    /**
+     * @return Map of slot -> priority
+     */
     @Nonnull
     private Map<Integer, Integer> sortByValue(Map<Integer, Integer> slotPriorityMap) {
         slotPriorityMap = slotPriorityMap.entrySet().stream()
