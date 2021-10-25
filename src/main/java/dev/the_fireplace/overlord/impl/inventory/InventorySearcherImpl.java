@@ -108,7 +108,7 @@ public final class InventorySearcherImpl implements InventorySearcher
     @Nonnull
     private Map<Integer, Integer> sortByValue(Map<Integer, Integer> slotPriorityMap) {
         slotPriorityMap = slotPriorityMap.entrySet().stream()
-            .sorted(Map.Entry.comparingByValue())
+            .sorted((i1, i2) -> Integer.compare(i2.getValue(), i1.getValue()))
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
         return slotPriorityMap;
     }

@@ -14,8 +14,6 @@ import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.feature.ArmorBipedFeatureRenderer;
 import net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer;
-import net.minecraft.client.render.entity.feature.StuckArrowsFeatureRenderer;
-import net.minecraft.client.render.entity.feature.StuckStingersFeatureRenderer;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.CrossbowItem;
@@ -28,13 +26,13 @@ import net.minecraft.util.UseAction;
 
 @Environment(EnvType.CLIENT)
 public class OwnedSkeletonRenderer extends LivingEntityRenderer<OwnedSkeletonEntity, OwnedSkeletonModel> {
-    @SuppressWarnings("rawtypes, unchecked")
     public OwnedSkeletonRenderer(EntityRenderDispatcher dispatcher) {
         super(dispatcher, new OwnedSkeletonModel(), 0.5F);
-        this.addFeature(new ArmorBipedFeatureRenderer(this, new BipedEntityModel(0.5F), new BipedEntityModel(1.0F)));
-        this.addFeature(new HeldItemFeatureRenderer(this));
-        this.addFeature(new StuckArrowsFeatureRenderer(this));
-        this.addFeature(new StuckStingersFeatureRenderer(this));
+        this.addFeature(new ArmorBipedFeatureRenderer<>(this, new BipedEntityModel<>(0.5F), new BipedEntityModel<>(1.0F)));
+        this.addFeature(new HeldItemFeatureRenderer<>(this));
+        //TODO These were designed for the player model. Remake to work with others.
+        //this.addFeature(new StuckArrowsFeatureRenderer<>(this));
+        //this.addFeature(new StuckStingersFeatureRenderer<>(this));
     }
 
     @Override

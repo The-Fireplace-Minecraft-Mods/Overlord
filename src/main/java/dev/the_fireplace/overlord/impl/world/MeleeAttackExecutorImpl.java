@@ -38,7 +38,7 @@ public final class MeleeAttackExecutorImpl implements MeleeAttackExecutor {
             return;
         }
         float baseAttackDamage = (float) attacker.getAttributeInstance(EntityAttributes.ATTACK_DAMAGE).getValue();
-        float attackDamage = EnchantmentHelper.getAttackDamage(
+        float enchantmentAttackDamage = EnchantmentHelper.getAttackDamage(
             attacker.getMainHandStack(),
             target instanceof LivingEntity
                 ? ((LivingEntity) target).getGroup()
@@ -46,8 +46,8 @@ public final class MeleeAttackExecutorImpl implements MeleeAttackExecutor {
         );
 
         baseAttackDamage *= 0.2F + cooldownProgress * cooldownProgress * 0.8F;
-        attackDamage *= cooldownProgress;
-        if (baseAttackDamage <= 0.0F && attackDamage <= 0.0F) {
+        enchantmentAttackDamage *= cooldownProgress;
+        if (baseAttackDamage <= 0.0F && enchantmentAttackDamage <= 0.0F) {
             return;
         }
         boolean isNearFullStrength = cooldownProgress > 0.9F;
@@ -65,7 +65,7 @@ public final class MeleeAttackExecutorImpl implements MeleeAttackExecutor {
             baseAttackDamage *= 1.5F;
         }
 
-        baseAttackDamage += attackDamage;
+        baseAttackDamage += enchantmentAttackDamage;
         boolean isSweepingSword = false;
         double horizontalAcceleration = attacker.horizontalSpeed - attacker.prevHorizontalSpeed;
         if (isNearFullStrength
@@ -100,7 +100,7 @@ public final class MeleeAttackExecutorImpl implements MeleeAttackExecutor {
                 playStandardAttackSound(attacker, isNearFullStrength);
             }
 
-            if (attackDamage > 0.0F) {
+            if (enchantmentAttackDamage > 0.0F) {
                 spawnStandardAttackParticles(attacker, target);
             }
 

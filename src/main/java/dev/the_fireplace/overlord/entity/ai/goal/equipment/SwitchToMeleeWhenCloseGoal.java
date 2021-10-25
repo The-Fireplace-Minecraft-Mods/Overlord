@@ -3,7 +3,9 @@ package dev.the_fireplace.overlord.entity.ai.goal.equipment;
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.overlord.entity.ArmyEntity;
 import dev.the_fireplace.overlord.entity.ai.goal.AIEquipmentHelper;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.ai.pathing.Path;
 
 public class SwitchToMeleeWhenCloseGoal extends Goal
 {
@@ -23,12 +25,25 @@ public class SwitchToMeleeWhenCloseGoal extends Goal
 
     @Override
     public boolean canStart() {
-        return isInMeleeDistance() && equipmentHelper.isUsingRanged(armyEntity);//TODO we still need AI to equip shield after picking one up - probably should avoid extra scan every tick so don't do it here
+        LivingEntity target = armyEntity.getTarget();
+        if (!isInSwitchToMeleeDistance(target) || !equipmentHelper.isUsingRanged(armyEntity)) {
+            return false;
+        }
+        Path path = this.armyEntity.getNavigation().findPathTo(target, 0);
+        if (path != null) {
+            return true;
+        } else {
+            return this.getSquaredMaxAttackDistance(target) >= this.armyEntity.squaredDistanceTo(target);
+        }
     }
 
-    private boolean isInMeleeDistance() {
-        return armyEntity.getTarget() != null
-            && armyEntity.squaredDistanceTo(armyEntity.getTarget()) < (switchDistance * switchDistance);
+    private boolean isInSwitchToMeleeDistance(LivingEntity target) {
+        return target != null
+            && armyEntity.squaredDistanceTo(target) < (switchDistance * switchDistance);
+    }
+
+    protected double getSquaredMaxAttackDistance(LivingEntity entity) {
+        return this.armyEntity.getWidth() * 2.0F * this.armyEntity.getWidth() * 2.0F + entity.getWidth();
     }
 
     @Override

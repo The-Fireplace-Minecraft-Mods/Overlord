@@ -22,9 +22,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.MobEntityWithAi;
-import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.TurtleEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
@@ -51,9 +51,11 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
     }
 
     protected void reloadGoals() {
-        GoalSelectorHelper.clear(goalSelector);
-        GoalSelectorHelper.clear(targetSelector);
-        initGoals();
+        if (!world.isClient()) {
+            GoalSelectorHelper.clear(goalSelector);
+            GoalSelectorHelper.clear(targetSelector);
+            initGoals();
+        }
     }
 
     @Override
@@ -140,7 +142,7 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
         if (combat.isEnabled()) {
             //TODO Looks like we'll need a custom Target goal that chooses targets based on equipped weapon type
             this.targetSelector.add(targetGoalWeight++, new FollowTargetGoal<>(this, PlayerEntity.class, true));
-            this.targetSelector.add(targetGoalWeight, new FollowTargetGoal<>(this, IronGolemEntity.class, true));
+            this.targetSelector.add(targetGoalWeight, new FollowTargetGoal<>(this, MobEntity.class, true));
             this.targetSelector.add(targetGoalWeight, new FollowTargetGoal<>(this, TurtleEntity.class, 10, true, false, TurtleEntity.BABY_TURTLE_ON_LAND_FILTER));
         }
     }
@@ -167,6 +169,12 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
     public BlockPos getHome() {
         PositionSetting homeSetting = aiSettings.getMovement().getHome();
         return new BlockPos(homeSetting.getX(), homeSetting.getY(), homeSetting.getZ());
+    }
+
+    @Override
+    protected void initAttributes() {
+        super.initAttributes();
+        this.getAttributes().register(EntityAttributes.ATTACK_DAMAGE);
     }
 
     @Override

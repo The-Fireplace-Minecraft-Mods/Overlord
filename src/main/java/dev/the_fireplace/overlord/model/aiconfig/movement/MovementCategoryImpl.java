@@ -19,7 +19,7 @@ public final class MovementCategoryImpl implements SettingsComponent, MovementCa
     private UUID patrolPosList = AIListManager.EMPTY_LIST_ID;
     //Should the skeleton go from last directly to first or turn around and navigate the path in reverse?
     private boolean patrolLoop = false;
-    private PositionSetting home = null;
+    private PositionSetting home = new PositionSetting(0, 0, 0);
     //Should the stationed skeleton return to the home position after walking away to attack
     private boolean stationedReturnHome = true;
     //The radius away from home the skeleton can go when attacking while stationed or wandering the area
@@ -67,9 +67,6 @@ public final class MovementCategoryImpl implements SettingsComponent, MovementCa
             patrolLoop = tag.getBoolean("patrolLoop");
         }
         if (tag.contains("home")) {
-            if (home == null) {
-                home = new PositionSetting(0, 0, 0);
-            }
             home.readTag(tag.getCompound("home"));
         }
         if (tag.contains("stationedReturnHome")) {

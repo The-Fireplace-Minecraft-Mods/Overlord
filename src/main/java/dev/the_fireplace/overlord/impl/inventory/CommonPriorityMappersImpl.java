@@ -1,21 +1,27 @@
 package dev.the_fireplace.overlord.impl.inventory;
 
 import com.google.common.collect.Sets;
+import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.domain.inventory.CommonPriorityMappers;
 import dev.the_fireplace.overlord.util.EquipmentUtils;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityGroup;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShieldItem;
 
+import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
+@Singleton
+@Implementation
 public class CommonPriorityMappersImpl implements CommonPriorityMappers
 {
     @Override
@@ -30,8 +36,14 @@ public class CommonPriorityMappersImpl implements CommonPriorityMappers
                     Collection<EntityAttributeModifier> armorMods = stack.getAttributeModifiers(slot).get(EntityAttributes.ARMOR.getId());
                     armorMods.addAll(stack.getAttributeModifiers(slot).get(EntityAttributes.ARMOR_TOUGHNESS.getId()));
                     double totalArmorValue = 0;
-                    for (EntityAttributeModifier mod : armorMods) {
-                        totalArmorValue += mod.getAmount();
+                    for (EntityAttributeModifier modifier : armorMods) {
+                        switch (modifier.getOperation()) {
+                            case ADDITION:
+                            case MULTIPLY_BASE:
+                                totalArmorValue += modifier.getAmount();
+                            case MULTIPLY_TOTAL:
+                                totalArmorValue *= modifier.getAmount();
+                        }
                     }
                     if (totalArmorValue > max) {
                         max = totalArmorValue;
@@ -48,11 +60,24 @@ public class CommonPriorityMappersImpl implements CommonPriorityMappers
     }
 
     @Override
-    public ToIntFunction<ItemStack> weapon() {
+    public ToIntFunction<ItemStack> weapon(LivingEntity source, @Nullable LivingEntity target) {
         return stack -> {
-            int damage = (int) EnchantmentHelper.getAttackDamage(stack, EntityGroup.DEFAULT);
-            if (damage > 0) {
-                return damage;
+            double damage = 0.5;
+            Collection<EntityAttributeModifier> attributeModifiers = stack.getAttributeModifiers(EquipmentSlot.MAINHAND).get(EntityAttributes.ATTACK_DAMAGE.getId());
+            for (EntityAttributeModifier modifier : attributeModifiers) {
+                switch (modifier.getOperation()) {
+                    case ADDITION:
+                        damage += modifier.getAmount();
+                    case MULTIPLY_BASE:
+                        damage += 0.5 * modifier.getAmount();
+                    case MULTIPLY_TOTAL:
+                        damage *= modifier.getAmount();
+                }
+            }
+            damage += EnchantmentHelper.getAttackDamage(stack, target != null ? target.getGroup() : EntityGroup.DEFAULT);
+            damage -= 0.5;
+            if ((int) damage > 0) {
+                return (int) damage;
             }
             if (EquipmentUtils.isRangedWeapon(stack)) {
                 return 1;

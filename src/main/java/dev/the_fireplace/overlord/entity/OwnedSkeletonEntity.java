@@ -6,6 +6,7 @@ import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.domain.inventory.InventorySearcher;
+import dev.the_fireplace.overlord.domain.mechanic.Ownable;
 import dev.the_fireplace.overlord.domain.world.BreakSpeedModifiers;
 import dev.the_fireplace.overlord.domain.world.DaylightDetector;
 import dev.the_fireplace.overlord.domain.world.MeleeAttackExecutor;
@@ -39,7 +40,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -56,6 +56,7 @@ import java.util.UUID;
 public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, CrossbowUser
 {
     private static final TrackedData<Boolean> CHARGING = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    //TODO use DataTracker for the other properties?
 
     private UUID owner = new UUID(801295133947085751L, -7395604847578632613L);
     private UUID skinsuit;
@@ -65,7 +66,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
     private final SkeletonInventory inventory = new SkeletonInventory(this);
     private final ItemCooldownManager itemCooldownManager = new ItemCooldownManager();
-    private boolean lefty;
 
     private final DaylightDetector daylightDetector;
     private final UndeadDaylightDamager undeadDaylightDamager;
@@ -81,7 +81,11 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     @Deprecated
     public OwnedSkeletonEntity(EntityType<? extends OwnedSkeletonEntity> type, World world) {
         super(type, world);
-        lefty = world.random.nextBoolean();
+        if (this.random.nextFloat() < 0.05F) {
+            this.setLeftHanded(true);
+        } else {
+            this.setLeftHanded(false);
+        }
         Injector injector = DIContainer.get();
         daylightDetector = injector.getInstance(DaylightDetector.class);
         undeadDaylightDamager = injector.getInstance(UndeadDaylightDamager.class);
@@ -89,6 +93,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         breakSpeedModifiers = injector.getInstance(BreakSpeedModifiers.class);
         inventorySearcher = injector.getInstance(InventorySearcher.class);
         equipmentHelper = injector.getInstance(AIEquipmentHelper.class);
+        setGrowthPhase(SkeletonGrowthPhase.BABY);
     }
 
     public static OwnedSkeletonEntity create(World world, @Nullable UUID owner) {
@@ -184,7 +189,9 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
     @Override
     public boolean isTeammate(Entity other) {
-        return super.isTeammate(other) || other.getUuid().equals(getOwnerId());
+        return super.isTeammate(other)
+            || other.getUuid().equals(getOwnerId())
+            || (other instanceof Ownable && ((Ownable) other).getOwnerId().equals(getOwnerId()));
     }
 
     @Override
@@ -250,11 +257,10 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         ListTag inventoryTag = tag.getList("Inventory", 10);
         this.inventory.deserialize(inventoryTag);
         this.owner = tag.getUuid("Owner");
-        this.lefty = tag.getBoolean("Lefty");
         this.hasMuscles = tag.getBoolean("Muscles");
         this.hasSkin = tag.getBoolean("Skin");
         this.skinsuit = tag.getUuid("Skinsuit");
-        this.growthPhase = SkeletonGrowthPhase.values()[tag.getInt("GrowthPhase")];
+        this.setGrowthPhase(SkeletonGrowthPhase.values()[tag.getInt("GrowthPhase")]);
         this.updateAISettings(tag.getCompound("aiSettings"));
     }
 
@@ -264,7 +270,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         tag.putInt("DataVersion", SharedConstants.getGameVersion().getWorldVersion());
         tag.put("Inventory", this.inventory.serialize(new ListTag()));
         tag.putUuid("Owner", this.owner);
-        tag.putBoolean("Lefty", this.lefty);
         tag.putBoolean("Muscles", this.hasMuscles);
         tag.putBoolean("Skin", this.hasSkin);
         tag.putUuid("Skinsuit", this.getSkinsuit());
@@ -520,11 +525,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         return true;
     }
 
-    @Override
-    public Arm getMainArm() {
-        return lefty ? Arm.LEFT : Arm.RIGHT;
-    }
-
     public float getAttackCooldownProgressPerTick() {
         return (float) (1.0D / this.getAttributeInstance(EntityAttributes.ATTACK_SPEED).getValue() * 20.0D);
     }
@@ -558,6 +558,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
     public void setGrowthPhase(SkeletonGrowthPhase newPhase) {
         growthPhase = newPhase;
+        calculateDimensions();
     }
 
     @Override
@@ -571,6 +572,9 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
     public void setSkinsuit(UUID playerId) {
         this.skinsuit = playerId;
+        if (!world.isClient()) {
+            //TODO find a way to set left-handedness based on skinsuit
+        }
     }
 
     public UUID getSkinsuit() {
@@ -591,11 +595,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
     public void setHasMuscles(boolean hasMuscles) {
         this.hasMuscles = hasMuscles;
-    }
-
-    public boolean isMeleeAttacking() {
-        //TODO
-        return false;
     }
 
     @Override
@@ -692,6 +691,11 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         projectileEntity.setVelocity(d, e + h * 0.2, g, 1.6F, (float) (14 - this.world.getDifficulty().getId() * 4));
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
         this.world.spawnEntity(projectileEntity);
+        if (arrowStack.getCount() == 1) {
+            setStackInHand(Hand.OFF_HAND, ItemStack.EMPTY);
+        } else {
+            getOffHandStack().setCount(arrowStack.getCount() - 1);
+        }
     }
 
     protected ProjectileEntity createArrowProjectile(ItemStack arrow, float f) {

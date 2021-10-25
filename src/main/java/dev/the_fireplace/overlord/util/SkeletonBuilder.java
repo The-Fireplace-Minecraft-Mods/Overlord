@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.mojang.authlib.GameProfile;
 import dev.the_fireplace.annotateddi.api.DIContainer;
-import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.domain.inventory.CommonPriorityMappers;
 import dev.the_fireplace.overlord.domain.mechanic.Tombstone;
 import dev.the_fireplace.overlord.domain.registry.ThrowableRegistry;
@@ -130,7 +129,7 @@ public class SkeletonBuilder
         }
         //Sort armor prioritizing the high defense armors first
         List<Map.Entry<Integer, ItemStack>> armorByWeight = Lists.newArrayList(armorSlots.entrySet());
-        armorByWeight.sort(Comparator.comparingDouble(o -> commonPriorityMappers.weapon().applyAsInt(o.getValue())));
+        armorByWeight.sort(Comparator.comparingDouble(o -> commonPriorityMappers.armor().applyAsInt(o.getValue())));
         if (armorByWeight.isEmpty()) {
             return;
         }
@@ -183,13 +182,10 @@ public class SkeletonBuilder
             }
         }
         //Figure out which weapons deal the most damage and collect those first
-        List<Map.Entry<Integer, ItemStack>> m = Lists.newArrayList(weaponSlots.entrySet());
-        m.sort(Comparator.comparingInt(o -> commonPriorityMappers.weapon().applyAsInt(o.getValue())));
-        if (!m.isEmpty()) {
-            //TODO Don't log, this is just to find out which end has the strongest weapon
-            Overlord.getLogger().info(m.get(0).getValue().toString());
-            Overlord.getLogger().info(m.get(m.size() - 1).getValue().toString());
-            entity.equipStack(EquipmentSlot.MAINHAND, casket.removeInvStack(m.get(0).getKey()));
+        List<Map.Entry<Integer, ItemStack>> weaponWeights = Lists.newArrayList(weaponSlots.entrySet());
+        weaponWeights.sort(Comparator.comparingInt(o -> commonPriorityMappers.weapon(entity, entity.getTarget()).applyAsInt(o.getValue())));
+        if (!weaponWeights.isEmpty()) {
+            entity.equipStack(EquipmentSlot.MAINHAND, casket.removeInvStack(weaponWeights.get(0).getKey()));
         }
         //Collect weapons, tools
         for (int slot = 0; slot < casket.getInvSize(); slot++) {

@@ -52,7 +52,7 @@ public class AIEquipmentHelper
         //TODO check preserve damaged equipment setting
         Inventory inventory = armyEntity.getInventory();
 
-        Map<Integer, Integer> rangedWeaponSlots = inventorySearcher.findSlotsMatchingByPriority(inventory, EquipmentUtils::isRangedWeapon, commonPriorityMappers.weapon());
+        Map<Integer, Integer> rangedWeaponSlots = inventorySearcher.findSlotsMatchingByPriority(inventory, EquipmentUtils::isRangedWeapon, commonPriorityMappers.weapon(armyEntity, armyEntity.getTarget()));
         for (int rangedWeaponSlot : rangedWeaponSlots.keySet()) {
             ItemStack weapon = inventory.getInvStack(rangedWeaponSlot);
             boolean hasAmmo = hasAmmoForWeapon(inventory, weapon);
@@ -75,7 +75,7 @@ public class AIEquipmentHelper
         //TODO check preserve damaged equipment setting
         Inventory inventory = armyEntity.getInventory();
 
-        Map<Integer, Integer> rangedWeaponSlots = inventorySearcher.findSlotsMatchingByPriority(inventory, EquipmentUtils::isRangedWeapon, commonPriorityMappers.weapon());
+        Map<Integer, Integer> rangedWeaponSlots = inventorySearcher.findSlotsMatchingByPriority(inventory, EquipmentUtils::isRangedWeapon, commonPriorityMappers.weapon(armyEntity, armyEntity.getTarget()));
         for (int rangedWeaponSlot : rangedWeaponSlots.keySet()) {
             ItemStack weapon = inventory.getInvStack(rangedWeaponSlot);
             boolean hasAmmo = hasAmmoForWeapon(inventory, weapon);
@@ -114,7 +114,7 @@ public class AIEquipmentHelper
         //TODO check preserve damaged equipment setting
         Inventory inventory = armyEntity.getInventory();
 
-        Map<Integer, Integer> meleePriority = inventorySearcher.findSlotsMatchingByPriority(inventory, EquipmentUtils::isMeleeWeapon, commonPriorityMappers.weapon());
+        Map<Integer, Integer> meleePriority = inventorySearcher.findSlotsMatchingByPriority(inventory, EquipmentUtils::isMeleeWeapon, commonPriorityMappers.weapon(armyEntity, armyEntity.getTarget()));
         ItemStack newWeapon = ItemStack.EMPTY;
         if (!meleePriority.isEmpty()) {
             int oldWeaponSlot = meleePriority.keySet().toArray(new Integer[0])[0];
