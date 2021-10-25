@@ -646,6 +646,9 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
             return;
         }
         Entity entity = (Entity) projectile;
+        if (projectile instanceof ProjectileEntity) {
+            ((ProjectileEntity) projectile).pickupType = ProjectileEntity.PickupPermission.ALLOWED;
+        }
         double d = target.getX() - this.getX();
         double e = target.getZ() - this.getZ();
         double f = MathHelper.sqrt(d * d + e * e);
@@ -684,6 +687,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     public void shootBow(LivingEntity target, float f) {
         ItemStack arrowStack = this.getArrowType(this.getMainHandStack());
         ProjectileEntity projectileEntity = this.createArrowProjectile(arrowStack, f);
+        projectileEntity.pickupType = ProjectileEntity.PickupPermission.ALLOWED;
         double d = target.getX() - this.getX();
         double e = target.getBodyY(1.0 / 3.0) - projectileEntity.getY();
         double g = target.getZ() - this.getZ();
