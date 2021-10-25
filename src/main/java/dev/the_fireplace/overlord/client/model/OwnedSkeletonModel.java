@@ -1,16 +1,13 @@
 package dev.the_fireplace.overlord.client.model;
 
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
-import dev.the_fireplace.overlord.util.EquipmentUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.entity.mob.IllagerEntity;
 import net.minecraft.util.Arm;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
 
 @Environment(EnvType.CLIENT)
@@ -43,13 +40,12 @@ public class OwnedSkeletonModel extends BipedEntityModel<OwnedSkeletonEntity>
     }
 
     @Override
-    public void setAngles(OwnedSkeletonEntity mobEntity, float f, float g, float h, float i, float j) {
-        super.setAngles(mobEntity, f, g, h, i, j);
-        ItemStack itemStack = mobEntity.getMainHandStack();
-        if (mobEntity.isAttacking() && !EquipmentUtils.isRangedWeapon(itemStack)) {
+    public void setAngles(OwnedSkeletonEntity entity, float f, float g, float h, float i, float j) {
+        super.setAngles(entity, f, g, h, i, j);
+        if (entity.getState().equals(IllagerEntity.State.ATTACKING)) {
             float k = MathHelper.sin(this.handSwingProgress * (float) Math.PI);
             float l = MathHelper.sin((1.0F - (1.0F - this.handSwingProgress) * (1.0F - this.handSwingProgress)) * (float) Math.PI);
-            if (mobEntity.getMainArm() == Arm.RIGHT) {
+            if (entity.getMainArm() == Arm.RIGHT) {
                 ModelPart arm = this.rightArm;
                 arm.roll = 0.0F;
                 arm.yaw = -(0.1F - k * 0.6F);
@@ -79,19 +75,34 @@ public class OwnedSkeletonModel extends BipedEntityModel<OwnedSkeletonEntity>
     }
 
     @Override
-    public void animateModel(OwnedSkeletonEntity livingEntity, float f, float g, float h) {
-        this.rightArmPose = BipedEntityModel.ArmPose.EMPTY;
-        this.leftArmPose = BipedEntityModel.ArmPose.EMPTY;
-        ItemStack itemStack = livingEntity.getStackInHand(Hand.MAIN_HAND);
-        if (itemStack.getItem() == Items.BOW && livingEntity.isAttacking()) {
-            if (livingEntity.getMainArm() == Arm.RIGHT) {
-                this.rightArmPose = BipedEntityModel.ArmPose.BOW_AND_ARROW;
-            } else {
-                this.leftArmPose = BipedEntityModel.ArmPose.BOW_AND_ARROW;
-            }
+    public void animateModel(OwnedSkeletonEntity entity, float f, float g, float h) {
+        this.rightArmPose = ArmPose.EMPTY;
+        this.leftArmPose = ArmPose.EMPTY;
+        switch (entity.getState()) {
+            case BOW_AND_ARROW:
+                if (entity.getMainArm() == Arm.RIGHT) {
+                    this.rightArmPose = ArmPose.BOW_AND_ARROW;
+                } else {
+                    this.leftArmPose = ArmPose.BOW_AND_ARROW;
+                }
+                break;
+            case CROSSBOW_CHARGE:
+                if (entity.getMainArm() == Arm.RIGHT) {
+                    this.rightArmPose = ArmPose.CROSSBOW_CHARGE;
+                } else {
+                    this.leftArmPose = ArmPose.CROSSBOW_CHARGE;
+                }
+                break;
+            case CROSSBOW_HOLD:
+                if (entity.getMainArm() == Arm.RIGHT) {
+                    this.rightArmPose = ArmPose.CROSSBOW_HOLD;
+                } else {
+                    this.leftArmPose = ArmPose.CROSSBOW_HOLD;
+                }
+                break;
         }
 
-        super.animateModel(livingEntity, f, g, h);
+        super.animateModel(entity, f, g, h);
     }
 
     public boolean isThicc() {

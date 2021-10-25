@@ -20,6 +20,7 @@ import net.minecraft.SharedConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -56,6 +57,7 @@ import java.util.UUID;
 public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, CrossbowUser
 {
     private static final TrackedData<Boolean> CHARGING = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> HAS_TARGET = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     //TODO use DataTracker for the other properties?
 
     private UUID owner = new UUID(801295133947085751L, -7395604847578632613L);
@@ -164,6 +166,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     protected void initDataTracker() {
         super.initDataTracker();
         this.dataTracker.startTracking(CHARGING, false);
+        this.dataTracker.startTracking(HAS_TARGET, false);
     }
 
     @Environment(EnvType.CLIENT)
@@ -177,11 +180,24 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     @Environment(EnvType.CLIENT)
+    public boolean hasTarget() {
+        return this.dataTracker.get(HAS_TARGET);
+    }
+
+    @Override
+    public void setTarget(@Nullable LivingEntity target) {
+        super.setTarget(target);
+        this.dataTracker.set(HAS_TARGET, target != null);
+    }
+
+    @Environment(EnvType.CLIENT)
     public IllagerEntity.State getState() {
         if (this.isCharging()) {
             return IllagerEntity.State.CROSSBOW_CHARGE;
-        } else if (this.isHolding(Items.CROSSBOW)) {
-            return IllagerEntity.State.CROSSBOW_HOLD;
+        } else if (this.getMainHandStack().getItem() instanceof CrossbowItem) {
+            return hasTarget() ? IllagerEntity.State.CROSSBOW_HOLD : IllagerEntity.State.NEUTRAL;
+        } else if (this.getMainHandStack().getItem() instanceof BowItem) {
+            return this.isAttacking() ? IllagerEntity.State.BOW_AND_ARROW : IllagerEntity.State.NEUTRAL;
         } else {
             return this.isAttacking() ? IllagerEntity.State.ATTACKING : IllagerEntity.State.NEUTRAL;
         }
@@ -637,16 +653,17 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
     @Override
     public void shoot(LivingEntity target, ItemStack crossbow, Projectile projectile, float multiShotSpray) {
-        shootCrossbow(target, projectile, multiShotSpray);
+        shootCrossbow(target, crossbow, projectile, multiShotSpray);
     }
 
-    private void shootCrossbow(LivingEntity target, Projectile projectile, float multiShotSpray) {
+    private void shootCrossbow(LivingEntity target, ItemStack crossbow, Projectile projectile, float multiShotSpray) {
         if (!(projectile instanceof Entity)) {
             Overlord.getLogger().warn("Projectile is not an entity! {}", projectile.getClass());
             return;
         }
         Entity entity = (Entity) projectile;
-        if (projectile instanceof ProjectileEntity) {
+        boolean isMultishotProjectile = EnchantmentHelper.getLevel(Enchantments.MULTISHOT, crossbow) > 0;
+        if (projectile instanceof ProjectileEntity && !isMultishotProjectile) {
             ((ProjectileEntity) projectile).pickupType = ProjectileEntity.PickupPermission.ALLOWED;
         }
         double d = target.getX() - this.getX();
@@ -700,6 +717,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         } else {
             getOffHandStack().setCount(arrowStack.getCount() - 1);
         }
+        this.getMainHandStack().damage(1, this, (entity) -> entity.sendToolBreakStatus(Hand.MAIN_HAND));
     }
 
     protected ProjectileEntity createArrowProjectile(ItemStack arrow, float f) {
