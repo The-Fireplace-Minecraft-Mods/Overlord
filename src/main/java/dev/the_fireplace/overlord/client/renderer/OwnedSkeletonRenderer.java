@@ -42,15 +42,11 @@ public class OwnedSkeletonRenderer extends LivingEntityRenderer<OwnedSkeletonEnt
             return new Identifier(Overlord.MODID, "textures/entity/owned_skeleton/owned_skeleton.png");
         }
         if (entity.getGrowthPhase() == SkeletonGrowthPhase.ADULT && entity.hasSkin() && entity.getSkinsuit() != null) {
-            ClientPlayNetworkHandler net = MinecraftClient.getInstance().getNetworkHandler();
-            if (net != null) {
-                PlayerListEntry ple = net.getPlayerListEntry(entity.getSkinsuit());
-                if (ple != null && ple.hasSkinTexture()) {
-                    return ple.getSkinTexture();
-                } else if (!entity.hasMuscles()) {
-                    return new Identifier(Overlord.MODID, "textures/entity/owned_skeleton/owned_skeleton_skin_4.png");
-                } else {
-                    return new Identifier(Overlord.MODID, "textures/entity/owned_skeleton/owned_skeleton_skin_muscles_4.png");
+            ClientPlayNetworkHandler networkHandler = MinecraftClient.getInstance().getNetworkHandler();
+            if (networkHandler != null) {
+                PlayerListEntry playerListEntry = networkHandler.getPlayerListEntry(entity.getSkinsuit());
+                if (playerListEntry != null && playerListEntry.hasSkinTexture()) {
+                    return playerListEntry.getSkinTexture();
                 }
             }
         }

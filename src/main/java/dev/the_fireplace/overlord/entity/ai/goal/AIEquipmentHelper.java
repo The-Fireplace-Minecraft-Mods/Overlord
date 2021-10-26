@@ -52,7 +52,7 @@ public class AIEquipmentHelper
         //TODO check preserve damaged equipment setting
         Inventory inventory = armyEntity.getInventory();
 
-        Map<Integer, Integer> rangedWeaponSlots = inventorySearcher.findSlotsMatchingByPriority(inventory, EquipmentUtils::isRangedWeapon, commonPriorityMappers.weapon(armyEntity, armyEntity.getTarget()));
+        Map<Integer, Integer> rangedWeaponSlots = inventorySearcher.getSlotsMatchingByPriority(inventory, EquipmentUtils::isRangedWeapon, commonPriorityMappers.weapon(armyEntity, armyEntity.getTarget()));
         for (int rangedWeaponSlot : rangedWeaponSlots.keySet()) {
             ItemStack weapon = inventory.getInvStack(rangedWeaponSlot);
             boolean hasAmmo = hasAmmoForWeapon(inventory, weapon);
@@ -75,7 +75,7 @@ public class AIEquipmentHelper
         //TODO check preserve damaged equipment setting
         Inventory inventory = armyEntity.getInventory();
 
-        Map<Integer, Integer> rangedWeaponSlots = inventorySearcher.findSlotsMatchingByPriority(inventory, EquipmentUtils::isRangedWeapon, commonPriorityMappers.weapon(armyEntity, armyEntity.getTarget()));
+        Map<Integer, Integer> rangedWeaponSlots = inventorySearcher.getSlotsMatchingByPriority(inventory, EquipmentUtils::isRangedWeapon, commonPriorityMappers.weapon(armyEntity, armyEntity.getTarget()));
         for (int rangedWeaponSlot : rangedWeaponSlots.keySet()) {
             ItemStack weapon = inventory.getInvStack(rangedWeaponSlot);
             boolean hasAmmo = hasAmmoForWeapon(inventory, weapon);
@@ -96,7 +96,7 @@ public class AIEquipmentHelper
         Inventory inventory = armyEntity.getInventory();
 
         ItemStack weapon = armyEntity.getMainHandStack();
-        Map<Integer, Integer> ammoPriority = inventorySearcher.findSlotsMatchingByPriority(
+        Map<Integer, Integer> ammoPriority = inventorySearcher.getSlotsMatchingByPriority(
             inventory,
             stack -> EquipmentUtils.isAmmoFor(weapon, stack),
             commonPriorityMappers.ammo(weapon)
@@ -114,7 +114,7 @@ public class AIEquipmentHelper
         //TODO check preserve damaged equipment setting
         Inventory inventory = armyEntity.getInventory();
 
-        Map<Integer, Integer> meleePriority = inventorySearcher.findSlotsMatchingByPriority(inventory, EquipmentUtils::isMeleeWeapon, commonPriorityMappers.weapon(armyEntity, armyEntity.getTarget()));
+        Map<Integer, Integer> meleePriority = inventorySearcher.getSlotsMatchingByPriority(inventory, EquipmentUtils::isMeleeWeapon, commonPriorityMappers.weapon(armyEntity, armyEntity.getTarget()));
         ItemStack newWeapon = ItemStack.EMPTY;
         if (!meleePriority.isEmpty()) {
             int oldWeaponSlot = meleePriority.keySet().toArray(new Integer[0])[0];
@@ -138,7 +138,7 @@ public class AIEquipmentHelper
         //TODO check preserve damaged equipment setting
         Inventory inventory = armyEntity.getInventory();
 
-        Map<Integer, Integer> shieldPriority = inventorySearcher.findSlotsMatchingByPriority(
+        Map<Integer, Integer> shieldPriority = inventorySearcher.getSlotsMatchingByPriority(
             inventory,
             stack -> stack.getItem() instanceof ShieldItem,
             stack -> stack.getMaxDamage() - stack.getDamage()

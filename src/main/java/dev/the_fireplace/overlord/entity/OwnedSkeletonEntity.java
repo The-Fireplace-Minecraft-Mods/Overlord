@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.Overlord;
+import dev.the_fireplace.overlord.domain.entity.AnimatedMilkDrinker;
 import dev.the_fireplace.overlord.domain.inventory.InventorySearcher;
 import dev.the_fireplace.overlord.domain.mechanic.Ownable;
 import dev.the_fireplace.overlord.domain.world.BreakSpeedModifiers;
@@ -12,7 +13,11 @@ import dev.the_fireplace.overlord.domain.world.DaylightDetector;
 import dev.the_fireplace.overlord.domain.world.MeleeAttackExecutor;
 import dev.the_fireplace.overlord.domain.world.UndeadDaylightDamager;
 import dev.the_fireplace.overlord.entity.ai.goal.AIEquipmentHelper;
+import dev.the_fireplace.overlord.entity.ai.goal.equipment.skeleton.DrinkMilkForHealthGoal;
+import dev.the_fireplace.overlord.entity.ai.goal.equipment.skeleton.DrinkMilkGoal;
 import dev.the_fireplace.overlord.init.OverlordEntities;
+import dev.the_fireplace.overlord.model.aiconfig.movement.MovementCategory;
+import dev.the_fireplace.overlord.model.aiconfig.tasks.TasksCategory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
@@ -28,7 +33,6 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.IllagerEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -52,19 +56,21 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, CrossbowUser
+public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, CrossbowUser, AnimatedMilkDrinker
 {
     private static final TrackedData<Boolean> CHARGING = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> DRINKING_MILK = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Boolean> HAS_TARGET = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    //TODO use DataTracker for the other properties?
+    private static final TrackedData<Integer> GROWTH_PHASE = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Boolean> HAS_SKIN = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> HAS_MUSCLES = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Optional<UUID>> SKINSUIT = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
 
     private UUID owner = new UUID(801295133947085751L, -7395604847578632613L);
-    private UUID skinsuit;
-    private SkeletonGrowthPhase growthPhase = SkeletonGrowthPhase.BABY;
-    private boolean hasSkin = false;
-    private boolean hasMuscles = false;
+    private int milkBucketsDrank = 0;
 
     private final SkeletonInventory inventory = new SkeletonInventory(this);
     private final ItemCooldownManager itemCooldownManager = new ItemCooldownManager();
@@ -95,7 +101,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         breakSpeedModifiers = injector.getInstance(BreakSpeedModifiers.class);
         inventorySearcher = injector.getInstance(InventorySearcher.class);
         equipmentHelper = injector.getInstance(AIEquipmentHelper.class);
-        setGrowthPhase(SkeletonGrowthPhase.BABY);
+        calculateDimensions();
     }
 
     public static OwnedSkeletonEntity create(World world, @Nullable UUID owner) {
@@ -107,17 +113,35 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     @Override
-    public void tickMovement() {
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(CHARGING, false);
+        this.dataTracker.startTracking(HAS_TARGET, false);
+        this.dataTracker.startTracking(DRINKING_MILK, false);
+        this.dataTracker.startTracking(GROWTH_PHASE, SkeletonGrowthPhase.BABY.ordinal());
+        this.dataTracker.startTracking(HAS_SKIN, false);
+        this.dataTracker.startTracking(HAS_MUSCLES, false);
+        this.dataTracker.startTracking(SKINSUIT, Optional.empty());
+    }
+
+    @Override
+    protected void mobTick() {
+        super.mobTick();
         tickRegeneration();
         this.getInventory().tickItems();
         tickDaylight();
+        tickMilkDrinkSound();
+    }
 
-        super.tickMovement();
+    private void tickMilkDrinkSound() {
+        if (isDrinkingMilk()) {
+            this.playSound(this.getDrinkSound(this.getOffHandStack()), 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
+        }
     }
 
     private void tickRegeneration() {
         if (this.world.getDifficulty() == Difficulty.PEACEFUL && this.world.getGameRules().getBoolean(GameRules.NATURAL_REGENERATION)) {
-            if (this.getHealth() < this.getMaximumHealth() && this.age % 20 == 0) {
+            if (this.getHealth() < this.getMaximumHealth() && this.age % 2000 == 0) {
                 this.heal(1.0F);
             }
         }
@@ -163,10 +187,13 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(CHARGING, false);
-        this.dataTracker.startTracking(HAS_TARGET, false);
+    public int getMainHandSlot() {
+        return SkeletonInventory.MAIN_HAND_SLOT;
+    }
+
+    @Override
+    public int getOffHandSlot() {
+        return SkeletonInventory.OFF_HAND_SLOT;
     }
 
     @Environment(EnvType.CLIENT)
@@ -191,16 +218,20 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     @Environment(EnvType.CLIENT)
-    public IllagerEntity.State getState() {
+    public AnimationState getAnimationState() {
         if (this.isCharging()) {
-            return IllagerEntity.State.CROSSBOW_CHARGE;
+            return AnimationState.CROSSBOW_CHARGE;
         } else if (this.getMainHandStack().getItem() instanceof CrossbowItem) {
-            return hasTarget() ? IllagerEntity.State.CROSSBOW_HOLD : IllagerEntity.State.NEUTRAL;
+            return hasTarget() ? AnimationState.CROSSBOW_AIM : AnimationState.NEUTRAL;
         } else if (this.getMainHandStack().getItem() instanceof BowItem) {
-            return this.isAttacking() ? IllagerEntity.State.BOW_AND_ARROW : IllagerEntity.State.NEUTRAL;
-        } else {
-            return this.isAttacking() ? IllagerEntity.State.ATTACKING : IllagerEntity.State.NEUTRAL;
+            return this.isAttacking() ? AnimationState.BOW_AND_ARROW : AnimationState.NEUTRAL;
+        } else if (this.isAttacking()) {
+            return AnimationState.MELEE_ATTACK;
+        } else if (this.isDrinkingMilk()) {
+            return AnimationState.DRINK;
         }
+
+        return AnimationState.NEUTRAL;
     }
 
     @Override
@@ -236,7 +267,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     private void vanishCursedItems() {
-        List<Integer> slots = inventorySearcher.findSlotsMatching(inventory, EnchantmentHelper::hasVanishingCurse);
+        List<Integer> slots = inventorySearcher.getSlotsMatching(inventory, EnchantmentHelper::hasVanishingCurse);
         for (int slot : slots) {
             this.inventory.removeInvStack(slot);
         }
@@ -273,11 +304,17 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         ListTag inventoryTag = tag.getList("Inventory", 10);
         this.inventory.deserialize(inventoryTag);
         this.owner = tag.getUuid("Owner");
-        this.hasMuscles = tag.getBoolean("Muscles");
-        this.hasSkin = tag.getBoolean("Skin");
-        this.skinsuit = tag.getUuid("Skinsuit");
+        this.dataTracker.set(HAS_MUSCLES, tag.getBoolean("Muscles"));
+        this.dataTracker.set(HAS_SKIN, tag.getBoolean("Skin"));
+        this.dataTracker.set(
+            SKINSUIT,
+            tag.containsUuid("Skinsuit")
+                ? Optional.of(tag.getUuid("Skinsuit"))
+                : Optional.empty()
+        );
         this.setGrowthPhase(SkeletonGrowthPhase.values()[tag.getInt("GrowthPhase")]);
         this.updateAISettings(tag.getCompound("aiSettings"));
+        this.milkBucketsDrank = tag.getInt("milkBucketsDrank");
     }
 
     @Override
@@ -286,11 +323,14 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         tag.putInt("DataVersion", SharedConstants.getGameVersion().getWorldVersion());
         tag.put("Inventory", this.inventory.serialize(new ListTag()));
         tag.putUuid("Owner", this.owner);
-        tag.putBoolean("Muscles", this.hasMuscles);
-        tag.putBoolean("Skin", this.hasSkin);
-        tag.putUuid("Skinsuit", this.getSkinsuit());
+        tag.putBoolean("Muscles", hasMuscles());
+        tag.putBoolean("Skin", hasSkin());
+        if (this.hasSkinsuit()) {
+            tag.putUuid("Skinsuit", this.getSkinsuit());
+        }
         tag.put("aiSettings", aiSettings.toTag());
-        tag.putInt("GrowthPhase", growthPhase.ordinal());
+        tag.putInt("GrowthPhase", dataTracker.get(GROWTH_PHASE));
+        tag.putInt("milkBucketsDrank", milkBucketsDrank);
     }
 
     @Override
@@ -573,44 +613,49 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     public void setGrowthPhase(SkeletonGrowthPhase newPhase) {
-        growthPhase = newPhase;
+        dataTracker.set(GROWTH_PHASE, newPhase.ordinal());
         calculateDimensions();
     }
 
     @Override
     public EntityDimensions getDimensions(EntityPose pose) {
-        return super.getDimensions(pose).scaled(1 - (0.1f * (4 - growthPhase.ordinal())));
+        return super.getDimensions(pose).scaled(1 - (0.1f * (4 - dataTracker.get(GROWTH_PHASE))));
     }
 
     public SkeletonGrowthPhase getGrowthPhase() {
-        return growthPhase;
+        return SkeletonGrowthPhase.values()[this.dataTracker.get(GROWTH_PHASE)];
     }
 
     public void setSkinsuit(UUID playerId) {
-        this.skinsuit = playerId;
+        this.dataTracker.set(SKINSUIT, Optional.of(playerId));
         if (!world.isClient()) {
             //TODO find a way to set left-handedness based on skinsuit
         }
     }
 
+    public boolean hasSkinsuit() {
+        return dataTracker.get(SKINSUIT).isPresent();
+    }
+
     public UUID getSkinsuit() {
-        return skinsuit == null ? DIContainer.get().getInstance(EmptyUUID.class).get() : skinsuit;
+        Optional<UUID> skinsuit = dataTracker.get(SKINSUIT);
+        return skinsuit.orElseGet(() -> DIContainer.get().getInstance(EmptyUUID.class).get());
     }
 
     public boolean hasSkin() {
-        return hasSkin;
+        return this.dataTracker.get(HAS_SKIN);
     }
 
     public void setHasSkin(boolean hasSkin) {
-        this.hasSkin = hasSkin;
+        this.dataTracker.set(HAS_SKIN, hasSkin);
     }
 
     public boolean hasMuscles() {
-        return hasMuscles;
+        return dataTracker.get(HAS_MUSCLES);
     }
 
     public void setHasMuscles(boolean hasMuscles) {
-        this.hasMuscles = hasMuscles;
+        this.dataTracker.set(HAS_MUSCLES, hasMuscles);
     }
 
     @Override
@@ -620,12 +665,13 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
     @Nullable
     @Override
-    public Entity getOwner() {
+    public LivingEntity getOwner() {
         if (this.world == null || !(world instanceof ServerWorld)) {
             return null;
         }
 
-        return ((ServerWorld) this.world).getEntity(this.getOwnerId());
+        Entity entity = ((ServerWorld) this.world).getEntity(this.getOwnerId());
+        return entity instanceof LivingEntity ? (LivingEntity) entity : null;
     }
 
     public float getBlockBreakingSpeed(BlockState block) {
@@ -640,6 +686,11 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
     public OwnedSkeletonContainer getContainer(PlayerInventory playerInv, int syncId) {
         return new OwnedSkeletonContainer(playerInv, !world.isClient, this, syncId);
+    }
+
+    @Override
+    public boolean isUsingItem() {
+        return super.isUsingItem();
     }
 
     @Override
@@ -722,5 +773,95 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
     protected ProjectileEntity createArrowProjectile(ItemStack arrow, float f) {
         return ProjectileUtil.createArrowProjectile(this, arrow, f);
+    }
+
+    @Override
+    public void startDrinkingMilkAnimation() {
+        this.dataTracker.set(DRINKING_MILK, true);
+    }
+
+    @Override
+    public void completeDrinkingMilk() {
+        this.dataTracker.set(DRINKING_MILK, false);
+        if (canUseMilkToFullHealingPotential() || !canGrow()) {
+            heal(Math.min(getMilkRestoreAmount(), getMaximumHealth() - getHealth()));
+            //TODO crop growth type particles maybe?
+            return;
+        }
+        milkBucketsDrank++;
+        checkForGrowth();
+    }
+
+    protected boolean canUseMilkToFullHealingPotential() {
+        return getMaximumHealth() - getHealth() >= getMilkRestoreAmount();
+    }
+
+    protected float getMilkRestoreAmount() {
+        return 6;
+    }
+
+    protected void checkForGrowth() {
+        //TODO particles?
+        switch (this.getGrowthPhase()) {
+            case BABY:
+                if (milkBucketsDrank >= 2) {
+                    setGrowthPhase(SkeletonGrowthPhase.CHILD);
+                }
+                break;
+            case CHILD:
+                if (milkBucketsDrank >= 8) {
+                    setGrowthPhase(SkeletonGrowthPhase.PRETEEN);
+                }
+                break;
+            case PRETEEN:
+                if (milkBucketsDrank >= 32) {
+                    setGrowthPhase(SkeletonGrowthPhase.TEEN);
+                }
+                break;
+            case TEEN:
+                if (milkBucketsDrank >= 64) {
+                    setGrowthPhase(SkeletonGrowthPhase.ADULT);
+                }
+                break;
+        }
+    }
+
+    protected boolean canGrow() {
+        return getGrowthPhase() != SkeletonGrowthPhase.ADULT;
+    }
+
+    @Override
+    public boolean isDrinkingMilk() {
+        return this.dataTracker.get(DRINKING_MILK);
+    }
+
+    @Override
+    public boolean canDrinkMilk() {
+        return canGrow() || getHealth() < getMaximumHealth();
+    }
+
+    @Override
+    protected int addBasicSurvivalGoals(int goalWeight, MovementCategory movement) {
+        goalWeight = super.addBasicSurvivalGoals(goalWeight, movement);
+        this.goalSelector.add(goalWeight++, new DrinkMilkForHealthGoal<>(this));
+        return goalWeight;
+    }
+
+    @Override
+    protected int addTaskGoals(int goalWeight, TasksCategory tasks) {
+        goalWeight = super.addTaskGoals(goalWeight, tasks);
+        this.goalSelector.add(goalWeight++, new DrinkMilkGoal<>(this));
+        return goalWeight;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public enum AnimationState
+    {
+        MELEE_ATTACK,
+        BOW_AND_ARROW,
+        CROSSBOW_AIM,
+        CROSSBOW_CHARGE,
+        DRINK,
+        NEUTRAL
     }
 }

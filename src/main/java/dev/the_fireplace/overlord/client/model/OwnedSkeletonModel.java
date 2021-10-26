@@ -1,12 +1,13 @@
 package dev.the_fireplace.overlord.client.model;
 
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
+import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity.AnimationState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.mob.IllagerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
 import net.minecraft.util.math.MathHelper;
 
@@ -42,7 +43,7 @@ public class OwnedSkeletonModel extends BipedEntityModel<OwnedSkeletonEntity>
     @Override
     public void setAngles(OwnedSkeletonEntity entity, float f, float g, float h, float i, float j) {
         super.setAngles(entity, f, g, h, i, j);
-        if (entity.getState().equals(IllagerEntity.State.ATTACKING)) {
+        if (entity.getAnimationState().equals(AnimationState.MELEE_ATTACK)) {
             float k = MathHelper.sin(this.handSwingProgress * (float) Math.PI);
             float l = MathHelper.sin((1.0F - (1.0F - this.handSwingProgress) * (1.0F - this.handSwingProgress)) * (float) Math.PI);
             if (entity.getMainArm() == Arm.RIGHT) {
@@ -76,9 +77,12 @@ public class OwnedSkeletonModel extends BipedEntityModel<OwnedSkeletonEntity>
 
     @Override
     public void animateModel(OwnedSkeletonEntity entity, float f, float g, float h) {
-        this.rightArmPose = ArmPose.EMPTY;
-        this.leftArmPose = ArmPose.EMPTY;
-        switch (entity.getState()) {
+        ItemStack rightArmStack = entity.getMainArm() == Arm.RIGHT ? entity.getMainHandStack() : entity.getOffHandStack();
+        ItemStack leftArmStack = entity.getMainArm() == Arm.LEFT ? entity.getMainHandStack() : entity.getOffHandStack();
+
+        this.rightArmPose = rightArmStack.isEmpty() ? ArmPose.EMPTY : ArmPose.ITEM;
+        this.leftArmPose = leftArmStack.isEmpty() ? ArmPose.EMPTY : ArmPose.ITEM;
+        switch (entity.getAnimationState()) {
             case BOW_AND_ARROW:
                 if (entity.getMainArm() == Arm.RIGHT) {
                     this.rightArmPose = ArmPose.BOW_AND_ARROW;
@@ -93,12 +97,15 @@ public class OwnedSkeletonModel extends BipedEntityModel<OwnedSkeletonEntity>
                     this.leftArmPose = ArmPose.CROSSBOW_CHARGE;
                 }
                 break;
-            case CROSSBOW_HOLD:
+            case CROSSBOW_AIM:
                 if (entity.getMainArm() == Arm.RIGHT) {
                     this.rightArmPose = ArmPose.CROSSBOW_HOLD;
                 } else {
                     this.leftArmPose = ArmPose.CROSSBOW_HOLD;
                 }
+                break;
+            case DRINK:
+                //TODO Not sure the standard animations will cover this right now - maybe in a future update?
                 break;
         }
 

@@ -31,7 +31,18 @@ public final class InventorySearcherImpl implements InventorySearcher
     }
 
     @Override
-    public List<Integer> findSlotsMatching(Inventory container, Predicate<ItemStack> matcher) {
+    public Integer getFirstSlotMatching(Inventory container, Predicate<ItemStack> matcher) {
+        for (int slot = 0; slot < container.getInvSize(); slot++) {
+            if (matcher.test(container.getInvStack(slot))) {
+                return slot;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<Integer> getSlotsMatching(Inventory container, Predicate<ItemStack> matcher) {
         IntList slotList = new IntArrayList();
 
         for (int slot = 0; slot < container.getInvSize(); slot++) {
@@ -47,7 +58,7 @@ public final class InventorySearcherImpl implements InventorySearcher
      * @return Map of slot -> priority
      */
     @Override
-    public Map<Integer, Integer> findSlotsMatchingByPriority(Inventory container, Predicate<ItemStack> matcher, ToIntFunction<ItemStack> priorityMapper) {
+    public Map<Integer, Integer> getSlotsMatchingByPriority(Inventory container, Predicate<ItemStack> matcher, ToIntFunction<ItemStack> priorityMapper) {
         IntList slotList = new IntArrayList();
 
         for (int slot = 0; slot < container.getInvSize(); slot++) {

@@ -4,6 +4,7 @@ import dev.the_fireplace.overlord.entity.ArmyEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.pathing.*;
 import net.minecraft.util.math.BlockPos;
@@ -39,7 +40,7 @@ public class FollowOwnerGoal extends Goal
     }
 
     public boolean canStart() {
-        Entity owner = this.armyEntity.getOwner();
+        LivingEntity owner = this.armyEntity.getOwner();
         if (owner == null) {
             return false;
         } else if (owner.isSpectator()) {

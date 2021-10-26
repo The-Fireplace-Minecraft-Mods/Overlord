@@ -12,6 +12,8 @@ import dev.the_fireplace.overlord.entity.ai.goal.equipment.SwitchToRangedWhenFar
 import dev.the_fireplace.overlord.entity.ai.goal.movement.FollowOwnerGoal;
 import dev.the_fireplace.overlord.entity.ai.goal.movement.ReturnHomeGoal;
 import dev.the_fireplace.overlord.entity.ai.goal.movement.WanderAroundHomeGoal;
+import dev.the_fireplace.overlord.entity.ai.goal.target.ArmyAttackWithOwnerGoal;
+import dev.the_fireplace.overlord.entity.ai.goal.target.ArmyTrackOwnerAttackerGoal;
 import dev.the_fireplace.overlord.model.aiconfig.AISettings;
 import dev.the_fireplace.overlord.model.aiconfig.combat.CombatCategory;
 import dev.the_fireplace.overlord.model.aiconfig.movement.MovementCategory;
@@ -20,12 +22,12 @@ import dev.the_fireplace.overlord.model.aiconfig.tasks.TasksCategory;
 import net.minecraft.entity.CrossbowUser;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.MobEntityWithAi;
-import net.minecraft.entity.passive.TurtleEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -65,16 +67,30 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
             return;
         }
         int goalWeight = 1;
-        int targetGoalWeight = 1;
         MovementCategory movement = this.aiSettings.getMovement();
         CombatCategory combat = this.aiSettings.getCombat();
         TasksCategory tasks = this.aiSettings.getTasks();
 
+        goalWeight = addBasicSurvivalGoals(goalWeight, movement);
+        goalWeight = addCombatGoals(goalWeight, combat);
+        goalWeight = addTaskGoals(goalWeight, tasks);
+        goalWeight = addStandardMovementGoals(goalWeight, movement);
+        goalWeight = addIdleGoals(goalWeight);
+
+        addTargetSelectors(combat);
+    }
+
+    protected int addBasicSurvivalGoals(int goalWeight, MovementCategory movement) {
         if (movement.isEnabled() && this.isUndead()) {
             this.goalSelector.add(goalWeight++, new AvoidSunlightGoal(this));
             this.goalSelector.add(goalWeight++, new EscapeSunlightGoal(this, 1.0D));
         }
+        return goalWeight;
+    }
+
+    protected int addCombatGoals(int goalWeight, CombatCategory combat) {
         if (combat.isEnabled()) {
+            //TODO drink milk when health is critical?
             if (combat.isRanged() && combat.isSwitchToRangedWhenFar()) {
                 this.goalSelector.add(goalWeight, new SwitchToRangedWhenFarGoal(this, combat.getRangedSwitchDistance()));
             }
@@ -104,9 +120,17 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
                 }
             }
         }
+        return goalWeight;
+    }
+
+    protected int addTaskGoals(int goalWeight, TasksCategory tasks) {
         if (tasks.isEnabled()) {
-            //TODO
+            goalWeight++;//TODO
         }
+        return goalWeight;
+    }
+
+    protected int addStandardMovementGoals(int goalWeight, MovementCategory movement) {
         if (movement.isEnabled()) {
             PositionSetting homeSetting = movement.getHome();
             Vec3d home = new Vec3d(homeSetting.getX(), homeSetting.getY(), homeSetting.getZ());
@@ -133,17 +157,27 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
                     break;
             }
         }
+        return goalWeight;
+    }
+
+    protected int addIdleGoals(int goalWeight) {
         this.goalSelector.add(goalWeight, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
         if (aiSettings.getCombat().isEnabled()) {
             this.goalSelector.add(goalWeight, new LookAtEntityGoal(this, MobEntity.class, 8.0F));
         }
         this.goalSelector.add(goalWeight, new LookAroundGoal(this));
 
+        return ++goalWeight;
+    }
+
+    protected void addTargetSelectors(CombatCategory combat) {
+        int targetGoalWeight = 1;
         if (combat.isEnabled()) {
+            this.targetSelector.add(targetGoalWeight++, new ArmyTrackOwnerAttackerGoal(this));
+            this.targetSelector.add(targetGoalWeight++, new ArmyAttackWithOwnerGoal(this));
+            this.targetSelector.add(targetGoalWeight++, new RevengeGoal(this).setGroupRevenge());
             //TODO Looks like we'll need a custom Target goal that chooses targets based on equipped weapon type
-            this.targetSelector.add(targetGoalWeight++, new FollowTargetGoal<>(this, PlayerEntity.class, true));
             this.targetSelector.add(targetGoalWeight, new FollowTargetGoal<>(this, MobEntity.class, true));
-            this.targetSelector.add(targetGoalWeight, new FollowTargetGoal<>(this, TurtleEntity.class, 10, true, false, TurtleEntity.BABY_TURTLE_ON_LAND_FILTER));
         }
     }
 
@@ -164,6 +198,11 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
 
     public byte getEquipmentSwapTicks() {
         return 0;
+    }
+
+    @Override
+    public boolean canAttackWithOwner(LivingEntity target, LivingEntity owner) {
+        return true;
     }
 
     public BlockPos getHome() {
@@ -202,4 +241,8 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
     public void detachLeash(boolean sendPacket, boolean bl) {
 
     }
+
+    public abstract int getMainHandSlot();
+
+    public abstract int getOffHandSlot();
 }
