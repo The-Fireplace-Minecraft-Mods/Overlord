@@ -12,7 +12,7 @@ public final class MovementCategoryImpl implements SettingsComponent, MovementCa
     private boolean enabled = true;
 
     //Movement modes
-    private EnumMovementMode moveMode = EnumMovementMode.STATIONED;
+    private EnumMovementMode moveMode = EnumMovementMode.FOLLOW;
     //How close the skeleton follows the player
     private byte minimumFollowDistance = 6;
     private byte maximumFollowDistance = 8;
