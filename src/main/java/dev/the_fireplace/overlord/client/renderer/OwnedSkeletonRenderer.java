@@ -28,7 +28,10 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
 {
     public OwnedSkeletonRenderer(EntityRenderDispatcher dispatcher) {
         super(dispatcher, new OwnedSkeletonModel(), 0.5F);
-        this.addFeature(new ArmorBipedFeatureRenderer<>(this, new BipedEntityModel<>(0.5F), new BipedEntityModel<>(1.0F)));
+
+        BipedEntityModel<OwnedSkeletonEntity> leggingsModel = new BipedEntityModel<>(0.5F);
+        BipedEntityModel<OwnedSkeletonEntity> bodyModel = new BipedEntityModel<>(1.0F);
+        this.addFeature(new ArmorBipedFeatureRenderer<>(this, leggingsModel, bodyModel));
         //TODO These were designed for the player model. Remake to work with others.
         //this.addFeature(new StuckArrowsFeatureRenderer<>(this));
         //this.addFeature(new StuckStingersFeatureRenderer<>(this));
@@ -66,10 +69,10 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
     @Override
     public void render(OwnedSkeletonEntity livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         setModelPose(livingEntity);
-        if (livingEntity.getGrowthPhase() == SkeletonGrowthPhase.ADULT && livingEntity.hasMuscles() && !this.getModel().isThicc()) {
-            this.getModel().setThicc(true);
-        } else if ((livingEntity.getGrowthPhase() != SkeletonGrowthPhase.ADULT || !livingEntity.hasMuscles()) && this.getModel().isThicc()) {
-            this.getModel().setThicc(false);
+        if (livingEntity.getGrowthPhase() == SkeletonGrowthPhase.ADULT && livingEntity.hasMuscles() && !this.getModel().hasThickLimbs()) {
+            this.getModel().setHasThickLimbs(true);
+        } else if ((livingEntity.getGrowthPhase() != SkeletonGrowthPhase.ADULT || !livingEntity.hasMuscles()) && this.getModel().hasThickLimbs()) {
+            this.getModel().setHasThickLimbs(false);
         }
         super.render(livingEntity, f, g, matrixStack, vertexConsumerProvider, i);
     }
