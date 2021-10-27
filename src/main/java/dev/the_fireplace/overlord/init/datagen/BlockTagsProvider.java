@@ -21,7 +21,7 @@ public class BlockTagsProvider extends AbstractTagProvider<Block> {
     protected void configure() {
         this.getOrCreateTagBuilder(OverlordBlockTags.CASKETS).add(OverlordBlocks.OAK_CASKET);
         this.getOrCreateTagBuilder(OverlordBlockTags.GRAVE_MARKERS).add(OverlordBlocks.OAK_GRAVE_MARKER);
-        this.getOrCreateTagBuilder(OverlordBlockTags.DIRT).add(Blocks.DIRT, Blocks.COARSE_DIRT, Blocks.GRASS_BLOCK, Blocks.PODZOL, Blocks.MYCELIUM);
+        this.getOrCreateTagBuilder(OverlordBlockTags.DIRT).add(Blocks.DIRT, Blocks.COARSE_DIRT, Blocks.GRASS_BLOCK, Blocks.PODZOL, Blocks.MYCELIUM, OverlordBlocks.BLOOD_SOAKED_SOIL);
     }
 
     @Override

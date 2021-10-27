@@ -266,7 +266,7 @@ public class SkeletonBuilder
             entity.setHasSkin(true);
             removeSkin(casket);
         }
-        if (tombstone.getNameText() != null) {
+        if (!tombstone.getNameText().isEmpty()) {
             if (hasSkin) {
                 GameProfile profile = Objects.requireNonNull(world.getServer()).getUserCache().findByName(tombstone.getNameText());
                 if (profile != null) {

@@ -5,6 +5,7 @@
     "minecraft:coarse_dirt",
     "minecraft:grass_block",
     "minecraft:podzol",
-    "minecraft:mycelium"
+    "minecraft:mycelium",
+    "overlord:blood_soaked_soil"
   ]
 }

@@ -20,14 +20,14 @@ public class GraveMarkerBlockEntity extends TombstoneBlockEntity implements Tick
 {
     private String name = "";
 
-    public void setOwner(@Nullable UUID owner) {
-        this.owner = owner;
-    }
-
     private UUID owner = null;
 
     public GraveMarkerBlockEntity() {
         super(OverlordBlockEntities.GRAVE_MARKER_BLOCK_ENTITY);
+    }
+
+    public void setOwner(@Nullable UUID owner) {
+        this.owner = owner;
     }
 
     @Override
