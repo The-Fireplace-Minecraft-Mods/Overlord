@@ -6,32 +6,24 @@ import dev.the_fireplace.lib.api.datagen.injectables.DataGeneratorFactory;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.client.gui.CasketGui;
 import dev.the_fireplace.overlord.client.gui.OwnedSkeletonGui;
-import dev.the_fireplace.overlord.client.particle.DeadFlameParticle;
-import dev.the_fireplace.overlord.client.particle.ScorchedFlameParticle;
 import dev.the_fireplace.overlord.client.renderer.OwnedSkeletonRenderer;
 import dev.the_fireplace.overlord.container.ContainerEquipmentSlot;
 import dev.the_fireplace.overlord.domain.network.client.ClientPacketRegistry;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonContainer;
 import dev.the_fireplace.overlord.init.OverlordBlockEntities;
-import dev.the_fireplace.overlord.init.OverlordBlocks;
 import dev.the_fireplace.overlord.init.OverlordEntities;
-import dev.the_fireplace.overlord.init.OverlordParticleTypes;
 import dev.the_fireplace.overlord.init.datagen.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.container.GenericContainer;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.Identifier;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -42,7 +34,6 @@ public final class OverlordClient implements ClientDIModInitializer {
     public void onInitializeClient(Injector diContainer) {
         registerEntityRenderers();
         registerGuis();
-        registerParticles();
         diContainer.getInstance(ClientPacketRegistry.class).registerPacketHandlers();
         //noinspection ConstantConditions//TODO Use environment variables for this
         if (true) {
@@ -63,20 +54,6 @@ public final class OverlordClient implements ClientDIModInitializer {
 
     private void registerEntityRenderers() {
         EntityRendererRegistry.INSTANCE.register(OverlordEntities.OWNED_SKELETON_TYPE, (erd, ctx) -> new OwnedSkeletonRenderer(erd));
-    }
-
-    private void registerParticles() {
-        BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(),
-                OverlordBlocks.SCORCHED_TORCH,
-                OverlordBlocks.TORCH_OF_THE_DEAD,
-                OverlordBlocks.WALL_SCORCHED_TORCH,
-                OverlordBlocks.WALL_TORCH_OF_THE_DEAD);
-        ParticleFactoryRegistry.getInstance().register(OverlordParticleTypes.DEAD_FLAME, DeadFlameParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(OverlordParticleTypes.SCORCHED_FLAME, ScorchedFlameParticle.Factory::new);
-        ClientSpriteRegistryCallback.event(SpriteAtlasTexture.PARTICLE_ATLAS_TEX).register((atlasTexture, registry) -> {
-            registry.register(new Identifier(Overlord.MODID, "particle/dead_flame"));
-            registry.register(new Identifier(Overlord.MODID, "particle/scorched_flame"));
-        });
     }
 
     private void registerGuis() {

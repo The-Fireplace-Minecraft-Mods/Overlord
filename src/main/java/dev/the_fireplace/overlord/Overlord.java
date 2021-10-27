@@ -3,7 +3,10 @@ package dev.the_fireplace.overlord;
 import com.google.inject.Injector;
 import dev.the_fireplace.annotateddi.api.entrypoints.DIModInitializer;
 import dev.the_fireplace.overlord.domain.network.server.ServerPacketRegistry;
-import dev.the_fireplace.overlord.init.*;
+import dev.the_fireplace.overlord.init.OverlordBlockEntities;
+import dev.the_fireplace.overlord.init.OverlordBlocks;
+import dev.the_fireplace.overlord.init.OverlordEntities;
+import dev.the_fireplace.overlord.init.OverlordItems;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,7 +29,6 @@ public final class Overlord implements DIModInitializer {
         OverlordItems.registerItems();
         OverlordBlockEntities.register();
         OverlordEntities.register();
-        OverlordParticleTypes.register();
         diContainer.getInstance(ServerPacketRegistry.class).registerPacketHandlers();
     }
 }

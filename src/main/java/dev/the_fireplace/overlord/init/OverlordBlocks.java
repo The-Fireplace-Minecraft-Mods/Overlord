@@ -1,10 +1,11 @@
 package dev.the_fireplace.overlord.init;
 
 import com.google.common.collect.ImmutableList;
-import dev.the_fireplace.overlord.block.*;
+import dev.the_fireplace.overlord.block.BloodSoakedSoil;
+import dev.the_fireplace.overlord.block.GraveMarkerBlock;
 import dev.the_fireplace.overlord.block.internal.CasketBlock;
-import net.fabricmc.fabric.api.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.tools.FabricToolTags;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
@@ -18,29 +19,22 @@ import net.minecraft.util.registry.Registry;
 
 import static dev.the_fireplace.overlord.Overlord.MODID;
 
-public class OverlordBlocks {
-    public static final Block OAK_CASKET = new CasketBlock(FabricBlockSettings.copy(Blocks.OAK_PLANKS).build());
-    public static final Block OAK_GRAVE_MARKER = new GraveMarkerBlock(FabricBlockSettings.copy(Blocks.OAK_PLANKS).build());
+public class OverlordBlocks
+{
+    public static final Block OAK_CASKET = new CasketBlock(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS));
+    public static final Block OAK_GRAVE_MARKER = new GraveMarkerBlock(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS));
     public static final Block BLOOD_SOAKED_SOIL = new BloodSoakedSoil(FabricBlockSettings.of(Material.SOIL)
         .strength(0.5F, 0.1F)
         .sounds(BlockSoundGroup.WET_GRASS)
         .materialColor(MaterialColor.RED)
-        .breakByTool(FabricToolTags.SHOVELS).build());
-    public static final Block SCORCHED_TORCH = new ScorchedTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).build());
-    public static final Block TORCH_OF_THE_DEAD = new DeadTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).build());
-    public static final Block WALL_SCORCHED_TORCH = new WallScorchedTorchBlock(FabricBlockSettings.copy(Blocks.WALL_TORCH).build());
-    public static final Block WALL_TORCH_OF_THE_DEAD = new WallDeadTorchBlock(FabricBlockSettings.copy(Blocks.WALL_TORCH).build());
+        .breakByTool(FabricToolTags.SHOVELS));
 
-    public static final ImmutableList<Block> BLOCKS = ImmutableList.of(OAK_CASKET, BLOOD_SOAKED_SOIL, OAK_GRAVE_MARKER, SCORCHED_TORCH, TORCH_OF_THE_DEAD, WALL_SCORCHED_TORCH, WALL_TORCH_OF_THE_DEAD);
+    public static final ImmutableList<Block> BLOCKS = ImmutableList.of(OAK_CASKET, BLOOD_SOAKED_SOIL, OAK_GRAVE_MARKER);
 
     public static void registerBlocks() {
         registerBlockWithItem("oak_casket", OAK_CASKET, ItemGroup.DECORATIONS);
         registerBlockWithItem("oak_grave_marker", OAK_GRAVE_MARKER, ItemGroup.DECORATIONS);
         registerBlockWithItem("blood_soaked_soil", BLOOD_SOAKED_SOIL, ItemGroup.BUILDING_BLOCKS);
-        registerBlock("scorched_torch", SCORCHED_TORCH);
-        registerBlock("torch_of_the_dead", TORCH_OF_THE_DEAD);
-        registerBlock("wall_scorched_torch", WALL_SCORCHED_TORCH);
-        registerBlock("wall_torch_of_the_dead", WALL_TORCH_OF_THE_DEAD);
     }
 
     private static void registerBlock(String path, Block block) {

@@ -1,8 +1,0 @@
-{
-  "variants": {
-    "facing=east": { "model": "overlord:block/wall_torch_of_the_dead" },
-    "facing=south": { "model": "overlord:block/wall_torch_of_the_dead", "y": 90 },
-    "facing=west": { "model": "overlord:block/wall_torch_of_the_dead", "y": 180 },
-    "facing=north": { "model": "overlord:block/wall_torch_of_the_dead", "y": 270 }
-  }
-}
