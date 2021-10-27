@@ -30,7 +30,8 @@ public class ItemTagsProvider extends AbstractTagProvider<Item> {
             Items.BEEF,
             Items.RABBIT,
             Items.MUTTON,
-            Items.PORKCHOP
+            Items.PORKCHOP,
+            Items.CHICKEN
         );
         this.getOrCreateTagBuilder(OverlordItemTags.FLESH).add(
             Items.LEATHER,
