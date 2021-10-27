@@ -41,6 +41,7 @@ import javax.annotation.Nullable;
 public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, OrderableEntity
 {
     protected final AISettings aiSettings;
+    protected boolean isSwappingEquipment;
 
     protected ArmyEntity(EntityType<? extends ArmyEntity> type, World world) {
         super(type, world);
@@ -198,6 +199,14 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
 
     public byte getEquipmentSwapTicks() {
         return 0;
+    }
+
+    public boolean isSwappingEquipment() {
+        return this.isSwappingEquipment;
+    }
+
+    public void setSwappingEquipment(boolean swappingEquipment) {
+        this.isSwappingEquipment = swappingEquipment;
     }
 
     @Override

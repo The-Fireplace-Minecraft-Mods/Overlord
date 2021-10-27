@@ -3,11 +3,9 @@ package dev.the_fireplace.overlord.entity.ai.goal.equipment;
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.overlord.entity.ArmyEntity;
 import dev.the_fireplace.overlord.entity.ai.goal.AIEquipmentHelper;
-import net.minecraft.entity.ai.goal.Goal;
 
-public class FindAmmoGoal extends Goal
+public class FindAmmoGoal extends SwapEquipmentGoal
 {
-    protected final ArmyEntity armyEntity;
     protected final boolean switchToMeleeWhenOut;
     protected final boolean equipShieldWhenSwitchingToMelee;
     protected final AIEquipmentHelper equipmentHelper;
@@ -15,7 +13,7 @@ public class FindAmmoGoal extends Goal
     protected byte postSwapCooldownTicks;
 
     public FindAmmoGoal(ArmyEntity armyEntity, boolean switchToMeleeWhenOut, boolean equipShieldWhenSwitchingToMelee) {
-        this.armyEntity = armyEntity;
+        super(armyEntity);
         this.switchToMeleeWhenOut = switchToMeleeWhenOut;
         this.equipShieldWhenSwitchingToMelee = equipShieldWhenSwitchingToMelee;
         this.equipmentHelper = DIContainer.get().getInstance(AIEquipmentHelper.class);
@@ -23,9 +21,18 @@ public class FindAmmoGoal extends Goal
 
     @Override
     public boolean canStart() {
+        return super.canStart()
+            && missingRangedAmmo()
+            && canSwitchAmmoOrWeapon();
+    }
+
+    private boolean canSwitchAmmoOrWeapon() {
+        return equipmentHelper.hasUsableRangedWeapon(armyEntity) || switchToMeleeWhenOut;
+    }
+
+    private boolean missingRangedAmmo() {
         return equipmentHelper.isUsingRanged(armyEntity)
-            && !equipmentHelper.hasAmmoEquipped(armyEntity)
-            && (equipmentHelper.hasUsableRangedWeapon(armyEntity) || switchToMeleeWhenOut);
+            && !equipmentHelper.hasAmmoEquipped(armyEntity);
     }
 
     @Override
@@ -36,7 +43,9 @@ public class FindAmmoGoal extends Goal
 
     @Override
     public boolean shouldContinue() {
-        return this.postSwapCooldownTicks > 0 || canStart() || (this.equipShieldWhenSwitchingToMelee && equipmentHelper.shouldEquipShield(armyEntity));
+        return this.postSwapCooldownTicks > 0
+            || (missingRangedAmmo() && canSwitchAmmoOrWeapon())
+            || (this.equipShieldWhenSwitchingToMelee && equipmentHelper.shouldEquipShield(armyEntity));
     }
 
     @Override

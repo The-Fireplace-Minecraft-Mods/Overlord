@@ -4,12 +4,10 @@ import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.overlord.entity.ArmyEntity;
 import dev.the_fireplace.overlord.entity.ai.goal.AIEquipmentHelper;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.pathing.Path;
 
-public class SwitchToMeleeWhenCloseGoal extends Goal
+public class SwitchToMeleeWhenCloseGoal extends SwapEquipmentGoal
 {
-    protected final ArmyEntity armyEntity;
     protected final byte switchDistance;
     protected final boolean useShield;
     protected final AIEquipmentHelper equipmentHelper;
@@ -17,7 +15,7 @@ public class SwitchToMeleeWhenCloseGoal extends Goal
     protected byte postSwapCooldownTicks;
 
     public SwitchToMeleeWhenCloseGoal(ArmyEntity armyEntity, byte switchDistance, boolean useShield) {
-        this.armyEntity = armyEntity;
+        super(armyEntity);
         this.switchDistance = switchDistance;
         this.useShield = useShield;
         this.equipmentHelper = DIContainer.get().getInstance(AIEquipmentHelper.class);
@@ -25,6 +23,9 @@ public class SwitchToMeleeWhenCloseGoal extends Goal
 
     @Override
     public boolean canStart() {
+        if (!super.canStart()) {
+            return false;
+        }
         LivingEntity target = armyEntity.getTarget();
         if (!isInSwitchToMeleeDistance(target) || !equipmentHelper.isUsingRanged(armyEntity)) {
             return false;

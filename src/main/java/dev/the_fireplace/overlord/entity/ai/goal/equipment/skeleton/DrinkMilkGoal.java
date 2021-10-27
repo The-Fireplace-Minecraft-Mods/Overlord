@@ -4,14 +4,14 @@ import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.overlord.domain.entity.AnimatedMilkDrinker;
 import dev.the_fireplace.overlord.domain.inventory.InventorySearcher;
 import dev.the_fireplace.overlord.entity.ArmyEntity;
-import net.minecraft.entity.ai.goal.Goal;
+import dev.the_fireplace.overlord.entity.ai.goal.equipment.SwapEquipmentGoal;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 
 import java.util.function.Predicate;
 
-public class DrinkMilkGoal<T extends ArmyEntity & AnimatedMilkDrinker> extends Goal
+public class DrinkMilkGoal<T extends ArmyEntity & AnimatedMilkDrinker> extends SwapEquipmentGoal
 {
     protected static final Predicate<ItemStack> IS_MILK = stack -> stack.getItem() == Items.MILK_BUCKET;
     protected final T armyEntity;
@@ -21,13 +21,15 @@ public class DrinkMilkGoal<T extends ArmyEntity & AnimatedMilkDrinker> extends G
     protected byte drinkingTicks;
 
     public DrinkMilkGoal(T armyEntity) {
+        super(armyEntity);
         this.armyEntity = armyEntity;
         this.inventorySearcher = DIContainer.get().getInstance(InventorySearcher.class);
     }
 
     @Override
     public boolean canStart() {
-        return inventorySearcher.hasSlotMatching(armyEntity.getInventory(), IS_MILK)
+        return super.canStart()
+            && inventorySearcher.hasSlotMatching(armyEntity.getInventory(), IS_MILK)
             && armyEntity.canDrinkMilk();
     }
 
