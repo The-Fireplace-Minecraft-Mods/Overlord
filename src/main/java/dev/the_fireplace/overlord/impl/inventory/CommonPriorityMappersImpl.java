@@ -5,7 +5,6 @@ import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.domain.inventory.CommonPriorityMappers;
 import dev.the_fireplace.overlord.util.EquipmentUtils;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityGroup;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -93,10 +92,5 @@ public class CommonPriorityMappersImpl implements CommonPriorityMappers
             //TODO priority to more harmful arrows?
             return EquipmentUtils.isAmmoFor(forWeapon, testStack) ? 1 : -1;
         };
-    }
-
-    @Override
-    public ToIntFunction<ItemStack> throwable(Entity target) {
-        return testStack -> 0;//TODO once throwables are figured out, maybe sort by damage?
     }
 }

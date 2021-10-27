@@ -7,7 +7,6 @@ import com.mojang.authlib.GameProfile;
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.overlord.domain.inventory.CommonPriorityMappers;
 import dev.the_fireplace.overlord.domain.mechanic.Tombstone;
-import dev.the_fireplace.overlord.domain.registry.ThrowableRegistry;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import dev.the_fireplace.overlord.tags.OverlordItemTags;
 import net.minecraft.entity.EquipmentSlot;
@@ -15,7 +14,6 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.*;
 import net.minecraft.text.LiteralText;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 import java.util.Comparator;
@@ -219,16 +217,6 @@ public class SkeletonBuilder
                 } else if (bow != null && EquipmentUtils.isAmmoFor(bow, stack)) {
                     entity.getInventory().insertStack(casket.getInvStack(slot));
                 }
-            }
-        }
-        //Collect throwables
-        for (int slot = 0; slot < casket.getInvSize(); slot++) {
-            ItemStack stack = casket.getInvStack(slot);
-            if (stack.isEmpty()) {
-                continue;
-            }
-            if (DIContainer.get().getInstance(ThrowableRegistry.class).isThrowable(Registry.ITEM.getId(stack.getItem()))) {
-                entity.getInventory().insertStack(casket.getInvStack(slot));
             }
         }
     }

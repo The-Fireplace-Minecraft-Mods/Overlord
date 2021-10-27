@@ -107,7 +107,6 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 		).addDependency(enabled);
 		addMeleeSettings(currentSettings, defaults, enabled);
 		addRangedSettings(currentSettings, defaults, enabled);
-		addThrowSettings(currentSettings, defaults, enabled);
 	}
 
 	private void addMeleeSettings(CombatCategory currentSettings, CombatCategory defaults, OptionBuilder<Boolean> enabled) {
@@ -164,21 +163,6 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 			Byte.MAX_VALUE
 		).setDescriptionRowCount((byte) 0).addDependency(switchToRangedWhenFar);
 		this.screenBuilder.endSubCategory();
-	}
-
-	private void addThrowSettings(CombatCategory currentSettings, CombatCategory defaults, OptionBuilder<Boolean> enabled) {
-		OptionBuilder<Boolean> throwItemsEnabled = this.screenBuilder.addBoolToggle(
-			COMBAT_TRANSLATION_BASE + "throwItems",
-			currentSettings.isThrowItem(),
-			defaults.isThrowItem(),
-			currentSettings::setThrowItem
-		).setDescriptionRowCount((byte) 0).addDependency(enabled);
-		this.addUniversalList(
-			COMBAT_TRANSLATION_BASE + "thrownItemList",
-			currentSettings.getThrowItemList(),
-			defaults.getThrowItemList(),
-			currentSettings::setThrowItemList
-		).addDependency(throwItemsEnabled);
 	}
 
 	private void addMovementCategory(MovementCategory currentSettings) {

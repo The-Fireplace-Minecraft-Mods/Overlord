@@ -1,7 +1,5 @@
 package dev.the_fireplace.overlord.model.aiconfig.combat;
 
-import java.util.UUID;
-
 public interface CombatCategory {
     boolean isEnabled();
 
@@ -18,10 +16,6 @@ public interface CombatCategory {
     boolean isBlock();
 
     void setBlock(boolean block);
-
-    boolean isThrowItem();
-
-    void setThrowItem(boolean throwItem);
 
     boolean isOnlyDefendPlayer();
 
@@ -50,10 +44,4 @@ public interface CombatCategory {
     void setMeleeSwitchDistance(byte meleeSwitchDistance);
 
     TargetEntitySelector.Access getRangedTargets();
-
-    UUID getThrowItemList();
-
-    void setThrowItemList(UUID throwItemList);
-
-    TargetEntitySelector.Access getThrowTargets();
 }
