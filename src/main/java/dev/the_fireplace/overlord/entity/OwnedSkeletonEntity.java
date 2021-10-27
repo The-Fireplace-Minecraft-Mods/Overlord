@@ -125,6 +125,14 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     @Override
+    public void onTrackedDataSet(TrackedData<?> data) {
+        // Scale the hitbox on the client
+        if (world.isClient() && GROWTH_PHASE.equals(data)) {
+            calculateDimensions();
+        }
+    }
+
+    @Override
     protected void mobTick() {
         super.mobTick();
         tickRegeneration();
@@ -618,8 +626,8 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     @Override
-    public EntityDimensions getDimensions(EntityPose pose) {
-        return super.getDimensions(pose).scaled(1 - (0.1f * (4 - dataTracker.get(GROWTH_PHASE))));
+    public float getScaleFactor() {
+        return 1 - (0.1f * (4 - dataTracker.get(GROWTH_PHASE)));
     }
 
     public SkeletonGrowthPhase getGrowthPhase() {

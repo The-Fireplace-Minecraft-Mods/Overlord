@@ -59,8 +59,8 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
 
     @Override
     protected void scale(OwnedSkeletonEntity entity, MatrixStack matrices, float tickDelta) {
-        float g = (entity.getGrowthPhase().ordinal() + 1) * 0.1f + 0.5f;
-        matrices.scale(g, g, g);
+        float shrinkMultiplier = (entity.getGrowthPhase().ordinal() + 1) * 0.1f + 0.5f;
+        matrices.scale(shrinkMultiplier, shrinkMultiplier, shrinkMultiplier);
     }
 
     @Override
