@@ -61,6 +61,11 @@ import java.util.UUID;
 
 public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, CrossbowUser, AnimatedMilkDrinker
 {
+    public static final int CHILD_REQUIRED_MILK = 4;
+    public static final int PRETEEN_REQUIRED_MILK = 16;
+    public static final int TEEN_REQUIRED_MILK = 64;
+    public static final int ADULT_REQUIRED_MILK = 256;
+
     private static final TrackedData<Boolean> CHARGING = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Boolean> DRINKING_MILK = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Boolean> HAS_TARGET = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -165,6 +170,32 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     public boolean interactMob(PlayerEntity player, Hand hand) {
         if (!player.world.isClient() && !player.isSneaking()) {
             ContainerProviderRegistry.INSTANCE.openContainer(OverlordEntities.OWNED_SKELETON_ID, player, buf -> buf.writeUuid(this.getUuid()));
+        }
+        if (player.isSneaking()
+            && player.isCreative()
+            && player.getUuid().equals(getOwnerId())
+            && player.getMainHandStack().getItem() == Items.MILK_BUCKET
+            && canGrow()
+        ) {
+            switch (getGrowthPhase()) {
+                case BABY:
+                    setGrowthPhase(SkeletonGrowthPhase.CHILD);
+                    milkBucketsDrank = CHILD_REQUIRED_MILK;
+                    break;
+                case CHILD:
+                    setGrowthPhase(SkeletonGrowthPhase.PRETEEN);
+                    milkBucketsDrank = PRETEEN_REQUIRED_MILK;
+                    break;
+                case PRETEEN:
+                    setGrowthPhase(SkeletonGrowthPhase.TEEN);
+                    milkBucketsDrank = TEEN_REQUIRED_MILK;
+                    break;
+                case TEEN:
+                    setGrowthPhase(SkeletonGrowthPhase.ADULT);
+                    milkBucketsDrank = ADULT_REQUIRED_MILK;
+                    break;
+            }
+            return true;
         }
         return !player.isSneaking();
     }
@@ -812,22 +843,22 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         //TODO particles?
         switch (this.getGrowthPhase()) {
             case BABY:
-                if (milkBucketsDrank >= 2) {
+                if (milkBucketsDrank >= CHILD_REQUIRED_MILK) {
                     setGrowthPhase(SkeletonGrowthPhase.CHILD);
                 }
                 break;
             case CHILD:
-                if (milkBucketsDrank >= 8) {
+                if (milkBucketsDrank >= PRETEEN_REQUIRED_MILK) {
                     setGrowthPhase(SkeletonGrowthPhase.PRETEEN);
                 }
                 break;
             case PRETEEN:
-                if (milkBucketsDrank >= 32) {
+                if (milkBucketsDrank >= TEEN_REQUIRED_MILK) {
                     setGrowthPhase(SkeletonGrowthPhase.TEEN);
                 }
                 break;
             case TEEN:
-                if (milkBucketsDrank >= 64) {
+                if (milkBucketsDrank >= ADULT_REQUIRED_MILK) {
                     setGrowthPhase(SkeletonGrowthPhase.ADULT);
                 }
                 break;
