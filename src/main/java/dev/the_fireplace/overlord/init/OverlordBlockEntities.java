@@ -12,7 +12,8 @@ import net.minecraft.world.World;
 
 import java.util.Objects;
 
-public class OverlordBlockEntities {
+public final class OverlordBlockEntities
+{
     public static BlockEntityType<CasketBlockEntity> CASKET_BLOCK_ENTITY;
     public static final Identifier CASKET_BLOCK_ENTITY_ID = new Identifier(Overlord.MODID, "casket");
 
@@ -21,7 +22,7 @@ public class OverlordBlockEntities {
 
     public static void register() {
         CASKET_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, CASKET_BLOCK_ENTITY_ID,
-                BlockEntityType.Builder.create(CasketBlockEntity::new, OverlordBlocks.OAK_CASKET).build(null));
+            BlockEntityType.Builder.create(CasketBlockEntity::new, OverlordBlocks.OAK_CASKET).build(null));
         ContainerProviderRegistry.INSTANCE.registerFactory(CASKET_BLOCK_ENTITY_ID, (syncId, identifier, player, buf) -> {
             final World world = player.world;
             final BlockPos pos = buf.readBlockPos();

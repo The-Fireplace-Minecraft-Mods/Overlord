@@ -6,8 +6,10 @@ import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.domain.entity.AnimatedMilkDrinker;
+import dev.the_fireplace.overlord.domain.entity.AugmentBearer;
 import dev.the_fireplace.overlord.domain.inventory.InventorySearcher;
 import dev.the_fireplace.overlord.domain.mechanic.Ownable;
+import dev.the_fireplace.overlord.domain.registry.HeadBlockAugmentRegistry;
 import dev.the_fireplace.overlord.domain.world.BreakSpeedModifiers;
 import dev.the_fireplace.overlord.domain.world.DaylightDetector;
 import dev.the_fireplace.overlord.domain.world.MeleeAttackExecutor;
@@ -15,6 +17,7 @@ import dev.the_fireplace.overlord.domain.world.UndeadDaylightDamager;
 import dev.the_fireplace.overlord.entity.ai.goal.AIEquipmentHelper;
 import dev.the_fireplace.overlord.entity.ai.goal.equipment.skeleton.DrinkMilkForHealthGoal;
 import dev.the_fireplace.overlord.entity.ai.goal.equipment.skeleton.DrinkMilkGoal;
+import dev.the_fireplace.overlord.init.Augments;
 import dev.the_fireplace.overlord.init.OverlordEntities;
 import dev.the_fireplace.overlord.model.aiconfig.movement.MovementCategory;
 import dev.the_fireplace.overlord.model.aiconfig.tasks.TasksCategory;
@@ -46,6 +49,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
@@ -59,7 +63,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, CrossbowUser, AnimatedMilkDrinker
+public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, CrossbowUser, AnimatedMilkDrinker, AugmentBearer
 {
     public static final int CHILD_REQUIRED_MILK = 4;
     public static final int PRETEEN_REQUIRED_MILK = 16;
@@ -73,6 +77,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     private static final TrackedData<Boolean> HAS_SKIN = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Boolean> HAS_MUSCLES = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Optional<UUID>> SKINSUIT = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+    private static final TrackedData<ItemStack> AUGMENT_BLOCK = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.ITEM_STACK);
 
     private UUID owner = new UUID(801295133947085751L, -7395604847578632613L);
     private int milkBucketsDrank = 0;
@@ -86,6 +91,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     private final BreakSpeedModifiers breakSpeedModifiers;
     private final InventorySearcher inventorySearcher;
     private final AIEquipmentHelper equipmentHelper;
+    private final HeadBlockAugmentRegistry headBlockAugmentRegistry;
 
     /**
      * @deprecated Only public because Minecraft requires it to be. Use the factory.
@@ -94,11 +100,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     @Deprecated
     public OwnedSkeletonEntity(EntityType<? extends OwnedSkeletonEntity> type, World world) {
         super(type, world);
-        if (this.random.nextFloat() < 0.05F) {
-            this.setLeftHanded(true);
-        } else {
-            this.setLeftHanded(false);
-        }
+        this.setLeftHanded(this.random.nextFloat() < 0.05F);
         Injector injector = DIContainer.get();
         daylightDetector = injector.getInstance(DaylightDetector.class);
         undeadDaylightDamager = injector.getInstance(UndeadDaylightDamager.class);
@@ -106,6 +108,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         breakSpeedModifiers = injector.getInstance(BreakSpeedModifiers.class);
         inventorySearcher = injector.getInstance(InventorySearcher.class);
         equipmentHelper = injector.getInstance(AIEquipmentHelper.class);
+        headBlockAugmentRegistry = injector.getInstance(HeadBlockAugmentRegistry.class);
         calculateDimensions();
     }
 
@@ -127,6 +130,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         this.dataTracker.startTracking(HAS_SKIN, false);
         this.dataTracker.startTracking(HAS_MUSCLES, false);
         this.dataTracker.startTracking(SKINSUIT, Optional.empty());
+        this.dataTracker.startTracking(AUGMENT_BLOCK, ItemStack.EMPTY);
     }
 
     @Override
@@ -135,6 +139,10 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         if (world.isClient() && GROWTH_PHASE.equals(data)) {
             calculateDimensions();
         }
+    }
+
+    public ItemStack getAugmentBlockStack() {
+        return dataTracker.get(AUGMENT_BLOCK);
     }
 
     @Override
@@ -354,6 +362,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         this.setGrowthPhase(SkeletonGrowthPhase.values()[tag.getInt("GrowthPhase")]);
         this.updateAISettings(tag.getCompound("aiSettings"));
         this.milkBucketsDrank = tag.getInt("milkBucketsDrank");
+        this.setAugmentBlock(ItemStack.fromTag(tag.getCompound("augment")));
     }
 
     @Override
@@ -370,6 +379,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         tag.put("aiSettings", aiSettings.toTag());
         tag.putInt("GrowthPhase", dataTracker.get(GROWTH_PHASE));
         tag.putInt("milkBucketsDrank", milkBucketsDrank);
+        tag.put("augment", dataTracker.get(AUGMENT_BLOCK).toTag(new CompoundTag()));
     }
 
     @Override
@@ -392,9 +402,16 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         if (this.isInvulnerableTo(source) || this.getHealth() <= 0) {
             return false;
         }
+        amount = applyDifficultyScalingModifiers(source, amount);
+        amount = applyAugmentDamageModifiers(source, amount);
+
+        return amount != 0.0F && super.damage(source, amount);
+    }
+
+    private float applyDifficultyScalingModifiers(DamageSource source, float amount) {
         if (source.isScaledWithDifficulty()) {
             if (this.world.getDifficulty() == Difficulty.PEACEFUL) {
-                amount = 0.0F;
+                amount = Math.min(1.0F, amount);
             } else if (this.world.getDifficulty() == Difficulty.EASY) {
                 amount = Math.min(amount / 2.0F + 1.0F, amount);
             } else if (this.world.getDifficulty() == Difficulty.HARD) {
@@ -402,7 +419,24 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
             }
         }
 
-        return amount != 0.0F && super.damage(source, amount);
+        return amount;
+    }
+
+    private float applyAugmentDamageModifiers(DamageSource source, float amount) {
+        if (hasAugment(Augments.FRAGILE)) {
+            if (source.getMagic()) {
+                amount = amount / 4.0F;
+            }
+            if (source.isExplosive() || source.isProjectile()) {
+                amount = amount * 3.0F / 2.0F;
+            }
+        } else if (hasAugment(Augments.IMPOSTER)) {
+            Entity attacker = source.getAttacker();
+            if (attacker instanceof LivingEntity && ((LivingEntity) attacker).isUndead()) {
+                amount = amount * 0.99F;
+            }
+        }
+        return amount;
     }
 
     @Override
@@ -891,6 +925,26 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         goalWeight = super.addTaskGoals(goalWeight, tasks);
         this.goalSelector.add(goalWeight++, new DrinkMilkGoal<>(this));
         return goalWeight;
+    }
+
+    @Override
+    public boolean hasAugment(Identifier augment) {
+        Item augmentBlockItem = getAugmentBlockStack().getItem();
+        return augmentBlockItem instanceof BlockItem && augment.equals(headBlockAugmentRegistry.get(((BlockItem) augmentBlockItem).getBlock()));
+    }
+
+    public void setAugmentBlock(ItemStack augmentBlock) {
+        this.dataTracker.set(AUGMENT_BLOCK, augmentBlock);
+    }
+
+    @Nullable
+    public Identifier getAugment() {
+        Item augmentBlockItem = getAugmentBlockStack().getItem();
+        if (augmentBlockItem instanceof BlockItem) {
+            return headBlockAugmentRegistry.get(((BlockItem) augmentBlockItem).getBlock());
+        }
+
+        return null;
     }
 
     @Environment(EnvType.CLIENT)

@@ -2,6 +2,7 @@ package dev.the_fireplace.overlord.client.renderer;
 
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.client.model.OwnedSkeletonModel;
+import dev.the_fireplace.overlord.client.renderer.feature.AugmentHeadFeatureRenderer;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import dev.the_fireplace.overlord.entity.SkeletonGrowthPhase;
 import net.fabricmc.api.EnvType;
@@ -32,6 +33,7 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
         BipedEntityModel<OwnedSkeletonEntity> leggingsModel = new BipedEntityModel<>(0.5F);
         BipedEntityModel<OwnedSkeletonEntity> bodyModel = new BipedEntityModel<>(1.0F);
         this.addFeature(new ArmorBipedFeatureRenderer<>(this, leggingsModel, bodyModel));
+        this.addFeature(new AugmentHeadFeatureRenderer<>(this));
         //TODO These were designed for the player model. Remake to work with others.
         //this.addFeature(new StuckArrowsFeatureRenderer<>(this));
         //this.addFeature(new StuckStingersFeatureRenderer<>(this));
@@ -52,12 +54,13 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
                 }
             }
         }
-        if (entity.hasSkin() && !entity.hasMuscles())
-            return new Identifier(Overlord.MODID, String.format("textures/entity/owned_skeleton/owned_skeleton_skin_%s.png", entity.getGrowthPhase()));
-        else if(!entity.hasSkin() && entity.hasMuscles())
-            return new Identifier(Overlord.MODID, String.format("textures/entity/owned_skeleton/owned_skeleton_muscles_%s.png", entity.getGrowthPhase()));
-        else
-            return new Identifier(Overlord.MODID, String.format("textures/entity/owned_skeleton/owned_skeleton_skin_muscles_%s.png", entity.getGrowthPhase()));
+        if (entity.hasSkin() && !entity.hasMuscles()) {
+            return new Identifier(Overlord.MODID, String.format("textures/entity/owned_skeleton/owned_skeleton_skin_%s.png", entity.getGrowthPhase().ordinal()));
+        } else if (!entity.hasSkin() && entity.hasMuscles()) {
+            return new Identifier(Overlord.MODID, String.format("textures/entity/owned_skeleton/owned_skeleton_muscles_%s.png", entity.getGrowthPhase().ordinal()));
+        } else {
+            return new Identifier(Overlord.MODID, String.format("textures/entity/owned_skeleton/owned_skeleton_skin_muscles_%s.png", entity.getGrowthPhase().ordinal()));
+        }
     }
 
     @Override
@@ -74,6 +77,8 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
         } else if ((livingEntity.getGrowthPhase() != SkeletonGrowthPhase.ADULT || !livingEntity.hasMuscles()) && this.getModel().hasThickLimbs()) {
             this.getModel().setHasThickLimbs(false);
         }
+        ItemStack augment = livingEntity.getAugmentBlockStack();
+        this.getModel().head.visible = augment.isEmpty();
         super.render(livingEntity, f, g, matrixStack, vertexConsumerProvider, i);
     }
 

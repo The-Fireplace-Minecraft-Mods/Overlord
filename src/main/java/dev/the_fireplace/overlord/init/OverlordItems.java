@@ -8,7 +8,8 @@ import net.minecraft.util.registry.Registry;
 
 import static dev.the_fireplace.overlord.Overlord.MODID;
 
-public class OverlordItems {
+public final class OverlordItems
+{
 
     public static final Item OWNED_SKELETON_SPAWN_EGG = new OwnedSkeletonSpawnEggItem(OverlordEntities.OWNED_SKELETON_TYPE, 0xC1C1C1, 0xC76462, new Item.Settings().group(ItemGroup.MISC));
 

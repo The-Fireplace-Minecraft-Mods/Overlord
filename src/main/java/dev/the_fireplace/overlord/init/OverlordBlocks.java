@@ -19,7 +19,7 @@ import net.minecraft.util.registry.Registry;
 
 import static dev.the_fireplace.overlord.Overlord.MODID;
 
-public class OverlordBlocks
+public final class OverlordBlocks
 {
     public static final Block OAK_CASKET = new CasketBlock(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS));
     public static final Block OAK_GRAVE_MARKER = new GraveMarkerBlock(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS));

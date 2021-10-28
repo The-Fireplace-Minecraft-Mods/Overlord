@@ -6,7 +6,9 @@ import com.google.common.collect.Sets;
 import com.mojang.authlib.GameProfile;
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.overlord.domain.inventory.CommonPriorityMappers;
+import dev.the_fireplace.overlord.domain.inventory.InventorySearcher;
 import dev.the_fireplace.overlord.domain.mechanic.Tombstone;
+import dev.the_fireplace.overlord.domain.registry.HeadBlockAugmentRegistry;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import dev.the_fireplace.overlord.tags.OverlordItemTags;
 import net.minecraft.entity.EquipmentSlot;
@@ -242,6 +244,24 @@ public class SkeletonBuilder
         }
     }
 
+    public static void gatherAugment(OwnedSkeletonEntity entity, Inventory casket) {
+        InventorySearcher inventorySearcher = DIContainer.get().getInstance(InventorySearcher.class);
+        HeadBlockAugmentRegistry headBlockAugmentRegistry = DIContainer.get().getInstance(HeadBlockAugmentRegistry.class);
+        Integer slot = inventorySearcher.getFirstSlotMatching(casket, stack -> {
+            Item item = stack.getItem();
+            return item instanceof BlockItem && headBlockAugmentRegistry.has(((BlockItem) item).getBlock());
+        });
+        if (slot == null) {
+            return;
+        }
+        ItemStack stack = casket.getInvStack(slot);
+        ItemStack augmentStack = stack.split(1);
+        if (stack.isEmpty()) {
+            casket.setInvStack(slot, ItemStack.EMPTY);
+        }
+        entity.setAugmentBlock(augmentStack);
+    }
+
     public static OwnedSkeletonEntity build(Inventory casket, World world, Tombstone tombstone) {
         OwnedSkeletonEntity entity = OwnedSkeletonEntity.create(world, tombstone.getOwner());
         removeEssentialContents(casket);
@@ -266,7 +286,7 @@ public class SkeletonBuilder
         findAndEquipArmor(entity, casket);
         gatherWeapons(entity, casket);
         gatherExtraArmor(entity, casket);
-        //TODO Augments?
+        gatherAugment(entity, casket);
         return entity;
     }
 
