@@ -9,6 +9,7 @@ public final class Augments
 {
     public static final Identifier IMPOSTER = create("imposter");
     public static final Identifier FRAGILE = create("fragile");
+    public static final Identifier SLOW_BURN = create("slow_burn");
 
     public static void register(HeadBlockAugmentRegistry registry) {
         registry.register(Blocks.SKELETON_SKULL, IMPOSTER);
@@ -29,6 +30,7 @@ public final class Augments
         registry.register(Blocks.PURPLE_STAINED_GLASS, FRAGILE);
         registry.register(Blocks.WHITE_STAINED_GLASS, FRAGILE);
         registry.register(Blocks.YELLOW_STAINED_GLASS, FRAGILE);
+        registry.register(Blocks.COAL_BLOCK, SLOW_BURN);
     }
 
     private static Identifier create(String path) {

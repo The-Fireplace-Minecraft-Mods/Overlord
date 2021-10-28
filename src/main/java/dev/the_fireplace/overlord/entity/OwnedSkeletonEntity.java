@@ -415,7 +415,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
             } else if (this.world.getDifficulty() == Difficulty.EASY) {
                 amount = Math.min(amount / 2.0F + 1.0F, amount);
             } else if (this.world.getDifficulty() == Difficulty.HARD) {
-                amount = amount * 3.0F / 2.0F;
+                amount *= 3.0F / 2.0F;
             }
         }
 
@@ -425,15 +425,19 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     private float applyAugmentDamageModifiers(DamageSource source, float amount) {
         if (hasAugment(Augments.FRAGILE)) {
             if (source.getMagic()) {
-                amount = amount / 4.0F;
+                amount /= 4.0F;
             }
             if (source.isExplosive() || source.isProjectile()) {
-                amount = amount * 3.0F / 2.0F;
+                amount *= 3.0F / 2.0F;
             }
         } else if (hasAugment(Augments.IMPOSTER)) {
             Entity attacker = source.getAttacker();
             if (attacker instanceof LivingEntity && ((LivingEntity) attacker).isUndead()) {
-                amount = amount * 0.99F;
+                amount *= 0.99F;
+            }
+        } else if (hasAugment(Augments.SLOW_BURN)) {
+            if (source.isFire()) {
+                amount *= 0.05F;
             }
         }
         return amount;
