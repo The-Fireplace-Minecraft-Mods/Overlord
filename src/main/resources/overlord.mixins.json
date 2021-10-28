@@ -6,6 +6,7 @@
     "GoalSelectorAccessor"
   ],
   "client": [
+    "client.SkullBlockEntityRendererAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

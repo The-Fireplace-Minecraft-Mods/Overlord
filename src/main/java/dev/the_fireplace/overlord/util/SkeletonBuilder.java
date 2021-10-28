@@ -285,8 +285,9 @@ public class SkeletonBuilder
         }
         findAndEquipArmor(entity, casket);
         gatherWeapons(entity, casket);
-        gatherExtraArmor(entity, casket);
+        // gather augment before armor - no deception from wearing the skeleton skulls instead of using them as augments
         gatherAugment(entity, casket);
+        gatherExtraArmor(entity, casket);
         return entity;
     }
 
