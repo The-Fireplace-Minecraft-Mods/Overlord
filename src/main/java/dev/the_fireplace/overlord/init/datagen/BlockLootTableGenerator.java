@@ -6,6 +6,7 @@ import com.google.common.collect.Sets;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.init.OverlordBlocks;
 import net.minecraft.block.*;
+import net.minecraft.block.enums.BedPart;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.Item;
@@ -21,6 +22,7 @@ import net.minecraft.predicate.NumberRange;
 import net.minecraft.predicate.StatePredicate;
 import net.minecraft.predicate.item.EnchantmentPredicate;
 import net.minecraft.predicate.item.ItemPredicate;
+import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.BoundedIntUnaryOperator;
 import net.minecraft.util.Identifier;
@@ -41,19 +43,28 @@ public class BlockLootTableGenerator implements Consumer<BiConsumer<Identifier, 
     private static final LootCondition.Builder NEEDS_SILK_TOUCH_SHEARS;
     private static final LootCondition.Builder DOESNT_NEED_SILK_TOUCH_SHEARS;
     private static final Set<Item> ALWAYS_DROPPED_FROM_EXPLOSION;
-    private static final float[] SAPLING_DROP_CHANCES_FROM_LEAVES;
-    private static final float[] JUNGLE_SAPLING_DROP_CHANCES_FROM_LEAVES;
     private final Map<Identifier, LootTable.Builder> lootTables = Maps.newHashMap();
 
     @Override
     public void accept(BiConsumer<Identifier, LootTable.Builder> identifierBuilderBiConsumer) {
         registerForSelfDrop(OverlordBlocks.BLOOD_SOAKED_SOIL);
         registerForSelfDrop(OverlordBlocks.OAK_GRAVE_MARKER);
+        registerForSelfDrop(OverlordBlocks.BIRCH_GRAVE_MARKER);
+        registerForSelfDrop(OverlordBlocks.JUNGLE_GRAVE_MARKER);
+        registerForSelfDrop(OverlordBlocks.SPRUCE_GRAVE_MARKER);
+        registerForSelfDrop(OverlordBlocks.ACACIA_GRAVE_MARKER);
+        registerForSelfDrop(OverlordBlocks.DARK_OAK_GRAVE_MARKER);
+        registerMultiblock(OverlordBlocks.OAK_CASKET, Properties.BED_PART, BedPart.HEAD);
+        registerMultiblock(OverlordBlocks.BIRCH_CASKET, Properties.BED_PART, BedPart.HEAD);
+        registerMultiblock(OverlordBlocks.JUNGLE_CASKET, Properties.BED_PART, BedPart.HEAD);
+        registerMultiblock(OverlordBlocks.SPRUCE_CASKET, Properties.BED_PART, BedPart.HEAD);
+        registerMultiblock(OverlordBlocks.ACACIA_CASKET, Properties.BED_PART, BedPart.HEAD);
+        registerMultiblock(OverlordBlocks.DARK_OAK_CASKET, Properties.BED_PART, BedPart.HEAD);
 
 
         Set<Identifier> set = Sets.newHashSet();
 
-        for (Block block : OverlordBlocks.BLOCKS) {
+        for (Block block : OverlordBlocks.getRegisteredBlocks()) {
             Identifier identifier = block.getDropTableId();
             if (identifier != LootTables.EMPTY && set.add(identifier)) {
                 LootTable.Builder builder5 = this.lootTables.remove(identifier);
@@ -207,6 +218,10 @@ public class BlockLootTableGenerator implements Consumer<BiConsumer<Identifier, 
         this.register(block, block);
     }
 
+    public <T extends Comparable<T> & StringIdentifiable> void registerMultiblock(Block block, Property<T> property, T comparable) {
+        this.registerWithFunction(block, (registerBlock) -> createForMultiblock(registerBlock, property, comparable));
+    }
+
     private void registerWithFunction(Block block, Function<Block, LootTable.Builder> function) {
         this.register(block, function.apply(block));
     }
@@ -222,7 +237,5 @@ public class BlockLootTableGenerator implements Consumer<BiConsumer<Identifier, 
         NEEDS_SILK_TOUCH_SHEARS = NEEDS_SHEARS.withCondition(NEEDS_SILK_TOUCH);
         DOESNT_NEED_SILK_TOUCH_SHEARS = NEEDS_SILK_TOUCH_SHEARS.invert();
         ALWAYS_DROPPED_FROM_EXPLOSION = Stream.of(Blocks.DRAGON_EGG, Blocks.BEACON, Blocks.CONDUIT, Blocks.SKELETON_SKULL, Blocks.WITHER_SKELETON_SKULL, Blocks.PLAYER_HEAD, Blocks.ZOMBIE_HEAD, Blocks.CREEPER_HEAD, Blocks.DRAGON_HEAD, Blocks.SHULKER_BOX, Blocks.BLACK_SHULKER_BOX, Blocks.BLUE_SHULKER_BOX, Blocks.BROWN_SHULKER_BOX, Blocks.CYAN_SHULKER_BOX, Blocks.GRAY_SHULKER_BOX, Blocks.GREEN_SHULKER_BOX, Blocks.LIGHT_BLUE_SHULKER_BOX, Blocks.LIGHT_GRAY_SHULKER_BOX, Blocks.LIME_SHULKER_BOX, Blocks.MAGENTA_SHULKER_BOX, Blocks.ORANGE_SHULKER_BOX, Blocks.PINK_SHULKER_BOX, Blocks.PURPLE_SHULKER_BOX, Blocks.RED_SHULKER_BOX, Blocks.WHITE_SHULKER_BOX, Blocks.YELLOW_SHULKER_BOX).map(ItemConvertible::asItem).collect(ImmutableSet.toImmutableSet());
-        SAPLING_DROP_CHANCES_FROM_LEAVES = new float[]{0.05F, 0.0625F, 0.083333336F, 0.1F};
-        JUNGLE_SAPLING_DROP_CHANCES_FROM_LEAVES = new float[]{0.025F, 0.027777778F, 0.03125F, 0.041666668F, 0.1F};
     }
 }

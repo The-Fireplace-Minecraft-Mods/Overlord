@@ -1,3 +1,6 @@
 {
-    "parent": "overlord:block/oak_casket_lower"
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "overlord:item/oak_casket"
+    }
 }

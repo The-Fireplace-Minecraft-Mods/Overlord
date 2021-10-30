@@ -1,0 +1,7 @@
+{
+  "parent": "overlord:block/grave_marker",
+  "textures": {
+    "sign": "block/jungle_planks",
+    "pole": "block/stripped_jungle_log"
+  }
+}

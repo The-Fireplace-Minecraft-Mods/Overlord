@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "overlord:item/oak_grave_marker"
+    "layer0": "overlord:item/spruce_grave_marker"
   }
 }

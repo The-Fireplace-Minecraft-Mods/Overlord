@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "part=head,facing=north": {
+      "model": "overlord:block/acacia_casket_upper"
+    },
+    "part=head,facing=east": {
+      "model": "overlord:block/acacia_casket_upper",
+      "y": 90
+    },
+    "part=head,facing=south": {
+      "model": "overlord:block/acacia_casket_upper",
+      "y": 180
+    },
+    "part=head,facing=west": {
+      "model": "overlord:block/acacia_casket_upper",
+      "y": 270
+    },
+    "part=foot,facing=north": {
+      "model": "overlord:block/acacia_casket_lower"
+    },
+    "part=foot,facing=east": {
+      "model": "overlord:block/acacia_casket_lower",
+      "y": 90
+    },
+    "part=foot,facing=south": {
+      "model": "overlord:block/acacia_casket_lower",
+      "y": 180
+    },
+    "part=foot,facing=west": {
+      "model": "overlord:block/acacia_casket_lower",
+      "y": 270
+    }
+  }
+}

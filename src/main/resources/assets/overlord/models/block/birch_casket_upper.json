@@ -1,0 +1,7 @@
+{
+  "parent": "overlord:block/wood_casket_upper",
+  "textures": {
+    "sides": "block/birch_planks",
+    "topbottom": "block/stripped_birch_log"
+  }
+}
