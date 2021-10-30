@@ -2,6 +2,7 @@ package dev.the_fireplace.overlord.init;
 
 import dev.the_fireplace.overlord.block.BloodSoakedSoil;
 import dev.the_fireplace.overlord.block.GraveMarkerBlock;
+import dev.the_fireplace.overlord.block.TombstoneBlock;
 import dev.the_fireplace.overlord.block.internal.CasketBlock;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
@@ -35,6 +36,7 @@ public final class OverlordBlocks
     public static final Block ACACIA_GRAVE_MARKER = new GraveMarkerBlock(FabricBlockSettings.copyOf(Blocks.ACACIA_PLANKS));
     public static final Block DARK_OAK_CASKET = new CasketBlock(FabricBlockSettings.copyOf(Blocks.DARK_OAK_PLANKS));
     public static final Block DARK_OAK_GRAVE_MARKER = new GraveMarkerBlock(FabricBlockSettings.copyOf(Blocks.DARK_OAK_PLANKS));
+    public static final Block STONE_TOMBSTONE = new TombstoneBlock(FabricBlockSettings.copyOf(Blocks.STONE));
     public static final Block BLOOD_SOAKED_SOIL = new BloodSoakedSoil(FabricBlockSettings.of(Material.SOIL)
         .strength(0.5F, 0.1F)
         .sounds(BlockSoundGroup.WET_GRASS)
@@ -56,6 +58,7 @@ public final class OverlordBlocks
         registerBlockWithItem("acacia_grave_marker", ACACIA_GRAVE_MARKER, ItemGroup.DECORATIONS);
         registerBlockWithItem("dark_oak_casket", DARK_OAK_CASKET, ItemGroup.DECORATIONS);
         registerBlockWithItem("dark_oak_grave_marker", DARK_OAK_GRAVE_MARKER, ItemGroup.DECORATIONS);
+        registerBlockWithItem("stone_tombstone", STONE_TOMBSTONE, ItemGroup.DECORATIONS);
         registerBlockWithItem("blood_soaked_soil", BLOOD_SOAKED_SOIL, ItemGroup.BUILDING_BLOCKS);
     }
 

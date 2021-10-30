@@ -5,4 +5,6 @@ import net.minecraft.util.Identifier;
 public interface ClientToServerPacketIDs {
     Identifier getOrdersPacketID();
     Identifier saveAiPacketID();
+
+    Identifier saveTombstonePacketID();
 }

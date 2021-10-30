@@ -4,6 +4,7 @@ import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.lib.api.network.injectables.ClientPacketReceiverRegistry;
 import dev.the_fireplace.overlord.domain.network.client.ClientPacketRegistry;
 import dev.the_fireplace.overlord.domain.network.client.OpenOrdersGUIPacketReceiver;
+import dev.the_fireplace.overlord.domain.network.client.OpenTombstoneGUIPacketReceiver;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -14,18 +15,22 @@ import javax.inject.Inject;
 public final class ClientPacketRegistryImpl implements ClientPacketRegistry {
     private final ClientPacketReceiverRegistry registry;
     private final OpenOrdersGUIPacketReceiver openOrdersGUIPacketReceiver;
+    private final OpenTombstoneGUIPacketReceiver openTombstoneGUIPacketReceiver;
 
     @Inject
     public ClientPacketRegistryImpl(
         ClientPacketReceiverRegistry registry,
-        OpenOrdersGUIPacketReceiver openOrdersGUIPacketReceiver
+        OpenOrdersGUIPacketReceiver openOrdersGUIPacketReceiver,
+        OpenTombstoneGUIPacketReceiver openTombstoneGUIPacketReceiver
     ) {
         this.registry = registry;
         this.openOrdersGUIPacketReceiver = openOrdersGUIPacketReceiver;
+        this.openTombstoneGUIPacketReceiver = openTombstoneGUIPacketReceiver;
     }
 
     @Override
     public void registerPacketHandlers() {
         registry.register(openOrdersGUIPacketReceiver);
+        registry.register(openTombstoneGUIPacketReceiver);
     }
 }

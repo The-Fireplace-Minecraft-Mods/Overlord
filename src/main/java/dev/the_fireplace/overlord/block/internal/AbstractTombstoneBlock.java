@@ -1,6 +1,6 @@
 package dev.the_fireplace.overlord.block.internal;
 
-import dev.the_fireplace.overlord.blockentity.internal.TombstoneBlockEntity;
+import dev.the_fireplace.overlord.blockentity.internal.AbstractTombstoneBlockEntity;
 import dev.the_fireplace.overlord.domain.mechanic.Tombstone;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -48,7 +48,7 @@ public abstract class AbstractTombstoneBlock extends HorizontalFacingBlock imple
         return createTombstone(view);
     }
 
-    public abstract TombstoneBlockEntity createTombstone(BlockView view);
+    public abstract AbstractTombstoneBlockEntity createTombstone(BlockView view);
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {

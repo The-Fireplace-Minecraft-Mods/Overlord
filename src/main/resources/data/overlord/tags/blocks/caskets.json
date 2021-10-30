@@ -1,6 +1,11 @@
 {
   "replace": false,
   "values": [
-    "overlord:oak_casket"
+    "overlord:oak_casket",
+    "overlord:birch_casket",
+    "overlord:jungle_casket",
+    "overlord:spruce_casket",
+    "overlord:acacia_casket",
+    "overlord:dark_oak_casket"
   ]
 }

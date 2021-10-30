@@ -1,0 +1,147 @@
+{
+  "credit": "Made with Blockbench",
+  "parent": "block/orientable",
+  "textures": {
+    "particle": "#main"
+  },
+  "elements": [
+    {
+      "name": "base",
+      "from": [
+        2,
+        0,
+        4
+      ],
+      "to": [
+        14,
+        3,
+        12
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2,
+            1,
+            14,
+            4
+          ],
+          "texture": "#base"
+        },
+        "east": {
+          "uv": [
+            2,
+            12,
+            10,
+            15
+          ],
+          "texture": "#base"
+        },
+        "south": {
+          "uv": [
+            2,
+            1,
+            14,
+            4
+          ],
+          "texture": "#base"
+        },
+        "west": {
+          "uv": [
+            6,
+            12,
+            14,
+            15
+          ],
+          "texture": "#base"
+        },
+        "up": {
+          "uv": [
+            2,
+            4,
+            14,
+            12
+          ],
+          "texture": "#base"
+        },
+        "down": {
+          "uv": [
+            2,
+            4,
+            14,
+            12
+          ],
+          "texture": "#base"
+        }
+      }
+    },
+    {
+      "name": "main",
+      "from": [
+        4,
+        3,
+        6
+      ],
+      "to": [
+        12,
+        14,
+        10
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            7,
+            2,
+            15,
+            13
+          ],
+          "texture": "#main"
+        },
+        "east": {
+          "uv": [
+            2,
+            2,
+            6,
+            13
+          ],
+          "texture": "#main"
+        },
+        "south": {
+          "uv": [
+            1,
+            2,
+            9,
+            13
+          ],
+          "texture": "#main"
+        },
+        "west": {
+          "uv": [
+            9,
+            2,
+            13,
+            13
+          ],
+          "texture": "#main"
+        },
+        "up": {
+          "uv": [
+            4,
+            11,
+            12,
+            15
+          ],
+          "texture": "#main"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            8,
+            4
+          ],
+          "texture": "#missing"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "overlord:block/tombstone",
+  "textures": {
+    "main": "block/smooth_stone",
+    "base": "block/stone"
+  }
+}

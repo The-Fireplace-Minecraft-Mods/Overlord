@@ -1,6 +1,11 @@
 {
   "replace": false,
   "values": [
-    "overlord:oak_grave_marker"
+    "overlord:oak_grave_marker",
+    "overlord:birch_grave_marker",
+    "overlord:jungle_grave_marker",
+    "overlord:spruce_grave_marker",
+    "overlord:acacia_grave_marker",
+    "overlord:dark_oak_grave_marker"
   ]
 }

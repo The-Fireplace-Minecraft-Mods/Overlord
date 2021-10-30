@@ -22,7 +22,6 @@ import net.minecraft.world.World;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class SkeletonBuilder
 {
@@ -276,9 +275,10 @@ public class SkeletonBuilder
             removeSkin(casket);
         }
         if (!tombstone.getNameText().isEmpty()) {
-            if (hasSkin) {
+            String skinName = tombstone.getNameText().trim();
+            if (hasSkin && PlayerNameHelper.VALID_NAME_REGEX.matcher(skinName).matches()) {//TODO use dye for skinsuit
                 UserCache.setUseRemote(true);
-                GameProfile profile = Objects.requireNonNull(world.getServer()).getUserCache().findByName(tombstone.getNameText());
+                GameProfile profile = world.getServer().getUserCache().findByName(skinName);
                 if (profile != null) {
                     entity.setSkinsuit(profile.getId());
                 }

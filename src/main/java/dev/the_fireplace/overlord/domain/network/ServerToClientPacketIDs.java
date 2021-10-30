@@ -4,4 +4,6 @@ import net.minecraft.util.Identifier;
 
 public interface ServerToClientPacketIDs {
     Identifier openOrdersGuiPacketID();
+
+    Identifier openTombstoneGuiPacketID();
 }

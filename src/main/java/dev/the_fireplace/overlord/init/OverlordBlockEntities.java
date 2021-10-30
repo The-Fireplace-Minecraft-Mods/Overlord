@@ -3,6 +3,7 @@ package dev.the_fireplace.overlord.init;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.blockentity.CasketBlockEntity;
 import dev.the_fireplace.overlord.blockentity.GraveMarkerBlockEntity;
+import dev.the_fireplace.overlord.blockentity.TombstoneBlockEntity;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.Identifier;
@@ -19,6 +20,9 @@ public final class OverlordBlockEntities
 
     public static BlockEntityType<GraveMarkerBlockEntity> GRAVE_MARKER_BLOCK_ENTITY;
     public static final Identifier GRAVE_MARKER_BLOCK_ENTITY_ID = new Identifier(Overlord.MODID, "grave_marker");
+
+    public static BlockEntityType<TombstoneBlockEntity> TOMBSTONE_BLOCK_ENTITY;
+    public static final Identifier TOMBSTONE_BLOCK_ENTITY_ID = new Identifier(Overlord.MODID, "tombstone");
 
     public static void register() {
         CASKET_BLOCK_ENTITY = Registry.register(
@@ -51,6 +55,14 @@ public final class OverlordBlockEntities
                 OverlordBlocks.SPRUCE_GRAVE_MARKER,
                 OverlordBlocks.ACACIA_GRAVE_MARKER,
                 OverlordBlocks.DARK_OAK_GRAVE_MARKER
+            ).build(null)
+        );
+        TOMBSTONE_BLOCK_ENTITY = Registry.register(
+            Registry.BLOCK_ENTITY_TYPE,
+            TOMBSTONE_BLOCK_ENTITY_ID,
+            BlockEntityType.Builder.create(
+                TombstoneBlockEntity::new,
+                OverlordBlocks.STONE_TOMBSTONE
             ).build(null)
         );
     }

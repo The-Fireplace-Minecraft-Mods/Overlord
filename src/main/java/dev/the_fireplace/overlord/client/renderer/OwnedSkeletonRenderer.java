@@ -1,5 +1,7 @@
 package dev.the_fireplace.overlord.client.renderer;
 
+import dev.the_fireplace.annotateddi.api.DIContainer;
+import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.client.model.OwnedSkeletonModel;
 import dev.the_fireplace.overlord.client.renderer.feature.AugmentHeadFeatureRenderer;
@@ -7,9 +9,6 @@ import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import dev.the_fireplace.overlord.entity.SkeletonGrowthPhase;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.BipedEntityRenderer;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
@@ -27,8 +26,14 @@ import net.minecraft.util.UseAction;
 @Environment(EnvType.CLIENT)
 public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEntity, OwnedSkeletonModel>
 {
+    private static final Identifier NO_TEXTURE_TO_CACHE = new Identifier(Overlord.MODID, "");
+    private final EmptyUUID emptyUUID;
+    private Identifier cachedTexture = null;
+
     public OwnedSkeletonRenderer(EntityRenderDispatcher dispatcher) {
         super(dispatcher, new OwnedSkeletonModel(), 0.5F);
+
+        this.emptyUUID = DIContainer.get().getInstance(EmptyUUID.class);
 
         BipedEntityModel<OwnedSkeletonEntity> leggingsModel = new BipedEntityModel<>(0.5F);
         BipedEntityModel<OwnedSkeletonEntity> bodyModel = new BipedEntityModel<>(1.0F);
@@ -45,15 +50,27 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
         if (!entity.hasSkin() && !entity.hasMuscles()) {
             return new Identifier(Overlord.MODID, "textures/entity/owned_skeleton/owned_skeleton.png");
         }
-        if (entity.getGrowthPhase() == SkeletonGrowthPhase.ADULT && entity.hasSkin() && entity.getSkinsuit() != null) {
-            ClientPlayNetworkHandler networkHandler = MinecraftClient.getInstance().getNetworkHandler();
-            if (networkHandler != null) {
-                PlayerListEntry playerListEntry = networkHandler.getPlayerListEntry(entity.getSkinsuit());
-                if (playerListEntry != null && playerListEntry.hasSkinTexture()) {
-                    return playerListEntry.getSkinTexture();
-                }
-            }
-        }
+//        if (entity.getGrowthPhase() == SkeletonGrowthPhase.ADULT && entity.hasSkin() && !emptyUUID.is(entity.getSkinsuit())) {
+//            if (cachedTexture == null) {
+//                ClientPlayNetworkHandler networkHandler = MinecraftClient.getInstance().getNetworkHandler();
+//                if (networkHandler != null) {
+//                    GameProfile gameProfile = new GameProfile(entity.getSkinsuit(), null);
+//                    PlayerListS2CPacket dummyPlayerListPacket = new PlayerListS2CPacket();
+//                    PlayerListEntry playerListEntry = new PlayerListEntry(dummyPlayerListPacket.new Entry(
+//                        gameProfile,
+//                        0,
+//                        null,
+//                        null
+//                    ));
+//                    if (playerListEntry.hasSkinTexture()) {
+//                        return cachedTexture = playerListEntry.getSkinTexture();
+//                    }
+//                }
+//                cachedTexture = NO_TEXTURE_TO_CACHE;
+//            } else if (!cachedTexture.equals(NO_TEXTURE_TO_CACHE)) {
+//                return cachedTexture;
+//            }
+//        }
         if (entity.hasSkin() && !entity.hasMuscles()) {
             return new Identifier(Overlord.MODID, String.format("textures/entity/owned_skeleton/owned_skeleton_skin_%s.png", entity.getGrowthPhase().ordinal()));
         } else if (!entity.hasSkin() && entity.hasMuscles()) {

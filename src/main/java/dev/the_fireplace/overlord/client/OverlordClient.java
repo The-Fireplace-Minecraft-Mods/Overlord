@@ -7,6 +7,7 @@ import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.client.gui.CasketGui;
 import dev.the_fireplace.overlord.client.gui.OwnedSkeletonGui;
 import dev.the_fireplace.overlord.client.renderer.OwnedSkeletonRenderer;
+import dev.the_fireplace.overlord.client.renderer.TombstoneBlockEntityRenderer;
 import dev.the_fireplace.overlord.container.ContainerEquipmentSlot;
 import dev.the_fireplace.overlord.domain.network.client.ClientPacketRegistry;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonContainer;
@@ -15,6 +16,7 @@ import dev.the_fireplace.overlord.init.OverlordEntities;
 import dev.the_fireplace.overlord.init.datagen.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
@@ -33,6 +35,7 @@ public final class OverlordClient implements ClientDIModInitializer {
     @Override
     public void onInitializeClient(Injector diContainer) {
         registerEntityRenderers();
+        registerBlockEntityRenderers();
         registerGuis();
         diContainer.getInstance(ClientPacketRegistry.class).registerPacketHandlers();
         //noinspection ConstantConditions//TODO Use environment variables for this
@@ -54,6 +57,10 @@ public final class OverlordClient implements ClientDIModInitializer {
 
     private void registerEntityRenderers() {
         EntityRendererRegistry.INSTANCE.register(OverlordEntities.OWNED_SKELETON_TYPE, (erd, ctx) -> new OwnedSkeletonRenderer(erd));
+    }
+
+    private void registerBlockEntityRenderers() {
+        BlockEntityRendererRegistry.INSTANCE.register(OverlordBlockEntities.TOMBSTONE_BLOCK_ENTITY, TombstoneBlockEntityRenderer::new);
     }
 
     private void registerGuis() {

@@ -60,6 +60,7 @@ public class BlockLootTableGenerator implements Consumer<BiConsumer<Identifier, 
         registerMultiblock(OverlordBlocks.SPRUCE_CASKET, Properties.BED_PART, BedPart.HEAD);
         registerMultiblock(OverlordBlocks.ACACIA_CASKET, Properties.BED_PART, BedPart.HEAD);
         registerMultiblock(OverlordBlocks.DARK_OAK_CASKET, Properties.BED_PART, BedPart.HEAD);
+        registerForSelfDrop(OverlordBlocks.STONE_TOMBSTONE);
 
 
         Set<Identifier> set = Sets.newHashSet();

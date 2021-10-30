@@ -2,7 +2,7 @@ package dev.the_fireplace.overlord.block;
 
 import dev.the_fireplace.overlord.block.internal.AbstractTombstoneBlock;
 import dev.the_fireplace.overlord.blockentity.GraveMarkerBlockEntity;
-import dev.the_fireplace.overlord.blockentity.internal.TombstoneBlockEntity;
+import dev.the_fireplace.overlord.blockentity.internal.AbstractTombstoneBlockEntity;
 import dev.the_fireplace.overlord.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -42,7 +42,7 @@ public class GraveMarkerBlock extends AbstractTombstoneBlock {
     }
 
     @Override
-    public TombstoneBlockEntity createTombstone(BlockView view) {
+    public AbstractTombstoneBlockEntity createTombstone(BlockView view) {
         return new GraveMarkerBlockEntity();
     }
 

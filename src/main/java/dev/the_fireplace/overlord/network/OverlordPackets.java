@@ -19,7 +19,7 @@ public final class OverlordPackets implements ClientToServerPacketIDs, ServerToC
 
     //C2S
     private static final Identifier UPDATED_AI_PACKET_ID = new Identifier(Overlord.MODID, "updated_ai");
-    private static final Identifier TOMBSTONE_TEXT_ID = new Identifier(Overlord.MODID, "tombstone_text");
+    private static final Identifier SAVE_TOMBSTONE_ID = new Identifier(Overlord.MODID, "tombstone_text");
     private static final Identifier GET_ORDERS_ID = new Identifier(Overlord.MODID, "get_ai");
 
     @Override
@@ -33,7 +33,17 @@ public final class OverlordPackets implements ClientToServerPacketIDs, ServerToC
     }
 
     @Override
+    public Identifier saveTombstonePacketID() {
+        return SAVE_TOMBSTONE_ID;
+    }
+
+    @Override
     public Identifier openOrdersGuiPacketID() {
         return OPEN_ORDERS_GUI_ID;
+    }
+
+    @Override
+    public Identifier openTombstoneGuiPacketID() {
+        return OPEN_TOMBSTONE_GUI_PACKET_ID;
     }
 }
