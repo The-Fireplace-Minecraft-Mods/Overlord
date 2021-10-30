@@ -3,6 +3,7 @@ package dev.the_fireplace.overlord.blockentity;
 import dev.the_fireplace.overlord.blockentity.internal.TombstoneBlockEntity;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import dev.the_fireplace.overlord.init.OverlordBlockEntities;
+import dev.the_fireplace.overlord.model.aiconfig.movement.PositionSetting;
 import dev.the_fireplace.overlord.util.SkeletonBuilder;
 import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.Material;
@@ -72,6 +73,7 @@ public class GraveMarkerBlockEntity extends TombstoneBlockEntity implements Tick
         }
         OwnedSkeletonEntity skeleton = SkeletonBuilder.build(casketEntity, casketEntity.getWorld(), this);
         skeleton.updatePosition(soilPos1.getX(), soilPos1.getY() + 1, soilPos1.getZ());
+        skeleton.getAISettings().getMovement().setHome(new PositionSetting(soilPos1.getX(), soilPos1.getY() + 1, soilPos1.getZ()));
         world.spawnEntity(skeleton);
         //TODO dirt particles around skeleton
     }
