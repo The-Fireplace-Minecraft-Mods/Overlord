@@ -16,6 +16,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.*;
 import net.minecraft.text.LiteralText;
+import net.minecraft.util.UserCache;
 import net.minecraft.world.World;
 
 import java.util.Comparator;
@@ -276,6 +277,7 @@ public class SkeletonBuilder
         }
         if (!tombstone.getNameText().isEmpty()) {
             if (hasSkin) {
+                UserCache.setUseRemote(true);
                 GameProfile profile = Objects.requireNonNull(world.getServer()).getUserCache().findByName(tombstone.getNameText());
                 if (profile != null) {
                     entity.setSkinsuit(profile.getId());
