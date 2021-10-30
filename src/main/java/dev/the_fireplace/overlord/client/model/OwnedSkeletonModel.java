@@ -5,30 +5,42 @@ import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity.AnimationState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
+import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
 import net.minecraft.util.math.MathHelper;
 
 @Environment(EnvType.CLIENT)
-public class OwnedSkeletonModel extends BipedEntityModel<OwnedSkeletonEntity>
+public class OwnedSkeletonModel extends PlayerEntityModel<OwnedSkeletonEntity>
 {
     private boolean hasThickLimbs;
+    private boolean hasThinArmTexture = false;
 
     public OwnedSkeletonModel() {
-        super(0);
+        super(0, false);
         setHasThickLimbs(false);
     }
 
     public void setHasThickLimbs(boolean hasThickLimbs) {
         this.hasThickLimbs = hasThickLimbs;
+        resizeLimbs();
+    }
+
+    public void setHasThinArmTexture(boolean hasThinArmTexture) {
+        this.hasThinArmTexture = hasThinArmTexture;
+        resizeLimbs();
+    }
+
+    private void resizeLimbs() {
         float extra = hasThickLimbs ? 0F : -0.5F;
+        float armWidth = hasThinArmTexture ? 3 : 4;
+        float armWidthExtra = hasThinArmTexture ? 1 : 0;
         this.rightArm = new ModelPart(this, 40, 16);
-        this.rightArm.addCuboid(hasThickLimbs ? -3.0F : -2.5F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, extra, 0, extra);
+        this.rightArm.addCuboid(hasThickLimbs ? -3.0F : -2.5F, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, extra + armWidthExtra, 0, extra);
         this.rightArm.setPivot(-5.0F, hasThickLimbs ? 2.5F : 2.0F, 0.0F);
         this.leftArm = new ModelPart(this, 40, 16);
-        this.leftArm.addCuboid(hasThickLimbs ? -1.0F : -1.5F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, extra, 0, extra);
+        this.leftArm.addCuboid(hasThickLimbs ? -1.0F : -1.5F, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, extra + armWidthExtra, 0, extra);
         this.leftArm.mirror = true;
         this.leftArm.setPivot(5.0F, hasThickLimbs ? 2.5F : 2.0F, 0.0F);
         this.rightLeg = new ModelPart(this, 0, 16);
@@ -38,6 +50,7 @@ public class OwnedSkeletonModel extends BipedEntityModel<OwnedSkeletonEntity>
         this.leftLeg.addCuboid(-2.0F, -0.01F, -2.0F, 4.0F, 12.0F, 4.0F, extra, 0, extra);
         this.leftLeg.mirror = true;
         this.leftLeg.setPivot(hasThickLimbs ? 2.5F : 2.0F, 12.0F, 0.0F);
+        //TODO sleeves
     }
 
     @Override

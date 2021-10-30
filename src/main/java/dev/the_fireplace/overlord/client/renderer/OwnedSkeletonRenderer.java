@@ -1,5 +1,6 @@
 package dev.the_fireplace.overlord.client.renderer;
 
+import com.mojang.authlib.GameProfile;
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.Overlord;
@@ -9,19 +10,26 @@ import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import dev.the_fireplace.overlord.entity.SkeletonGrowthPhase;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.BipedEntityRenderer;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.feature.ArmorBipedFeatureRenderer;
+import net.minecraft.client.render.entity.feature.StuckArrowsFeatureRenderer;
+import net.minecraft.client.render.entity.feature.StuckStingersFeatureRenderer;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.UseAction;
+import net.minecraft.world.GameMode;
 
 @Environment(EnvType.CLIENT)
 public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEntity, OwnedSkeletonModel>
@@ -39,9 +47,8 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
         BipedEntityModel<OwnedSkeletonEntity> bodyModel = new BipedEntityModel<>(1.0F);
         this.addFeature(new ArmorBipedFeatureRenderer<>(this, leggingsModel, bodyModel));
         this.addFeature(new AugmentHeadFeatureRenderer<>(this));
-        //TODO These were designed for the player model. Remake to work with others.
-        //this.addFeature(new StuckArrowsFeatureRenderer<>(this));
-        //this.addFeature(new StuckStingersFeatureRenderer<>(this));
+        this.addFeature(new StuckArrowsFeatureRenderer<>(this));
+        this.addFeature(new StuckStingersFeatureRenderer<>(this));
     }
 
     @Override
@@ -50,33 +57,43 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
         if (!entity.hasSkin() && !entity.hasMuscles()) {
             return new Identifier(Overlord.MODID, "textures/entity/owned_skeleton/owned_skeleton.png");
         }
-//        if (entity.getGrowthPhase() == SkeletonGrowthPhase.ADULT && entity.hasSkin() && !emptyUUID.is(entity.getSkinsuit())) {
-//            if (cachedTexture == null) {
-//                ClientPlayNetworkHandler networkHandler = MinecraftClient.getInstance().getNetworkHandler();
-//                if (networkHandler != null) {
-//                    GameProfile gameProfile = new GameProfile(entity.getSkinsuit(), null);
-//                    PlayerListS2CPacket dummyPlayerListPacket = new PlayerListS2CPacket();
-//                    PlayerListEntry playerListEntry = new PlayerListEntry(dummyPlayerListPacket.new Entry(
-//                        gameProfile,
-//                        0,
-//                        null,
-//                        null
-//                    ));
-//                    if (playerListEntry.hasSkinTexture()) {
-//                        return cachedTexture = playerListEntry.getSkinTexture();
-//                    }
-//                }
-//                cachedTexture = NO_TEXTURE_TO_CACHE;
-//            } else if (!cachedTexture.equals(NO_TEXTURE_TO_CACHE)) {
-//                return cachedTexture;
-//            }
-//        }
+        if (entity.getGrowthPhase() == SkeletonGrowthPhase.ADULT && entity.hasSkin() && !emptyUUID.is(entity.getSkinsuit())) {
+            cacheSkinsuitTexture(entity);
+            if (!cachedTexture.equals(NO_TEXTURE_TO_CACHE)) {
+                return cachedTexture;
+            }
+        }
         if (entity.hasSkin() && !entity.hasMuscles()) {
             return new Identifier(Overlord.MODID, String.format("textures/entity/owned_skeleton/owned_skeleton_skin_%s.png", entity.getGrowthPhase().ordinal()));
         } else if (!entity.hasSkin() && entity.hasMuscles()) {
             return new Identifier(Overlord.MODID, String.format("textures/entity/owned_skeleton/owned_skeleton_muscles_%s.png", entity.getGrowthPhase().ordinal()));
         } else {
             return new Identifier(Overlord.MODID, String.format("textures/entity/owned_skeleton/owned_skeleton_skin_muscles_%s.png", entity.getGrowthPhase().ordinal()));
+        }
+    }
+
+    private void cacheSkinsuitTexture(OwnedSkeletonEntity entity) {
+        if (cachedTexture == null) {
+            ClientPlayNetworkHandler networkHandler = MinecraftClient.getInstance().getNetworkHandler();
+            if (networkHandler != null) {
+                GameProfile gameProfile = new GameProfile(entity.getSkinsuit(), null);
+                PlayerListS2CPacket dummyPlayerListPacket = new PlayerListS2CPacket();
+                PlayerListEntry playerListEntry = new PlayerListEntry(dummyPlayerListPacket.new Entry(
+                    gameProfile,
+                    0,
+                    GameMode.SURVIVAL,
+                    null
+                ));
+                if (playerListEntry.hasSkinTexture()) {
+                    cachedTexture = playerListEntry.getSkinTexture();
+                    boolean hasThinArms = playerListEntry.getModel().equals("slim");
+                    if (hasThinArms) {
+                        this.model.setHasThinArmTexture(true);
+                    }
+                    return;
+                }
+            }
+            cachedTexture = NO_TEXTURE_TO_CACHE;
         }
     }
 
