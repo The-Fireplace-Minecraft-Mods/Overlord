@@ -26,7 +26,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntityWithAi;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
@@ -162,10 +162,10 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
     }
 
     protected int addIdleGoals(int goalWeight) {
-        this.goalSelector.add(goalWeight, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
         if (aiSettings.getCombat().isEnabled()) {
-            this.goalSelector.add(goalWeight, new LookAtEntityGoal(this, MobEntity.class, 8.0F));
+            this.goalSelector.add(goalWeight++, new LookAtEntityGoal(this, HostileEntity.class, 12.0F));
         }
+        this.goalSelector.add(goalWeight, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.add(goalWeight, new LookAroundGoal(this));
 
         return ++goalWeight;
@@ -175,10 +175,12 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
         int targetGoalWeight = 1;
         if (combat.isEnabled()) {
             this.targetSelector.add(targetGoalWeight++, new ArmyTrackOwnerAttackerGoal(this));
-            this.targetSelector.add(targetGoalWeight++, new ArmyAttackWithOwnerGoal(this));
-            this.targetSelector.add(targetGoalWeight++, new RevengeGoal(this).setGroupRevenge());
-            //TODO Looks like we'll need a custom Target goal that chooses targets based on equipped weapon type
-            this.targetSelector.add(targetGoalWeight, new FollowTargetGoal<>(this, MobEntity.class, true));
+            if (!combat.isOnlyDefendPlayer()) {
+                this.targetSelector.add(targetGoalWeight++, new ArmyAttackWithOwnerGoal(this));
+                this.targetSelector.add(targetGoalWeight++, new RevengeGoal(this).setGroupRevenge());
+                //TODO Looks like we'll eventually need a custom Target goal that chooses targets based on equipped weapon type
+                this.targetSelector.add(targetGoalWeight, new FollowTargetGoal<>(this, HostileEntity.class, true));
+            }
         }
     }
 
