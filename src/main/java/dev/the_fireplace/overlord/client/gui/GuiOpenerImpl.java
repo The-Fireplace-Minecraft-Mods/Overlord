@@ -26,6 +26,6 @@ public final class GuiOpenerImpl implements GuiOpener
 
     @Override
     public void openOrdersGUI(OrderableEntity entity) {
-        ClientPlayNetworking.send(clientToServerPacketIDs.getOrdersPacketID(), getOrdersPacketBufferBuilder.build(entity.getEntityId()));
+        ClientPlayNetworking.send(clientToServerPacketIDs.getOrdersPacketID(), getOrdersPacketBufferBuilder.build(entity.getEntityIdNumber()));
     }
 }

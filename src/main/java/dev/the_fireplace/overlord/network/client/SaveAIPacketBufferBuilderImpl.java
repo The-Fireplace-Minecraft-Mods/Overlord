@@ -11,7 +11,7 @@ public final class SaveAIPacketBufferBuilderImpl implements SaveAIPacketBufferBu
     @Override
     public PacketByteBuf build(OrderableEntity orderableEntity) {
         PacketByteBuf buffer = PacketByteBufs.create();
-        buffer.writeInt(orderableEntity.getEntityId());
+        buffer.writeInt(orderableEntity.getEntityIdNumber());
         buffer.writeCompoundTag(orderableEntity.getAISettings().toTag());
 
         return buffer;

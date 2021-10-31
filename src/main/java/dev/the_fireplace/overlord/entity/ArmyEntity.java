@@ -252,4 +252,9 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
     public abstract int getMainHandSlot();
 
     public abstract int getOffHandSlot();
+
+    @Override
+    public int getEntityIdNumber() {
+        return getEntityId();
+    }
 }
