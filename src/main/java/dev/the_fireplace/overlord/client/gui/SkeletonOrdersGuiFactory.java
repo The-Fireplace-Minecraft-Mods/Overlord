@@ -182,7 +182,7 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 			defaults.getMoveMode(),
 			EnumMovementMode.values(),
 			currentSettings::setMoveMode
-		).addDependency(enabled);
+		).addDependency(enabled).setDescriptionRowCount((byte) 0);
 		this.screenBuilder.addByteSlider(
 				MOVEMENT_TRANSLATION_BASE + "minimumFollowDistance",
 				currentSettings.getMinimumFollowDistance(),
@@ -204,13 +204,11 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 			.addDependency(movementMode, mode -> mode == EnumMovementMode.FOLLOW)
 			.setDescriptionRowCount((byte) 0);
 		OptionBuilder<Boolean> isExploringWander = this.screenBuilder.addBoolToggle(
-				MOVEMENT_TRANSLATION_BASE + "exploringWander",
-				currentSettings.isExploringWander(),
-				defaults.isExploringWander(),
-				currentSettings::setExploringWander
-			)
-			.addDependency(movementMode, mode -> mode == EnumMovementMode.WANDER)
-			.setDescriptionRowCount((byte) 2);
+			MOVEMENT_TRANSLATION_BASE + "exploringWander",
+			currentSettings.isExploringWander(),
+			defaults.isExploringWander(),
+			currentSettings::setExploringWander
+		).addDependency(movementMode, mode -> mode == EnumMovementMode.WANDER);
 		this.screenBuilder.addByteSlider(
 				MOVEMENT_TRANSLATION_BASE + "wanderRadius",
 				currentSettings.getMoveRadius(),
