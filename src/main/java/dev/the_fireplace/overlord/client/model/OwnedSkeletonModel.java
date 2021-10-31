@@ -2,6 +2,7 @@ package dev.the_fireplace.overlord.client.model;
 
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity.AnimationState;
+import dev.the_fireplace.overlord.mixin.client.PlayerEntityModelAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
@@ -33,24 +34,50 @@ public class OwnedSkeletonModel extends PlayerEntityModel<OwnedSkeletonEntity>
     }
 
     private void resizeLimbs() {
-        float extra = hasThickLimbs ? 0F : -0.5F;
+        float extraXZ = hasThickLimbs ? 0F : -0.5F;
         float armWidth = hasThinArmTexture ? 3 : 4;
-        float armWidthExtra = hasThinArmTexture ? 1 : 0;
+        float armExtraX = hasThinArmTexture ? 1 : 0;
+        float leftArmStartX = hasThickLimbs ? -1.0F : -1.5F;
+        float rightArmStartX = hasThickLimbs ? -3.0F : -2.5F;
+        float armPivotY = hasThickLimbs ? 2.5F : 2.0F;
+        float legPivotX = hasThickLimbs ? 2.5F : 2.0F;
         this.rightArm = new ModelPart(this, 40, 16);
-        this.rightArm.addCuboid(hasThickLimbs ? -3.0F : -2.5F, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, extra + armWidthExtra, 0, extra);
-        this.rightArm.setPivot(-5.0F, hasThickLimbs ? 2.5F : 2.0F, 0.0F);
+        this.rightArm.addCuboid(rightArmStartX, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, extraXZ + armExtraX, 0, extraXZ);
+        this.rightArm.setPivot(-5.0F, armPivotY, 0.0F);
         this.leftArm = new ModelPart(this, 40, 16);
-        this.leftArm.addCuboid(hasThickLimbs ? -1.0F : -1.5F, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, extra + armWidthExtra, 0, extra);
+        this.leftArm.addCuboid(leftArmStartX, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, extraXZ + armExtraX, 0, extraXZ);
         this.leftArm.mirror = true;
-        this.leftArm.setPivot(5.0F, hasThickLimbs ? 2.5F : 2.0F, 0.0F);
+        this.leftArm.setPivot(5.0F, armPivotY, 0.0F);
         this.rightLeg = new ModelPart(this, 0, 16);
-        this.rightLeg.addCuboid(-2.0F, -0.01F, -2.0F, 4.0F, 12.0F, 4.0F, extra, 0, extra);
-        this.rightLeg.setPivot(hasThickLimbs ? -2.5F : -2.0F, 12.0F, 0.0F);
+        this.rightLeg.addCuboid(-2.0F, -0.01F, -2.0F, 4.0F, 12.0F, 4.0F, extraXZ, 0, extraXZ);
+        this.rightLeg.setPivot(-legPivotX, 12.0F, 0.0F);
         this.leftLeg = new ModelPart(this, 0, 16);
-        this.leftLeg.addCuboid(-2.0F, -0.01F, -2.0F, 4.0F, 12.0F, 4.0F, extra, 0, extra);
+        this.leftLeg.addCuboid(-2.0F, -0.01F, -2.0F, 4.0F, 12.0F, 4.0F, extraXZ, 0, extraXZ);
         this.leftLeg.mirror = true;
-        this.leftLeg.setPivot(hasThickLimbs ? 2.5F : 2.0F, 12.0F, 0.0F);
-        //TODO sleeves
+        this.leftLeg.setPivot(legPivotX, 12.0F, 0.0F);
+        //noinspection RedundantCast
+        PlayerEntityModelAccessor playerEntityModelAccessor = (PlayerEntityModelAccessor) (Object) this;
+
+        ModelPart leftSleeve = new ModelPart(this, 48, 48);
+        leftSleeve.addCuboid(leftArmStartX, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, extraXZ + armExtraX + 0.25F, 0.25F, extraXZ + 0.25F);
+        leftSleeve.setPivot(5.0F, armPivotY, 0.0F);
+
+        ModelPart rightSleeve = new ModelPart(this, 40, 32);
+        rightSleeve.addCuboid(rightArmStartX, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, extraXZ + armExtraX + 0.25F, 0.25F, extraXZ + 0.25F);
+        rightSleeve.setPivot(-5.0F, armPivotY, 10.0F);
+
+        ModelPart leftPantLeg = new ModelPart(this, 0, 48);
+        leftPantLeg.addCuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, extraXZ + 0.25F, 0.25F, extraXZ + 0.25F);
+        leftPantLeg.setPivot(legPivotX, 12.0F, 0.0F);
+
+        ModelPart rightPantLeg = new ModelPart(this, 0, 32);
+        rightPantLeg.addCuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, extraXZ + 0.25F, 0.25F, extraXZ + 0.25F);
+        rightPantLeg.setPivot(-legPivotX, 12.0F, 0.0F);
+
+        playerEntityModelAccessor.setLeftSleeve(leftSleeve);
+        playerEntityModelAccessor.setRightSleeve(rightSleeve);
+        playerEntityModelAccessor.setLeftPantLeg(leftPantLeg);
+        playerEntityModelAccessor.setRightPantLeg(rightPantLeg);
     }
 
     @Override
