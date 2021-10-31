@@ -84,14 +84,13 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
     protected int addBasicSurvivalGoals(int goalWeight, MovementCategory movement) {
         if (movement.isEnabled() && this.isUndead()) {
             this.goalSelector.add(goalWeight++, new AvoidSunlightGoal(this));
-            this.goalSelector.add(goalWeight++, new EscapeSunlightGoal(this, 1.0D));
+            this.goalSelector.add(goalWeight++, new EscapeSunlightGoal(this, 1.2D));
         }
         return goalWeight;
     }
 
     protected int addCombatGoals(int goalWeight, CombatCategory combat) {
         if (combat.isEnabled()) {
-            //TODO drink milk when health is critical?
             if (combat.isRanged() && combat.isSwitchToRangedWhenFar()) {
                 this.goalSelector.add(goalWeight, new SwitchToRangedWhenFarGoal(this, combat.getRangedSwitchDistance()));
             }
@@ -140,9 +139,6 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
                     byte minimumFollowDistance = movement.getMinimumFollowDistance();
                     byte maximumFollowDistance = movement.getMaximumFollowDistance();
                     this.goalSelector.add(goalWeight++, new FollowOwnerGoal(this, 1.0D, minimumFollowDistance, maximumFollowDistance, true));
-                    break;
-                case PATROL:
-                    //TODO patrol goal
                     break;
                 case WANDER:
                     if (movement.isExploringWander()) {
