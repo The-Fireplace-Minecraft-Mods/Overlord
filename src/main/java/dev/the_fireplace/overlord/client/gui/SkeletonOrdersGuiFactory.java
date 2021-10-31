@@ -24,6 +24,7 @@ import dev.the_fireplace.overlord.model.aiconfig.tasks.TasksCategory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
 
 import javax.inject.Inject;
@@ -84,11 +85,13 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
 		this.screenBuilder.startCategory(TRANSLATION_BASE + "movement");
 		addMovementCategory(currentSettings.getMovement());
 
-		this.screenBuilder.startCategory(TRANSLATION_BASE + "tasks");
-		addTasksCategory(currentSettings.getTasks());
+		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+			this.screenBuilder.startCategory(TRANSLATION_BASE + "tasks");
+			addTasksCategory(currentSettings.getTasks());
 
-		this.screenBuilder.startCategory(TRANSLATION_BASE + "misc");
-		addMiscCategory(currentSettings.getMisc());
+			this.screenBuilder.startCategory(TRANSLATION_BASE + "misc");
+			addMiscCategory(currentSettings.getMisc());
+		}
 	}
 
 	private void addCombatCategory(CombatCategory currentSettings) {
