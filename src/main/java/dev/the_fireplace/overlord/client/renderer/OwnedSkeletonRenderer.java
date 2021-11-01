@@ -36,14 +36,15 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
 {
     private static final Identifier NO_TEXTURE_TO_CACHE = new Identifier(Overlord.MODID, "");
     private final EmptyUUID emptyUUID;
+    private final OwnedSkeletonModel leggingsModel;
     private Identifier cachedTexture = null;
 
     public OwnedSkeletonRenderer(EntityRenderDispatcher dispatcher) {
-        super(dispatcher, new OwnedSkeletonModel(), 0.5F);
+        super(dispatcher, new OwnedSkeletonModel(false), 0.5F);
 
         this.emptyUUID = DIContainer.get().getInstance(EmptyUUID.class);
 
-        BipedEntityModel<OwnedSkeletonEntity> leggingsModel = new BipedEntityModel<>(0.5F);
+        leggingsModel = new OwnedSkeletonModel(true);
         BipedEntityModel<OwnedSkeletonEntity> bodyModel = new BipedEntityModel<>(1.0F);
         this.addFeature(new ArmorBipedFeatureRenderer<>(this, leggingsModel, bodyModel));
         this.addFeature(new AugmentHeadFeatureRenderer<>(this));
@@ -106,10 +107,12 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
     @Override
     public void render(OwnedSkeletonEntity livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         setModelPose(livingEntity);
-        if (livingEntity.getGrowthPhase() == SkeletonGrowthPhase.ADULT && livingEntity.hasMuscles() && !this.getModel().hasThickLimbs()) {
+        if (livingEntity.getGrowthPhase() == SkeletonGrowthPhase.ADULT && livingEntity.hasMuscles() && (!this.getModel().hasThickLimbs() || !this.leggingsModel.hasThickLimbs())) {
             this.getModel().setHasThickLimbs(true);
-        } else if ((livingEntity.getGrowthPhase() != SkeletonGrowthPhase.ADULT || !livingEntity.hasMuscles()) && this.getModel().hasThickLimbs()) {
+            leggingsModel.setHasThickLimbs(true);
+        } else if ((livingEntity.getGrowthPhase() != SkeletonGrowthPhase.ADULT || !livingEntity.hasMuscles()) && (this.getModel().hasThickLimbs() || this.leggingsModel.hasThickLimbs())) {
             this.getModel().setHasThickLimbs(false);
+            leggingsModel.setHasThickLimbs(false);
         }
         ItemStack augment = livingEntity.getAugmentBlockStack();
         this.getModel().head.visible = augment.isEmpty();

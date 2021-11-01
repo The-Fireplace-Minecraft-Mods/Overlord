@@ -16,10 +16,15 @@ import net.minecraft.util.math.MathHelper;
 public class OwnedSkeletonModel extends PlayerEntityModel<OwnedSkeletonEntity>
 {
     private boolean hasThickLimbs;
+    private boolean isArmor = false;
     private boolean hasThinArmTexture = false;
 
-    public OwnedSkeletonModel() {
+    public OwnedSkeletonModel(boolean isArmor) {
         super(0, false);
+        if (isArmor) {
+            this.isArmor = true;
+            this.textureHeight = 32;
+        }
         setHasThickLimbs(false);
     }
 
@@ -34,6 +39,7 @@ public class OwnedSkeletonModel extends PlayerEntityModel<OwnedSkeletonEntity>
     }
 
     private void resizeLimbs() {
+        float armorExtra = isArmor ? 0.5F : 0;
         float extraXZ = hasThickLimbs ? 0F : -0.5F;
         float armWidth = hasThinArmTexture ? 3 : 4;
         float armExtraX = hasThinArmTexture ? 1 : 0;
@@ -42,42 +48,44 @@ public class OwnedSkeletonModel extends PlayerEntityModel<OwnedSkeletonEntity>
         float armPivotY = hasThickLimbs ? 2.5F : 2.0F;
         float legPivotX = hasThickLimbs ? 2.5F : 2.0F;
         this.rightArm = new ModelPart(this, 40, 16);
-        this.rightArm.addCuboid(rightArmStartX, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, extraXZ + armExtraX, 0, extraXZ);
+        this.rightArm.addCuboid(rightArmStartX, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, extraXZ + armExtraX + armorExtra, armorExtra, extraXZ + armorExtra);
         this.rightArm.setPivot(-5.0F, armPivotY, 0.0F);
         this.leftArm = new ModelPart(this, 40, 16);
-        this.leftArm.addCuboid(leftArmStartX, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, extraXZ + armExtraX, 0, extraXZ);
+        this.leftArm.addCuboid(leftArmStartX, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, extraXZ + armExtraX + armorExtra, armorExtra, extraXZ + armorExtra);
         this.leftArm.mirror = true;
         this.leftArm.setPivot(5.0F, armPivotY, 0.0F);
         this.rightLeg = new ModelPart(this, 0, 16);
-        this.rightLeg.addCuboid(-2.0F, -0.01F, -2.0F, 4.0F, 12.0F, 4.0F, extraXZ, 0, extraXZ);
+        this.rightLeg.addCuboid(-2.0F, -0.01F, -2.0F, 4.0F, 12.0F, 4.0F, extraXZ + armorExtra, armorExtra, extraXZ + armorExtra);
         this.rightLeg.setPivot(-legPivotX, 12.0F, 0.0F);
         this.leftLeg = new ModelPart(this, 0, 16);
-        this.leftLeg.addCuboid(-2.0F, -0.01F, -2.0F, 4.0F, 12.0F, 4.0F, extraXZ, 0, extraXZ);
+        this.leftLeg.addCuboid(-2.0F, -0.01F, -2.0F, 4.0F, 12.0F, 4.0F, extraXZ + armorExtra, armorExtra, extraXZ + armorExtra);
         this.leftLeg.mirror = true;
         this.leftLeg.setPivot(legPivotX, 12.0F, 0.0F);
-        //noinspection RedundantCast
-        PlayerEntityModelAccessor playerEntityModelAccessor = (PlayerEntityModelAccessor) (Object) this;
+        if (!isArmor) {
+            //noinspection RedundantCast
+            PlayerEntityModelAccessor playerEntityModelAccessor = (PlayerEntityModelAccessor) (Object) this;
 
-        ModelPart leftSleeve = new ModelPart(this, 48, 48);
-        leftSleeve.addCuboid(leftArmStartX, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, extraXZ + armExtraX + 0.25F, 0.25F, extraXZ + 0.25F);
-        leftSleeve.setPivot(5.0F, armPivotY, 0.0F);
+            ModelPart leftSleeve = new ModelPart(this, 48, 48);
+            leftSleeve.addCuboid(leftArmStartX, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, extraXZ + armExtraX + 0.25F, 0.25F, extraXZ + 0.25F);
+            leftSleeve.setPivot(5.0F, armPivotY, 0.0F);
 
-        ModelPart rightSleeve = new ModelPart(this, 40, 32);
-        rightSleeve.addCuboid(rightArmStartX, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, extraXZ + armExtraX + 0.25F, 0.25F, extraXZ + 0.25F);
-        rightSleeve.setPivot(-5.0F, armPivotY, 10.0F);
+            ModelPart rightSleeve = new ModelPart(this, 40, 32);
+            rightSleeve.addCuboid(rightArmStartX, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, extraXZ + armExtraX + 0.25F, 0.25F, extraXZ + 0.25F);
+            rightSleeve.setPivot(-5.0F, armPivotY, 10.0F);
 
-        ModelPart leftPantLeg = new ModelPart(this, 0, 48);
-        leftPantLeg.addCuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, extraXZ + 0.25F, 0.25F, extraXZ + 0.25F);
-        leftPantLeg.setPivot(legPivotX, 12.0F, 0.0F);
+            ModelPart leftPantLeg = new ModelPart(this, 0, 48);
+            leftPantLeg.addCuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, extraXZ + 0.25F, 0.25F, extraXZ + 0.25F);
+            leftPantLeg.setPivot(legPivotX, 12.0F, 0.0F);
 
-        ModelPart rightPantLeg = new ModelPart(this, 0, 32);
-        rightPantLeg.addCuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, extraXZ + 0.25F, 0.25F, extraXZ + 0.25F);
-        rightPantLeg.setPivot(-legPivotX, 12.0F, 0.0F);
+            ModelPart rightPantLeg = new ModelPart(this, 0, 32);
+            rightPantLeg.addCuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, extraXZ + 0.25F, 0.25F, extraXZ + 0.25F);
+            rightPantLeg.setPivot(-legPivotX, 12.0F, 0.0F);
 
-        playerEntityModelAccessor.setLeftSleeve(leftSleeve);
-        playerEntityModelAccessor.setRightSleeve(rightSleeve);
-        playerEntityModelAccessor.setLeftPantLeg(leftPantLeg);
-        playerEntityModelAccessor.setRightPantLeg(rightPantLeg);
+            playerEntityModelAccessor.setLeftSleeve(leftSleeve);
+            playerEntityModelAccessor.setRightSleeve(rightSleeve);
+            playerEntityModelAccessor.setLeftPantLeg(leftPantLeg);
+            playerEntityModelAccessor.setRightPantLeg(rightPantLeg);
+        }
     }
 
     @Override
