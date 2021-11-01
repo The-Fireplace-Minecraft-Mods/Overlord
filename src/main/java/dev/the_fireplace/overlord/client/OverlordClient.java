@@ -20,6 +20,7 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegi
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.texture.SpriteAtlasTexture;
@@ -38,8 +39,7 @@ public final class OverlordClient implements ClientDIModInitializer {
         registerBlockEntityRenderers();
         registerGuis();
         diContainer.getInstance(ClientPacketRegistry.class).registerPacketHandlers();
-        //noinspection ConstantConditions//TODO Use environment variables for this
-        if (true) {
+        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
             Overlord.getLogger().debug("Generating data...");
             DataGenerator gen = diContainer.getInstance(DataGeneratorFactory.class).createAdditive(Paths.get("..", "src", "main", "resources"));
             gen.install(new BlockTagsProvider(gen));
