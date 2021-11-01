@@ -35,8 +35,6 @@
   "gui.overlord.aisettings.option.combat.ranged": "Enable Ranged",
   "gui.overlord.aisettings.option.combat.switchToRangedWhenFar": "Switch to Ranged when far from the enemy",
   "gui.overlord.aisettings.option.combat.switchToRangedDistance": "Distance from the enemy to switch to ranged",
-  "gui.overlord.aisettings.option.combat.throwItems": "Enable Throwing Items",
-  "gui.overlord.aisettings.option.combat.thrownItemList": "Items to Throw",
   "gui.overlord.aisettings.option.movement.moveMode": "Movement Mode",
   "gui.overlord.aisettings.option.movement.minimumFollowDistance": "Minimum Follow Distance",
   "gui.overlord.aisettings.option.movement.maximumFollowDistance": "Maximum Follow Distance",

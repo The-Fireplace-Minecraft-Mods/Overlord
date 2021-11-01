@@ -35,8 +35,6 @@
   "gui.overlord.aisettings.option.combat.ranged": "Habilitar longo alcance",
   "gui.overlord.aisettings.option.combat.switchToRangedWhenFar": "Mudar para longo alcance quando longe do inimigo",
   "gui.overlord.aisettings.option.combat.switchToRangedDistance": "Distancia do inimigo para mudar para longo alcance",
-  "gui.overlord.aisettings.option.combat.throwItems": "Habilitar jogar itens",
-  "gui.overlord.aisettings.option.combat.thrownItemList": "Itens para Jogar",
   "gui.overlord.aisettings.option.movement.moveMode": "Modo de Movimento",
   "gui.overlord.aisettings.option.movement.minimumFollowDistance": "Distancia minima para seguir",
   "gui.overlord.aisettings.option.movement.maximumFollowDistance": "Distancia maxima para seguir",
