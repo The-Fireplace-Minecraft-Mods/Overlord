@@ -89,27 +89,31 @@ public class OwnedSkeletonModel extends PlayerEntityModel<OwnedSkeletonEntity>
     }
 
     @Override
-    public void setAngles(OwnedSkeletonEntity entity, float f, float g, float h, float i, float j) {
-        super.setAngles(entity, f, g, h, i, j);
+    public void setAngles(OwnedSkeletonEntity entity, float limbAngle, float limbDistance, float customAngle, float headYaw, float headPitch) {
+        super.setAngles(entity, limbAngle, limbDistance, customAngle, headYaw, headPitch);
         if (entity.getAnimationState().equals(AnimationState.MELEE_ATTACK)) {
             float k = MathHelper.sin(this.handSwingProgress * (float) Math.PI);
             float l = MathHelper.sin((1.0F - (1.0F - this.handSwingProgress) * (1.0F - this.handSwingProgress)) * (float) Math.PI);
-            if (entity.getMainArm() == Arm.RIGHT) {
+            boolean raiseBothArms = entity.getMainHandStack().isEmpty();
+            boolean raiseRightArm = entity.getMainArm() == Arm.RIGHT || raiseBothArms;
+            boolean raiseLeftArm = entity.getMainArm() == Arm.LEFT || raiseBothArms;
+            if (raiseRightArm) {
                 ModelPart arm = this.rightArm;
                 arm.roll = 0.0F;
                 arm.yaw = -(0.1F - k * 0.6F);
                 arm.pitch = (float) -Math.PI / 2;
                 arm.pitch -= k * 1.2F - l * 0.4F;
-                arm.roll += MathHelper.cos(h * 0.09F) * 0.05F + 0.05F;
-                arm.pitch += MathHelper.sin(h * 0.067F) * 0.05F;
-            } else {
+                arm.roll += MathHelper.cos(customAngle * 0.09F) * 0.05F + 0.05F;
+                arm.pitch += MathHelper.sin(customAngle * 0.067F) * 0.05F;
+            }
+            if (raiseLeftArm) {
                 ModelPart arm = this.leftArm;
                 arm.roll = 0.0F;
                 arm.yaw = 0.1F - k * 0.6F;
                 arm.pitch = (float) -Math.PI / 2;
                 arm.pitch -= k * 1.2F - l * 0.4F;
-                arm.roll -= MathHelper.cos(h * 0.09F) * 0.05F + 0.05F;
-                arm.pitch -= MathHelper.sin(h * 0.067F) * 0.05F;
+                arm.roll -= MathHelper.cos(customAngle * 0.09F) * 0.05F + 0.05F;
+                arm.pitch -= MathHelper.sin(customAngle * 0.067F) * 0.05F;
             }
         }
     }
