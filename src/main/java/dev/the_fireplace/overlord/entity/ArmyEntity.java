@@ -27,7 +27,9 @@ import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.MobEntityWithAi;
+import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -175,7 +177,7 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
                 this.targetSelector.add(targetGoalWeight++, new ArmyAttackWithOwnerGoal(this));
                 this.targetSelector.add(targetGoalWeight++, new RevengeGoal(this).setGroupRevenge());
                 //TODO Looks like we'll eventually need a custom Target goal that chooses targets based on equipped weapon type
-                this.targetSelector.add(targetGoalWeight, new FollowTargetGoal<>(this, HostileEntity.class, true));
+                this.targetSelector.add(targetGoalWeight, new FollowTargetGoal<>(this, MobEntity.class, 10, true, false, mob -> mob instanceof Monster));
             }
         }
     }
