@@ -26,7 +26,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.MobEntityWithAi;
 import net.minecraft.entity.mob.Monster;
@@ -161,7 +160,7 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
 
     protected int addIdleGoals(int goalWeight) {
         if (aiSettings.getCombat().isEnabled()) {
-            this.goalSelector.add(goalWeight++, new LookAtEntityGoal(this, HostileEntity.class, 12.0F));
+            this.goalSelector.add(goalWeight++, new LookAtEntityGoal(this, MobEntity.class, 12.0F));
         }
         this.goalSelector.add(goalWeight, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.add(goalWeight, new LookAroundGoal(this));
