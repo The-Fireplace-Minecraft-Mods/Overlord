@@ -22,6 +22,7 @@ public class ArmyCrossbowAttackGoal<T extends ArmyEntity & RangedAttackMob & Cro
 	private int seeingTargetTicker;
 	private int chargedTicksLeft;
 	protected final AIEquipmentHelper equipmentHelper;
+	private long lastUpdateTime;
 
 	public ArmyCrossbowAttackGoal(T armyEntity, double speed, float range) {
 		this.stage = Stage.UNCHARGED;
@@ -34,6 +35,11 @@ public class ArmyCrossbowAttackGoal<T extends ArmyEntity & RangedAttackMob & Cro
 
 	@Override
 	public boolean canStart() {
+		long worldTime = this.armyEntity.world.getTime();
+		if (worldTime - this.lastUpdateTime < 20) {
+			return false;
+		}
+		this.lastUpdateTime = worldTime;
 		return this.hasAliveTarget() && this.isEntityHoldingCrossbow();
 	}
 

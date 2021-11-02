@@ -23,6 +23,7 @@ public class ArmyBowAttackGoal<T extends ArmyEntity & RangedAttackMob> extends G
     private boolean backward;
     private int combatTicks = -1;
     protected final AIEquipmentHelper equipmentHelper;
+    private long lastUpdateTime;
 
     public ArmyBowAttackGoal(T armyEntity, double speed, int attackInterval, float range) {
         this.armyEntity = armyEntity;
@@ -39,6 +40,11 @@ public class ArmyBowAttackGoal<T extends ArmyEntity & RangedAttackMob> extends G
 
     @Override
     public boolean canStart() {
+        long worldTime = this.armyEntity.world.getTime();
+        if (worldTime - this.lastUpdateTime < 20) {
+            return false;
+        }
+        this.lastUpdateTime = worldTime;
         return this.armyEntity.getTarget() != null && this.isHoldingBow();
     }
 
