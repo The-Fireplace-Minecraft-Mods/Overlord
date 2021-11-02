@@ -3,7 +3,10 @@ package dev.the_fireplace.overlord.entity.ai.goal.combat;
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.overlord.entity.ArmyEntity;
 import dev.the_fireplace.overlord.entity.ai.goal.AIEquipmentHelper;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.util.Hand;
 
 public class ArmyMeleeAttackGoal extends MeleeAttackGoal
 {
@@ -28,5 +31,18 @@ public class ArmyMeleeAttackGoal extends MeleeAttackGoal
     @Override
     public boolean shouldContinue() {
         return super.shouldContinue() && shouldAttackWithMelee();
+    }
+
+    @Override
+    protected void attack(LivingEntity target, double squaredDistance) {
+        double d = this.getSquaredMaxAttackDistance(target);
+        if (squaredDistance <= d && this.ticksUntilAttack <= 0) {
+            if (!this.mob.getEntityWorld().isClient()) {
+                double attackSpeed = this.mob.getAttributeInstance(EntityAttributes.ATTACK_SPEED).getValue();
+                this.ticksUntilAttack = Math.max(1, (int) Math.ceil(20D / attackSpeed - 0.5));
+            }
+            this.mob.swingHand(Hand.MAIN_HAND);
+            this.mob.tryAttack(target);
+        }
     }
 }

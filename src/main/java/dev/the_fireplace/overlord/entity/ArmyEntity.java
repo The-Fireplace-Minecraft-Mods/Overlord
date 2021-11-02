@@ -34,6 +34,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -222,6 +223,19 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
     protected void initAttributes() {
         super.initAttributes();
         this.getAttributes().register(EntityAttributes.ATTACK_DAMAGE);
+        this.getAttributes().register(EntityAttributes.ATTACK_SPEED);
+    }
+
+    public float getAttackCooldownProgressPerTick() {
+        return (float) (1.0D / this.getAttributeInstance(EntityAttributes.ATTACK_SPEED).getValue() * 20.0D);
+    }
+
+    public float getAttackCooldownProgress(float baseTime) {
+        return MathHelper.clamp(((float) this.lastAttackedTicks + baseTime) / this.getAttackCooldownProgressPerTick(), 0.0F, 1.0F);
+    }
+
+    public void resetLastAttackedTicks() {
+        this.lastAttackedTicks = 0;
     }
 
     @Override

@@ -658,18 +658,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         return true;
     }
 
-    public float getAttackCooldownProgressPerTick() {
-        return (float) (1.0D / this.getAttributeInstance(EntityAttributes.ATTACK_SPEED).getValue() * 20.0D);
-    }
-
-    public float getAttackCooldownProgress(float baseTime) {
-        return MathHelper.clamp(((float) this.lastAttackedTicks + baseTime) / this.getAttackCooldownProgressPerTick(), 0.0F, 1.0F);
-    }
-
-    public void resetLastAttackedTicks() {
-        this.lastAttackedTicks = 0;
-    }
-
     public ItemCooldownManager getItemCooldownManager() {
         return this.itemCooldownManager;
     }
