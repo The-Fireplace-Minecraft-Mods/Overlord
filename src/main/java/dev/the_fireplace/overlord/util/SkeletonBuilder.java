@@ -29,6 +29,7 @@ public class SkeletonBuilder
     public static final int REQUIRED_MILK_COUNT = 2;
     public static final int REQUIRED_MUSCLE_COUNT = 32;
     public static final int REQUIRED_SKIN_COUNT = 32;
+    public static final int REQUIRED_DYE_COUNT = 8;
 
     public static boolean hasEssentialContents(Inventory casket) {
         int boneCount = 0, milkCount = 0;
@@ -111,6 +112,33 @@ public class SkeletonBuilder
             }
             if (stack.getItem().isIn(OverlordItemTags.FLESH)) {
                 skinCount = reduceStack(casket, slot, stack, skinCount);
+            }
+        }
+    }
+
+    public static boolean hasDye(Inventory casket) {
+        int dyeCount = 0;
+        for (int slot = 0; slot < casket.getInvSize(); slot++) {
+            ItemStack stack = casket.getInvStack(slot);
+            if (stack.isEmpty()) {
+                continue;
+            }
+            if (stack.getItem() instanceof DyeItem) {
+                dyeCount += stack.getCount();
+            }
+        }
+        return dyeCount >= REQUIRED_DYE_COUNT;
+    }
+
+    public static void removeDye(Inventory casket) {
+        int dyeCount = REQUIRED_DYE_COUNT;
+        for (int slot = 0; slot < casket.getInvSize() && dyeCount > 0; slot++) {
+            ItemStack stack = casket.getInvStack(slot);
+            if (stack.isEmpty()) {
+                continue;
+            }
+            if (stack.getItem() instanceof DyeItem) {
+                dyeCount = reduceStack(casket, slot, stack, dyeCount);
             }
         }
     }
@@ -276,10 +304,11 @@ public class SkeletonBuilder
         }
         if (!tombstone.getNameText().isEmpty()) {
             String skinName = tombstone.getNameText().trim();
-            if (hasSkin && PlayerNameHelper.VALID_NAME_REGEX.matcher(skinName).matches()) {//TODO use dye for skinsuit
+            if (hasSkin && PlayerNameHelper.VALID_NAME_REGEX.matcher(skinName).matches() && hasDye(casket)) {
                 UserCache.setUseRemote(true);
                 GameProfile profile = world.getServer().getUserCache().findByName(skinName);
                 if (profile != null) {
+                    removeDye(casket);
                     entity.setSkinsuit(profile.getId());
                 }
             }
