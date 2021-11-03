@@ -34,10 +34,10 @@ import net.minecraft.world.GameMode;
 @Environment(EnvType.CLIENT)
 public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEntity, OwnedSkeletonModel>
 {
-    private static final Identifier NO_TEXTURE_TO_CACHE = new Identifier(Overlord.MODID, "");
     private final EmptyUUID emptyUUID;
     private final OwnedSkeletonModel leggingsModel;
-    private Identifier cachedTexture = null;
+    private PlayerListEntry cachedListEntry = null;
+    private Identifier previousSkinTexture = null;
 
     public OwnedSkeletonRenderer(EntityRenderDispatcher dispatcher) {
         super(dispatcher, new OwnedSkeletonModel(false), 0.5F);
@@ -60,8 +60,13 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
         }
         if (entity.getGrowthPhase() == SkeletonGrowthPhase.ADULT && entity.hasSkin() && !emptyUUID.is(entity.getSkinsuit())) {
             cacheSkinsuitTexture(entity);
-            if (!cachedTexture.equals(NO_TEXTURE_TO_CACHE)) {
-                return cachedTexture;
+            if (cachedListEntry != null) {
+                Identifier skinTexture = cachedListEntry.getSkinTexture();
+                if (!skinTexture.equals(previousSkinTexture)) {
+                    this.model.setHasThinArmTexture(cachedListEntry.getModel().equals("slim"));
+                    previousSkinTexture = skinTexture;
+                }
+                return skinTexture;
             }
         }
         if (entity.hasSkin() && !entity.hasMuscles()) {
@@ -74,27 +79,18 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
     }
 
     private void cacheSkinsuitTexture(OwnedSkeletonEntity entity) {
-        if (cachedTexture == null) {
+        if (cachedListEntry == null) {
             ClientPlayNetworkHandler networkHandler = MinecraftClient.getInstance().getNetworkHandler();
             if (networkHandler != null) {
                 GameProfile gameProfile = new GameProfile(entity.getSkinsuit(), null);
                 PlayerListS2CPacket dummyPlayerListPacket = new PlayerListS2CPacket();
-                PlayerListEntry playerListEntry = new PlayerListEntry(dummyPlayerListPacket.new Entry(
+                cachedListEntry = new PlayerListEntry(dummyPlayerListPacket.new Entry(
                     gameProfile,
                     0,
                     GameMode.SURVIVAL,
                     null
                 ));
-                if (playerListEntry.hasSkinTexture()) {
-                    cachedTexture = playerListEntry.getSkinTexture();
-                    boolean hasThinArms = playerListEntry.getModel().equals("slim");
-                    if (hasThinArms) {
-                        this.model.setHasThinArmTexture(true);
-                    }
-                    return;
-                }
             }
-            cachedTexture = NO_TEXTURE_TO_CACHE;
         }
     }
 
