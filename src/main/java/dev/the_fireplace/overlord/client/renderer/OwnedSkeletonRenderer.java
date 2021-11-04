@@ -31,25 +31,52 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.UseAction;
 import net.minecraft.world.GameMode;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 @Environment(EnvType.CLIENT)
 public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEntity, OwnedSkeletonModel>
 {
     private final EmptyUUID emptyUUID;
-    private final OwnedSkeletonModel leggingsModel;
-    private PlayerListEntry cachedListEntry = null;
-    private Identifier previousSkinTexture = null;
+
+    private final Map<UUID, PlayerListEntry> skinCache;
+
+    private final OwnedSkeletonModel thinSkinMuscleModel;
+    private final OwnedSkeletonModel muscleModel;
+    private final OwnedSkeletonModel thinSkinModel;
+    private final OwnedSkeletonModel standardModel;
+
+    private final ArmorBipedFeatureRenderer<OwnedSkeletonEntity, OwnedSkeletonModel, BipedEntityModel<OwnedSkeletonEntity>> standardArmorRenderer;
+    private final ArmorBipedFeatureRenderer<OwnedSkeletonEntity, OwnedSkeletonModel, BipedEntityModel<OwnedSkeletonEntity>> muscleArmorRenderer;
+
+    private ArmorBipedFeatureRenderer<OwnedSkeletonEntity, OwnedSkeletonModel, BipedEntityModel<OwnedSkeletonEntity>> currentArmorRenderer;
+    private ArmorBipedFeatureRenderer<OwnedSkeletonEntity, OwnedSkeletonModel, BipedEntityModel<OwnedSkeletonEntity>> previousArmorRenderer;
 
     public OwnedSkeletonRenderer(EntityRenderDispatcher dispatcher) {
-        super(dispatcher, new OwnedSkeletonModel(false), 0.5F);
+        super(dispatcher, new OwnedSkeletonModel(false, false, false), 0.5F);
 
         this.emptyUUID = DIContainer.get().getInstance(EmptyUUID.class);
 
-        leggingsModel = new OwnedSkeletonModel(true);
+        this.standardModel = new OwnedSkeletonModel(false, false, false);
+        this.muscleModel = new OwnedSkeletonModel(true, false, false);
+        this.thinSkinModel = new OwnedSkeletonModel(false, false, true);
+        this.thinSkinMuscleModel = new OwnedSkeletonModel(true, false, true);
+
         BipedEntityModel<OwnedSkeletonEntity> bodyModel = new BipedEntityModel<>(1.0F);
-        this.addFeature(new ArmorBipedFeatureRenderer<>(this, leggingsModel, bodyModel));
+        OwnedSkeletonModel standardLeggingsModel = new OwnedSkeletonModel(false, true, false);
+        this.standardArmorRenderer = new ArmorBipedFeatureRenderer<>(this, standardLeggingsModel, bodyModel);
+        OwnedSkeletonModel muscleLeggingsModel = new OwnedSkeletonModel(true, true, false);
+        this.muscleArmorRenderer = new ArmorBipedFeatureRenderer<>(this, muscleLeggingsModel, bodyModel);
+
+        this.addFeature(this.standardArmorRenderer);
         this.addFeature(new AugmentHeadFeatureRenderer<>(this));
         this.addFeature(new StuckArrowsFeatureRenderer<>(this));
         this.addFeature(new StuckStingersFeatureRenderer<>(this));
+
+        this.skinCache = new HashMap<>();
+        this.currentArmorRenderer = this.standardArmorRenderer;
+        this.previousArmorRenderer = this.standardArmorRenderer;
     }
 
     @Override
@@ -58,15 +85,11 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
         if (!entity.hasSkin() && !entity.hasMuscles()) {
             return new Identifier(Overlord.MODID, "textures/entity/owned_skeleton/owned_skeleton.png");
         }
-        if (entity.getGrowthPhase() == SkeletonGrowthPhase.ADULT && entity.hasSkin() && !emptyUUID.is(entity.getSkinsuit())) {
+        UUID skinsuit = entity.getSkinsuit();
+        if (entity.getGrowthPhase() == SkeletonGrowthPhase.ADULT && entity.hasSkin() && !emptyUUID.is(skinsuit)) {
             cacheSkinsuitTexture(entity);
-            if (cachedListEntry != null) {
-                Identifier skinTexture = cachedListEntry.getSkinTexture();
-                if (!skinTexture.equals(previousSkinTexture)) {
-                    this.model.setHasThinArmTexture(cachedListEntry.getModel().equals("slim"));
-                    previousSkinTexture = skinTexture;
-                }
-                return skinTexture;
+            if (skinCache.containsKey(skinsuit)) {
+                return skinCache.get(skinsuit).getSkinTexture();
             }
         }
         if (entity.hasSkin() && !entity.hasMuscles()) {
@@ -79,18 +102,20 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
     }
 
     private void cacheSkinsuitTexture(OwnedSkeletonEntity entity) {
-        if (cachedListEntry == null) {
+        UUID skinsuit = entity.getSkinsuit();
+        if (!skinCache.containsKey(skinsuit)) {
             ClientPlayNetworkHandler networkHandler = MinecraftClient.getInstance().getNetworkHandler();
-            if (networkHandler != null) {
-                GameProfile gameProfile = new GameProfile(entity.getSkinsuit(), null);
-                PlayerListS2CPacket dummyPlayerListPacket = new PlayerListS2CPacket();
-                cachedListEntry = new PlayerListEntry(dummyPlayerListPacket.new Entry(
-                    gameProfile,
-                    0,
-                    GameMode.SURVIVAL,
-                    null
-                ));
+            if (networkHandler == null) {
+                return;
             }
+            GameProfile gameProfile = new GameProfile(skinsuit, null);
+            PlayerListS2CPacket dummyPlayerListPacket = new PlayerListS2CPacket();
+            skinCache.put(skinsuit, new PlayerListEntry(dummyPlayerListPacket.new Entry(
+                gameProfile,
+                0,
+                GameMode.SURVIVAL,
+                null
+            )));
         }
     }
 
@@ -102,17 +127,34 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
 
     @Override
     public void render(OwnedSkeletonEntity livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
+        setModel(livingEntity);
         setModelPose(livingEntity);
-        if (livingEntity.getGrowthPhase() == SkeletonGrowthPhase.ADULT && livingEntity.hasMuscles() && (!this.getModel().hasThickLimbs() || !this.leggingsModel.hasThickLimbs())) {
-            this.getModel().setHasThickLimbs(true);
-            leggingsModel.setHasThickLimbs(true);
-        } else if ((livingEntity.getGrowthPhase() != SkeletonGrowthPhase.ADULT || !livingEntity.hasMuscles()) && (this.getModel().hasThickLimbs() || this.leggingsModel.hasThickLimbs())) {
-            this.getModel().setHasThickLimbs(false);
-            leggingsModel.setHasThickLimbs(false);
-        }
         ItemStack augment = livingEntity.getAugmentBlockStack();
         this.getModel().head.visible = augment.isEmpty();
         super.render(livingEntity, f, g, matrixStack, vertexConsumerProvider, i);
+    }
+
+    private void setModel(OwnedSkeletonEntity entity) {
+        boolean hasThinArmTexture = skinCache.containsKey(entity.getSkinsuit()) && skinCache.get(entity.getSkinsuit()).getModel().equals("slim");
+        boolean hasThickLimbs = entity.getGrowthPhase() == SkeletonGrowthPhase.ADULT && entity.hasMuscles();
+        if (hasThinArmTexture && hasThickLimbs) {
+            this.model = this.thinSkinMuscleModel;
+            this.currentArmorRenderer = this.muscleArmorRenderer;
+        } else if (hasThinArmTexture) {
+            this.model = this.thinSkinModel;
+            this.currentArmorRenderer = this.standardArmorRenderer;
+        } else if (hasThickLimbs) {
+            this.model = this.muscleModel;
+            this.currentArmorRenderer = this.muscleArmorRenderer;
+        } else {
+            this.model = this.standardModel;
+            this.currentArmorRenderer = this.standardArmorRenderer;
+        }
+        if (this.previousArmorRenderer != this.currentArmorRenderer) {
+            this.features.remove(this.previousArmorRenderer);
+            this.addFeature(currentArmorRenderer);
+            this.previousArmorRenderer = this.currentArmorRenderer;
+        }
     }
 
     private void setModelPose(OwnedSkeletonEntity entity) {

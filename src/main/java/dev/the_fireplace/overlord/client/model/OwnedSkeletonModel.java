@@ -15,26 +15,18 @@ import net.minecraft.util.math.MathHelper;
 @Environment(EnvType.CLIENT)
 public class OwnedSkeletonModel extends PlayerEntityModel<OwnedSkeletonEntity>
 {
-    private boolean hasThickLimbs;
-    private boolean isArmor = false;
-    private boolean hasThinArmTexture = false;
+    private final boolean hasThickLimbs;
+    private final boolean isArmor;
+    private final boolean hasThinArmTexture;
 
-    public OwnedSkeletonModel(boolean isArmor) {
+    public OwnedSkeletonModel(boolean hasThickLimbs, boolean isArmor, boolean hasThinArmTexture) {
         super(0, false);
+        this.hasThickLimbs = hasThickLimbs;
+        this.isArmor = isArmor;
+        this.hasThinArmTexture = hasThinArmTexture;
         if (isArmor) {
-            this.isArmor = true;
             this.textureHeight = 32;
         }
-        setHasThickLimbs(false);
-    }
-
-    public void setHasThickLimbs(boolean hasThickLimbs) {
-        this.hasThickLimbs = hasThickLimbs;
-        resizeLimbs();
-    }
-
-    public void setHasThinArmTexture(boolean hasThinArmTexture) {
-        this.hasThinArmTexture = hasThinArmTexture;
         resizeLimbs();
     }
 
@@ -42,7 +34,7 @@ public class OwnedSkeletonModel extends PlayerEntityModel<OwnedSkeletonEntity>
         float armorExtra = isArmor ? 0.5F : 0;
         float extraXZ = hasThickLimbs ? 0F : -0.5F;
         float armWidth = hasThinArmTexture ? 3 : 4;
-        float armExtraX = hasThinArmTexture ? 1 : 0;
+        float armExtraX = hasThinArmTexture ? 0.5F : 0;
         float leftArmStartX = hasThickLimbs ? -1.0F : -1.5F;
         float rightArmStartX = hasThickLimbs ? -3.0F : -2.5F;
         float armPivotY = hasThickLimbs ? 2.5F : 2.0F;
@@ -98,24 +90,32 @@ public class OwnedSkeletonModel extends PlayerEntityModel<OwnedSkeletonEntity>
             boolean raiseRightArm = entity.getMainArm() == Arm.RIGHT || raiseBothArms;
             boolean raiseLeftArm = entity.getMainArm() == Arm.LEFT || raiseBothArms;
             if (raiseRightArm) {
-                ModelPart arm = this.rightArm;
-                arm.roll = 0.0F;
-                arm.yaw = -(0.1F - k * 0.6F);
-                arm.pitch = (float) -Math.PI / 2;
-                arm.pitch -= k * 1.2F - l * 0.4F;
-                arm.roll += MathHelper.cos(customAngle * 0.09F) * 0.05F + 0.05F;
-                arm.pitch += MathHelper.sin(customAngle * 0.067F) * 0.05F;
+                raiseRightArm(customAngle, k, l, this.rightArm);
+                raiseRightArm(customAngle, k, l, this.rightSleeve);
             }
             if (raiseLeftArm) {
-                ModelPart arm = this.leftArm;
-                arm.roll = 0.0F;
-                arm.yaw = 0.1F - k * 0.6F;
-                arm.pitch = (float) -Math.PI / 2;
-                arm.pitch -= k * 1.2F - l * 0.4F;
-                arm.roll -= MathHelper.cos(customAngle * 0.09F) * 0.05F + 0.05F;
-                arm.pitch -= MathHelper.sin(customAngle * 0.067F) * 0.05F;
+                raiseLeftArm(customAngle, k, l, this.leftArm);
+                raiseLeftArm(customAngle, k, l, this.leftSleeve);
             }
         }
+    }
+
+    private void raiseRightArm(float customAngle, float k, float l, ModelPart arm) {
+        arm.roll = 0.0F;
+        arm.yaw = -(0.1F - k * 0.6F);
+        arm.pitch = (float) -Math.PI / 2;
+        arm.pitch -= k * 1.2F - l * 0.4F;
+        arm.roll += MathHelper.cos(customAngle * 0.09F) * 0.05F + 0.05F;
+        arm.pitch += MathHelper.sin(customAngle * 0.067F) * 0.05F;
+    }
+
+    private void raiseLeftArm(float customAngle, float k, float l, ModelPart arm) {
+        arm.roll = 0.0F;
+        arm.yaw = 0.1F - k * 0.6F;
+        arm.pitch = (float) -Math.PI / 2;
+        arm.pitch -= k * 1.2F - l * 0.4F;
+        arm.roll -= MathHelper.cos(customAngle * 0.09F) * 0.05F + 0.05F;
+        arm.pitch -= MathHelper.sin(customAngle * 0.067F) * 0.05F;
     }
 
     @Override
@@ -162,9 +162,5 @@ public class OwnedSkeletonModel extends PlayerEntityModel<OwnedSkeletonEntity>
         }
 
         super.animateModel(entity, f, g, h);
-    }
-
-    public boolean hasThickLimbs() {
-        return hasThickLimbs;
     }
 }
