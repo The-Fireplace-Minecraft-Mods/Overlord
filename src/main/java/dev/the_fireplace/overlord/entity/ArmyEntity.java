@@ -19,6 +19,7 @@ import dev.the_fireplace.overlord.model.aiconfig.combat.CombatCategory;
 import dev.the_fireplace.overlord.model.aiconfig.movement.MovementCategory;
 import dev.the_fireplace.overlord.model.aiconfig.movement.PositionSetting;
 import dev.the_fireplace.overlord.model.aiconfig.tasks.TasksCategory;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.CrossbowUser;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -160,6 +161,10 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
     }
 
     protected int addIdleGoals(int goalWeight) {
+        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            this.goalSelector.add(goalWeight, new LookAtEntityGoal(this, PlayerEntity.class, 16.0F));
+            return ++goalWeight;
+        }
         if (aiSettings.getCombat().isEnabled()) {
             this.goalSelector.add(goalWeight++, new LookAtEntityGoal(this, MobEntity.class, 12.0F));
         }
