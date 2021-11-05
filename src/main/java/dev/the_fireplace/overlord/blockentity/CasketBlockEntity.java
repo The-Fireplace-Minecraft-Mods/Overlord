@@ -1,7 +1,12 @@
 package dev.the_fireplace.overlord.blockentity;
 
+import dev.the_fireplace.overlord.block.internal.CasketBlock;
 import dev.the_fireplace.overlord.init.OverlordBlockEntities;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.HorizontalFacingBlock;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
+import net.minecraft.block.enums.BedPart;
 import net.minecraft.container.Container;
 import net.minecraft.container.GenericContainer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -12,11 +17,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DefaultedList;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.Objects;
 
-public class CasketBlockEntity extends LockableContainerBlockEntity {
+public class CasketBlockEntity extends LockableContainerBlockEntity
+{
     private DefaultedList<ItemStack> inventory;
+    private Boolean cachedIsFoot = null;
+
     public CasketBlockEntity() {
         super(OverlordBlockEntities.CASKET_BLOCK_ENTITY);
         this.inventory = DefaultedList.ofSize(54, ItemStack.EMPTY);
@@ -24,11 +33,19 @@ public class CasketBlockEntity extends LockableContainerBlockEntity {
 
     @Override
     protected Text getContainerName() {
+        if (isCasketFoot()) {
+            return this.getHead().getContainerName();
+        }
+
         return new TranslatableText("container.casket");
     }
 
     @Override
     protected Container createContainer(int syncId, PlayerInventory playerInventory) {
+        if (isCasketFoot()) {
+            return this.getHead().createContainer(syncId, playerInventory);
+        }
+
         return GenericContainer.createGeneric9x6(syncId, playerInventory, this);
     }
 
@@ -39,64 +56,98 @@ public class CasketBlockEntity extends LockableContainerBlockEntity {
 
     @Override
     public boolean isInvEmpty() {
-        for(ItemStack stack: inventory)
-            if(!stack.isEmpty())
+        for (ItemStack stack : getHead().inventory) {
+            if (!stack.isEmpty()) {
                 return false;
+            }
+        }
         return true;
     }
 
     @Override
     public ItemStack getInvStack(int slot) {
-        return inventory.get(slot);
+        return getHead().inventory.get(slot);
     }
 
     @Override
     public ItemStack takeInvStack(int slot, int amount) {
-        ItemStack itemStack = Inventories.splitStack(inventory, slot, amount);
-        if (!itemStack.isEmpty())
-            this.markDirty();
+        ItemStack itemStack = Inventories.splitStack(getHead().inventory, slot, amount);
+        if (!itemStack.isEmpty()) {
+            this.getHead().markDirty();
+        }
 
         return itemStack;
     }
 
     @Override
     public ItemStack removeInvStack(int slot) {
-        return Inventories.removeStack(inventory, slot);
+        return Inventories.removeStack(getHead().inventory, slot);
     }
 
     @Override
     public void setInvStack(int slot, ItemStack stack) {
-        inventory.set(slot, stack);
-        if (stack.getCount() > this.getInvMaxStackAmount())
-            stack.setCount(this.getInvMaxStackAmount());
+        CasketBlockEntity head = getHead();
+        head.inventory.set(slot, stack);
+        int maxStackAmount = head.getInvMaxStackAmount();
+        if (stack.getCount() > maxStackAmount) {
+            stack.setCount(maxStackAmount);
+        }
 
         this.markDirty();
     }
 
     @Override
     public boolean canPlayerUseInv(PlayerEntity player) {
-        if (Objects.requireNonNull(this.world).getBlockEntity(this.pos) != this)
+        if (Objects.requireNonNull(this.world).getBlockEntity(this.pos) != this) {
             return false;
-        else
-            return player.squaredDistanceTo((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
+        }
+
+        return player.squaredDistanceTo((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) <= 64.0D;
     }
 
     @Override
     public void clear() {
-        inventory.clear();
+        this.getHead().inventory.clear();
     }
 
     @Override
     public void fromTag(CompoundTag compoundTag) {
         super.fromTag(compoundTag);
-        this.inventory = DefaultedList.ofSize(this.getInvSize(), ItemStack.EMPTY);
-        Inventories.fromTag(compoundTag, this.inventory);
+        if (!isCasketFoot()) {
+            this.inventory = DefaultedList.ofSize(this.getInvSize(), ItemStack.EMPTY);
+            Inventories.fromTag(compoundTag, this.inventory);
+        }
     }
 
     public CompoundTag toTag(CompoundTag compoundTag) {
         super.toTag(compoundTag);
-        Inventories.toTag(compoundTag, this.inventory);
+        if (!isCasketFoot()) {
+            Inventories.toTag(compoundTag, this.inventory);
+        }
 
         return compoundTag;
+    }
+
+    private boolean isCasketFoot() {
+        if (cachedIsFoot != null) {
+            return cachedIsFoot;
+        }
+        cachedIsFoot = this.world != null ? this.world.getBlockState(pos).get(CasketBlock.PART).equals(BedPart.FOOT) : null;
+
+        return cachedIsFoot != null ? cachedIsFoot : false;
+    }
+
+    private CasketBlockEntity getHead() {
+        if (!isCasketFoot() || this.world == null) {
+            return this;
+        }
+        BlockState casketState = this.world.getBlockState(pos);
+        BlockPos headPosition = pos.offset(CasketBlock.getDirectionTowardsOtherPart(
+            BedPart.FOOT,
+            casketState.get(HorizontalFacingBlock.FACING)
+        ));
+        BlockEntity head = this.world.getBlockEntity(headPosition);
+
+        return head instanceof CasketBlockEntity ? (CasketBlockEntity) head : this;
     }
 }

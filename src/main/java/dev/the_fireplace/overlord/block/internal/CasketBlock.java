@@ -41,8 +41,9 @@ import net.minecraft.world.World;
 
 import java.util.stream.Stream;
 
-public class CasketBlock extends HorizontalFacingBlock implements BlockEntityProvider, Waterloggable {
-    private static final EnumProperty<BedPart> PART = Properties.BED_PART;
+public class CasketBlock extends HorizontalFacingBlock implements BlockEntityProvider, Waterloggable
+{
+    public static final EnumProperty<BedPart> PART = Properties.BED_PART;
     private static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     private static final VoxelShape SOUTH_SHAPE = Stream.of(
@@ -82,15 +83,11 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
         this.setDefaultState(this.getStateManager().getDefaultState().with(PART, BedPart.FOOT).with(WATERLOGGED, false));
     }
 
-    public static Direction getDirection(BlockView world, BlockPos pos) {
-        BlockState blockState = world.getBlockState(pos);
-        return blockState.getBlock() instanceof CasketBlock ? blockState.get(FACING) : null;
-    }
-
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, IWorld world, BlockPos pos, BlockPos neighborPos) {
-        if(state.get(WATERLOGGED))
+        if (state.get(WATERLOGGED)) {
             world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
         if (facing == getDirectionTowardsOtherPart(state.get(PART), state.get(FACING))) {
             return neighborState.getBlock() == this && neighborState.get(PART) != state.get(PART) ? state : Blocks.AIR.getDefaultState();
         } else {
@@ -98,8 +95,8 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
         }
     }
 
-    private static Direction getDirectionTowardsOtherPart(BedPart part, Direction direction) {
-        return part == BedPart.FOOT ? direction : direction.getOpposite();
+    public static Direction getDirectionTowardsOtherPart(BedPart part, Direction facing) {
+        return part == BedPart.FOOT ? facing : facing.getOpposite();
     }
 
     @Override
@@ -160,52 +157,55 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
-        if (!world.isClient) {
-            BlockPos headPos = pos.offset(state.get(FACING));
-            world.setBlockState(headPos, state.with(PART, BedPart.HEAD), 3);
-            world.updateNeighbors(pos, Blocks.AIR);
-            state.updateNeighborStates(world, pos, 3);
-            if(itemStack.hasCustomName()) {
-                BlockEntity blockEntity = world.getBlockEntity(headPos);
-                if(blockEntity instanceof CasketBlockEntity)
-                    ((CasketBlockEntity) blockEntity).setCustomName(itemStack.getName());
+        if (world.isClient) {
+            return;
+        }
+        BlockPos headPos = pos.offset(state.get(FACING));
+        world.setBlockState(headPos, state.with(PART, BedPart.HEAD), 3);
+        world.updateNeighbors(pos, Blocks.AIR);
+        state.updateNeighborStates(world, pos, 3);
+        if (itemStack.hasCustomName()) {
+            BlockEntity blockEntity = world.getBlockEntity(headPos);
+            if (blockEntity instanceof CasketBlockEntity) {
+                ((CasketBlockEntity) blockEntity).setCustomName(itemStack.getName());
             }
         }
     }
 
     @Override
     public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.getBlock() != newState.getBlock()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof Inventory) {
-                ItemScatterer.spawn(world, pos, (Inventory)blockEntity);
-                world.updateHorizontalAdjacent(pos, this);
-            }
-
-            super.onBlockRemoved(state, world, pos, newState, moved);
+        if (state.getBlock() == newState.getBlock()) {
+            return;
         }
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof Inventory) {
+            ItemScatterer.spawn(world, pos, (Inventory) blockEntity);
+            world.updateHorizontalAdjacent(pos, this);
+        }
+
+        super.onBlockRemoved(state, world, pos, newState, moved);
     }
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient) {
-            //Always use the tile entity on the head
-            pos = state.get(PART).equals(BedPart.FOOT) ? pos.offset(state.get(FACING)) : pos;
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof CasketBlockEntity) {
-                BlockPos finalPos = pos;
-                ContainerProviderRegistry.INSTANCE.openContainer(OverlordBlockEntities.CASKET_BLOCK_ENTITY_ID, player, buf -> buf.writeBlockPos(finalPos));
-            }
+        if (world.isClient) {
+            return ActionResult.SUCCESS;
+        }
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof CasketBlockEntity) {
+            ContainerProviderRegistry.INSTANCE.openContainer(OverlordBlockEntities.CASKET_BLOCK_ENTITY_ID, player, buf -> buf.writeBlockPos(pos));
         }
         return ActionResult.SUCCESS;
     }
 
     public static CasketBlockEntity getBlockEntity(BlockState state, IWorld world, BlockPos pos) {
-        if(state.get(PART).equals(BedPart.FOOT))
+        if (state.get(PART).equals(BedPart.FOOT)) {
             pos = pos.offset(state.get(FACING));
+        }
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof CasketBlockEntity)
-            return (CasketBlockEntity)blockEntity;
+        if (blockEntity instanceof CasketBlockEntity) {
+            return (CasketBlockEntity) blockEntity;
+        }
         return null;
     }
 
