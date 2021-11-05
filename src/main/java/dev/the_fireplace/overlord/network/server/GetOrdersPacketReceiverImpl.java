@@ -3,6 +3,7 @@ package dev.the_fireplace.overlord.network.server;
 import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
+import dev.the_fireplace.overlord.domain.mechanic.Ownable;
 import dev.the_fireplace.overlord.domain.network.ClientToServerPacketIDs;
 import dev.the_fireplace.overlord.domain.network.ServerToClientPacketIDs;
 import dev.the_fireplace.overlord.domain.network.server.GetOrdersPacketReceiver;
@@ -43,7 +44,6 @@ public final class GetOrdersPacketReceiverImpl implements GetOrdersPacketReceive
 
     @Override
     public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
-        //TODO check player proximity and ownership
         int entityId = buf.readInt();
         //TODO Check which thread this runs on
         Entity entity = player.getEntityWorld().getEntityById(entityId);
@@ -52,6 +52,10 @@ public final class GetOrdersPacketReceiverImpl implements GetOrdersPacketReceive
             return;
         }
 
+        if (entity instanceof Ownable && !((Ownable) entity).getOwnerId().equals(player.getUuid())) {
+            Overlord.getLogger().warn("Get Orders packet received with wrong player ID, expected {} and got {}.", ((Ownable) entity).getOwnerId(), player.getUuid());
+            return;
+        }
         PacketByteBuf ordersPacketBuffer = openOrdersGUIBufferBuilder.build(entityId, ((OrderableEntity) entity).getAISettings());
         responseSender.sendPacket(serverToClientPacketIDs.openOrdersGuiPacketID(), ordersPacketBuffer);
     }

@@ -3,6 +3,7 @@ package dev.the_fireplace.overlord.network.server;
 import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
+import dev.the_fireplace.overlord.domain.mechanic.Ownable;
 import dev.the_fireplace.overlord.domain.network.ClientToServerPacketIDs;
 import dev.the_fireplace.overlord.domain.network.server.SaveAIPacketReceiver;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -34,12 +35,16 @@ public final class SaveAIPacketReceiverImpl implements SaveAIPacketReceiver {
 
     @Override
     public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
-        //TODO check player proximity and ownership
         int entityId = buf.readInt();
         //TODO Check which thread this runs on
         Entity entity = player.getEntityWorld().getEntityById(entityId);
         if (!(entity instanceof OrderableEntity)) {
             Overlord.getLogger().info("Entity is not orderable: {}", Objects.toString(entity));
+            return;
+        }
+
+        if (entity instanceof Ownable && !((Ownable) entity).getOwnerId().equals(player.getUuid())) {
+            Overlord.getLogger().warn("Save AI packet received with wrong player ID, expected {} and got {}.", ((Ownable) entity).getOwnerId(), player.getUuid());
             return;
         }
 

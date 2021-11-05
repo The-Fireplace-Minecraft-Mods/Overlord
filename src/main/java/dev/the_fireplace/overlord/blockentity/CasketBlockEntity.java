@@ -119,6 +119,7 @@ public class CasketBlockEntity extends LockableContainerBlockEntity
         }
     }
 
+    @Override
     public CompoundTag toTag(CompoundTag compoundTag) {
         super.toTag(compoundTag);
         if (!isCasketFoot()) {
