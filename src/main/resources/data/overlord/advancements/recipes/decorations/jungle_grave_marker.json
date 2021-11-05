@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "overlord:jungle_grave_marker"
+    ]
+  },
+  "criteria": {
+    "has_fence": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:jungle_fence"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "overlord:jungle_grave_marker"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_fence",
+      "has_the_recipe"
+    ]
+  ]
+}

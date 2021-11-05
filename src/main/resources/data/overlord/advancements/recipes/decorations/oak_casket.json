@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "overlord:oak_casket"
+    ]
+  },
+  "criteria": {
+    "has_stripped_wood": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:stripped_oak_wood"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "overlord:oak_casket"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_stripped_wood",
+      "has_the_recipe"
+    ]
+  ]
+}

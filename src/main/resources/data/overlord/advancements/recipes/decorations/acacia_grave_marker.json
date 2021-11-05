@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "minecraft:granite_tombstone_from_stonecutting"
+      "overlord:acacia_grave_marker"
     ]
   },
   "criteria": {
-    "has_polished_granite": {
+    "has_fence": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "minecraft:polished_granite"
+            "item": "minecraft:acacia_fence"
           }
         ]
       }
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "minecraft:granite_tombstone_from_stonecutting"
+        "recipe": "overlord:acacia_grave_marker"
       }
     }
   },
   "requirements": [
     [
-      "has_polished_granite",
+      "has_fence",
       "has_the_recipe"
     ]
   ]

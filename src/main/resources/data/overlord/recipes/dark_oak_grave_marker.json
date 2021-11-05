@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "grave_marker",
+  "pattern": [
+    "%%%",
+    " # ",
+    " # "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:dark_oak_fence"
+    },
+    "%": {
+      "item": "minecraft:dark_oak_slab"
+    }
+  },
+  "result": {
+    "item": "overlord:dark_oak_grave_marker",
+    "count": 2
+  }
+}

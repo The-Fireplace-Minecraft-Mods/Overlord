@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.init.OverlordBlocks;
 import net.minecraft.advancement.criterion.EnterBlockCriterion;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
@@ -13,9 +14,11 @@ import net.minecraft.data.DataCache;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonFactory;
 import net.minecraft.data.server.recipe.SingleItemRecipeJsonFactory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.Items;
 import net.minecraft.predicate.NumberRange;
 import net.minecraft.predicate.StatePredicate;
 import net.minecraft.predicate.item.ItemPredicate;
@@ -34,20 +37,54 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 @SuppressWarnings("UnstableApiUsage")
-public class RecipesProvider implements DataProvider {
+public class RecipesProvider implements DataProvider
+{
     private static final Logger LOGGER = LogManager.getLogger("Overlord Recipe Generator");
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
     private final DataGenerator root;
+
+    //Workaround because the tag is empty for some reason. TODO convert to use the tag. Maybe using a command when the world is running will let it work?
+    private final Ingredient bedIngredient = Ingredient.ofItems(
+        Items.BLACK_BED,
+        Items.RED_BED,
+        Items.BLUE_BED,
+        Items.GREEN_BED,
+        Items.YELLOW_BED,
+        Items.PINK_BED,
+        Items.CYAN_BED,
+        Items.BROWN_BED,
+        Items.GRAY_BED,
+        Items.LIGHT_BLUE_BED,
+        Items.LIGHT_GRAY_BED,
+        Items.LIME_BED,
+        Items.MAGENTA_BED,
+        Items.ORANGE_BED,
+        Items.PURPLE_BED,
+        Items.WHITE_BED
+    );
 
     public RecipesProvider(DataGenerator dataGenerator) {
         this.root = dataGenerator;
     }
 
     private void generate(Consumer<RecipeJsonProvider> consumer) {
-        SingleItemRecipeJsonFactory.create(Ingredient.ofItems(Blocks.SMOOTH_STONE), OverlordBlocks.STONE_TOMBSTONE).create("has_smooth_stone", this.conditionsFromItem(Blocks.SMOOTH_STONE)).offerTo(consumer, "stone_tombstone_from_stonecutting");
-        SingleItemRecipeJsonFactory.create(Ingredient.ofItems(Blocks.POLISHED_ANDESITE), OverlordBlocks.ANDESITE_TOMBSTONE).create("has_polished_andesite", this.conditionsFromItem(Blocks.POLISHED_ANDESITE)).offerTo(consumer, "andesite_tombstone_from_stonecutting");
-        SingleItemRecipeJsonFactory.create(Ingredient.ofItems(Blocks.POLISHED_DIORITE), OverlordBlocks.DIORITE_TOMBSTONE).create("has_polished_diorite", this.conditionsFromItem(Blocks.POLISHED_DIORITE)).offerTo(consumer, "diorite_tombstone_from_stonecutting");
-        SingleItemRecipeJsonFactory.create(Ingredient.ofItems(Blocks.POLISHED_GRANITE), OverlordBlocks.GRANITE_TOMBSTONE).create("has_polished_granite", this.conditionsFromItem(Blocks.POLISHED_GRANITE)).offerTo(consumer, "granite_tombstone_from_stonecutting");
+        SingleItemRecipeJsonFactory.create(Ingredient.ofItems(Blocks.SMOOTH_STONE), OverlordBlocks.STONE_TOMBSTONE).create("has_smooth_stone", this.conditionsFromItem(Blocks.SMOOTH_STONE)).offerTo(consumer, Overlord.MODID + ":stone_tombstone_from_stonecutting");
+        SingleItemRecipeJsonFactory.create(Ingredient.ofItems(Blocks.POLISHED_ANDESITE), OverlordBlocks.ANDESITE_TOMBSTONE).create("has_polished_andesite", this.conditionsFromItem(Blocks.POLISHED_ANDESITE)).offerTo(consumer, Overlord.MODID + ":andesite_tombstone_from_stonecutting");
+        SingleItemRecipeJsonFactory.create(Ingredient.ofItems(Blocks.POLISHED_DIORITE), OverlordBlocks.DIORITE_TOMBSTONE).create("has_polished_diorite", this.conditionsFromItem(Blocks.POLISHED_DIORITE)).offerTo(consumer, Overlord.MODID + ":diorite_tombstone_from_stonecutting");
+        SingleItemRecipeJsonFactory.create(Ingredient.ofItems(Blocks.POLISHED_GRANITE), OverlordBlocks.GRANITE_TOMBSTONE).create("has_polished_granite", this.conditionsFromItem(Blocks.POLISHED_GRANITE)).offerTo(consumer, Overlord.MODID + ":granite_tombstone_from_stonecutting");
+        //TODO why is the bed item tag empty?
+        ShapedRecipeJsonFactory.create(OverlordBlocks.ACACIA_CASKET, 1).input('#', Items.STRIPPED_ACACIA_WOOD).input('%', Items.ACACIA_PLANKS).input('B', bedIngredient).pattern("###").pattern("%B%").pattern("###").group("wooden_casket").criterion("has_stripped_wood", this.conditionsFromItem(Blocks.STRIPPED_ACACIA_WOOD)).offerTo(consumer);
+        ShapedRecipeJsonFactory.create(OverlordBlocks.BIRCH_CASKET, 1).input('#', Items.STRIPPED_BIRCH_WOOD).input('%', Items.BIRCH_PLANKS).input('B', bedIngredient).pattern("###").pattern("%B%").pattern("###").group("wooden_casket").criterion("has_stripped_wood", this.conditionsFromItem(Blocks.STRIPPED_BIRCH_WOOD)).offerTo(consumer);
+        ShapedRecipeJsonFactory.create(OverlordBlocks.SPRUCE_CASKET, 1).input('#', Items.STRIPPED_SPRUCE_WOOD).input('%', Items.SPRUCE_PLANKS).input('B', bedIngredient).pattern("###").pattern("%B%").pattern("###").group("wooden_casket").criterion("has_stripped_wood", this.conditionsFromItem(Blocks.STRIPPED_SPRUCE_WOOD)).offerTo(consumer);
+        ShapedRecipeJsonFactory.create(OverlordBlocks.JUNGLE_CASKET, 1).input('#', Items.STRIPPED_JUNGLE_WOOD).input('%', Items.JUNGLE_PLANKS).input('B', bedIngredient).pattern("###").pattern("%B%").pattern("###").group("wooden_casket").criterion("has_stripped_wood", this.conditionsFromItem(Blocks.STRIPPED_JUNGLE_WOOD)).offerTo(consumer);
+        ShapedRecipeJsonFactory.create(OverlordBlocks.OAK_CASKET, 1).input('#', Items.STRIPPED_OAK_WOOD).input('%', Items.OAK_PLANKS).input('B', bedIngredient).pattern("###").pattern("%B%").pattern("###").group("wooden_casket").criterion("has_stripped_wood", this.conditionsFromItem(Blocks.STRIPPED_OAK_WOOD)).offerTo(consumer);
+        ShapedRecipeJsonFactory.create(OverlordBlocks.DARK_OAK_CASKET, 1).input('#', Items.STRIPPED_DARK_OAK_WOOD).input('%', Items.DARK_OAK_PLANKS).input('B', bedIngredient).pattern("###").pattern("%B%").pattern("###").group("wooden_casket").criterion("has_stripped_wood", this.conditionsFromItem(Blocks.STRIPPED_DARK_OAK_WOOD)).offerTo(consumer);
+        ShapedRecipeJsonFactory.create(OverlordBlocks.ACACIA_GRAVE_MARKER, 2).input('#', Items.ACACIA_FENCE).input('%', Items.ACACIA_SLAB).pattern("%%%").pattern(" # ").pattern(" # ").group("grave_marker").criterion("has_fence", this.conditionsFromItem(Items.ACACIA_FENCE)).offerTo(consumer);
+        ShapedRecipeJsonFactory.create(OverlordBlocks.BIRCH_GRAVE_MARKER, 2).input('#', Items.BIRCH_FENCE).input('%', Items.BIRCH_SLAB).pattern("%%%").pattern(" # ").pattern(" # ").group("grave_marker").criterion("has_fence", this.conditionsFromItem(Items.BIRCH_FENCE)).offerTo(consumer);
+        ShapedRecipeJsonFactory.create(OverlordBlocks.SPRUCE_GRAVE_MARKER, 2).input('#', Items.SPRUCE_FENCE).input('%', Items.SPRUCE_SLAB).pattern("%%%").pattern(" # ").pattern(" # ").group("grave_marker").criterion("has_fence", this.conditionsFromItem(Items.SPRUCE_FENCE)).offerTo(consumer);
+        ShapedRecipeJsonFactory.create(OverlordBlocks.JUNGLE_GRAVE_MARKER, 2).input('#', Items.JUNGLE_FENCE).input('%', Items.JUNGLE_SLAB).pattern("%%%").pattern(" # ").pattern(" # ").group("grave_marker").criterion("has_fence", this.conditionsFromItem(Items.JUNGLE_FENCE)).offerTo(consumer);
+        ShapedRecipeJsonFactory.create(OverlordBlocks.OAK_GRAVE_MARKER, 2).input('#', Items.OAK_FENCE).input('%', Items.OAK_SLAB).pattern("%%%").pattern(" # ").pattern(" # ").group("grave_marker").criterion("has_fence", this.conditionsFromItem(Items.OAK_FENCE)).offerTo(consumer);
+        ShapedRecipeJsonFactory.create(OverlordBlocks.DARK_OAK_GRAVE_MARKER, 2).input('#', Items.DARK_OAK_FENCE).input('%', Items.DARK_OAK_SLAB).pattern("%%%").pattern(" # ").pattern(" # ").group("grave_marker").criterion("has_fence", this.conditionsFromItem(Items.DARK_OAK_FENCE)).offerTo(consumer);
     }
 
     public String getName() {

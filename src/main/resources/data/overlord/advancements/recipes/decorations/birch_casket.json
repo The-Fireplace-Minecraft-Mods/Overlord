@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "minecraft:andesite_tombstone_from_stonecutting"
+      "overlord:birch_casket"
     ]
   },
   "criteria": {
-    "has_polished_andesite": {
+    "has_stripped_wood": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "minecraft:polished_andesite"
+            "item": "minecraft:stripped_birch_wood"
           }
         ]
       }
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "minecraft:andesite_tombstone_from_stonecutting"
+        "recipe": "overlord:birch_casket"
       }
     }
   },
   "requirements": [
     [
-      "has_polished_andesite",
+      "has_stripped_wood",
       "has_the_recipe"
     ]
   ]

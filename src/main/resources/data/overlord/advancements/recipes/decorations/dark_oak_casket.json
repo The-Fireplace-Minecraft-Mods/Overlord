@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "minecraft:diorite_tombstone_from_stonecutting"
+      "overlord:dark_oak_casket"
     ]
   },
   "criteria": {
-    "has_polished_diorite": {
+    "has_stripped_wood": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "minecraft:polished_diorite"
+            "item": "minecraft:stripped_dark_oak_wood"
           }
         ]
       }
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "minecraft:diorite_tombstone_from_stonecutting"
+        "recipe": "overlord:dark_oak_casket"
       }
     }
   },
   "requirements": [
     [
-      "has_polished_diorite",
+      "has_stripped_wood",
       "has_the_recipe"
     ]
   ]

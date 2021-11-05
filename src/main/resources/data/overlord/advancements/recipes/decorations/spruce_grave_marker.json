@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "overlord:spruce_grave_marker"
+    ]
+  },
+  "criteria": {
+    "has_fence": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:spruce_fence"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "overlord:spruce_grave_marker"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_fence",
+      "has_the_recipe"
+    ]
+  ]
+}
