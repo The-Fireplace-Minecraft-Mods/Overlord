@@ -1,0 +1,7 @@
+{
+  "parent": "overlord:block/tombstone",
+  "textures": {
+    "main": "block/polished_andesite",
+    "base": "block/andesite"
+  }
+}

@@ -131,15 +131,6 @@
             15
           ],
           "texture": "#main"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            8,
-            4
-          ],
-          "texture": "#missing"
         }
       }
     }

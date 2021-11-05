@@ -62,7 +62,10 @@ public final class OverlordBlockEntities
             TOMBSTONE_BLOCK_ENTITY_ID,
             BlockEntityType.Builder.create(
                 TombstoneBlockEntity::new,
-                OverlordBlocks.STONE_TOMBSTONE
+                OverlordBlocks.STONE_TOMBSTONE,
+                OverlordBlocks.DIORITE_TOMBSTONE,
+                OverlordBlocks.GRANITE_TOMBSTONE,
+                OverlordBlocks.ANDESITE_TOMBSTONE
             ).build(null)
         );
     }

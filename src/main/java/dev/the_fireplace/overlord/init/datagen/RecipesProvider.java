@@ -4,10 +4,23 @@ import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import dev.the_fireplace.overlord.init.OverlordBlocks;
+import net.minecraft.advancement.criterion.EnterBlockCriterion;
+import net.minecraft.advancement.criterion.InventoryChangedCriterion;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.data.DataCache;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.SingleItemRecipeJsonFactory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemConvertible;
+import net.minecraft.predicate.NumberRange;
+import net.minecraft.predicate.StatePredicate;
+import net.minecraft.predicate.item.ItemPredicate;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,7 +44,10 @@ public class RecipesProvider implements DataProvider {
     }
 
     private void generate(Consumer<RecipeJsonProvider> consumer) {
-
+        SingleItemRecipeJsonFactory.create(Ingredient.ofItems(Blocks.SMOOTH_STONE), OverlordBlocks.STONE_TOMBSTONE).create("has_smooth_stone", this.conditionsFromItem(Blocks.SMOOTH_STONE)).offerTo(consumer, "stone_tombstone_from_stonecutting");
+        SingleItemRecipeJsonFactory.create(Ingredient.ofItems(Blocks.POLISHED_ANDESITE), OverlordBlocks.ANDESITE_TOMBSTONE).create("has_polished_andesite", this.conditionsFromItem(Blocks.POLISHED_ANDESITE)).offerTo(consumer, "andesite_tombstone_from_stonecutting");
+        SingleItemRecipeJsonFactory.create(Ingredient.ofItems(Blocks.POLISHED_DIORITE), OverlordBlocks.DIORITE_TOMBSTONE).create("has_polished_diorite", this.conditionsFromItem(Blocks.POLISHED_DIORITE)).offerTo(consumer, "diorite_tombstone_from_stonecutting");
+        SingleItemRecipeJsonFactory.create(Ingredient.ofItems(Blocks.POLISHED_GRANITE), OverlordBlocks.GRANITE_TOMBSTONE).create("has_polished_granite", this.conditionsFromItem(Blocks.POLISHED_GRANITE)).offerTo(consumer, "granite_tombstone_from_stonecutting");
     }
 
     public String getName() {
@@ -102,5 +118,21 @@ public class RecipesProvider implements DataProvider {
         }
 
         dataCache.updateSha1(path, string2);
+    }
+
+    private EnterBlockCriterion.Conditions requireEnteringFluid(Block block) {
+        return new EnterBlockCriterion.Conditions(block, StatePredicate.ANY);
+    }
+
+    private InventoryChangedCriterion.Conditions conditionsFromItem(ItemConvertible itemConvertible) {
+        return this.conditionsFromItemPredicates(ItemPredicate.Builder.create().item(itemConvertible).build());
+    }
+
+    private InventoryChangedCriterion.Conditions conditionsFromTag(Tag<Item> tag) {
+        return this.conditionsFromItemPredicates(ItemPredicate.Builder.create().tag(tag).build());
+    }
+
+    private InventoryChangedCriterion.Conditions conditionsFromItemPredicates(ItemPredicate... items) {
+        return new InventoryChangedCriterion.Conditions(NumberRange.IntRange.ANY, NumberRange.IntRange.ANY, NumberRange.IntRange.ANY, items);
     }
 }

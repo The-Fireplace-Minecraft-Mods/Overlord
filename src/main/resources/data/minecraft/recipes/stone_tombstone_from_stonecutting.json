@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "minecraft:smooth_stone"
+  },
+  "result": "overlord:stone_tombstone",
+  "count": 1
+}

@@ -37,6 +37,9 @@ public final class OverlordBlocks
     public static final Block DARK_OAK_CASKET = new CasketBlock(FabricBlockSettings.copyOf(Blocks.DARK_OAK_PLANKS));
     public static final Block DARK_OAK_GRAVE_MARKER = new GraveMarkerBlock(FabricBlockSettings.copyOf(Blocks.DARK_OAK_PLANKS));
     public static final Block STONE_TOMBSTONE = new TombstoneBlock(FabricBlockSettings.copyOf(Blocks.STONE));
+    public static final Block DIORITE_TOMBSTONE = new TombstoneBlock(FabricBlockSettings.copyOf(Blocks.DIORITE));
+    public static final Block GRANITE_TOMBSTONE = new TombstoneBlock(FabricBlockSettings.copyOf(Blocks.GRANITE));
+    public static final Block ANDESITE_TOMBSTONE = new TombstoneBlock(FabricBlockSettings.copyOf(Blocks.ANDESITE));
     public static final Block BLOOD_SOAKED_SOIL = new BloodSoakedSoil(FabricBlockSettings.of(Material.SOIL)
         .strength(0.5F, 0.1F)
         .sounds(BlockSoundGroup.WET_GRASS)
@@ -59,6 +62,9 @@ public final class OverlordBlocks
         registerBlockWithItem("dark_oak_casket", DARK_OAK_CASKET, ItemGroup.DECORATIONS);
         registerBlockWithItem("dark_oak_grave_marker", DARK_OAK_GRAVE_MARKER, ItemGroup.DECORATIONS);
         registerBlockWithItem("stone_tombstone", STONE_TOMBSTONE, ItemGroup.DECORATIONS);
+        registerBlockWithItem("diorite_tombstone", DIORITE_TOMBSTONE, ItemGroup.DECORATIONS);
+        registerBlockWithItem("granite_tombstone", GRANITE_TOMBSTONE, ItemGroup.DECORATIONS);
+        registerBlockWithItem("andesite_tombstone", ANDESITE_TOMBSTONE, ItemGroup.DECORATIONS);
         registerBlockWithItem("blood_soaked_soil", BLOOD_SOAKED_SOIL, ItemGroup.BUILDING_BLOCKS);
     }
 
