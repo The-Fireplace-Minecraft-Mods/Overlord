@@ -26,6 +26,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
@@ -110,7 +111,7 @@ public abstract class ArmyEntity extends PathAwareEntity implements Ownable, Ord
                 this.goalSelector.add(goalWeight, new ArmyMeleeAttackGoal(this, 1.0D, true));
             }
             if (combat.isRanged()) {
-                if (this instanceof CrossbowUser && this instanceof RangedAttackMob) {
+                if (this instanceof CrossbowUser) {
                     int crossbowRange = 8;//TODO Figure out a good way to calc this number. Using 8 for now since that's Pillager range
                     //noinspection unchecked,rawtypes
                     this.goalSelector.add(goalWeight, new ArmyCrossbowAttackGoal(this, 1.0D, crossbowRange));
@@ -225,7 +226,7 @@ public abstract class ArmyEntity extends PathAwareEntity implements Ownable, Ord
     }
 
     public float getAttackCooldownProgressPerTick() {
-        return (float) (1.0D / this.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_SPEED).getValue() * 20.0D);
+        return (float) (1.0D / this.getAttributeValue(EntityAttributes.GENERIC_ATTACK_SPEED) * 20.0D);
     }
 
     public float getAttackCooldownProgress(float baseTime) {
@@ -269,5 +270,9 @@ public abstract class ArmyEntity extends PathAwareEntity implements Ownable, Ord
     @Override
     public int getEntityIdNumber() {
         return getEntityId();
+    }
+
+    public static DefaultAttributeContainer.Builder createArmyAttributes() {
+        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_ATTACK_DAMAGE).add(EntityAttributes.GENERIC_ATTACK_SPEED);
     }
 }

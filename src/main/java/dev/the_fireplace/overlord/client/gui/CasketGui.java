@@ -17,12 +17,11 @@ public class CasketGui extends HandledScreen<GenericContainerScreenHandler>
 
     public CasketGui(GenericContainerScreenHandler container, PlayerInventory playerInventory) {
         super(container, playerInventory, new TranslatableText("container.casket"));
-        this.height = 114 + 6 * 18;
+        this.backgroundHeight = 114 + 6 * 18;
     }
 
     @Override
     protected void drawForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
-        super.drawForeground(matrixStack, mouseX, mouseY);
         this.textRenderer.draw(matrixStack, this.title.asString(), 8.0F, 6.0F, 0x404040);
         this.textRenderer.draw(matrixStack, this.playerInventory.getDisplayName().asString(), 8.0F, (float) (this.backgroundHeight - 96 + 2), 0x404040);
     }

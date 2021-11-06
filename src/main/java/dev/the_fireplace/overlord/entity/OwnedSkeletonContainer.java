@@ -1,6 +1,7 @@
 package dev.the_fireplace.overlord.entity;
 
 import dev.the_fireplace.overlord.container.ContainerEquipmentSlot;
+import dev.the_fireplace.overlord.init.OverlordEntities;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,7 +18,7 @@ public class OwnedSkeletonContainer extends ScreenHandler
     private final SkeletonInventory inventory;
 
     public OwnedSkeletonContainer(PlayerInventory playerInventory, boolean onServer, OwnedSkeletonEntity owner, int syncId) {
-        super(null, syncId);
+        super(OverlordEntities.OWNED_SKELETON_SCREEN_HANDLER, syncId);
         this.onServer = onServer;
         this.owner = owner;
         this.inventory = owner.getInventory();

@@ -22,13 +22,14 @@ import dev.the_fireplace.overlord.model.aiconfig.movement.MovementCategory;
 import dev.the_fireplace.overlord.model.aiconfig.tasks.TasksCategory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.SharedConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RangedAttackMob;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -44,9 +45,13 @@ import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -172,7 +177,23 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (!player.world.isClient() && !player.isSneaking()) {
-            ContainerProviderRegistry.INSTANCE.openContainer(OverlordEntities.OWNED_SKELETON_ID, player, buf -> buf.writeUuid(this.getUuid()));
+            player.openHandledScreen(new ExtendedScreenHandlerFactory()
+            {
+                @Override
+                public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
+                    buf.writeUuid(OwnedSkeletonEntity.this.getUuid());
+                }
+
+                @Override
+                public Text getDisplayName() {
+                    return OwnedSkeletonEntity.this.getDisplayName();
+                }
+
+                @Override
+                public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+                    return OwnedSkeletonEntity.this.getContainer(inv, syncId);
+                }
+            });
         }
         if (player.isSneaking()
             && player.isCreative()
@@ -534,7 +555,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
     @Override
     public float getMovementSpeed() {
-        return (float) this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).getValue();
+        return (float) this.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
     }
 
     @Override
@@ -931,5 +952,9 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         CROSSBOW_CHARGE,
         DRINK,
         NEUTRAL
+    }
+
+    public static DefaultAttributeContainer.Builder createOwnedSkeletonAttributes() {
+        return ArmyEntity.createArmyAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25D);
     }
 }

@@ -37,7 +37,7 @@ public final class MeleeAttackExecutorImpl implements MeleeAttackExecutor {
         if (!target.isAttackable() || target.handleAttack(attacker)) {
             return;
         }
-        float baseAttackDamage = (float) attacker.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).getValue();
+        float baseAttackDamage = (float) attacker.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
         float enchantmentAttackDamage = EnchantmentHelper.getAttackDamage(
             attacker.getMainHandStack(),
             target instanceof LivingEntity

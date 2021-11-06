@@ -19,6 +19,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
+import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
@@ -64,14 +65,15 @@ public final class OverlordClient implements ClientDIModInitializer {
         BlockEntityRendererRegistry.INSTANCE.register(OverlordBlockEntities.TOMBSTONE_BLOCK_ENTITY, TombstoneBlockEntityRenderer::new);
     }
 
+    @SuppressWarnings("RedundantTypeArguments")
     private void registerGuis() {
         ScreenProviderRegistry.INSTANCE.<GenericContainerScreenHandler>registerFactory(
             OverlordBlockEntities.CASKET_BLOCK_ENTITY_ID,
             (container) -> new CasketGui(container, getClientPlayerInventory())
         );
-        ScreenProviderRegistry.INSTANCE.<OwnedSkeletonContainer>registerFactory(
-            OverlordEntities.OWNED_SKELETON_ID,
-            (container) -> new OwnedSkeletonGui(container.getOwner(), getClientPlayerInventory(), container.syncId)
+        ScreenRegistry.<OwnedSkeletonContainer, OwnedSkeletonGui>register(
+            OverlordEntities.OWNED_SKELETON_SCREEN_HANDLER,
+            (container, playerInventory, title) -> new OwnedSkeletonGui(container.getOwner(), playerInventory, container.syncId)
         );
         ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).register((atlasTexture, registry) -> {
             registry.register(ContainerEquipmentSlot.EMPTY_WEAPON_SLOT_TEXTURE);

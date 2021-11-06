@@ -1,5 +1,6 @@
 package dev.the_fireplace.overlord.impl.inventory;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.domain.inventory.CommonPriorityMappers;
@@ -32,7 +33,7 @@ public class CommonPriorityMappersImpl implements CommonPriorityMappers
             } else {
                 double max = 0;
                 for (EquipmentSlot slot : Sets.newHashSet(EquipmentSlot.values()).stream().filter(s -> s.getType().equals(EquipmentSlot.Type.HAND)).collect(Collectors.toSet())) {
-                    Collection<EntityAttributeModifier> armorMods = stack.getAttributeModifiers(slot).get(EntityAttributes.GENERIC_ARMOR);
+                    Collection<EntityAttributeModifier> armorMods = Lists.newArrayList(stack.getAttributeModifiers(slot).get(EntityAttributes.GENERIC_ARMOR));
                     armorMods.addAll(stack.getAttributeModifiers(slot).get(EntityAttributes.GENERIC_ARMOR_TOUGHNESS));
                     double totalArmorValue = 0;
                     for (EntityAttributeModifier modifier : armorMods) {

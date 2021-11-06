@@ -4,8 +4,9 @@ import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.blockentity.CasketBlockEntity;
 import dev.the_fireplace.overlord.blockentity.GraveMarkerBlockEntity;
 import dev.the_fireplace.overlord.blockentity.TombstoneBlockEntity;
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
@@ -38,7 +39,8 @@ public final class OverlordBlockEntities
                 OverlordBlocks.DARK_OAK_CASKET
             ).build(null)
         );
-        ContainerProviderRegistry.INSTANCE.registerFactory(CASKET_BLOCK_ENTITY_ID, (syncId, identifier, player, buf) -> {
+        ScreenHandlerRegistry.registerExtended(CASKET_BLOCK_ENTITY_ID, (syncId, playerInventory, buf) -> {
+            PlayerEntity player = playerInventory.player;
             final World world = player.world;
             final BlockPos pos = buf.readBlockPos();
             return Objects.requireNonNull(world.getBlockState(pos).createScreenHandlerFactory(player.world, pos))

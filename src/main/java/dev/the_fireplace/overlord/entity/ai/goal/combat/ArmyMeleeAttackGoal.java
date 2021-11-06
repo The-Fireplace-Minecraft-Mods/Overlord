@@ -39,7 +39,7 @@ public class ArmyMeleeAttackGoal extends MeleeAttackGoal
         double d = this.getSquaredMaxAttackDistance(target);
         if (squaredDistance <= d && this.method_28347()) {
             if (!this.mob.getEntityWorld().isClient()) {
-                double attackSpeed = this.mob.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_SPEED).getValue();
+                double attackSpeed = this.mob.getAttributeValue(EntityAttributes.GENERIC_ATTACK_SPEED);
                 ((MeleeAttackGoalAccessor) this).setField_24667(Math.max(1, (int) Math.ceil(20D / attackSpeed - 0.5)));
             }
             this.mob.swingHand(Hand.MAIN_HAND);
