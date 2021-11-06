@@ -8,5 +8,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface MeleeAttackGoalAccessor
 {
     @Accessor
-    void setField_24667(int ticksUntilAttack);
+    void setCooldown(int ticksUntilAttack);
 }

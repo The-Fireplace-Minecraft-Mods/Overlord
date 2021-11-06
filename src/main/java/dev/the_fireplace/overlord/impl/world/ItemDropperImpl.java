@@ -55,16 +55,16 @@ public final class ItemDropperImpl implements ItemDropper {
         ItemEntity itemEntity = new ItemEntity(entity.world, entity.getX(), itemSpawnY, entity.getZ(), stack);
         itemEntity.setPickupDelay(40);
         itemEntity.setThrower(entity.getUuid());
-        float g = MathHelper.sin(entity.pitch * (float) Math.PI/180);
-        float j = MathHelper.cos(entity.pitch * (float) Math.PI/180);
-        float k = MathHelper.sin(entity.yaw * (float) Math.PI/180);
-        float l = MathHelper.cos(entity.yaw * (float) Math.PI/180);
-        float m = random.nextFloat() * (float) Math.PI*2;
+        float g = MathHelper.sin(entity.getPitch() * (float) Math.PI / 180);
+        float j = MathHelper.cos(entity.getPitch() * (float) Math.PI / 180);
+        float k = MathHelper.sin(entity.getYaw() * (float) Math.PI / 180);
+        float l = MathHelper.cos(entity.getYaw() * (float) Math.PI / 180);
+        float m = random.nextFloat() * (float) Math.PI * 2;
         float n = 0.02f * random.nextFloat();
         itemEntity.setVelocity(
-            (double)(-k * j * 0.3f) + Math.cos(m) * (double)n,
+            (double) (-k * j * 0.3f) + Math.cos(m) * (double) n,
             -g * 0.3f + 0.1f + (random.nextFloat() - random.nextFloat()) * 0.1f,
-            (double)(l * j * 0.3f) + Math.sin(m) * (double)n
+            (double) (l * j * 0.3f) + Math.sin(m) * (double) n
         );
 
         spawner.spawn(entity.getEntityWorld(), itemEntity);

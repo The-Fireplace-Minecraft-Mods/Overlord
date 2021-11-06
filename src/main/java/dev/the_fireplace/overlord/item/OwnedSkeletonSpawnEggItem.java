@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
@@ -28,7 +29,8 @@ import java.util.Objects;
 
 public class OwnedSkeletonSpawnEggItem extends SpawnEggItem {
     private static final String SKELETON_DATA_TAG = "skeletonData";
-    public OwnedSkeletonSpawnEggItem(EntityType<?> type, int primaryColor, int secondaryColor, Settings settings) {
+
+    public OwnedSkeletonSpawnEggItem(EntityType<? extends MobEntity> type, int primaryColor, int secondaryColor, Settings settings) {
         super(type, primaryColor, secondaryColor, settings);
     }
 
@@ -94,7 +96,7 @@ public class OwnedSkeletonSpawnEggItem extends SpawnEggItem {
             if (entityType.spawnFromItemStack((ServerWorld) world, itemStack, user, blockPos, SpawnReason.SPAWN_EGG, false, false) == null) {
                 return TypedActionResult.pass(itemStack);
             } else {
-                if (!user.abilities.creativeMode) {
+                if (!user.getAbilities().creativeMode) {
                     itemStack.decrement(1);
                 }
 

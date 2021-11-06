@@ -109,7 +109,7 @@ public class FollowOwnerGoal extends Goal
         } else if (!this.canTeleportTo(new BlockPos(x, y, z))) {
             return false;
         } else {
-            this.armyEntity.refreshPositionAndAngles((double) ((float) x + 0.5F), (double) y, (double) ((float) z + 0.5F), this.armyEntity.yaw, this.armyEntity.pitch);
+            this.armyEntity.refreshPositionAndAngles((double) ((float) x + 0.5F), (double) y, (double) ((float) z + 0.5F), this.armyEntity.getYaw(), this.armyEntity.getPitch());
             this.navigation.stop();
             return true;
         }

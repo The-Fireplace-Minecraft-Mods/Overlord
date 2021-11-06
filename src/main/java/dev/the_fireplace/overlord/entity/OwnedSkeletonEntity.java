@@ -35,7 +35,6 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -231,9 +230,9 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
         if (source != null) {
             this.setVelocity(
-                -MathHelper.cos((this.knockbackVelocity + this.yaw) * (float) Math.PI / 180) * 0.1f,
+                -MathHelper.cos((this.knockbackVelocity + this.getYaw()) * (float) Math.PI / 180) * 0.1f,
                 0.1f,
-                -MathHelper.sin((this.knockbackVelocity + this.yaw) * (float) Math.PI / 180) * 0.1f
+                -MathHelper.sin((this.knockbackVelocity + this.getYaw()) * (float) Math.PI / 180) * 0.1f
             );
         } else {
             this.setVelocity(0.0D, 0.1D, 0.0D);
@@ -634,47 +633,13 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         return this.inventory.armor;
     }
 
-    @Override
-    public boolean equip(int slot, ItemStack item) {
-        if (slot >= 0 && slot < this.inventory.main.size()) {
-            this.inventory.setStack(slot, item);
-            return true;
-        }
-        EquipmentSlot equipmentSlot;
-        if (slot == 100 + EquipmentSlot.HEAD.getEntitySlotId()) {
-            equipmentSlot = EquipmentSlot.HEAD;
-        } else if (slot == 100 + EquipmentSlot.CHEST.getEntitySlotId()) {
-            equipmentSlot = EquipmentSlot.CHEST;
-        } else if (slot == 100 + EquipmentSlot.LEGS.getEntitySlotId()) {
-            equipmentSlot = EquipmentSlot.LEGS;
-        } else if (slot == 100 + EquipmentSlot.FEET.getEntitySlotId()) {
-            equipmentSlot = EquipmentSlot.FEET;
-        } else {
-            equipmentSlot = null;
-        }
-
-        if (slot == 98) {
-            this.equipStack(EquipmentSlot.MAINHAND, item);
-            return true;
-        } else if (slot == 99) {
-            this.equipStack(EquipmentSlot.OFFHAND, item);
-            return true;
-        }
-        if (!item.isEmpty() && MobEntity.getPreferredEquipmentSlot(item) != equipmentSlot) {
-            return false;
-        }
-
-        this.inventory.setStack((equipmentSlot != null ? equipmentSlot.getEntitySlotId() : 0) + this.inventory.main.size(), item);
-        return true;
-    }
-
     public ItemCooldownManager getItemCooldownManager() {
         return this.itemCooldownManager;
     }
 
     @Override
     public boolean canPickupItem(ItemStack stack) {
-        EquipmentSlot equipmentSlot = MobEntity.getPreferredEquipmentSlot(stack);
+        EquipmentSlot equipmentSlot = LivingEntity.getPreferredEquipmentSlot(stack);
         return this.getEquippedStack(equipmentSlot).isEmpty();
     }
 
@@ -788,7 +753,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         }
         double d = target.getX() - this.getX();
         double e = target.getZ() - this.getZ();
-        double f = MathHelper.sqrt(d * d + e * e);
+        double f = MathHelper.sqrt((float) (d * d + e * e));
         double g = target.getBodyY(1.0 / 3.0) - projectile.getY() + f * 0.2;
         Vec3f vector3f = this.getProjectileVelocity(new Vec3d(d, g, e), multiShotSpray);
         projectile.setVelocity(vector3f.getX(), vector3f.getY(), vector3f.getZ(), 1.6F, (float) (14 - this.world.getDifficulty().getId() * 4));
@@ -828,7 +793,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         double d = target.getX() - this.getX();
         double e = target.getBodyY(1.0 / 3.0) - projectileEntity.getY();
         double g = target.getZ() - this.getZ();
-        double h = MathHelper.sqrt(d * d + g * g);
+        double h = MathHelper.sqrt((float) (d * d + g * g));
         projectileEntity.setVelocity(d, e + h * 0.2, g, 1.6F, (float) (14 - this.world.getDifficulty().getId() * 4));
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
         this.world.spawnEntity(projectileEntity);

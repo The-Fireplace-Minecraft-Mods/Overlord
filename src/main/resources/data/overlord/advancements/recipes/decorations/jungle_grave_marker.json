@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:jungle_fence"
+            "items": [
+              "minecraft:jungle_fence"
+            ]
           }
         ]
       }

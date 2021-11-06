@@ -48,15 +48,15 @@ public class PositionSelectorGui extends Screen implements CustomButtonScreen<St
 
     @Override
     protected void init() {
-        this.addButton(xWidget = new TextFieldWidget(client.textRenderer, this.width / 2 - 75 - 2, this.height / 2, 50, 20, Text.of("X")));
-        this.addButton(yWidget = new TextFieldWidget(client.textRenderer, this.width / 2 - 25, this.height / 2, 50, 20, Text.of("Y")));
-        this.addButton(zWidget = new TextFieldWidget(client.textRenderer, this.width / 2 + 25 + 2, this.height / 2, 50, 20, Text.of("Z")));
-        this.addButton(confirmButton = new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, Text.of("Confirm and exit"), (button) -> {
+        this.addDrawableChild(xWidget = new TextFieldWidget(client.textRenderer, this.width / 2 - 75 - 2, this.height / 2, 50, 20, Text.of("X")));
+        this.addDrawableChild(yWidget = new TextFieldWidget(client.textRenderer, this.width / 2 - 25, this.height / 2, 50, 20, Text.of("Y")));
+        this.addDrawableChild(zWidget = new TextFieldWidget(client.textRenderer, this.width / 2 + 25 + 2, this.height / 2, 50, 20, Text.of("Z")));
+        this.addDrawableChild(confirmButton = new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, Text.of("Confirm and exit"), (button) -> {
             PositionSetting newPosition = new PositionSetting(Integer.parseInt(xWidget.getText()), Integer.parseInt(yWidget.getText()), Integer.parseInt(zWidget.getText()));
             resultPromise.setSuccess(Optional.of(newPosition.toString()));
             closeScreen();
         }));
-        this.addButton(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, Text.of("Cancel"), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, Text.of("Cancel"), (button) -> {
             resultPromise.setSuccess(Optional.empty());
             closeScreen();
         }));

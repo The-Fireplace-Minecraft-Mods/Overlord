@@ -27,8 +27,8 @@ public class CasketBlockEntity extends LockableContainerBlockEntity
     private DefaultedList<ItemStack> inventory;
     private Boolean cachedIsFoot = null;
 
-    public CasketBlockEntity() {
-        super(OverlordBlockEntities.CASKET_BLOCK_ENTITY);
+    public CasketBlockEntity(BlockPos pos, BlockState state) {
+        super(OverlordBlockEntities.CASKET_BLOCK_ENTITY, pos, state);
         this.inventory = DefaultedList.ofSize(54, ItemStack.EMPTY);
     }
 
@@ -112,9 +112,9 @@ public class CasketBlockEntity extends LockableContainerBlockEntity
     }
 
     @Override
-    public void fromTag(BlockState state, NbtCompound compoundTag) {
-        super.fromTag(state, compoundTag);
-        if (!isCasketFoot(state)) {
+    public void readNbt(NbtCompound compoundTag) {
+        super.readNbt(compoundTag);
+        if (!isCasketFoot()) {
             this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
             Inventories.readNbt(compoundTag, this.inventory);
         }

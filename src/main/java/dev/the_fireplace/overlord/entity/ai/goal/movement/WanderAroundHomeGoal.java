@@ -1,7 +1,8 @@
 package dev.the_fireplace.overlord.entity.ai.goal.movement;
 
 import dev.the_fireplace.overlord.entity.ArmyEntity;
-import net.minecraft.entity.ai.TargetFinder;
+import net.minecraft.entity.ai.FuzzyTargeting;
+import net.minecraft.entity.ai.NoPenaltyTargeting;
 import net.minecraft.entity.ai.goal.WanderAroundGoal;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
@@ -27,9 +28,9 @@ public class WanderAroundHomeGoal extends WanderAroundGoal
     @Override
     protected Vec3d getWanderTarget() {
         if (armyEntity.getPos().distanceTo(home) > radius) {
-            return TargetFinder.findTargetTowards(this.armyEntity, 10, 7, home);
+            return FuzzyTargeting.findTo(this.armyEntity, 10, 7, home);
         }
 
-        return TargetFinder.findTarget(this.armyEntity, 10, 7);
+        return NoPenaltyTargeting.find(this.armyEntity, 10, 7);
     }
 }

@@ -1,14 +1,10 @@
 {
   "required": true,
   "package": "dev.the_fireplace.overlord.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "mixins": [
     "GoalSelectorAccessor",
     "MeleeAttackGoalAccessor"
-  ],
-  "client": [
-    "client.PlayerEntityModelAccessor",
-    "client.SkullBlockEntityRendererAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

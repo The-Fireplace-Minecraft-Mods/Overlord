@@ -4,6 +4,7 @@ import dev.the_fireplace.overlord.blockentity.internal.AbstractTombstoneBlockEnt
 import dev.the_fireplace.overlord.init.OverlordBlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -13,8 +14,8 @@ public class TombstoneBlockEntity extends AbstractTombstoneBlockEntity
     private String name = "";
     private UUID owner = null;
 
-    public TombstoneBlockEntity() {
-        super(OverlordBlockEntities.TOMBSTONE_BLOCK_ENTITY);
+    public TombstoneBlockEntity(BlockPos pos, BlockState state) {
+        super(OverlordBlockEntities.TOMBSTONE_BLOCK_ENTITY, pos, state);
     }
 
     @Override
@@ -51,8 +52,8 @@ public class TombstoneBlockEntity extends AbstractTombstoneBlockEntity
     }
 
     @Override
-    public void fromTag(BlockState state, NbtCompound tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         if (tag.containsUuid("owner")) {
             this.owner = tag.getUuid("owner");
         }

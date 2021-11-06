@@ -22,13 +22,13 @@ public class CasketGui extends HandledScreen<GenericContainerScreenHandler>
 
     @Override
     protected void drawForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
-        this.textRenderer.draw(matrixStack, this.title.asString(), 8.0F, 6.0F, 0x404040);
-        this.textRenderer.draw(matrixStack, this.playerInventory.getDisplayName().asString(), 8.0F, (float) (this.backgroundHeight - 96 + 2), 0x404040);
+        this.textRenderer.draw(matrixStack, this.title, 8.0F, 6.0F, 0x404040);
+        this.textRenderer.draw(matrixStack, this.playerInventoryTitle, 8.0F, (float) (this.backgroundHeight - 96 + 2), 0x404040);
     }
 
     @Override
     protected void drawBackground(MatrixStack matrixStack, float delta, int mouseX, int mouseY) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         assert this.client != null;
         this.client.getTextureManager().bindTexture(TEXTURE);
         int i = (this.width - this.backgroundWidth) / 2;

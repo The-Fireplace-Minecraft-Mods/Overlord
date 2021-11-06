@@ -42,8 +42,8 @@ public class GraveMarkerBlock extends AbstractTombstoneBlock {
     }
 
     @Override
-    public AbstractTombstoneBlockEntity createTombstone(BlockView view) {
-        return new GraveMarkerBlockEntity();
+    public AbstractTombstoneBlockEntity createTombstone(BlockPos pos, BlockState state) {
+        return new GraveMarkerBlockEntity(pos, state);
     }
 
     @Override

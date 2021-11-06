@@ -474,7 +474,7 @@ public class SkeletonInventory implements Inventory, Nameable
 
     @Override
     public boolean canPlayerUse(PlayerEntity player) {
-        if (this.skeleton.removed) {
+        if (this.skeleton.isRemoved()) {
             return false;
         } else {
             return player.squaredDistanceTo(this.skeleton) <= 8.0D;

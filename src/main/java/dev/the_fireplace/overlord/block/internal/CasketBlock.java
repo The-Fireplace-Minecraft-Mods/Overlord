@@ -147,8 +147,8 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockView view) {
-        return new CasketBlockEntity();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new CasketBlockEntity(pos, state);
     }
 
     @Override

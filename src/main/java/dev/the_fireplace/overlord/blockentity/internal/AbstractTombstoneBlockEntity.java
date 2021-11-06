@@ -5,23 +5,22 @@ import dev.the_fireplace.overlord.domain.mechanic.Tombstone;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import dev.the_fireplace.overlord.model.aiconfig.movement.PositionSetting;
 import dev.the_fireplace.overlord.util.SkeletonBuilder;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
 import java.util.Objects;
 
-public abstract class AbstractTombstoneBlockEntity extends BlockEntity implements Tombstone, Tickable
+public abstract class AbstractTombstoneBlockEntity extends BlockEntity implements Tombstone
 {
-    public AbstractTombstoneBlockEntity(BlockEntityType<?> type) {
-        super(type);
+    public AbstractTombstoneBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
-    @Override
     public void tick() {
         if (!hasWorld() || Objects.requireNonNull(getWorld()).isClient) {
             return;

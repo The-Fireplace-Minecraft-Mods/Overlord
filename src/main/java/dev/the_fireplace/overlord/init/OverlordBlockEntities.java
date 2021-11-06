@@ -4,6 +4,7 @@ import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.blockentity.CasketBlockEntity;
 import dev.the_fireplace.overlord.blockentity.GraveMarkerBlockEntity;
 import dev.the_fireplace.overlord.blockentity.TombstoneBlockEntity;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,7 +31,7 @@ public final class OverlordBlockEntities
         CASKET_BLOCK_ENTITY = Registry.register(
             Registry.BLOCK_ENTITY_TYPE,
             CASKET_BLOCK_ENTITY_ID,
-            BlockEntityType.Builder.create(
+            FabricBlockEntityTypeBuilder.create(
                 CasketBlockEntity::new,
                 OverlordBlocks.OAK_CASKET,
                 OverlordBlocks.BIRCH_CASKET,
@@ -44,12 +45,12 @@ public final class OverlordBlockEntities
             PlayerEntity player = playerInventory.player;
             final World world = player.world;
             final BlockPos pos = buf.readBlockPos();
-            return (GenericContainerScreenHandler) world.getBlockState(pos).createScreenHandlerFactory(player.world, pos).createMenu(syncId, player.inventory, player);
+            return (GenericContainerScreenHandler) world.getBlockState(pos).createScreenHandlerFactory(player.world, pos).createMenu(syncId, player.getInventory(), player);
         });
         GRAVE_MARKER_BLOCK_ENTITY = Registry.register(
             Registry.BLOCK_ENTITY_TYPE,
             GRAVE_MARKER_BLOCK_ENTITY_ID,
-            BlockEntityType.Builder.create(
+            FabricBlockEntityTypeBuilder.create(
                 GraveMarkerBlockEntity::new,
                 OverlordBlocks.OAK_GRAVE_MARKER,
                 OverlordBlocks.BIRCH_GRAVE_MARKER,
@@ -62,7 +63,7 @@ public final class OverlordBlockEntities
         TOMBSTONE_BLOCK_ENTITY = Registry.register(
             Registry.BLOCK_ENTITY_TYPE,
             TOMBSTONE_BLOCK_ENTITY_ID,
-            BlockEntityType.Builder.create(
+            FabricBlockEntityTypeBuilder.create(
                 TombstoneBlockEntity::new,
                 OverlordBlocks.STONE_TOMBSTONE,
                 OverlordBlocks.DIORITE_TOMBSTONE,

@@ -64,10 +64,10 @@ public class RecipesProvider implements DataProvider
     }
 
     private void generate(Consumer<RecipeJsonProvider> consumer) {
-        SingleItemRecipeJsonFactory.createStonecutting(Ingredient.ofItems(Blocks.SMOOTH_STONE), OverlordBlocks.STONE_TOMBSTONE).create("has_smooth_stone", this.conditionsFromItem(Blocks.SMOOTH_STONE)).offerTo(consumer, Overlord.MODID + ":stone_tombstone_from_stonecutting");
-        SingleItemRecipeJsonFactory.createStonecutting(Ingredient.ofItems(Blocks.POLISHED_ANDESITE), OverlordBlocks.ANDESITE_TOMBSTONE).create("has_polished_andesite", this.conditionsFromItem(Blocks.POLISHED_ANDESITE)).offerTo(consumer, Overlord.MODID + ":andesite_tombstone_from_stonecutting");
-        SingleItemRecipeJsonFactory.createStonecutting(Ingredient.ofItems(Blocks.POLISHED_DIORITE), OverlordBlocks.DIORITE_TOMBSTONE).create("has_polished_diorite", this.conditionsFromItem(Blocks.POLISHED_DIORITE)).offerTo(consumer, Overlord.MODID + ":diorite_tombstone_from_stonecutting");
-        SingleItemRecipeJsonFactory.createStonecutting(Ingredient.ofItems(Blocks.POLISHED_GRANITE), OverlordBlocks.GRANITE_TOMBSTONE).create("has_polished_granite", this.conditionsFromItem(Blocks.POLISHED_GRANITE)).offerTo(consumer, Overlord.MODID + ":granite_tombstone_from_stonecutting");
+        SingleItemRecipeJsonFactory.createStonecutting(Ingredient.ofItems(Blocks.SMOOTH_STONE), OverlordBlocks.STONE_TOMBSTONE).criterion("has_smooth_stone", this.conditionsFromItem(Blocks.SMOOTH_STONE)).offerTo(consumer, Overlord.MODID + ":stone_tombstone_from_stonecutting");
+        SingleItemRecipeJsonFactory.createStonecutting(Ingredient.ofItems(Blocks.POLISHED_ANDESITE), OverlordBlocks.ANDESITE_TOMBSTONE).criterion("has_polished_andesite", this.conditionsFromItem(Blocks.POLISHED_ANDESITE)).offerTo(consumer, Overlord.MODID + ":andesite_tombstone_from_stonecutting");
+        SingleItemRecipeJsonFactory.createStonecutting(Ingredient.ofItems(Blocks.POLISHED_DIORITE), OverlordBlocks.DIORITE_TOMBSTONE).criterion("has_polished_diorite", this.conditionsFromItem(Blocks.POLISHED_DIORITE)).offerTo(consumer, Overlord.MODID + ":diorite_tombstone_from_stonecutting");
+        SingleItemRecipeJsonFactory.createStonecutting(Ingredient.ofItems(Blocks.POLISHED_GRANITE), OverlordBlocks.GRANITE_TOMBSTONE).criterion("has_polished_granite", this.conditionsFromItem(Blocks.POLISHED_GRANITE)).offerTo(consumer, Overlord.MODID + ":granite_tombstone_from_stonecutting");
         ShapedRecipeJsonFactory.create(OverlordBlocks.ACACIA_CASKET, 1).input('#', Items.STRIPPED_ACACIA_WOOD).input('%', Items.ACACIA_PLANKS).input('B', bedIngredient).pattern("###").pattern("%B%").pattern("###").group("wooden_casket").criterion("has_stripped_wood", this.conditionsFromItem(Blocks.STRIPPED_ACACIA_WOOD)).offerTo(consumer);
         ShapedRecipeJsonFactory.create(OverlordBlocks.BIRCH_CASKET, 1).input('#', Items.STRIPPED_BIRCH_WOOD).input('%', Items.BIRCH_PLANKS).input('B', bedIngredient).pattern("###").pattern("%B%").pattern("###").group("wooden_casket").criterion("has_stripped_wood", this.conditionsFromItem(Blocks.STRIPPED_BIRCH_WOOD)).offerTo(consumer);
         ShapedRecipeJsonFactory.create(OverlordBlocks.SPRUCE_CASKET, 1).input('#', Items.STRIPPED_SPRUCE_WOOD).input('%', Items.SPRUCE_PLANKS).input('B', bedIngredient).pattern("###").pattern("%B%").pattern("###").group("wooden_casket").criterion("has_stripped_wood", this.conditionsFromItem(Blocks.STRIPPED_SPRUCE_WOOD)).offerTo(consumer);
@@ -153,7 +153,7 @@ public class RecipesProvider implements DataProvider
     }
 
     private InventoryChangedCriterion.Conditions conditionsFromItem(ItemConvertible itemConvertible) {
-        return this.conditionsFromItemPredicates(ItemPredicate.Builder.create().item(itemConvertible).build());
+        return this.conditionsFromItemPredicates(ItemPredicate.Builder.create().items(itemConvertible).build());
     }
 
     private InventoryChangedCriterion.Conditions conditionsFromItemPredicates(ItemPredicate... items) {

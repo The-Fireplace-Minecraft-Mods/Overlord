@@ -42,7 +42,7 @@ public class TombstoneGui extends Screen
     protected void init() {
         assert this.client != null;
         this.client.keyboard.setRepeatEvents(true);
-        this.addButton(new ButtonWidget(this.width / 2 - 100, this.height / 4 + 120, 200, 20, new TranslatableText("gui.done"), (buttonWidget) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height / 4 + 120, 200, 20, new TranslatableText("gui.done"), (buttonWidget) -> {
             this.finishEditing();
         }));
         this.selectionManager = new SelectionManager(
@@ -73,7 +73,7 @@ public class TombstoneGui extends Screen
     @Override
     public void tick() {
         ++this.ticksSinceOpened;
-        if (!this.tombstone.getType().supports(this.tombstone.getCachedState().getBlock())) {
+        if (!this.tombstone.getType().supports(this.tombstone.getCachedState())) {
             this.finishEditing();
         }
     }
@@ -137,7 +137,8 @@ public class TombstoneGui extends Screen
             light,
             overlay,
             matrixStack,
-            immediate
+            immediate,
+            0
         );
 
         matrixStack.pop();
@@ -191,7 +192,7 @@ public class TombstoneGui extends Screen
                 RenderSystem.disableTexture();
                 RenderSystem.enableColorLogicOp();
                 RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-                bufferBuilder.begin(7, VertexFormats.POSITION_COLOR);
+                bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
                 float var35 = (float) z;
                 bufferBuilder.vertex(matrix4f, var35, (float) (cursorY + 9), 0.0F).color(0, 0, 255, 255).next();
                 var35 = (float) aa;

@@ -12,7 +12,7 @@ import dev.the_fireplace.overlord.domain.registry.HeadBlockAugmentRegistry;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import dev.the_fireplace.overlord.tags.OverlordItemTags;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.*;
 import net.minecraft.text.LiteralText;
@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class SkeletonBuilder
 {
@@ -69,7 +70,7 @@ public class SkeletonBuilder
             if (stack.isEmpty()) {
                 continue;
             }
-            if (stack.getItem().isIn(OverlordItemTags.MUSCLE_MEAT)) {
+            if (OverlordItemTags.MUSCLE_MEAT.contains(stack.getItem())) {
                 muscleCount += stack.getCount();
             }
         }
@@ -83,7 +84,7 @@ public class SkeletonBuilder
             if (stack.isEmpty()) {
                 continue;
             }
-            if (stack.getItem().isIn(OverlordItemTags.MUSCLE_MEAT)) {
+            if (OverlordItemTags.MUSCLE_MEAT.contains(stack.getItem())) {
                 muscleCount = reduceStack(casket, slot, stack, muscleCount);
             }
         }
@@ -96,7 +97,7 @@ public class SkeletonBuilder
             if (stack.isEmpty()) {
                 continue;
             }
-            if (stack.getItem().isIn(OverlordItemTags.FLESH)) {
+            if (OverlordItemTags.FLESH.contains(stack.getItem())) {
                 skinCount += stack.getCount();
             }
         }
@@ -110,7 +111,7 @@ public class SkeletonBuilder
             if (stack.isEmpty()) {
                 continue;
             }
-            if (stack.getItem().isIn(OverlordItemTags.FLESH)) {
+            if (OverlordItemTags.FLESH.contains(stack.getItem())) {
                 skinCount = reduceStack(casket, slot, stack, skinCount);
             }
         }
@@ -168,7 +169,7 @@ public class SkeletonBuilder
         equipped.put(EquipmentSlot.FEET, false);
         for (Map.Entry<Integer, ItemStack> slotEntry : armorByWeight) {
             for (Map.Entry<EquipmentSlot, Boolean> entry : Sets.newHashSet(equipped.entrySet())) {
-                if (!entry.getValue() && MobEntity.getPreferredEquipmentSlot(slotEntry.getValue()).equals(entry.getKey())) {
+                if (!entry.getValue() && LivingEntity.getPreferredEquipmentSlot(slotEntry.getValue()).equals(entry.getKey())) {
                     entity.equipStack(entry.getKey(), slotEntry.getValue());
                     casket.setStack(slotEntry.getKey(), ItemStack.EMPTY);
                     equipped.put(entry.getKey(), true);
@@ -306,10 +307,10 @@ public class SkeletonBuilder
             String skinName = tombstone.getNameText().trim();
             if (hasSkin && PlayerNameHelper.VALID_NAME_REGEX.matcher(skinName).matches() && hasDye(casket)) {
                 UserCache.setUseRemote(true);
-                GameProfile profile = world.getServer().getUserCache().findByName(skinName);
-                if (profile != null) {
+                Optional<GameProfile> profile = world.getServer().getUserCache().findByName(skinName);
+                if (profile.isPresent()) {
                     removeDye(casket);
-                    entity.setSkinsuit(profile.getId());
+                    entity.setSkinsuit(profile.get().getId());
                 }
             }
             entity.setCustomName(new LiteralText(tombstone.getNameText()));

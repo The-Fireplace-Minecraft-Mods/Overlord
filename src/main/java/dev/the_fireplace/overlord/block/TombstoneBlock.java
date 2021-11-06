@@ -48,8 +48,8 @@ public class TombstoneBlock extends AbstractTombstoneBlock
     }
 
     @Override
-    public AbstractTombstoneBlockEntity createTombstone(BlockView view) {
-        return new TombstoneBlockEntity();
+    public AbstractTombstoneBlockEntity createTombstone(BlockPos pos, BlockState state) {
+        return new TombstoneBlockEntity(pos, state);
     }
 
     @Override

@@ -12,15 +12,16 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.function.Function;
 
 public class ItemTagsProvider extends AbstractTagProvider<Item>
 {
-    private final Function<Tag.Identified<Block>, Tag.Builder> field_23783;
+    private final Function<Tag.Identified<Block>, Tag.Builder> blockTagBuilder;
 
     public ItemTagsProvider(DataGenerator root, BlockTagsProvider blockTagsProvider) {
         super(root, Registry.ITEM);
-        this.field_23783 = blockTagsProvider::method_27169;
+        this.blockTagBuilder = blockTagsProvider::getTagBuilder;
     }
 
     @Override
@@ -41,9 +42,10 @@ public class ItemTagsProvider extends AbstractTagProvider<Item>
     }
 
     protected void copy(Tag.Identified<Block> blockTag, Tag.Identified<Item> itemTag) {
-        Tag.Builder builder = this.method_27169(itemTag);
-        Tag.Builder builder2 = this.field_23783.apply(blockTag);
-        builder2.streamEntries().forEach(builder::add);
+        Tag.Builder itemTagBuilder = this.getTagBuilder(itemTag);
+        Tag.Builder blockTagBuilder = this.blockTagBuilder.apply(blockTag);
+        Objects.requireNonNull(itemTagBuilder);
+        blockTagBuilder.streamEntries().forEach(itemTagBuilder::add);
     }
 
     @Override

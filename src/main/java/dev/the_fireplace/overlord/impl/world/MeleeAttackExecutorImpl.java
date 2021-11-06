@@ -185,7 +185,7 @@ public final class MeleeAttackExecutorImpl implements MeleeAttackExecutor {
             }
 
             if (attacker.squaredDistanceTo(livingEntity) < 9.0D) {
-                livingEntity.takeKnockback(0.4F, MathHelper.sin(attacker.yaw * (float) Math.PI / 180), -MathHelper.cos(attacker.yaw * (float) Math.PI / 180));
+                livingEntity.takeKnockback(0.4F, MathHelper.sin(attacker.getYaw() * (float) Math.PI / 180), -MathHelper.cos(attacker.getYaw() * (float) Math.PI / 180));
                 livingEntity.damage(DamageSource.mob(attacker), multiplier);
             }
         }
@@ -197,9 +197,10 @@ public final class MeleeAttackExecutorImpl implements MeleeAttackExecutor {
     private void knockbackTarget(LivingEntity attacker, Entity target, int knockback) {
         if (knockback > 0) {
             if (target instanceof LivingEntity) {
-                ((LivingEntity) target).takeKnockback((float) knockback * 0.5F, MathHelper.sin(attacker.yaw * (float) Math.PI / 180), -MathHelper.cos(attacker.yaw * (float) Math.PI / 180));
-            } else
-                target.addVelocity(-MathHelper.sin(attacker.yaw * (float) Math.PI / 180) * (float) knockback * 0.5F, 0.1D, MathHelper.cos(attacker.yaw * (float) Math.PI / 180) * (float) knockback * 0.5F);
+                ((LivingEntity) target).takeKnockback((float) knockback * 0.5F, MathHelper.sin(attacker.getYaw() * (float) Math.PI / 180), -MathHelper.cos(attacker.getYaw() * (float) Math.PI / 180));
+            } else {
+                target.addVelocity(-MathHelper.sin(attacker.getYaw() * (float) Math.PI / 180) * (float) knockback * 0.5F, 0.1D, MathHelper.cos(attacker.getYaw() * (float) Math.PI / 180) * (float) knockback * 0.5F);
+            }
 
             attacker.setVelocity(attacker.getVelocity().multiply(0.6D, 1.0D, 0.6D));
             attacker.setSprinting(false);
@@ -217,9 +218,10 @@ public final class MeleeAttackExecutorImpl implements MeleeAttackExecutor {
     }
 
     public void showSweepParticles(LivingEntity attacker) {
-        double d = -MathHelper.sin(attacker.yaw * (float) Math.PI/180);
-        double e = MathHelper.cos(attacker.yaw * (float) Math.PI/180);
-        if (attacker.world instanceof ServerWorld)
-            ((ServerWorld)attacker.world).spawnParticles(ParticleTypes.SWEEP_ATTACK, attacker.getX() + d, attacker.getBodyY(0.5D), attacker.getZ() + e, 0, d, 0.0D, e, 0.0D);
+        double d = -MathHelper.sin(attacker.getYaw() * (float) Math.PI / 180);
+        double e = MathHelper.cos(attacker.getYaw() * (float) Math.PI / 180);
+        if (attacker.world instanceof ServerWorld) {
+            ((ServerWorld) attacker.world).spawnParticles(ParticleTypes.SWEEP_ATTACK, attacker.getX() + d, attacker.getBodyY(0.5D), attacker.getZ() + e, 0, d, 0.0D, e, 0.0D);
+        }
     }
 }

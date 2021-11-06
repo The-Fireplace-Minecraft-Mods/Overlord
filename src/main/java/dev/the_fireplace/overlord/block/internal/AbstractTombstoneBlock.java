@@ -1,5 +1,6 @@
 package dev.the_fireplace.overlord.block.internal;
 
+import dev.the_fireplace.overlord.blockentity.TombstoneBlockEntity;
 import dev.the_fireplace.overlord.blockentity.internal.AbstractTombstoneBlockEntity;
 import dev.the_fireplace.overlord.domain.mechanic.Tombstone;
 import net.minecraft.block.*;
@@ -10,15 +11,16 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 
 public abstract class AbstractTombstoneBlock extends HorizontalFacingBlock implements BlockEntityProvider, Waterloggable {
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
@@ -44,11 +46,19 @@ public abstract class AbstractTombstoneBlock extends HorizontalFacingBlock imple
     }
 
     @Override
-    public final BlockEntity createBlockEntity(BlockView view) {
-        return createTombstone(view);
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return createTombstone(pos, state);
     }
 
-    public abstract AbstractTombstoneBlockEntity createTombstone(BlockView view);
+    @Override
+    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof TombstoneBlockEntity) {
+            ((TombstoneBlockEntity) blockEntity).tick();
+        }
+    }
+
+    public abstract AbstractTombstoneBlockEntity createTombstone(BlockPos pos, BlockState state);
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {

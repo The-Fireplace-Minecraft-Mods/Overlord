@@ -5,6 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 
 public class ListSelectorEntry extends AlwaysSelectedEntryListWidget.Entry<ListSelectorEntry> {
     protected final MinecraftClient client;
@@ -17,7 +18,7 @@ public class ListSelectorEntry extends AlwaysSelectedEntryListWidget.Entry<ListS
 
     @Override
     public void render(MatrixStack matrixStack, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean hovering, float delta) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         String name = "";//TODO
         String trimmedName = name;
         int maxNameWidth = x - 3;
@@ -26,5 +27,10 @@ public class ListSelectorEntry extends AlwaysSelectedEntryListWidget.Entry<ListS
             trimmedName = font.trimToWidth(name, maxNameWidth - font.getWidth("...")) + "...";
         }
         font.draw(matrixStack, trimmedName, y + 32 + 3, index + 1, 0xFFFFFF);
+    }
+
+    @Override
+    public Text getNarration() {
+        return Text.of("");
     }
 }

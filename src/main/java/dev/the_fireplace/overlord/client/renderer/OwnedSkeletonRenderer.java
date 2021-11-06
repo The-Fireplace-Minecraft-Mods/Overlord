@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.Overlord;
+import dev.the_fireplace.overlord.client.model.OverlordModelLayers;
 import dev.the_fireplace.overlord.client.model.OwnedSkeletonModel;
 import dev.the_fireplace.overlord.client.renderer.feature.AugmentHeadFeatureRenderer;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
@@ -15,16 +16,17 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.BipedEntityRenderer;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.feature.ArmorFeatureRenderer;
 import net.minecraft.client.render.entity.feature.StuckArrowsFeatureRenderer;
 import net.minecraft.client.render.entity.feature.StuckStingersFeatureRenderer;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
+import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
+import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket.Entry;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -53,25 +55,25 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
     private ArmorFeatureRenderer<OwnedSkeletonEntity, OwnedSkeletonModel, BipedEntityModel<OwnedSkeletonEntity>> currentArmorRenderer;
     private ArmorFeatureRenderer<OwnedSkeletonEntity, OwnedSkeletonModel, BipedEntityModel<OwnedSkeletonEntity>> previousArmorRenderer;
 
-    public OwnedSkeletonRenderer(EntityRenderDispatcher dispatcher) {
-        super(dispatcher, new OwnedSkeletonModel(false, false, false), 0.5F);
+    public OwnedSkeletonRenderer(EntityRendererFactory.Context context) {
+        super(context, new OwnedSkeletonModel(context.getPart(OverlordModelLayers.OWNED_SKELETON_MODEL)), 0.5F);
 
         this.emptyUUID = DIContainer.get().getInstance(EmptyUUID.class);
 
-        this.standardModel = new OwnedSkeletonModel(false, false, false);
-        this.muscleModel = new OwnedSkeletonModel(true, false, false);
-        this.thinSkinModel = new OwnedSkeletonModel(false, false, true);
-        this.thinSkinMuscleModel = new OwnedSkeletonModel(true, false, true);
+        this.standardModel = new OwnedSkeletonModel(context.getPart(OverlordModelLayers.OWNED_SKELETON_MODEL));
+        this.muscleModel = new OwnedSkeletonModel(context.getPart(OverlordModelLayers.MUSCLE_OWNED_SKELETON_MODEL));
+        this.thinSkinModel = new OwnedSkeletonModel(context.getPart(OverlordModelLayers.SLIM_OWNED_SKELETON_MODEL));
+        this.thinSkinMuscleModel = new OwnedSkeletonModel(context.getPart(OverlordModelLayers.SLIM_MUSCLE_OWNED_SKELETON_MODEL));
 
-        BipedEntityModel<OwnedSkeletonEntity> bodyModel = new BipedEntityModel<>(1.0F);
-        OwnedSkeletonModel standardLeggingsModel = new OwnedSkeletonModel(false, true, false);
+        BipedEntityModel<OwnedSkeletonEntity> bodyModel = new BipedEntityModel<>(context.getPart(EntityModelLayers.PLAYER_INNER_ARMOR));
+        OwnedSkeletonModel standardLeggingsModel = new OwnedSkeletonModel(context.getPart(OverlordModelLayers.OWNED_SKELETON_LEGGINGS_MODEL));
         this.standardArmorRenderer = new ArmorFeatureRenderer<>(this, standardLeggingsModel, bodyModel);
-        OwnedSkeletonModel muscleLeggingsModel = new OwnedSkeletonModel(true, true, false);
+        OwnedSkeletonModel muscleLeggingsModel = new OwnedSkeletonModel(context.getPart(OverlordModelLayers.MUSCLE_OWNED_SKELETON_LEGGINGS_MODEL));
         this.muscleArmorRenderer = new ArmorFeatureRenderer<>(this, muscleLeggingsModel, bodyModel);
 
         this.addFeature(this.standardArmorRenderer);
-        this.addFeature(new AugmentHeadFeatureRenderer<>(this));
-        this.addFeature(new StuckArrowsFeatureRenderer<>(this));
+        this.addFeature(new AugmentHeadFeatureRenderer<>(this, context.getModelLoader()));
+        this.addFeature(new StuckArrowsFeatureRenderer<>(context, this));
         this.addFeature(new StuckStingersFeatureRenderer<>(this));
 
         this.skinCache = new HashMap<>();
@@ -109,8 +111,7 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
                 return;
             }
             GameProfile gameProfile = new GameProfile(skinsuit, null);
-            PlayerListS2CPacket dummyPlayerListPacket = new PlayerListS2CPacket();
-            skinCache.put(skinsuit, new PlayerListEntry(dummyPlayerListPacket.new Entry(
+            skinCache.put(skinsuit, new PlayerListEntry(new Entry(
                 gameProfile,
                 0,
                 GameMode.SURVIVAL,

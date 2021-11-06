@@ -269,7 +269,7 @@ public abstract class ArmyEntity extends PathAwareEntity implements Ownable, Ord
 
     @Override
     public int getEntityIdNumber() {
-        return getEntityId();
+        return getId();
     }
 
     public static DefaultAttributeContainer.Builder createArmyAttributes() {

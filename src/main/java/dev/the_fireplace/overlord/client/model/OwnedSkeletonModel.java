@@ -2,10 +2,10 @@ package dev.the_fireplace.overlord.client.model;
 
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity.AnimationState;
-import dev.the_fireplace.overlord.mixin.client.PlayerEntityModelAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.model.*;
+import net.minecraft.client.render.entity.model.EntityModelPartNames;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
@@ -15,22 +15,11 @@ import net.minecraft.util.math.MathHelper;
 @Environment(EnvType.CLIENT)
 public class OwnedSkeletonModel extends PlayerEntityModel<OwnedSkeletonEntity>
 {
-    private final boolean hasThickLimbs;
-    private final boolean isArmor;
-    private final boolean hasThinArmTexture;
-
-    public OwnedSkeletonModel(boolean hasThickLimbs, boolean isArmor, boolean hasThinArmTexture) {
-        super(0, false);
-        this.hasThickLimbs = hasThickLimbs;
-        this.isArmor = isArmor;
-        this.hasThinArmTexture = hasThinArmTexture;
-        if (isArmor) {
-            this.textureHeight = 32;
-        }
-        resizeLimbs();
+    public OwnedSkeletonModel(ModelPart root) {
+        super(root, false);
     }
 
-    private void resizeLimbs() {
+    public static TexturedModelData getTexturedModelData(Dilation dilation, boolean hasThickLimbs, boolean isArmor, boolean hasThinArmTexture) {
         float armorExtra = isArmor ? 0.5F : 0;
         float extraXZ = armorExtra + (hasThickLimbs ? 0F : -1F);
         float armWidth = hasThinArmTexture ? 3 : 4;
@@ -46,45 +35,57 @@ public class OwnedSkeletonModel extends PlayerEntityModel<OwnedSkeletonEntity>
             rightArmStartX += 0.5;
         }
         float legPivotX = hasThickLimbs ? 2.5F : 2.0F;
-        this.rightArm = new ModelPart(this, 40, 16);
-        this.rightArm.addCuboid(rightArmStartX, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, extraXZ, armorExtra, extraXZ);
-        this.rightArm.setPivot(-5.0F, armPivotY, 0.0F);
-        this.leftArm = new ModelPart(this, 40, 16);
-        this.leftArm.addCuboid(leftArmStartX, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, extraXZ, armorExtra, extraXZ);
-        this.leftArm.mirror = true;
-        this.leftArm.setPivot(5.0F, armPivotY, 0.0F);
-        this.rightLeg = new ModelPart(this, 0, 16);
-        this.rightLeg.addCuboid(-2.0F, -0.01F, -2.0F, 4.0F, 12.0F, 4.0F, extraXZ, armorExtra, extraXZ);
-        this.rightLeg.setPivot(-legPivotX, 12.0F, 0.0F);
-        this.leftLeg = new ModelPart(this, 0, 16);
-        this.leftLeg.addCuboid(-2.0F, -0.01F, -2.0F, 4.0F, 12.0F, 4.0F, extraXZ, armorExtra, extraXZ);
-        this.leftLeg.mirror = true;
-        this.leftLeg.setPivot(legPivotX, 12.0F, 0.0F);
+
+        ModelData modelData = PlayerEntityModel.getTexturedModelData(dilation, hasThinArmTexture);
+        ModelPartData modelPartData = modelData.getRoot();
+        Dilation limbDilation = dilation.add(extraXZ, armorExtra, extraXZ);
+        modelPartData.addChild(EntityModelPartNames.RIGHT_ARM, ModelPartBuilder.create()
+                .uv(40, 16)
+                .cuboid(rightArmStartX, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, limbDilation),
+            ModelTransform.pivot(-5.0F, armPivotY, 0.0F)
+        );
+        modelPartData.addChild(EntityModelPartNames.LEFT_ARM, ModelPartBuilder.create()
+                .uv(isArmor ? 40 : 32, isArmor ? 16 : 48)
+                .mirrored(isArmor)
+                .cuboid(leftArmStartX, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, limbDilation),
+            ModelTransform.pivot(5.0F, armPivotY, 0.0F)
+        );
+        modelPartData.addChild(EntityModelPartNames.RIGHT_LEG, ModelPartBuilder.create()
+                .uv(0, 16)
+                .cuboid(-2.0F, -0.01F, -2.0F, 4.0F, 12.0F, 4.0F, limbDilation),
+            ModelTransform.pivot(-legPivotX, 12.0F, 0.0F)
+        );
+        modelPartData.addChild(EntityModelPartNames.LEFT_LEG, ModelPartBuilder.create()
+                .uv(isArmor ? 0 : 16, isArmor ? 16 : 48)
+                .mirrored(isArmor)
+                .cuboid(-2.0F, -0.01F, -2.0F, 4.0F, 12.0F, 4.0F, limbDilation),
+            ModelTransform.pivot(legPivotX, 12.0F, 0.0F)
+        );
         if (!isArmor) {
-            //noinspection RedundantCast
-            PlayerEntityModelAccessor playerEntityModelAccessor = (PlayerEntityModelAccessor) (Object) this;
-
-            ModelPart leftSleeve = new ModelPart(this, 48, 48);
-            leftSleeve.addCuboid(leftArmStartX, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, extraXZ + 0.25F, 0.25F, extraXZ + 0.25F);
-            leftSleeve.setPivot(5.0F, armPivotY, 0.0F);
-
-            ModelPart rightSleeve = new ModelPart(this, 40, 32);
-            rightSleeve.addCuboid(rightArmStartX, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, extraXZ + 0.25F, 0.25F, extraXZ + 0.25F);
-            rightSleeve.setPivot(-5.0F, armPivotY, 10.0F);
-
-            ModelPart leftPantLeg = new ModelPart(this, 0, 48);
-            leftPantLeg.addCuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, extraXZ + 0.25F, 0.25F, extraXZ + 0.25F);
-            leftPantLeg.setPivot(legPivotX, 12.0F, 0.0F);
-
-            ModelPart rightPantLeg = new ModelPart(this, 0, 32);
-            rightPantLeg.addCuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, extraXZ + 0.25F, 0.25F, extraXZ + 0.25F);
-            rightPantLeg.setPivot(-legPivotX, 12.0F, 0.0F);
-
-            playerEntityModelAccessor.setLeftSleeve(leftSleeve);
-            playerEntityModelAccessor.setRightSleeve(rightSleeve);
-            playerEntityModelAccessor.setLeftPants(leftPantLeg);
-            playerEntityModelAccessor.setRightPants(rightPantLeg);
+            Dilation secondLayerLimbDilation = limbDilation.add(0.25F);
+            modelPartData.addChild("left_sleeve", ModelPartBuilder.create()
+                    .uv(48, 48)
+                    .cuboid(leftArmStartX, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, secondLayerLimbDilation),
+                ModelTransform.pivot(5.0F, armPivotY, 0.0F)
+            );
+            modelPartData.addChild("right_sleeve", ModelPartBuilder.create()
+                    .uv(40, 32)
+                    .cuboid(rightArmStartX, -2.0F, -2.0F, armWidth, 12.0F, 4.0F, secondLayerLimbDilation),
+                ModelTransform.pivot(-5.0F, armPivotY, 10.0F)
+            );
+            modelPartData.addChild("left_pants", ModelPartBuilder.create()
+                    .uv(0, 48)
+                    .cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, secondLayerLimbDilation),
+                ModelTransform.pivot(legPivotX, 12.0F, 0.0F)
+            );
+            modelPartData.addChild("right_pants", ModelPartBuilder.create()
+                    .uv(0, 32)
+                    .cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, secondLayerLimbDilation),
+                ModelTransform.pivot(-legPivotX, 12.0F, 0.0F)
+            );
         }
+
+        return TexturedModelData.of(modelData, 64, isArmor ? 32 : 64);
     }
 
     @Override

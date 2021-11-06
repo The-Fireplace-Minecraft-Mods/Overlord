@@ -33,10 +33,10 @@ public class ListBuilderGui extends Screen implements CustomButtonScreen<String>
 
     @Override
     protected void init() {
-        this.addButton(new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, Text.of("Confirm and exit"), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, Text.of("Confirm and exit"), (button) -> {
             closeScreen();
         }));
-        this.addButton(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, Text.of("Cancel"), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, Text.of("Cancel"), (button) -> {
             resultPromise.setSuccess(Optional.empty());
             closeScreen();
         }));

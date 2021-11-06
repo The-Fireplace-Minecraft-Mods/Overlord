@@ -4,21 +4,17 @@ import dev.the_fireplace.overlord.blockentity.TombstoneBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.WallSignBlock;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Vec3f;
 
 @Environment(EnvType.CLIENT)
-public class TombstoneBlockEntityRenderer extends BlockEntityRenderer<TombstoneBlockEntity>
+public class TombstoneBlockEntityRenderer implements BlockEntityRenderer<TombstoneBlockEntity>
 {
-    public TombstoneBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
-        super(dispatcher);
-    }
-
     @Override
     public void render(TombstoneBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         matrices.push();
@@ -30,7 +26,7 @@ public class TombstoneBlockEntityRenderer extends BlockEntityRenderer<TombstoneB
         matrices.translate(0.0D, 0.0D, 2.0 / 18.0);
 
         // Render text
-        TextRenderer textRenderer = this.dispatcher.getTextRenderer();
+        TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
         matrices.translate(0.0D, 0.3333333432674408D, 0.046666666865348816D);
         float scale = 0.010416667F / 2f;
         matrices.scale(scale, -scale, scale);

@@ -41,12 +41,12 @@ public class OwnedSkeletonGui extends HandledScreen<OwnedSkeletonContainer>
     protected void init() {
         super.init();
         //x, y, width, height
-        addButton(new ButtonWidget(x + 109, y + 58, 60, 20, new TranslatableText("gui.overlord.owned_skeleton.orders"), (b) -> guiOpener.openOrdersGUI(entity)));
+        addDrawableChild(new ButtonWidget(x + 109, y + 58, 60, 20, new TranslatableText("gui.overlord.owned_skeleton.orders"), (b) -> guiOpener.openOrdersGUI(entity)));
     }
 
     @Override
     protected void drawBackground(MatrixStack matrixStack, float delta, int mouseX, int mouseY) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         assert this.client != null;
         this.client.getTextureManager().bindTexture(BACKGROUND_TEXTURE);
         int i = this.x;

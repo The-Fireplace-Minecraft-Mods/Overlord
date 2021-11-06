@@ -49,7 +49,7 @@ public class BlockTagsProvider extends AbstractTagProvider<Block> {
     }
 
     @Override
-    public Tag.Builder method_27169(Tag.Identified<Block> identified) {
-        return super.method_27169(identified);
+    public Tag.Builder getTagBuilder(Tag.Identified<Block> tag) {
+        return super.getTagBuilder(tag);
     }
 }
