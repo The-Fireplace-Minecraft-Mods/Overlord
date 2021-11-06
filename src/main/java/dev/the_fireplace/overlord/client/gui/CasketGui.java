@@ -20,6 +20,7 @@ public class CasketGui extends ContainerScreen<GenericContainer> {
 
     @Override
     protected void drawForeground(int mouseX, int mouseY) {
+        super.drawForeground(mouseX, mouseY);
         this.font.draw(this.title.asFormattedString(), 8.0F, 6.0F, 0x404040);
         this.font.draw(this.playerInventory.getDisplayName().asFormattedString(), 8.0F, (float)(this.containerHeight - 96 + 2), 0x404040);
     }
@@ -33,5 +34,11 @@ public class CasketGui extends ContainerScreen<GenericContainer> {
         int j = (this.height - this.containerHeight) / 2;
         this.blit(i, j, 0, 0, this.containerWidth, 6 * 18 + 17);
         this.blit(i, j + 6 * 18 + 17, 0, 126, this.containerWidth, 96);
+    }
+
+    @Override
+    public void render(int mouseX, int mouseY, float delta) {
+        super.render(mouseX, mouseY, delta);
+        this.drawMouseoverTooltip(mouseX, mouseY);
     }
 }
