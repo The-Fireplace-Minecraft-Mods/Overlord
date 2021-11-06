@@ -109,10 +109,6 @@ public class TombstoneGui extends Screen
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
-        boolean hasFullyInitialized = selectionManager != null;
-        if (!hasFullyInitialized) {
-            return;
-        }
         DiffuseLighting.disableGuiDepthLighting();
         this.renderBackground(matrixStack);
         int textColor = 0xFFFFFF;
