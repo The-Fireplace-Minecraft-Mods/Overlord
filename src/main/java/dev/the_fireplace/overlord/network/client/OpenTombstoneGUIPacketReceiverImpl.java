@@ -41,7 +41,7 @@ public final class OpenTombstoneGUIPacketReceiverImpl implements OpenTombstoneGU
         }
         BlockEntity blockEntity = client.world.getBlockEntity(buf.readBlockPos());
         if (blockEntity instanceof TombstoneBlockEntity) {
-            client.openScreen(new TombstoneGui((TombstoneBlockEntity) blockEntity));
+            client.submit(() -> client.openScreen(new TombstoneGui((TombstoneBlockEntity) blockEntity)));
         } else {
             Overlord.getLogger().error("Received open tombstone packet with missing tombstone block entity!");
         }

@@ -59,6 +59,6 @@ public final class OpenOrdersGUIPacketReceiverImpl implements OpenOrdersGUIPacke
         if (parentScreen == null) {
             Overlord.getLogger().warn("Parent screen is null, attempting to open orders GUI anyways!");
         }
-        client.openScreen(ordersGuiFactory.build(parentScreen, (OrderableEntity) entity));
+        client.submit(() -> client.openScreen(ordersGuiFactory.build(parentScreen, (OrderableEntity) entity)));
     }
 }
