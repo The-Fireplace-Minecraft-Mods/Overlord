@@ -1,11 +1,9 @@
 package dev.the_fireplace.overlord.block.internal;
 
 import dev.the_fireplace.overlord.blockentity.CasketBlockEntity;
-import dev.the_fireplace.overlord.init.OverlordBlockEntities;
 import dev.the_fireplace.overlord.util.BlockUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.BedPart;
@@ -192,7 +190,7 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof CasketBlockEntity) {
-            ContainerProviderRegistry.INSTANCE.openContainer(OverlordBlockEntities.CASKET_BLOCK_ENTITY_ID, player, buf -> buf.writeBlockPos(pos));
+            player.openHandledScreen((CasketBlockEntity) blockEntity);
         }
         return ActionResult.SUCCESS;
     }

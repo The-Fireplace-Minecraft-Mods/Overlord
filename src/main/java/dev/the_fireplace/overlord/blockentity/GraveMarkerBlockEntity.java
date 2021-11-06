@@ -47,6 +47,8 @@ public class GraveMarkerBlockEntity extends AbstractTombstoneBlockEntity
     @Override
     public void fromTag(BlockState state, NbtCompound tag) {
         super.fromTag(state, tag);
-        this.owner = tag.getUuid("owner");
+        if (tag.contains("owner")) {
+            this.owner = tag.getUuid("owner");
+        }
     }
 }

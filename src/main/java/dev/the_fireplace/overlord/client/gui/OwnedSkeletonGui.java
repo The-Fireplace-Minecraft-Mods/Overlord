@@ -56,6 +56,11 @@ public class OwnedSkeletonGui extends HandledScreen<OwnedSkeletonContainer>
     }
 
     @Override
+    protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
+
+    }
+
+    @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, delta);
