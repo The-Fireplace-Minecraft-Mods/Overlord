@@ -3,6 +3,7 @@ package dev.the_fireplace.overlord.entity.ai.goal.combat;
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.overlord.entity.ArmyEntity;
 import dev.the_fireplace.overlord.entity.ai.goal.AIEquipmentHelper;
+import dev.the_fireplace.overlord.mixin.MeleeAttackGoalAccessor;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -36,10 +37,10 @@ public class ArmyMeleeAttackGoal extends MeleeAttackGoal
     @Override
     protected void attack(LivingEntity target, double squaredDistance) {
         double d = this.getSquaredMaxAttackDistance(target);
-        if (squaredDistance <= d && this.ticksUntilAttack <= 0) {
+        if (squaredDistance <= d && this.method_28347()) {
             if (!this.mob.getEntityWorld().isClient()) {
-                double attackSpeed = this.mob.getAttributeInstance(EntityAttributes.ATTACK_SPEED).getValue();
-                this.ticksUntilAttack = Math.max(1, (int) Math.ceil(20D / attackSpeed - 0.5));
+                double attackSpeed = this.mob.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_SPEED).getValue();
+                ((MeleeAttackGoalAccessor) this).setField_24667(Math.max(1, (int) Math.ceil(20D / attackSpeed - 0.5)));
             }
             this.mob.swingHand(Hand.MAIN_HAND);
             this.mob.tryAttack(target);

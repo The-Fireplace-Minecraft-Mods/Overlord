@@ -2,7 +2,7 @@ package dev.the_fireplace.overlord.model.aiconfig.movement;
 
 import dev.the_fireplace.overlord.model.AIListManager;
 import dev.the_fireplace.overlord.model.aiconfig.SettingsComponent;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 
 import java.util.UUID;
 
@@ -28,8 +28,8 @@ public final class MovementCategoryImpl implements SettingsComponent, MovementCa
     private boolean exploringWander = false;
 
     @Override
-    public CompoundTag toTag() {
-        CompoundTag tag = new CompoundTag();
+    public NbtCompound toTag() {
+        NbtCompound tag = new NbtCompound();
 
         tag.putBoolean("enabled", enabled);
         tag.putString("moveMode", moveMode.toString());
@@ -47,7 +47,7 @@ public final class MovementCategoryImpl implements SettingsComponent, MovementCa
     }
 
     @Override
-    public void readTag(CompoundTag tag) {
+    public void readTag(NbtCompound tag) {
         if (tag.contains("enabled")) {
             enabled = tag.getBoolean("enabled");
         }

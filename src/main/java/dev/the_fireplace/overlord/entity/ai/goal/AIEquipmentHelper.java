@@ -54,7 +54,7 @@ public class AIEquipmentHelper
 
         Map<Integer, Integer> rangedWeaponSlots = inventorySearcher.getSlotsMatchingByPriority(inventory, EquipmentUtils::isRangedWeapon, commonPriorityMappers.weapon(armyEntity, armyEntity.getTarget()));
         for (int rangedWeaponSlot : rangedWeaponSlots.keySet()) {
-            ItemStack weapon = inventory.getInvStack(rangedWeaponSlot);
+            ItemStack weapon = inventory.getStack(rangedWeaponSlot);
             boolean hasAmmo = hasAmmoForWeapon(inventory, weapon);
             if (hasAmmo) {
                 return true;
@@ -77,10 +77,10 @@ public class AIEquipmentHelper
 
         Map<Integer, Integer> rangedWeaponSlots = inventorySearcher.getSlotsMatchingByPriority(inventory, EquipmentUtils::isRangedWeapon, commonPriorityMappers.weapon(armyEntity, armyEntity.getTarget()));
         for (int rangedWeaponSlot : rangedWeaponSlots.keySet()) {
-            ItemStack weapon = inventory.getInvStack(rangedWeaponSlot);
+            ItemStack weapon = inventory.getStack(rangedWeaponSlot);
             boolean hasAmmo = hasAmmoForWeapon(inventory, weapon);
             if (hasAmmo) {
-                ItemStack newWeapon = inventory.removeInvStack(rangedWeaponSlot);
+                ItemStack newWeapon = inventory.removeStack(rangedWeaponSlot);
                 ItemStack oldWeapon = armyEntity.getMainHandStack().copy();
                 armyEntity.equipStack(EquipmentSlot.MAINHAND, newWeapon);
                 if (!armyEntity.giveItemStack(oldWeapon)) {
@@ -102,7 +102,7 @@ public class AIEquipmentHelper
             commonPriorityMappers.ammo(weapon)
         );
         int oldAmmoSlot = ammoPriority.keySet().toArray(new Integer[0])[0];
-        ItemStack newAmmo = inventory.removeInvStack(oldAmmoSlot);
+        ItemStack newAmmo = inventory.removeStack(oldAmmoSlot);
         ItemStack oldOffHandStack = armyEntity.getOffHandStack().copy();
         armyEntity.equipStack(EquipmentSlot.OFFHAND, newAmmo);
         if (!armyEntity.giveItemStack(oldOffHandStack)) {
@@ -118,7 +118,7 @@ public class AIEquipmentHelper
         ItemStack newWeapon = ItemStack.EMPTY;
         if (!meleePriority.isEmpty()) {
             int oldWeaponSlot = meleePriority.keySet().toArray(new Integer[0])[0];
-            newWeapon = inventory.removeInvStack(oldWeaponSlot);
+            newWeapon = inventory.removeStack(oldWeaponSlot);
         }
         ItemStack oldMainHandStack = armyEntity.getMainHandStack().copy();
         armyEntity.equipStack(EquipmentSlot.MAINHAND, newWeapon);
@@ -144,7 +144,7 @@ public class AIEquipmentHelper
             stack -> stack.getMaxDamage() - stack.getDamage()
         );
         int oldShieldSlot = shieldPriority.keySet().toArray(new Integer[0])[0];
-        ItemStack newShield = inventory.removeInvStack(oldShieldSlot);
+        ItemStack newShield = inventory.removeStack(oldShieldSlot);
         ItemStack oldOffHandStack = armyEntity.getOffHandStack().copy();
         armyEntity.equipStack(EquipmentSlot.OFFHAND, newShield);
         if (!armyEntity.giveItemStack(oldOffHandStack)) {

@@ -19,14 +19,13 @@ public final class EntityRegistryImpl implements EntityRegistry {
     private final List<Identifier> animalIds = Lists.newArrayList();
 
     public EntityRegistryImpl() {
-        if (Registry.ENTITY_TYPE.isEmpty()) {
+        if (Registry.ENTITY_TYPE.stream().toArray().length == 0) {
             throw new IllegalStateException("Tried to access the entity type registry before it was initialized!");
         }
         for (EntityType<?> entityType : Registry.ENTITY_TYPE) {
-            if (!entityType.getCategory().isPeaceful()) {
+            if (!entityType.getSpawnGroup().isPeaceful()) {
                 mobIds.add(Registry.ENTITY_TYPE.getId(entityType));
-            }
-            if (entityType.getCategory().isAnimal()) {
+            } else {
                 animalIds.add(Registry.ENTITY_TYPE.getId(entityType));
             }
         }

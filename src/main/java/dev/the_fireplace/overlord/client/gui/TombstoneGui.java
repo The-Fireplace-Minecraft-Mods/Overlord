@@ -15,12 +15,11 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.SelectionManager;
-import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.math.Matrix4f;
 
 @Environment(EnvType.CLIENT)
 public class TombstoneGui extends Screen
@@ -41,17 +40,25 @@ public class TombstoneGui extends Screen
 
     @Override
     protected void init() {
-        this.minecraft.keyboard.enableRepeatEvents(true);
-        this.addButton(new ButtonWidget(this.width / 2 - 100, this.height / 4 + 120, 200, 20, I18n.translate("gui.done"), (buttonWidget) -> {
+        assert this.client != null;
+        this.client.keyboard.setRepeatEvents(true);
+        this.addButton(new ButtonWidget(this.width / 2 - 100, this.height / 4 + 120, 200, 20, new TranslatableText("gui.done"), (buttonWidget) -> {
             this.finishEditing();
         }));
-        this.selectionManager = new SelectionManager(this.minecraft, this.tombstone::getNameText, this.tombstone::setNameText, 90);
+        this.selectionManager = new SelectionManager(
+            this.tombstone::getNameText,
+            this.tombstone::setNameText,
+            SelectionManager.makeClipboardGetter(this.client),
+            SelectionManager.makeClipboardSetter(this.client),
+            (string) -> this.client.textRenderer.getWidth(string) <= 90
+        );
     }
 
     @Override
     public void removed() {
-        this.minecraft.keyboard.enableRepeatEvents(false);
-        ClientPlayNetworkHandler clientPlayNetworkHandler = this.minecraft.getNetworkHandler();
+        //noinspection ConstantConditions
+        this.client.keyboard.setRepeatEvents(false);
+        ClientPlayNetworkHandler clientPlayNetworkHandler = this.client.getNetworkHandler();
         if (clientPlayNetworkHandler != null) {
             clientPlayNetworkHandler.sendPacket(ClientPlayNetworking.createC2SPacket(
                 clientToServerPacketIDs.saveTombstonePacketID(),
@@ -73,7 +80,7 @@ public class TombstoneGui extends Screen
 
     private void finishEditing() {
         this.tombstone.markDirty();
-        this.minecraft.openScreen(null);
+        this.client.openScreen(null);
     }
 
     @Override
@@ -90,27 +97,26 @@ public class TombstoneGui extends Screen
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == 265) {
-            this.selectionManager.moveCaretToEnd();
+            this.selectionManager.putCursorAtEnd();
             return true;
         } else if (keyCode != 264 && keyCode != 257 && keyCode != 335) {
             return this.selectionManager.handleSpecialKey(keyCode) || super.keyPressed(keyCode, scanCode, modifiers);
         } else {
-            this.selectionManager.moveCaretToEnd();
+            this.selectionManager.putCursorAtEnd();
             return true;
         }
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float delta) {
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
         boolean hasFullyInitialized = selectionManager != null;
         if (!hasFullyInitialized) {
             return;
         }
         DiffuseLighting.disableGuiDepthLighting();
-        this.renderBackground();
+        this.renderBackground(matrixStack);
         int textColor = 0xFFFFFF;
-        this.drawCenteredString(this.font, this.title.asFormattedString(), this.width / 2, 40, textColor);
-        MatrixStack matrixStack = new MatrixStack();
+        drawCenteredText(matrixStack, this.textRenderer, this.title.asString(), this.width / 2, 40, textColor);
         matrixStack.push();
         matrixStack.translate(this.width / 2.0, 0.0D, 50.0D);
         float scale = 93.75F;
@@ -122,10 +128,10 @@ public class TombstoneGui extends Screen
         matrixStack.push();
         float backgroundItemScale = 3.5f;
         matrixStack.scale(backgroundItemScale, backgroundItemScale, -backgroundItemScale);
-        VertexConsumerProvider.Immediate immediate = this.minecraft.getBufferBuilders().getEntityVertexConsumers();
+        VertexConsumerProvider.Immediate immediate = this.client.getBufferBuilders().getEntityVertexConsumers();
         int overlay = OverlayTexture.packUv(OverlayTexture.getU(0), OverlayTexture.getV(false));
         int light = 0xF000F0;
-        this.minecraft.getItemRenderer().renderItem(
+        this.client.getItemRenderer().renderItem(
             new ItemStack(blockState.getBlock()),
             ModelTransformation.Mode.FIXED,
             light,
@@ -144,20 +150,20 @@ public class TombstoneGui extends Screen
         Matrix4f matrix4f = matrixStack.peek().getModel();
         int selectionStart = this.selectionManager.getSelectionStart();
         int selectionEnd = this.selectionManager.getSelectionEnd();
-        int directionMultiplier = this.minecraft.textRenderer.isRightToLeft() ? -1 : 1;
+        int directionMultiplier = this.client.textRenderer.isRightToLeft() ? -1 : 1;
         int cursorY = 5;
 
         int u;
         int cursorX;
         if (!string.isEmpty()) {
-            float x = (float) (-this.minecraft.textRenderer.getStringWidth(string) / 2);
+            float x = (float) (-this.client.textRenderer.getWidth(string) / 2);
             int y = 5;
-            this.minecraft.textRenderer.draw(string, x, y, textColor, false, matrix4f, immediate, false, 0, light);
+            this.client.textRenderer.draw(string, x, y, textColor, false, matrix4f, immediate, false, 0, light);
             if (selectionStart >= 0 && isCursorVisible) {
-                u = this.minecraft.textRenderer.getStringWidth(string.substring(0, Math.min(selectionStart, string.length())));
-                cursorX = (u - this.minecraft.textRenderer.getStringWidth(string) / 2) * directionMultiplier;
+                u = this.client.textRenderer.getWidth(string.substring(0, Math.min(selectionStart, string.length())));
+                cursorX = (u - this.client.textRenderer.getWidth(string) / 2) * directionMultiplier;
                 if (selectionStart >= string.length()) {
-                    this.minecraft.textRenderer.draw("_", (float) cursorX, (float) cursorY, textColor, false, matrix4f, immediate, false, 0, light);
+                    this.client.textRenderer.draw("_", (float) cursorX, (float) cursorY, textColor, false, matrix4f, immediate, false, 0, light);
                 }
             }
         }
@@ -165,19 +171,19 @@ public class TombstoneGui extends Screen
         immediate.draw();
 
         if (!string.isEmpty() && selectionStart >= 0) {
-            int t = this.minecraft.textRenderer.getStringWidth(string.substring(0, Math.min(selectionStart, string.length())));
-            u = (t - this.minecraft.textRenderer.getStringWidth(string) / 2) * directionMultiplier;
+            int t = this.client.textRenderer.getWidth(string.substring(0, Math.min(selectionStart, string.length())));
+            u = (t - this.client.textRenderer.getWidth(string) / 2) * directionMultiplier;
             if (isCursorVisible && selectionStart < string.length()) {
                 int var34 = cursorY - 1;
                 int var10003 = u + 1;
-                fill(matrix4f, u, var34, var10003, cursorY + 9, -16777216 | textColor);
+                fill(matrixStack, u, var34, var10003, cursorY + 9, -16777216 | textColor);
             }
 
             if (selectionEnd != selectionStart) {
                 cursorX = Math.min(selectionStart, selectionEnd);
                 int w = Math.max(selectionStart, selectionEnd);
-                int x = (this.minecraft.textRenderer.getStringWidth(string.substring(0, cursorX)) - this.minecraft.textRenderer.getStringWidth(string) / 2) * directionMultiplier;
-                int y = (this.minecraft.textRenderer.getStringWidth(string.substring(0, w)) - this.minecraft.textRenderer.getStringWidth(string) / 2) * directionMultiplier;
+                int x = (this.client.textRenderer.getWidth(string.substring(0, cursorX)) - this.client.textRenderer.getWidth(string) / 2) * directionMultiplier;
+                int y = (this.client.textRenderer.getWidth(string.substring(0, w)) - this.client.textRenderer.getWidth(string) / 2) * directionMultiplier;
                 int z = Math.min(x, y);
                 int aa = Math.max(x, y);
                 Tessellator tessellator = Tessellator.getInstance();
@@ -201,6 +207,6 @@ public class TombstoneGui extends Screen
 
         matrixStack.pop();
         DiffuseLighting.enableGuiDepthLighting();
-        super.render(mouseX, mouseY, delta);
+        super.render(matrixStack, mouseX, mouseY, delta);
     }
 }

@@ -7,11 +7,11 @@ import dev.the_fireplace.overlord.domain.network.ClientToServerPacketIDs;
 import dev.the_fireplace.overlord.domain.network.server.SaveTombstonePacketReceiver;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 
 import javax.inject.Inject;

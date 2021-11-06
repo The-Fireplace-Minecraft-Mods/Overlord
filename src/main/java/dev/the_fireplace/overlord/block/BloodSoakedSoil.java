@@ -3,13 +3,11 @@ package dev.the_fireplace.overlord.block;
 import net.minecraft.block.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.ZombieEntity;
-import net.minecraft.entity.mob.ZombiePigmanEntity;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 
 import java.util.Random;
 
@@ -34,7 +32,7 @@ public class BloodSoakedSoil extends SnowyBlock implements Fertilizable {
     @Override
     public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
         world.setBlockState(pos, Blocks.COARSE_DIRT.getDefaultState());
-        ZombieEntity zombie = random.nextInt(10000) == 1 ? new ZombieVillagerEntity(EntityType.ZOMBIE_VILLAGER, world) : world.getDimension().getType().equals(DimensionType.THE_NETHER) ? new ZombiePigmanEntity(EntityType.ZOMBIE_PIGMAN, world) : new ZombieEntity(EntityType.ZOMBIE, world);
+        ZombieEntity zombie = random.nextInt(10000) == 1 ? new ZombieVillagerEntity(EntityType.ZOMBIE_VILLAGER, world) : new ZombieEntity(EntityType.ZOMBIE, world);
         if(random.nextInt(3) == 1)
             zombie.setBaby(true);
         zombie.updatePosition(pos.getX(), pos.getY()+1, pos.getZ());

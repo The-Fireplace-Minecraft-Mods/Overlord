@@ -6,7 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.server.AbstractTagProvider;
-import net.minecraft.tag.TagContainer;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -39,11 +39,6 @@ public class BlockTagsProvider extends AbstractTagProvider<Block> {
     }
 
     @Override
-    protected void setContainer(TagContainer<Block> tagContainer) {
-
-    }
-
-    @Override
     protected Path getOutput(Identifier identifier) {
         return this.root.getOutput().resolve("data/" + identifier.getNamespace() + "/tags/blocks/" + identifier.getPath() + ".json");
     }
@@ -51,5 +46,10 @@ public class BlockTagsProvider extends AbstractTagProvider<Block> {
     @Override
     public String getName() {
         return "Overlord Block Tags";
+    }
+
+    @Override
+    public Tag.Builder method_27169(Tag.Identified<Block> identified) {
+        return super.method_27169(identified);
     }
 }

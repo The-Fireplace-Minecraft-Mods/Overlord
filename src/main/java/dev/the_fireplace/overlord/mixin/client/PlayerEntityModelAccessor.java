@@ -22,11 +22,11 @@ public interface PlayerEntityModelAccessor
 
     @Accessor
     @Mutable
-    void setLeftPantLeg(ModelPart leftPantLeg);
+    void setLeftPants(ModelPart leftPantLeg);
 
     @Accessor
     @Mutable
-    void setRightPantLeg(ModelPart rightPantLeg);
+    void setRightPants(ModelPart rightPantLeg);
 
     @Accessor
     @Mutable

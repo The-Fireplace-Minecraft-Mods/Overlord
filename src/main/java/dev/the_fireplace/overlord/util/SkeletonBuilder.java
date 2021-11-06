@@ -33,8 +33,8 @@ public class SkeletonBuilder
 
     public static boolean hasEssentialContents(Inventory casket) {
         int boneCount = 0, milkCount = 0;
-        for (int slot = 0; slot < casket.getInvSize(); slot++) {
-            ItemStack stack = casket.getInvStack(slot);
+        for (int slot = 0; slot < casket.size(); slot++) {
+            ItemStack stack = casket.getStack(slot);
             if (stack.isEmpty()) {
                 continue;
             }
@@ -49,8 +49,8 @@ public class SkeletonBuilder
 
     public static void removeEssentialContents(Inventory casket) {
         int boneCount = REQUIRED_BONE_COUNT, milkCount = REQUIRED_MILK_COUNT;
-        for (int slot = 0; slot < casket.getInvSize() && (boneCount > 0 || milkCount > 0); slot++) {
-            ItemStack stack = casket.getInvStack(slot);
+        for (int slot = 0; slot < casket.size() && (boneCount > 0 || milkCount > 0); slot++) {
+            ItemStack stack = casket.getStack(slot);
             if (stack.isEmpty()) {
                 continue;
             }
@@ -64,8 +64,8 @@ public class SkeletonBuilder
 
     public static boolean hasMuscles(Inventory casket) {
         int muscleCount = 0;
-        for (int slot = 0; slot < casket.getInvSize(); slot++) {
-            ItemStack stack = casket.getInvStack(slot);
+        for (int slot = 0; slot < casket.size(); slot++) {
+            ItemStack stack = casket.getStack(slot);
             if (stack.isEmpty()) {
                 continue;
             }
@@ -78,8 +78,8 @@ public class SkeletonBuilder
 
     public static void removeMuscles(Inventory casket) {
         int muscleCount = REQUIRED_MUSCLE_COUNT;
-        for (int slot = 0; slot < casket.getInvSize() && muscleCount > 0; slot++) {
-            ItemStack stack = casket.getInvStack(slot);
+        for (int slot = 0; slot < casket.size() && muscleCount > 0; slot++) {
+            ItemStack stack = casket.getStack(slot);
             if (stack.isEmpty()) {
                 continue;
             }
@@ -91,8 +91,8 @@ public class SkeletonBuilder
 
     public static boolean hasSkin(Inventory casket) {
         int skinCount = 0;
-        for (int slot = 0; slot < casket.getInvSize(); slot++) {
-            ItemStack stack = casket.getInvStack(slot);
+        for (int slot = 0; slot < casket.size(); slot++) {
+            ItemStack stack = casket.getStack(slot);
             if (stack.isEmpty()) {
                 continue;
             }
@@ -105,8 +105,8 @@ public class SkeletonBuilder
 
     public static void removeSkin(Inventory casket) {
         int skinCount = REQUIRED_SKIN_COUNT;
-        for (int slot = 0; slot < casket.getInvSize() && skinCount > 0; slot++) {
-            ItemStack stack = casket.getInvStack(slot);
+        for (int slot = 0; slot < casket.size() && skinCount > 0; slot++) {
+            ItemStack stack = casket.getStack(slot);
             if (stack.isEmpty()) {
                 continue;
             }
@@ -118,8 +118,8 @@ public class SkeletonBuilder
 
     public static boolean hasDye(Inventory casket) {
         int dyeCount = 0;
-        for (int slot = 0; slot < casket.getInvSize(); slot++) {
-            ItemStack stack = casket.getInvStack(slot);
+        for (int slot = 0; slot < casket.size(); slot++) {
+            ItemStack stack = casket.getStack(slot);
             if (stack.isEmpty()) {
                 continue;
             }
@@ -132,8 +132,8 @@ public class SkeletonBuilder
 
     public static void removeDye(Inventory casket) {
         int dyeCount = REQUIRED_DYE_COUNT;
-        for (int slot = 0; slot < casket.getInvSize() && dyeCount > 0; slot++) {
-            ItemStack stack = casket.getInvStack(slot);
+        for (int slot = 0; slot < casket.size() && dyeCount > 0; slot++) {
+            ItemStack stack = casket.getStack(slot);
             if (stack.isEmpty()) {
                 continue;
             }
@@ -146,8 +146,8 @@ public class SkeletonBuilder
     public static void findAndEquipArmor(OwnedSkeletonEntity entity, Inventory casket) {
         CommonPriorityMappers commonPriorityMappers = DIContainer.get().getInstance(CommonPriorityMappers.class);
         Map<Integer, ItemStack> armorSlots = Maps.newHashMap();
-        for (int slot = 0; slot < casket.getInvSize(); slot++) {
-            ItemStack stack = casket.getInvStack(slot);
+        for (int slot = 0; slot < casket.size(); slot++) {
+            ItemStack stack = casket.getStack(slot);
             if (stack.isEmpty()) {
                 continue;
             }
@@ -170,7 +170,7 @@ public class SkeletonBuilder
             for (Map.Entry<EquipmentSlot, Boolean> entry : Sets.newHashSet(equipped.entrySet())) {
                 if (!entry.getValue() && MobEntity.getPreferredEquipmentSlot(slotEntry.getValue()).equals(entry.getKey())) {
                     entity.equipStack(entry.getKey(), slotEntry.getValue());
-                    casket.setInvStack(slotEntry.getKey(), ItemStack.EMPTY);
+                    casket.setStack(slotEntry.getKey(), ItemStack.EMPTY);
                     equipped.put(entry.getKey(), true);
                 }
             }
@@ -189,18 +189,18 @@ public class SkeletonBuilder
         boolean hasCrossbow = false;
         ItemStack crossbow = null;
         ItemStack bow = null;
-        for (int slot = 0; slot < casket.getInvSize(); slot++) {
-            ItemStack stack = casket.getInvStack(slot);
+        for (int slot = 0; slot < casket.size(); slot++) {
+            ItemStack stack = casket.getStack(slot);
             if (stack.isEmpty()) {
                 continue;
             }
             if (EquipmentUtils.isMeleeWeapon(stack)) {
                 weaponSlots.put(slot, stack);
             } else if (!equippedOffhand && stack.getItem() instanceof ShieldItem) {
-                entity.equipStack(EquipmentSlot.OFFHAND, casket.removeInvStack(slot));
+                entity.equipStack(EquipmentSlot.OFFHAND, casket.removeStack(slot));
                 equippedOffhand = true;
             } else if (!equippedOffhand && EquipmentUtils.isRangedWeapon(stack)) {
-                entity.equipStack(EquipmentSlot.OFFHAND, casket.removeInvStack(slot));
+                entity.equipStack(EquipmentSlot.OFFHAND, casket.removeStack(slot));
                 equippedOffhand = true;
                 if (stack.getItem() instanceof CrossbowItem) {
                     hasCrossbow = true;
@@ -213,18 +213,18 @@ public class SkeletonBuilder
         List<Map.Entry<Integer, ItemStack>> weaponWeights = Lists.newArrayList(weaponSlots.entrySet());
         weaponWeights.sort(Comparator.comparingInt(o -> commonPriorityMappers.weapon(entity, entity.getTarget()).applyAsInt(o.getValue())));
         if (!weaponWeights.isEmpty()) {
-            entity.equipStack(EquipmentSlot.MAINHAND, casket.removeInvStack(weaponWeights.get(0).getKey()));
+            entity.equipStack(EquipmentSlot.MAINHAND, casket.removeStack(weaponWeights.get(0).getKey()));
         }
         //Collect weapons, tools
-        for (int slot = 0; slot < casket.getInvSize(); slot++) {
-            ItemStack stack = casket.getInvStack(slot);
+        for (int slot = 0; slot < casket.size(); slot++) {
+            ItemStack stack = casket.getStack(slot);
             if (stack.isEmpty()) {
                 continue;
             }
             if (EquipmentUtils.isMeleeWeapon(stack)) {
-                entity.getInventory().insertStack(casket.getInvStack(slot));
+                entity.getInventory().insertStack(casket.getStack(slot));
             } else if (EquipmentUtils.isRangedWeapon(stack)) {
-                entity.getInventory().insertStack(casket.getInvStack(slot));
+                entity.getInventory().insertStack(casket.getStack(slot));
                 if (stack.getItem() instanceof CrossbowItem) {
                     hasCrossbow = true;
                     crossbow = stack;
@@ -236,16 +236,16 @@ public class SkeletonBuilder
         }
         //Collect ammo
         if (hasCrossbow || hasBow) {
-            for (int slot = 0; slot < casket.getInvSize(); slot++) {
-                ItemStack stack = casket.getInvStack(slot);
+            for (int slot = 0; slot < casket.size(); slot++) {
+                ItemStack stack = casket.getStack(slot);
                 if (stack.isEmpty()) {
                     continue;
                 }
                 //TODO ammo registry
                 if (crossbow != null && EquipmentUtils.isAmmoFor(crossbow, stack)) {
-                    entity.getInventory().insertStack(casket.getInvStack(slot));
+                    entity.getInventory().insertStack(casket.getStack(slot));
                 } else if (bow != null && EquipmentUtils.isAmmoFor(bow, stack)) {
-                    entity.getInventory().insertStack(casket.getInvStack(slot));
+                    entity.getInventory().insertStack(casket.getStack(slot));
                 }
             }
         }
@@ -254,8 +254,8 @@ public class SkeletonBuilder
     public static void gatherExtraArmor(OwnedSkeletonEntity entity, Inventory casket) {
         CommonPriorityMappers commonPriorityMappers = DIContainer.get().getInstance(CommonPriorityMappers.class);
         Map<Integer, ItemStack> armorSlots = Maps.newHashMap();
-        for (int slot = 0; slot < casket.getInvSize(); slot++) {
-            ItemStack stack = casket.getInvStack(slot);
+        for (int slot = 0; slot < casket.size(); slot++) {
+            ItemStack stack = casket.getStack(slot);
             if (stack.isEmpty()) {
                 continue;
             }
@@ -268,7 +268,7 @@ public class SkeletonBuilder
         m.sort(Comparator.comparingInt(o -> commonPriorityMappers.armor().applyAsInt(o.getValue())));
         //Collect armor
         for (int slot : armorSlots.keySet()) {
-            entity.getInventory().insertStack(casket.getInvStack(slot));
+            entity.getInventory().insertStack(casket.getStack(slot));
         }
     }
 
@@ -282,10 +282,10 @@ public class SkeletonBuilder
         if (slot == null) {
             return;
         }
-        ItemStack stack = casket.getInvStack(slot);
+        ItemStack stack = casket.getStack(slot);
         ItemStack augmentStack = stack.split(1);
         if (stack.isEmpty()) {
-            casket.setInvStack(slot, ItemStack.EMPTY);
+            casket.setStack(slot, ItemStack.EMPTY);
         }
         entity.setAugmentBlock(augmentStack);
     }
@@ -327,7 +327,7 @@ public class SkeletonBuilder
             stack.setCount(stack.getCount() - amount);
             return 0;
         } else {
-            inv.setInvStack(slot, stack.getItem() instanceof BucketItem ? new ItemStack(Items.BUCKET) : ItemStack.EMPTY);
+            inv.setStack(slot, stack.getItem() instanceof BucketItem ? new ItemStack(Items.BUCKET) : ItemStack.EMPTY);
             return amount - stack.getCount();
         }
     }

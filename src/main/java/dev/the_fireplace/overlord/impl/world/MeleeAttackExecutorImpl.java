@@ -37,7 +37,7 @@ public final class MeleeAttackExecutorImpl implements MeleeAttackExecutor {
         if (!target.isAttackable() || target.handleAttack(attacker)) {
             return;
         }
-        float baseAttackDamage = (float) attacker.getAttributeInstance(EntityAttributes.ATTACK_DAMAGE).getValue();
+        float baseAttackDamage = (float) attacker.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).getValue();
         float enchantmentAttackDamage = EnchantmentHelper.getAttackDamage(
             attacker.getMainHandStack(),
             target instanceof LivingEntity
@@ -55,7 +55,7 @@ public final class MeleeAttackExecutorImpl implements MeleeAttackExecutor {
 
         boolean isPerformingFallingAttack = isNearFullStrength
             && attacker.fallDistance > 0.0F
-            && !attacker.onGround
+            && !attacker.isOnGround()
             && !attacker.isClimbing()
             && !attacker.isTouchingWater()
             && !attacker.hasStatusEffect(StatusEffects.BLINDNESS)
@@ -70,7 +70,7 @@ public final class MeleeAttackExecutorImpl implements MeleeAttackExecutor {
         double horizontalAcceleration = attacker.horizontalSpeed - attacker.prevHorizontalSpeed;
         if (isNearFullStrength
             && !isPerformingFallingAttack
-            && attacker.onGround
+            && attacker.isOnGround()
             && horizontalAcceleration < (double) attacker.getMovementSpeed()
         ) {
             ItemStack itemStack = attacker.getStackInHand(Hand.MAIN_HAND);
@@ -185,7 +185,7 @@ public final class MeleeAttackExecutorImpl implements MeleeAttackExecutor {
             }
 
             if (attacker.squaredDistanceTo(livingEntity) < 9.0D) {
-                livingEntity.takeKnockback(attacker, 0.4F, MathHelper.sin(attacker.yaw * (float) Math.PI / 180), -MathHelper.cos(attacker.yaw * (float) Math.PI / 180));
+                livingEntity.takeKnockback(0.4F, MathHelper.sin(attacker.yaw * (float) Math.PI / 180), -MathHelper.cos(attacker.yaw * (float) Math.PI / 180));
                 livingEntity.damage(DamageSource.mob(attacker), multiplier);
             }
         }
@@ -196,9 +196,9 @@ public final class MeleeAttackExecutorImpl implements MeleeAttackExecutor {
 
     private void knockbackTarget(LivingEntity attacker, Entity target, int knockback) {
         if (knockback > 0) {
-            if (target instanceof LivingEntity)
-                ((LivingEntity) target).takeKnockback(attacker, (float) knockback * 0.5F, MathHelper.sin(attacker.yaw * (float) Math.PI / 180), -MathHelper.cos(attacker.yaw * (float) Math.PI / 180));
-            else
+            if (target instanceof LivingEntity) {
+                ((LivingEntity) target).takeKnockback((float) knockback * 0.5F, MathHelper.sin(attacker.yaw * (float) Math.PI / 180), -MathHelper.cos(attacker.yaw * (float) Math.PI / 180));
+            } else
                 target.addVelocity(-MathHelper.sin(attacker.yaw * (float) Math.PI / 180) * (float) knockback * 0.5F, 0.1D, MathHelper.cos(attacker.yaw * (float) Math.PI / 180) * (float) knockback * 0.5F);
 
             attacker.setVelocity(attacker.getVelocity().multiply(0.6D, 1.0D, 0.6D));

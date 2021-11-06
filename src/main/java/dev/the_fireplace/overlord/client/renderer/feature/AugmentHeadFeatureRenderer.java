@@ -20,15 +20,15 @@ import net.minecraft.client.render.entity.model.ModelWithHead;
 import net.minecraft.client.render.entity.model.SkullEntityModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3f;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
@@ -55,7 +55,7 @@ public class AugmentHeadFeatureRenderer<T extends OwnedSkeletonEntity, M extends
 
                 GameProfile gameProfile = null;
                 if (itemStack.hasTag()) {
-                    CompoundTag compoundTag = itemStack.getTag();
+                    NbtCompound compoundTag = itemStack.getTag();
                     //noinspection ConstantConditions
                     if (compoundTag.contains("SkullOwner", 10)) {
                         gameProfile = NbtHelper.toGameProfile(compoundTag.getCompound("SkullOwner"));
@@ -63,7 +63,7 @@ public class AugmentHeadFeatureRenderer<T extends OwnedSkeletonEntity, M extends
                         String string = compoundTag.getString("SkullOwner");
                         if (!StringUtils.isBlank(string)) {
                             gameProfile = SkullBlockEntity.loadProperties(new GameProfile(null, string));
-                            compoundTag.put("SkullOwner", NbtHelper.fromGameProfile(new CompoundTag(), gameProfile));
+                            compoundTag.put("SkullOwner", NbtHelper.writeGameProfile(new NbtCompound(), gameProfile));
                         }
                     }
                 }
@@ -72,7 +72,7 @@ public class AugmentHeadFeatureRenderer<T extends OwnedSkeletonEntity, M extends
                 renderSkull(overlay, 180.0F, ((AbstractSkullBlock) ((BlockItem) item).getBlock()).getSkullType(), gameProfile, f, matrixStack, vertexConsumerProvider, light);
             } else if (!(item instanceof ArmorItem) || ((ArmorItem) item).getSlotType() != EquipmentSlot.HEAD) {
                 matrixStack.translate(0.0D, -0.25D, 0.0D);
-                matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(180.0F));
+                matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F));
                 matrixStack.scale(0.5F, -0.5F, -0.5F);
 
                 MinecraftClient.getInstance().getItemRenderer().renderItem(
@@ -103,8 +103,8 @@ public class AugmentHeadFeatureRenderer<T extends OwnedSkeletonEntity, M extends
 
         matrixStack.scale(-1.0F, -1.0F, 1.0F);
         VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(SkullBlockEntityRendererAccessor.callMethod_3578(skullType, gameProfile));
-        //First "render" just sets yaw and pitch based on inputs
-        skullEntityModel.render(g, yaw, 0.0F);
+        //method_2821 sets yaw and pitch based on inputs
+        skullEntityModel.method_2821(g, yaw, 0.0F);
         skullEntityModel.render(matrixStack, vertexConsumer, i, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
         matrixStack.pop();
     }

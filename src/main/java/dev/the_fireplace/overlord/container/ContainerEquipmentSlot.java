@@ -4,22 +4,22 @@ import com.mojang.datafixers.util.Pair;
 import dev.the_fireplace.overlord.Overlord;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.container.PlayerContainer;
-import net.minecraft.container.Slot;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.PlayerScreenHandler;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.Identifier;
 
-import static net.minecraft.container.PlayerContainer.*;
+import static net.minecraft.screen.PlayerScreenHandler.*;
 
 public class ContainerEquipmentSlot extends Slot
 {
     public static final Identifier EMPTY_WEAPON_SLOT_TEXTURE = new Identifier(Overlord.MODID, "item/empty_weapon_slot");
-    public static final Identifier EMPTY_SHIELD_SLOT_TEXTURE = PlayerContainer.EMPTY_OFFHAND_ARMOR_SLOT;
+    public static final Identifier EMPTY_SHIELD_SLOT_TEXTURE = PlayerScreenHandler.EMPTY_OFFHAND_ARMOR_SLOT;
     private static final Identifier[] EMPTY_ARMOR_SLOT_TEXTURES = new Identifier[]{EMPTY_BOOTS_SLOT_TEXTURE, EMPTY_LEGGINGS_SLOT_TEXTURE, EMPTY_CHESTPLATE_SLOT_TEXTURE, EMPTY_HELMET_SLOT_TEXTURE};
     private static final Identifier[] EMPTY_HAND_SLOT_TEXTURES = new Identifier[]{EMPTY_WEAPON_SLOT_TEXTURE, EMPTY_SHIELD_SLOT_TEXTURE};
 
@@ -48,10 +48,10 @@ public class ContainerEquipmentSlot extends Slot
     }
 
     @Override
-    public int getMaxStackAmount() {
+    public int getMaxItemCount() {
         return equipmentSlot.getType() == EquipmentSlot.Type.ARMOR
             ? 1
-            : super.getMaxStackAmount();
+            : super.getMaxItemCount();
     }
 
     @Environment(EnvType.CLIENT)

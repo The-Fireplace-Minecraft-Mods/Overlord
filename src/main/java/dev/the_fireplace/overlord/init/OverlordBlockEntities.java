@@ -41,7 +41,7 @@ public final class OverlordBlockEntities
         ContainerProviderRegistry.INSTANCE.registerFactory(CASKET_BLOCK_ENTITY_ID, (syncId, identifier, player, buf) -> {
             final World world = player.world;
             final BlockPos pos = buf.readBlockPos();
-            return Objects.requireNonNull(world.getBlockState(pos).createContainerFactory(player.world, pos))
+            return Objects.requireNonNull(world.getBlockState(pos).createScreenHandlerFactory(player.world, pos))
                 .createMenu(syncId, player.inventory, player);
         });
         GRAVE_MARKER_BLOCK_ENTITY = Registry.register(

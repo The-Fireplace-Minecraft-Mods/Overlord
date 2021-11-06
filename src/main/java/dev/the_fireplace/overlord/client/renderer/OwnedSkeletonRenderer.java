@@ -16,7 +16,7 @@ import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.BipedEntityRenderer;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.feature.ArmorBipedFeatureRenderer;
+import net.minecraft.client.render.entity.feature.ArmorFeatureRenderer;
 import net.minecraft.client.render.entity.feature.StuckArrowsFeatureRenderer;
 import net.minecraft.client.render.entity.feature.StuckStingersFeatureRenderer;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
@@ -47,11 +47,11 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
     private final OwnedSkeletonModel thinSkinModel;
     private final OwnedSkeletonModel standardModel;
 
-    private final ArmorBipedFeatureRenderer<OwnedSkeletonEntity, OwnedSkeletonModel, BipedEntityModel<OwnedSkeletonEntity>> standardArmorRenderer;
-    private final ArmorBipedFeatureRenderer<OwnedSkeletonEntity, OwnedSkeletonModel, BipedEntityModel<OwnedSkeletonEntity>> muscleArmorRenderer;
+    private final ArmorFeatureRenderer<OwnedSkeletonEntity, OwnedSkeletonModel, BipedEntityModel<OwnedSkeletonEntity>> standardArmorRenderer;
+    private final ArmorFeatureRenderer<OwnedSkeletonEntity, OwnedSkeletonModel, BipedEntityModel<OwnedSkeletonEntity>> muscleArmorRenderer;
 
-    private ArmorBipedFeatureRenderer<OwnedSkeletonEntity, OwnedSkeletonModel, BipedEntityModel<OwnedSkeletonEntity>> currentArmorRenderer;
-    private ArmorBipedFeatureRenderer<OwnedSkeletonEntity, OwnedSkeletonModel, BipedEntityModel<OwnedSkeletonEntity>> previousArmorRenderer;
+    private ArmorFeatureRenderer<OwnedSkeletonEntity, OwnedSkeletonModel, BipedEntityModel<OwnedSkeletonEntity>> currentArmorRenderer;
+    private ArmorFeatureRenderer<OwnedSkeletonEntity, OwnedSkeletonModel, BipedEntityModel<OwnedSkeletonEntity>> previousArmorRenderer;
 
     public OwnedSkeletonRenderer(EntityRenderDispatcher dispatcher) {
         super(dispatcher, new OwnedSkeletonModel(false, false, false), 0.5F);
@@ -65,9 +65,9 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
 
         BipedEntityModel<OwnedSkeletonEntity> bodyModel = new BipedEntityModel<>(1.0F);
         OwnedSkeletonModel standardLeggingsModel = new OwnedSkeletonModel(false, true, false);
-        this.standardArmorRenderer = new ArmorBipedFeatureRenderer<>(this, standardLeggingsModel, bodyModel);
+        this.standardArmorRenderer = new ArmorFeatureRenderer<>(this, standardLeggingsModel, bodyModel);
         OwnedSkeletonModel muscleLeggingsModel = new OwnedSkeletonModel(true, true, false);
-        this.muscleArmorRenderer = new ArmorBipedFeatureRenderer<>(this, muscleLeggingsModel, bodyModel);
+        this.muscleArmorRenderer = new ArmorFeatureRenderer<>(this, muscleLeggingsModel, bodyModel);
 
         this.addFeature(this.standardArmorRenderer);
         this.addFeature(new AugmentHeadFeatureRenderer<>(this));
@@ -81,7 +81,7 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
 
     @Override
     public Identifier getTexture(OwnedSkeletonEntity entity) {
-        this.shadowSize = 0.25f * entity.getGrowthPhase().ordinal() / 4.0f + 0.25f;
+        this.shadowRadius = 0.25f * entity.getGrowthPhase().ordinal() / 4.0f + 0.25f;
         if (!entity.hasSkin() && !entity.hasMuscles()) {
             return new Identifier(Overlord.MODID, "textures/entity/owned_skeleton/owned_skeleton.png");
         }

@@ -21,8 +21,8 @@ public final class InventorySearcherImpl implements InventorySearcher
 {
     @Override
     public boolean hasSlotMatching(Inventory container, Predicate<ItemStack> matcher) {
-        for (int slot = 0; slot < container.getInvSize(); slot++) {
-            if (matcher.test(container.getInvStack(slot))) {
+        for (int slot = 0; slot < container.size(); slot++) {
+            if (matcher.test(container.getStack(slot))) {
                 return true;
             }
         }
@@ -32,8 +32,8 @@ public final class InventorySearcherImpl implements InventorySearcher
 
     @Override
     public Integer getFirstSlotMatching(Inventory container, Predicate<ItemStack> matcher) {
-        for (int slot = 0; slot < container.getInvSize(); slot++) {
-            if (matcher.test(container.getInvStack(slot))) {
+        for (int slot = 0; slot < container.size(); slot++) {
+            if (matcher.test(container.getStack(slot))) {
                 return slot;
             }
         }
@@ -45,8 +45,8 @@ public final class InventorySearcherImpl implements InventorySearcher
     public List<Integer> getSlotsMatching(Inventory container, Predicate<ItemStack> matcher) {
         IntList slotList = new IntArrayList();
 
-        for (int slot = 0; slot < container.getInvSize(); slot++) {
-            if (matcher.test(container.getInvStack(slot))) {
+        for (int slot = 0; slot < container.size(); slot++) {
+            if (matcher.test(container.getStack(slot))) {
                 slotList.add(slot);
             }
         }
@@ -61,8 +61,8 @@ public final class InventorySearcherImpl implements InventorySearcher
     public Map<Integer, Integer> getSlotsMatchingByPriority(Inventory container, Predicate<ItemStack> matcher, ToIntFunction<ItemStack> priorityMapper) {
         IntList slotList = new IntArrayList();
 
-        for (int slot = 0; slot < container.getInvSize(); slot++) {
-            if (matcher.test(container.getInvStack(slot))) {
+        for (int slot = 0; slot < container.size(); slot++) {
+            if (matcher.test(container.getStack(slot))) {
                 slotList.add(slot);
             }
         }
@@ -70,7 +70,7 @@ public final class InventorySearcherImpl implements InventorySearcher
         Map<Integer, Integer> slotPriorityMap = new Int2IntOpenHashMap();
 
         for (int slot : slotList) {
-            slotPriorityMap.put(slot, priorityMapper.applyAsInt(container.getInvStack(slot)));
+            slotPriorityMap.put(slot, priorityMapper.applyAsInt(container.getStack(slot)));
         }
 
         slotPriorityMap = sortByValue(slotPriorityMap);
@@ -85,8 +85,8 @@ public final class InventorySearcherImpl implements InventorySearcher
     public Map<Integer, Integer> getSlotsByPriority(Inventory container, ToIntFunction<ItemStack> priorityMapper) {
         Map<Integer, Integer> slotPriorityMap = new Int2IntOpenHashMap();
 
-        for (int slot = 0; slot < container.getInvSize(); slot++) {
-            slotPriorityMap.put(slot, priorityMapper.applyAsInt(container.getInvStack(slot)));
+        for (int slot = 0; slot < container.size(); slot++) {
+            slotPriorityMap.put(slot, priorityMapper.applyAsInt(container.getStack(slot)));
         }
 
         slotPriorityMap = sortByValue(slotPriorityMap);
@@ -101,8 +101,8 @@ public final class InventorySearcherImpl implements InventorySearcher
     public Map<Integer, Integer> getSlotsByPriorityOverZero(Inventory container, ToIntFunction<ItemStack> priorityMapper) {
         Map<Integer, Integer> slotPriorityMap = new Int2IntOpenHashMap();
 
-        for (int slot = 0; slot < container.getInvSize(); slot++) {
-            int priority = priorityMapper.applyAsInt(container.getInvStack(slot));
+        for (int slot = 0; slot < container.size(); slot++) {
+            int priority = priorityMapper.applyAsInt(container.getStack(slot));
             if (priority > 0) {
                 slotPriorityMap.put(slot, priority);
             }

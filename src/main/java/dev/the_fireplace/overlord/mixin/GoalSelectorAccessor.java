@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.mixin;
 
 import net.minecraft.entity.ai.goal.GoalSelector;
-import net.minecraft.entity.ai.goal.WeightedGoal;
+import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
@@ -11,5 +11,5 @@ import java.util.Set;
 public interface GoalSelectorAccessor
 {
     @Accessor
-    Set<WeightedGoal> getGoals();
+    Set<PrioritizedGoal> getGoals();
 }

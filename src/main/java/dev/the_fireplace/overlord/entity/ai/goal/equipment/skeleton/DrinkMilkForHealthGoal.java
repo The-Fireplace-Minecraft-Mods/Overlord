@@ -11,6 +11,6 @@ public class DrinkMilkForHealthGoal<T extends ArmyEntity & AnimatedMilkDrinker> 
 
     @Override
     public boolean canStart() {
-        return super.canStart() && armyEntity.getHealth() < armyEntity.getMaximumHealth() / 4.0;
+        return super.canStart() && armyEntity.getHealth() < armyEntity.getMaxHealth() / 4.0;
     }
 }

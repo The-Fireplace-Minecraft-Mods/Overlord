@@ -67,7 +67,7 @@ public final class BreakSpeedModifiersImpl implements BreakSpeedModifiers {
     }
 
     private float applyWaterToBreakSpeed(LivingEntity entity, float breakSpeed) {
-        if (entity.isInFluid(FluidTags.WATER) && !EnchantmentHelper.hasAquaAffinity(entity)) {
+        if (entity.isSubmergedIn(FluidTags.WATER) && !EnchantmentHelper.hasAquaAffinity(entity)) {
             breakSpeed /= 5.0F;
         }
 
@@ -75,7 +75,7 @@ public final class BreakSpeedModifiersImpl implements BreakSpeedModifiers {
     }
 
     private float applyOffGroundToBreakSpeed(LivingEntity entity, float breakSpeed) {
-        if (!entity.onGround) {
+        if (!entity.isOnGround()) {
             breakSpeed /= 5.0F;
         }
 

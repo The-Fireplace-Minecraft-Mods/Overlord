@@ -6,12 +6,13 @@ import net.minecraft.block.FluidBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnType;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.SpawnEggItem;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -20,7 +21,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.RayTraceContext;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 import java.util.Objects;
@@ -53,19 +54,19 @@ public class OwnedSkeletonSpawnEggItem extends SpawnEggItem {
 
         EntityType<?> spawningEntityType = this.getEntityType(itemStack.getTag());
         Entity spawnedEntity = spawningEntityType.spawnFromItemStack(
-            world,
+            (ServerWorld) world,
             itemStack,
             context.getPlayer(),
             blockPos3,
-            SpawnType.SPAWN_EGG,
+            SpawnReason.SPAWN_EGG,
             true,
             !Objects.equals(blockPos, blockPos3) && direction == Direction.UP
         );
         if (spawnedEntity != null) {
             if (spawnedEntity instanceof OwnedSkeletonEntity) {
-                CompoundTag savedSkeletonData = itemStack.getSubTag(SKELETON_DATA_TAG);
+                NbtCompound savedSkeletonData = itemStack.getSubTag(SKELETON_DATA_TAG);
                 if (savedSkeletonData != null) {
-                    ((OwnedSkeletonEntity) spawnedEntity).readCustomDataFromTag(savedSkeletonData);
+                    ((OwnedSkeletonEntity) spawnedEntity).readCustomDataFromNbt(savedSkeletonData);
                 }
                 if (context.getPlayer() != null) {
                     ((OwnedSkeletonEntity) spawnedEntity).setOwner(context.getPlayer().getUuid());
@@ -79,19 +80,18 @@ public class OwnedSkeletonSpawnEggItem extends SpawnEggItem {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
-        HitResult hitResult = rayTrace(world, user, RayTraceContext.FluidHandling.SOURCE_ONLY);
+        BlockHitResult hitResult = raycast(world, user, RaycastContext.FluidHandling.SOURCE_ONLY);
         if (hitResult.getType() != HitResult.Type.BLOCK) {
             return TypedActionResult.pass(itemStack);
         } else if (world.isClient) {
             return TypedActionResult.success(itemStack);
         }
-        BlockHitResult blockHitResult = (BlockHitResult)hitResult;
-        BlockPos blockPos = blockHitResult.getBlockPos();
+        BlockPos blockPos = hitResult.getBlockPos();
         if (!(world.getBlockState(blockPos).getBlock() instanceof FluidBlock)) {
             return TypedActionResult.pass(itemStack);
-        } else if (world.canPlayerModifyAt(user, blockPos) && user.canPlaceOn(blockPos, blockHitResult.getSide(), itemStack)) {
+        } else if (world.canPlayerModifyAt(user, blockPos) && user.canPlaceOn(blockPos, hitResult.getSide(), itemStack)) {
             EntityType<?> entityType = this.getEntityType(itemStack.getTag());
-            if (entityType.spawnFromItemStack(world, itemStack, user, blockPos, SpawnType.SPAWN_EGG, false, false) == null) {
+            if (entityType.spawnFromItemStack((ServerWorld) world, itemStack, user, blockPos, SpawnReason.SPAWN_EGG, false, false) == null) {
                 return TypedActionResult.pass(itemStack);
             } else {
                 if (!user.abilities.creativeMode) {
@@ -107,14 +107,14 @@ public class OwnedSkeletonSpawnEggItem extends SpawnEggItem {
     }
 
     @Override
-    public boolean useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
+    public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
         if (user.isSneaking() && entity instanceof OwnedSkeletonEntity && !user.world.isClient()) {
-            entity.writeCustomDataToTag(stack.getOrCreateSubTag(SKELETON_DATA_TAG));
+            entity.writeCustomDataToNbt(stack.getOrCreateSubTag(SKELETON_DATA_TAG));
             if (entity.getCustomName() != null) {
                 stack.setCustomName(entity.getCustomName());
             }
             user.setStackInHand(hand, stack);
-            return true;
+            return ActionResult.SUCCESS;
         }
         return super.useOnEntity(stack, user, entity, hand);
     }

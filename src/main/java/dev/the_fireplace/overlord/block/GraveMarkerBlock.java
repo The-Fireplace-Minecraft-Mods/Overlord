@@ -6,8 +6,8 @@ import dev.the_fireplace.overlord.blockentity.internal.AbstractTombstoneBlockEnt
 import dev.the_fireplace.overlord.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityContext;
-import net.minecraft.util.BooleanBiFunction;
+import net.minecraft.block.ShapeContext;
+import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -47,7 +47,7 @@ public class GraveMarkerBlock extends AbstractTombstoneBlock {
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext ePos) {
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction direction = state.get(FACING);
         return BlockUtils.getVoxelShape(direction, NORTH_SHAPE, SOUTH_SHAPE, WEST_SHAPE, EAST_SHAPE);
     }

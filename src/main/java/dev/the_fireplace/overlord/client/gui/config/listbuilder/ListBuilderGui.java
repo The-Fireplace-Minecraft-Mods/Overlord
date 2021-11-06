@@ -7,6 +7,7 @@ import io.netty.util.concurrent.Promise;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 import java.util.Optional;
@@ -32,10 +33,10 @@ public class ListBuilderGui extends Screen implements CustomButtonScreen<String>
 
     @Override
     protected void init() {
-        this.addButton(new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, "Confirm and exit", (button) -> {
+        this.addButton(new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, Text.of("Confirm and exit"), (button) -> {
             closeScreen();
         }));
-        this.addButton(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, "Cancel", (button) -> {
+        this.addButton(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, Text.of("Cancel"), (button) -> {
             resultPromise.setSuccess(Optional.empty());
             closeScreen();
         }));
@@ -54,9 +55,9 @@ public class ListBuilderGui extends Screen implements CustomButtonScreen<String>
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float delta) {
-        this.renderBackground();
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
+        this.renderBackground(matrixStack);
         //TODO
-        super.render(mouseX, mouseY, delta);
+        super.render(matrixStack, mouseX, mouseY, delta);
     }
 }

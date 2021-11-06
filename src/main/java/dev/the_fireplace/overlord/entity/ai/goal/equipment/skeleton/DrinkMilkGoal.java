@@ -40,10 +40,10 @@ public class DrinkMilkGoal<T extends ArmyEntity & AnimatedMilkDrinker> extends S
         if (milkSlot != null) {
             int offHandSlot = this.armyEntity.getOffHandSlot();
             Inventory inventory = this.armyEntity.getInventory();
-            ItemStack milkStack = inventory.removeInvStack(milkSlot);
-            ItemStack offHandStack = inventory.removeInvStack(offHandSlot);
-            inventory.setInvStack(offHandSlot, milkStack);
-            inventory.setInvStack(milkSlot, offHandStack);
+            ItemStack milkStack = inventory.removeStack(milkSlot);
+            ItemStack offHandStack = inventory.removeStack(offHandSlot);
+            inventory.setStack(offHandSlot, milkStack);
+            inventory.setStack(milkSlot, offHandStack);
             this.swapBackSlot = milkSlot;
             this.armyEntity.startDrinkingMilkAnimation();
             this.drinkingTicks = armyEntity.getEquipmentSwapTicks();
@@ -64,9 +64,9 @@ public class DrinkMilkGoal<T extends ArmyEntity & AnimatedMilkDrinker> extends S
         this.armyEntity.completeDrinkingMilk();
         int offHandSlot = this.armyEntity.getOffHandSlot();
         Inventory inventory = this.armyEntity.getInventory();
-        ItemStack milkStack = inventory.removeInvStack(offHandSlot);
-        ItemStack offHandStack = inventory.removeInvStack(swapBackSlot);
-        inventory.setInvStack(offHandSlot, offHandStack);
+        ItemStack milkStack = inventory.removeStack(offHandSlot);
+        ItemStack offHandStack = inventory.removeStack(swapBackSlot);
+        inventory.setStack(offHandSlot, offHandStack);
         milkStack.decrement(1);
         this.armyEntity.giveItemStack(milkStack.isEmpty() ? new ItemStack(Items.BUCKET) : milkStack);
     }

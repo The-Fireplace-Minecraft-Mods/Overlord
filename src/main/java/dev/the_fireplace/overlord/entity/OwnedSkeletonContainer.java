@@ -2,18 +2,20 @@ package dev.the_fireplace.overlord.entity;
 
 import dev.the_fireplace.overlord.container.ContainerEquipmentSlot;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.container.Container;
-import net.minecraft.container.Slot;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.Slot;
 
-public class OwnedSkeletonContainer extends Container {
+public class OwnedSkeletonContainer extends ScreenHandler
+{
     private static final EquipmentSlot[] EQUIPMENT_SLOT_ORDER = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     public final boolean onServer;
     private final OwnedSkeletonEntity owner;
     private final SkeletonInventory inventory;
+
     public OwnedSkeletonContainer(PlayerInventory playerInventory, boolean onServer, OwnedSkeletonEntity owner, int syncId) {
         super(null, syncId);
         this.onServer = onServer;

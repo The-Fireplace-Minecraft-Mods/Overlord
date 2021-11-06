@@ -24,9 +24,9 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.container.GenericContainer;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.screen.GenericContainerScreenHandler;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -42,9 +42,10 @@ public final class OverlordClient implements ClientDIModInitializer {
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
             Overlord.getLogger().debug("Generating data...");
             DataGenerator gen = diContainer.getInstance(DataGeneratorFactory.class).createAdditive(Paths.get("..", "src", "main", "resources"));
-            gen.install(new BlockTagsProvider(gen));
+            BlockTagsProvider blockTagsProvider = new BlockTagsProvider(gen);
+            gen.install(blockTagsProvider);
             gen.install(new EntityTypeTagsProvider(gen));
-            gen.install(new ItemTagsProvider(gen));
+            gen.install(new ItemTagsProvider(gen, blockTagsProvider));
             gen.install(new RecipesProvider(gen));
             gen.install(new LootTablesProvider(gen));
             try {
@@ -64,7 +65,7 @@ public final class OverlordClient implements ClientDIModInitializer {
     }
 
     private void registerGuis() {
-        ScreenProviderRegistry.INSTANCE.<GenericContainer>registerFactory(
+        ScreenProviderRegistry.INSTANCE.<GenericContainerScreenHandler>registerFactory(
             OverlordBlockEntities.CASKET_BLOCK_ENTITY_ID,
             (container) -> new CasketGui(container, getClientPlayerInventory())
         );
@@ -72,7 +73,7 @@ public final class OverlordClient implements ClientDIModInitializer {
             OverlordEntities.OWNED_SKELETON_ID,
             (container) -> new OwnedSkeletonGui(container.getOwner(), getClientPlayerInventory(), container.syncId)
         );
-        ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEX).register((atlasTexture, registry) -> {
+        ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).register((atlasTexture, registry) -> {
             registry.register(ContainerEquipmentSlot.EMPTY_WEAPON_SLOT_TEXTURE);
         });
     }

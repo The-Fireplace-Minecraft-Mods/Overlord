@@ -2,7 +2,8 @@ package dev.the_fireplace.overlord.blockentity;
 
 import dev.the_fireplace.overlord.blockentity.internal.AbstractTombstoneBlockEntity;
 import dev.the_fireplace.overlord.init.OverlordBlockEntities;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.NbtCompound;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -37,15 +38,15 @@ public class GraveMarkerBlockEntity extends AbstractTombstoneBlockEntity
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        tag = super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        tag = super.writeNbt(tag);
         tag.putUuid("owner", owner);
         return tag;
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
+    public void fromTag(BlockState state, NbtCompound tag) {
+        super.fromTag(state, tag);
         this.owner = tag.getUuid("owner");
     }
 }

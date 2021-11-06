@@ -1,8 +1,10 @@
 package dev.the_fireplace.overlord.model.aiconfig;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 
-public interface SettingsComponent {
-    CompoundTag toTag();
-    void readTag(CompoundTag tag);
+public interface SettingsComponent
+{
+    NbtCompound toTag();
+
+    void readTag(NbtCompound tag);
 }

@@ -10,7 +10,6 @@ import dev.the_fireplace.overlord.domain.entity.AugmentBearer;
 import dev.the_fireplace.overlord.domain.inventory.InventorySearcher;
 import dev.the_fireplace.overlord.domain.mechanic.Ownable;
 import dev.the_fireplace.overlord.domain.registry.HeadBlockAugmentRegistry;
-import dev.the_fireplace.overlord.domain.world.BreakSpeedModifiers;
 import dev.the_fireplace.overlord.domain.world.DaylightDetector;
 import dev.the_fireplace.overlord.domain.world.MeleeAttackExecutor;
 import dev.the_fireplace.overlord.domain.world.UndeadDaylightDamager;
@@ -26,7 +25,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.SharedConstants;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.*;
@@ -40,20 +38,19 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.projectile.Projectile;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -88,7 +85,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     private final DaylightDetector daylightDetector;
     private final UndeadDaylightDamager undeadDaylightDamager;
     private final MeleeAttackExecutor meleeAttackExecutor;
-    private final BreakSpeedModifiers breakSpeedModifiers;
     private final InventorySearcher inventorySearcher;
     private final AIEquipmentHelper equipmentHelper;
     private final HeadBlockAugmentRegistry headBlockAugmentRegistry;
@@ -105,7 +101,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         daylightDetector = injector.getInstance(DaylightDetector.class);
         undeadDaylightDamager = injector.getInstance(UndeadDaylightDamager.class);
         meleeAttackExecutor = injector.getInstance(MeleeAttackExecutor.class);
-        breakSpeedModifiers = injector.getInstance(BreakSpeedModifiers.class);
         inventorySearcher = injector.getInstance(InventorySearcher.class);
         equipmentHelper = injector.getInstance(AIEquipmentHelper.class);
         headBlockAugmentRegistry = injector.getInstance(HeadBlockAugmentRegistry.class);
@@ -162,7 +157,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
     private void tickRegeneration() {
         if (this.world.getDifficulty() == Difficulty.PEACEFUL && this.world.getGameRules().getBoolean(GameRules.NATURAL_REGENERATION)) {
-            if (this.getHealth() < this.getMaximumHealth() && this.age % 2000 == 0) {
+            if (this.getHealth() < this.getMaxHealth() && this.age % 2000 == 0) {
                 this.heal(1.0F);
             }
         }
@@ -175,7 +170,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     @Override
-    public boolean interactMob(PlayerEntity player, Hand hand) {
+    public ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (!player.world.isClient() && !player.isSneaking()) {
             ContainerProviderRegistry.INSTANCE.openContainer(OverlordEntities.OWNED_SKELETON_ID, player, buf -> buf.writeUuid(this.getUuid()));
         }
@@ -203,9 +198,9 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
                     milkBucketsDrank = ADULT_REQUIRED_MILK;
                     break;
             }
-            return true;
+            return ActionResult.SUCCESS;
         }
-        return !player.isSneaking();
+        return ActionResult.PASS;
     }
 
     @Override
@@ -225,12 +220,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
         this.extinguish();
         this.setFlag(0, false);
-    }
-
-    @Override
-    protected void initAttributes() {
-        super.initAttributes();
-        this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
     }
 
     @Override
@@ -316,7 +305,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     private void vanishCursedItems() {
         List<Integer> slots = inventorySearcher.getSlotsMatching(inventory, EnchantmentHelper::hasVanishingCurse);
         for (int slot : slots) {
-            this.inventory.removeInvStack(slot);
+            this.inventory.removeStack(slot);
         }
     }
 
@@ -346,9 +335,9 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     @Override
-    public void readCustomDataFromTag(CompoundTag tag) {
-        super.readCustomDataFromTag(tag);
-        ListTag inventoryTag = tag.getList("Inventory", 10);
+    public void readCustomDataFromNbt(NbtCompound tag) {
+        super.readCustomDataFromNbt(tag);
+        NbtList inventoryTag = tag.getList("Inventory", 10);
         this.inventory.deserialize(inventoryTag);
         this.owner = tag.getUuid("Owner");
         this.dataTracker.set(HAS_MUSCLES, tag.getBoolean("Muscles"));
@@ -362,14 +351,14 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         this.setGrowthPhase(SkeletonGrowthPhase.values()[tag.getInt("GrowthPhase")]);
         this.updateAISettings(tag.getCompound("aiSettings"));
         this.milkBucketsDrank = tag.getInt("milkBucketsDrank");
-        this.setAugmentBlock(ItemStack.fromTag(tag.getCompound("augment")));
+        this.setAugmentBlock(ItemStack.fromNbt(tag.getCompound("augment")));
     }
 
     @Override
-    public void writeCustomDataToTag(CompoundTag tag) {
-        super.writeCustomDataToTag(tag);
+    public void writeCustomDataToNbt(NbtCompound tag) {
+        super.writeCustomDataToNbt(tag);
         tag.putInt("DataVersion", SharedConstants.getGameVersion().getWorldVersion());
-        tag.put("Inventory", this.inventory.serialize(new ListTag()));
+        tag.put("Inventory", this.inventory.serialize(new NbtList()));
         tag.putUuid("Owner", this.owner);
         tag.putBoolean("Muscles", hasMuscles());
         tag.putBoolean("Skin", hasSkin());
@@ -379,7 +368,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         tag.put("aiSettings", aiSettings.toTag());
         tag.putInt("GrowthPhase", dataTracker.get(GROWTH_PHASE));
         tag.putInt("milkBucketsDrank", milkBucketsDrank);
-        tag.put("augment", dataTracker.get(AUGMENT_BLOCK).toTag(new CompoundTag()));
+        tag.put("augment", dataTracker.get(AUGMENT_BLOCK).writeNbt(new NbtCompound()));
     }
 
     @Override
@@ -424,7 +413,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
     private float applyAugmentDamageModifiers(DamageSource source, float amount) {
         if (hasAugment(Augments.FRAGILE)) {
-            if (source.getMagic()) {
+            if (source.isMagic()) {
                 amount /= 4.0F;
             }
             if (source.isExplosive() || source.isProjectile()) {
@@ -452,7 +441,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     @Override
-    protected void damageArmor(float amount) {
+    protected void damageArmor(DamageSource source, float amount) {
         this.inventory.damageArmor(amount);
     }
 
@@ -540,12 +529,12 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     protected boolean doesNotSuffocate(BlockPos pos) {
-        return !this.world.getBlockState(pos).canSuffocate(this.world, pos);
+        return !this.world.getBlockState(pos).shouldSuffocate(this.world, pos);
     }
 
     @Override
     public float getMovementSpeed() {
-        return (float) this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).getValue();
+        return (float) this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).getValue();
     }
 
     @Override
@@ -627,7 +616,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     @Override
     public boolean equip(int slot, ItemStack item) {
         if (slot >= 0 && slot < this.inventory.main.size()) {
-            this.inventory.setInvStack(slot, item);
+            this.inventory.setStack(slot, item);
             return true;
         }
         EquipmentSlot equipmentSlot;
@@ -654,7 +643,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
             return false;
         }
 
-        this.inventory.setInvStack((equipmentSlot != null ? equipmentSlot.getEntitySlotId() : 0) + this.inventory.main.size(), item);
+        this.inventory.setStack((equipmentSlot != null ? equipmentSlot.getEntitySlotId() : 0) + this.inventory.main.size(), item);
         return true;
     }
 
@@ -663,7 +652,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     @Override
-    public boolean canPickUp(ItemStack stack) {
+    public boolean canPickupItem(ItemStack stack) {
         EquipmentSlot equipmentSlot = MobEntity.getPreferredEquipmentSlot(stack);
         return this.getEquippedStack(equipmentSlot).isEmpty();
     }
@@ -739,16 +728,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         return entity instanceof LivingEntity ? (LivingEntity) entity : null;
     }
 
-    public float getBlockBreakingSpeed(BlockState block) {
-        float breakSpeed = this.inventory.getBlockBreakingSpeed(block);
-
-        return breakSpeedModifiers.applyApplicable(this, breakSpeed);
-    }
-
-    public boolean isUsingEffectiveTool(BlockState block) {
-        return block.getMaterial().canBreakByHand() || this.inventory.isUsingEffectiveTool(block);
-    }
-
     public OwnedSkeletonContainer getContainer(PlayerInventory playerInv, int syncId) {
         return new OwnedSkeletonContainer(playerInv, !world.isClient, this, syncId);
     }
@@ -768,41 +747,45 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     @Override
-    public void shoot(LivingEntity target, ItemStack crossbow, Projectile projectile, float multiShotSpray) {
+    public void shoot(LivingEntity target, ItemStack crossbow, ProjectileEntity projectile, float multiShotSpray) {
         shootCrossbow(target, crossbow, projectile, multiShotSpray);
     }
 
-    private void shootCrossbow(LivingEntity target, ItemStack crossbow, Projectile projectile, float multiShotSpray) {
-        if (!(projectile instanceof Entity)) {
+    @Override
+    public void postShoot() {
+
+    }
+
+    private void shootCrossbow(LivingEntity target, ItemStack crossbow, ProjectileEntity projectile, float multiShotSpray) {
+        if (projectile == null) {
             Overlord.getLogger().warn("Projectile is not an entity! {}", projectile.getClass());
             return;
         }
-        Entity entity = (Entity) projectile;
         boolean isMultishotProjectile = EnchantmentHelper.getLevel(Enchantments.MULTISHOT, crossbow) > 0;
-        if (projectile instanceof ProjectileEntity && !isMultishotProjectile) {
-            ((ProjectileEntity) projectile).pickupType = ProjectileEntity.PickupPermission.ALLOWED;
+        if (projectile instanceof PersistentProjectileEntity && !isMultishotProjectile) {
+            ((PersistentProjectileEntity) projectile).pickupType = PersistentProjectileEntity.PickupPermission.ALLOWED;
         }
         double d = target.getX() - this.getX();
         double e = target.getZ() - this.getZ();
         double f = MathHelper.sqrt(d * d + e * e);
-        double g = target.getBodyY(1.0 / 3.0) - entity.getY() + f * 0.2;
-        Vector3f vector3f = this.getProjectileVelocity(new Vec3d(d, g, e), multiShotSpray);
+        double g = target.getBodyY(1.0 / 3.0) - projectile.getY() + f * 0.2;
+        Vec3f vector3f = this.getProjectileVelocity(new Vec3d(d, g, e), multiShotSpray);
         projectile.setVelocity(vector3f.getX(), vector3f.getY(), vector3f.getZ(), 1.6F, (float) (14 - this.world.getDifficulty().getId() * 4));
         this.playSound(SoundEvents.ITEM_CROSSBOW_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
     }
 
-    private Vector3f getProjectileVelocity(Vec3d vec3d, float multiShotSpray) {
+    private Vec3f getProjectileVelocity(Vec3d vec3d, float multiShotSpray) {
         Vec3d vec3d2 = vec3d.normalize();
         Vec3d vec3d3 = vec3d2.crossProduct(new Vec3d(0.0D, 1.0D, 0.0D));
         if (vec3d3.lengthSquared() <= 1.0E-7D) {
             vec3d3 = vec3d2.crossProduct(this.getOppositeRotationVector(1.0F));
         }
 
-        Quaternion quaternion = new Quaternion(new Vector3f(vec3d3), 90.0F, true);
-        Vector3f vector3f = new Vector3f(vec3d2);
+        Quaternion quaternion = new Quaternion(new Vec3f(vec3d3), 90.0F, true);
+        Vec3f vector3f = new Vec3f(vec3d2);
         vector3f.rotate(quaternion);
         Quaternion quaternion2 = new Quaternion(vector3f, multiShotSpray, true);
-        Vector3f vector3f2 = new Vector3f(vec3d2);
+        Vec3f vector3f2 = new Vec3f(vec3d2);
         vector3f2.rotate(quaternion2);
         return vector3f2;
     }
@@ -819,8 +802,8 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
     public void shootBow(LivingEntity target, float f) {
         ItemStack arrowStack = this.getArrowType(this.getMainHandStack());
-        ProjectileEntity projectileEntity = this.createArrowProjectile(arrowStack, f);
-        projectileEntity.pickupType = ProjectileEntity.PickupPermission.ALLOWED;
+        PersistentProjectileEntity projectileEntity = this.createArrowProjectile(arrowStack, f);
+        projectileEntity.pickupType = PersistentProjectileEntity.PickupPermission.ALLOWED;
         double d = target.getX() - this.getX();
         double e = target.getBodyY(1.0 / 3.0) - projectileEntity.getY();
         double g = target.getZ() - this.getZ();
@@ -836,7 +819,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         this.getMainHandStack().damage(1, this, (entity) -> entity.sendToolBreakStatus(Hand.MAIN_HAND));
     }
 
-    protected ProjectileEntity createArrowProjectile(ItemStack arrow, float f) {
+    protected PersistentProjectileEntity createArrowProjectile(ItemStack arrow, float f) {
         return ProjectileUtil.createArrowProjectile(this, arrow, f);
     }
 
@@ -849,7 +832,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     public void completeDrinkingMilk() {
         this.dataTracker.set(DRINKING_MILK, false);
         if (canUseMilkToFullHealingPotential() || !canGrow()) {
-            heal(Math.min(getMilkRestoreAmount(), getMaximumHealth() - getHealth()));
+            heal(Math.min(getMilkRestoreAmount(), getMaxHealth() - getHealth()));
             //TODO crop growth type particles maybe?
             return;
         }
@@ -858,7 +841,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     protected boolean canUseMilkToFullHealingPotential() {
-        return getMaximumHealth() - getHealth() >= getMilkRestoreAmount();
+        return getMaxHealth() - getHealth() >= getMilkRestoreAmount();
     }
 
     protected float getMilkRestoreAmount() {
@@ -902,7 +885,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
     @Override
     public boolean canDrinkMilk() {
-        return canGrow() || getHealth() < getMaximumHealth();
+        return canGrow() || getHealth() < getMaxHealth();
     }
 
     @Override

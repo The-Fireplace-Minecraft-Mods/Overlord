@@ -2,7 +2,7 @@ package dev.the_fireplace.overlord.model.aiconfig.misc;
 
 import dev.the_fireplace.overlord.model.AIListManager;
 import dev.the_fireplace.overlord.model.aiconfig.SettingsComponent;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 
 import java.util.UUID;
 
@@ -13,8 +13,8 @@ public final class MiscCategoryImpl implements SettingsComponent, MiscCategory {
     private boolean loadChunks = false;
 
     @Override
-    public CompoundTag toTag() {
-        CompoundTag tag = new CompoundTag();
+    public NbtCompound toTag() {
+        NbtCompound tag = new NbtCompound();
 
         tag.putBoolean("saveDamagedEquipment", saveDamagedEquipment);
         tag.putUuid("saveEquipmentList", saveEquipmentList);
@@ -24,7 +24,7 @@ public final class MiscCategoryImpl implements SettingsComponent, MiscCategory {
     }
 
     @Override
-    public void readTag(CompoundTag tag) {
+    public void readTag(NbtCompound tag) {
         if (tag.contains("saveDamagedEquipment")) {
             saveDamagedEquipment = tag.getBoolean("saveDamagedEquipment");
         }

@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.model.aiconfig.combat;
 
 import dev.the_fireplace.overlord.model.aiconfig.SettingsComponent;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 
 public final class CombatCategoryImpl implements SettingsComponent, CombatCategory {
 
@@ -22,8 +22,8 @@ public final class CombatCategoryImpl implements SettingsComponent, CombatCatego
     private final TargetEntitySelector rangedTargets = new TargetEntitySelector();
 
     @Override
-    public CompoundTag toTag() {
-        CompoundTag tag = new CompoundTag();
+    public NbtCompound toTag() {
+        NbtCompound tag = new NbtCompound();
 
         tag.putBoolean("enabled", enabled);
 
@@ -46,7 +46,7 @@ public final class CombatCategoryImpl implements SettingsComponent, CombatCatego
     }
 
     @Override
-    public void readTag(CompoundTag tag) {
+    public void readTag(NbtCompound tag) {
         if (tag.contains("enabled")) {
             enabled = tag.getBoolean("enabled");
         }

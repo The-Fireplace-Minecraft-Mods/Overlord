@@ -10,9 +10,6 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.container.Container;
-import net.minecraft.container.NameableContainerFactory;
-import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -20,15 +17,17 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.stat.Stats;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.BooleanBiFunction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -36,8 +35,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 
 import java.util.stream.Stream;
 
@@ -84,7 +83,7 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, IWorld world, BlockPos pos, BlockPos neighborPos) {
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (state.get(WATERLOGGED)) {
             world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
@@ -111,7 +110,7 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
         BlockState blockState = world.getBlockState(blockPos);
         if (blockState.getBlock() == this && blockState.get(PART) != bedPart) {
             world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 35);
-            world.playLevelEvent(player, 2001, blockPos, Block.getRawIdFromState(blockState));
+            world.syncWorldEvent(player, 2001, blockPos, Block.getRawIdFromState(blockState));
             if (!world.isClient && !player.isCreative()) {
                 ItemStack itemStack = player.getMainHandStack();
                 dropStacks(state, world, pos, null, player, itemStack);
@@ -163,7 +162,7 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
         BlockPos headPos = pos.offset(state.get(FACING));
         world.setBlockState(headPos, state.with(PART, BedPart.HEAD), 3);
         world.updateNeighbors(pos, Blocks.AIR);
-        state.updateNeighborStates(world, pos, 3);
+        state.updateNeighbors(world, pos, 3);
         if (itemStack.hasCustomName()) {
             BlockEntity blockEntity = world.getBlockEntity(headPos);
             if (blockEntity instanceof CasketBlockEntity) {
@@ -173,17 +172,17 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
     }
 
     @Override
-    public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() == newState.getBlock()) {
             return;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof Inventory) {
             ItemScatterer.spawn(world, pos, (Inventory) blockEntity);
-            world.updateHorizontalAdjacent(pos, this);
+            world.updateComparators(pos, this);
         }
 
-        super.onBlockRemoved(state, world, pos, newState, moved);
+        super.onStateReplaced(state, world, pos, newState, moved);
     }
 
     @Override
@@ -198,7 +197,7 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
         return ActionResult.SUCCESS;
     }
 
-    public static CasketBlockEntity getBlockEntity(BlockState state, IWorld world, BlockPos pos) {
+    public static CasketBlockEntity getBlockEntity(BlockState state, WorldAccess world, BlockPos pos) {
         if (state.get(PART).equals(BedPart.FOOT)) {
             pos = pos.offset(state.get(FACING));
         }
@@ -214,7 +213,7 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
     }
 
     @Override
-    public NameableContainerFactory createContainerFactory(BlockState state, World world, BlockPos pos) {
+    public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
         return getBlockEntity(state, world, pos);
     }
 
@@ -226,22 +225,17 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
     }
 
     @Override
-    public boolean canPlaceAtSide(BlockState world, BlockView view, BlockPos pos, BlockPlacementEnvironment env) {
-        return false;
-    }
-
-    @Override
     public boolean hasComparatorOutput(BlockState state) {
         return true;
     }
 
     @Override
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-        return Container.calculateComparatorOutput(getInventory(state, world, pos));
+        return ScreenHandler.calculateComparatorOutput(getInventory(state, world, pos));
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext ePos) {
+    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext ePos) {
         Direction direction = state.get(FACING);
         Direction direction2 = state.get(PART) == BedPart.HEAD ? direction : direction.getOpposite();
         return BlockUtils.getVoxelShape(direction2, NORTH_SHAPE, SOUTH_SHAPE, WEST_SHAPE, EAST_SHAPE);

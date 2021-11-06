@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.model.aiconfig.movement;
 
 import dev.the_fireplace.overlord.model.aiconfig.SettingsComponent;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 
 public class PositionSetting implements SettingsComponent
 {
@@ -30,8 +30,8 @@ public class PositionSetting implements SettingsComponent
     }
 
     @Override
-    public CompoundTag toTag() {
-        CompoundTag tag = new CompoundTag();
+    public NbtCompound toTag() {
+        NbtCompound tag = new NbtCompound();
 
         tag.putInt("x", x);
         tag.putInt("y", y);
@@ -41,7 +41,7 @@ public class PositionSetting implements SettingsComponent
     }
 
     @Override
-    public void readTag(CompoundTag tag) {
+    public void readTag(NbtCompound tag) {
         if (tag.contains("x")) {
             x = tag.getInt("x");
         }

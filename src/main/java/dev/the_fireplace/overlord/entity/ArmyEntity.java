@@ -28,12 +28,12 @@ import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.MobEntityWithAi;
 import net.minecraft.entity.mob.Monster;
+import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -41,7 +41,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, OrderableEntity
+public abstract class ArmyEntity extends PathAwareEntity implements Ownable, OrderableEntity
 {
     protected final AISettings aiSettings;
     protected boolean isSwappingEquipment;
@@ -193,7 +193,7 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
     }
 
     @Override
-    public void updateAISettings(CompoundTag newSettings) {
+    public void updateAISettings(NbtCompound newSettings) {
         aiSettings.readTag(newSettings);
         reloadGoals();
     }
@@ -224,15 +224,8 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
         return new BlockPos(homeSetting.getX(), homeSetting.getY(), homeSetting.getZ());
     }
 
-    @Override
-    protected void initAttributes() {
-        super.initAttributes();
-        this.getAttributes().register(EntityAttributes.ATTACK_DAMAGE);
-        this.getAttributes().register(EntityAttributes.ATTACK_SPEED);
-    }
-
     public float getAttackCooldownProgressPerTick() {
-        return (float) (1.0D / this.getAttributeInstance(EntityAttributes.ATTACK_SPEED).getValue() * 20.0D);
+        return (float) (1.0D / this.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_SPEED).getValue() * 20.0D);
     }
 
     public float getAttackCooldownProgress(float baseTime) {

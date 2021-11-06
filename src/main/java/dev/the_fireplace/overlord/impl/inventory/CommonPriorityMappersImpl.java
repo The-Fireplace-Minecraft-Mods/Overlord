@@ -32,16 +32,16 @@ public class CommonPriorityMappersImpl implements CommonPriorityMappers
             } else {
                 double max = 0;
                 for (EquipmentSlot slot : Sets.newHashSet(EquipmentSlot.values()).stream().filter(s -> s.getType().equals(EquipmentSlot.Type.HAND)).collect(Collectors.toSet())) {
-                    Collection<EntityAttributeModifier> armorMods = stack.getAttributeModifiers(slot).get(EntityAttributes.ARMOR.getId());
-                    armorMods.addAll(stack.getAttributeModifiers(slot).get(EntityAttributes.ARMOR_TOUGHNESS.getId()));
+                    Collection<EntityAttributeModifier> armorMods = stack.getAttributeModifiers(slot).get(EntityAttributes.GENERIC_ARMOR);
+                    armorMods.addAll(stack.getAttributeModifiers(slot).get(EntityAttributes.GENERIC_ARMOR_TOUGHNESS));
                     double totalArmorValue = 0;
                     for (EntityAttributeModifier modifier : armorMods) {
                         switch (modifier.getOperation()) {
                             case ADDITION:
                             case MULTIPLY_BASE:
-                                totalArmorValue += modifier.getAmount();
+                                totalArmorValue += modifier.getValue();
                             case MULTIPLY_TOTAL:
-                                totalArmorValue *= modifier.getAmount();
+                                totalArmorValue *= modifier.getValue();
                         }
                     }
                     if (totalArmorValue > max) {
@@ -62,15 +62,15 @@ public class CommonPriorityMappersImpl implements CommonPriorityMappers
     public ToIntFunction<ItemStack> weapon(LivingEntity source, @Nullable LivingEntity target) {
         return stack -> {
             double damage = 0.5;
-            Collection<EntityAttributeModifier> attributeModifiers = stack.getAttributeModifiers(EquipmentSlot.MAINHAND).get(EntityAttributes.ATTACK_DAMAGE.getId());
+            Collection<EntityAttributeModifier> attributeModifiers = stack.getAttributeModifiers(EquipmentSlot.MAINHAND).get(EntityAttributes.GENERIC_ATTACK_DAMAGE);
             for (EntityAttributeModifier modifier : attributeModifiers) {
                 switch (modifier.getOperation()) {
                     case ADDITION:
-                        damage += modifier.getAmount();
+                        damage += modifier.getValue();
                     case MULTIPLY_BASE:
-                        damage += 0.5 * modifier.getAmount();
+                        damage += 0.5 * modifier.getValue();
                     case MULTIPLY_TOTAL:
-                        damage *= modifier.getAmount();
+                        damage *= modifier.getValue();
                 }
             }
             damage += EnchantmentHelper.getAttackDamage(stack, target != null ? target.getGroup() : EntityGroup.DEFAULT);

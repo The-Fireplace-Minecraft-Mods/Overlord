@@ -1,7 +1,5 @@
 package dev.the_fireplace.overlord.init.datagen;
 
-import com.google.common.collect.Lists;
-import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.tags.OverlordBlockTags;
 import dev.the_fireplace.overlord.tags.OverlordItemTags;
 import net.minecraft.block.Block;
@@ -10,16 +8,19 @@ import net.minecraft.data.server.AbstractTagProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.tag.Tag;
-import net.minecraft.tag.TagContainer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import java.nio.file.Path;
-import java.util.List;
+import java.util.function.Function;
 
-public class ItemTagsProvider extends AbstractTagProvider<Item> {
-    public ItemTagsProvider(DataGenerator root) {
+public class ItemTagsProvider extends AbstractTagProvider<Item>
+{
+    private final Function<Tag.Identified<Block>, Tag.Builder> field_23783;
+
+    public ItemTagsProvider(DataGenerator root, BlockTagsProvider blockTagsProvider) {
         super(root, Registry.ITEM);
+        this.field_23783 = blockTagsProvider::method_27169;
     }
 
     @Override
@@ -39,40 +40,10 @@ public class ItemTagsProvider extends AbstractTagProvider<Item> {
         );
     }
 
-    protected void copy(Tag<Block> tag, Tag<Item> tag2) {
-        Tag.Builder<Item> builder = this.getOrCreateTagBuilder(tag2);
-
-        for (Tag.Entry<Block> blockEntry : tag.entries()) {
-            Tag.Entry<Item> entry2 = this.convert(blockEntry);
-            builder.add(entry2);
-        }
-    }
-
-    private Tag.Entry<Item> convert(Tag.Entry<Block> entry) {
-        if (entry instanceof Tag.TagEntry) {
-            return new Tag.TagEntry<>(((Tag.TagEntry<Block>)entry).getId());
-        } else if (entry instanceof Tag.CollectionEntry) {
-            List<Item> list = Lists.newArrayList();
-
-            for (Object o : ((Tag.CollectionEntry<Block>) entry).getValues()) {
-                Block block = (Block) o;
-                Item item = block.asItem();
-                if (item == Items.AIR) {
-                    Overlord.getLogger().warn("Itemless block copied to item tag: {}", Registry.BLOCK.getId(block));
-                } else {
-                    list.add(item);
-                }
-            }
-
-            return new Tag.CollectionEntry<>(list);
-        } else {
-            throw new UnsupportedOperationException("Unknown tag entry " + entry);
-        }
-    }
-
-    @Override
-    protected void setContainer(TagContainer<Item> tagContainer) {
-
+    protected void copy(Tag.Identified<Block> blockTag, Tag.Identified<Item> itemTag) {
+        Tag.Builder builder = this.method_27169(itemTag);
+        Tag.Builder builder2 = this.field_23783.apply(blockTag);
+        builder2.streamEntries().forEach(builder::add);
     }
 
     @Override

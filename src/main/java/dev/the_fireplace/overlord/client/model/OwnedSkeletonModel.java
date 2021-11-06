@@ -82,8 +82,8 @@ public class OwnedSkeletonModel extends PlayerEntityModel<OwnedSkeletonEntity>
 
             playerEntityModelAccessor.setLeftSleeve(leftSleeve);
             playerEntityModelAccessor.setRightSleeve(rightSleeve);
-            playerEntityModelAccessor.setLeftPantLeg(leftPantLeg);
-            playerEntityModelAccessor.setRightPantLeg(rightPantLeg);
+            playerEntityModelAccessor.setLeftPants(leftPantLeg);
+            playerEntityModelAccessor.setRightPants(rightPantLeg);
         }
     }
 

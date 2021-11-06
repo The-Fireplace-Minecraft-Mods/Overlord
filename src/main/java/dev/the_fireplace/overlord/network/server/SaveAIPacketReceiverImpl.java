@@ -8,12 +8,12 @@ import dev.the_fireplace.overlord.domain.network.ClientToServerPacketIDs;
 import dev.the_fireplace.overlord.domain.network.server.SaveAIPacketReceiver;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.PacketByteBuf;
 
 import javax.inject.Inject;
 import java.util.Objects;
@@ -48,7 +48,7 @@ public final class SaveAIPacketReceiverImpl implements SaveAIPacketReceiver {
             return;
         }
 
-        CompoundTag aiTag = buf.readCompoundTag();
+        NbtCompound aiTag = buf.readNbt();
         if (aiTag != null) {
             ((OrderableEntity) entity).updateAISettings(aiTag);
         } else {

@@ -13,7 +13,7 @@ import net.minecraft.item.RangedWeaponItem;
 public final class EquipmentUtils
 {
     public static boolean isMeleeWeapon(ItemStack stack) {
-        return (stack.getAttributeModifiers(EquipmentSlot.MAINHAND).containsKey(EntityAttributes.ATTACK_DAMAGE.getId()) || getEnchantmentDamageModifier(stack) > 0) && !isRangedWeapon(stack);
+        return (stack.getAttributeModifiers(EquipmentSlot.MAINHAND).containsKey(EntityAttributes.GENERIC_ATTACK_DAMAGE) || getEnchantmentDamageModifier(stack) > 0) && !isRangedWeapon(stack);
     }
 
     private static float getEnchantmentDamageModifier(ItemStack stack) {

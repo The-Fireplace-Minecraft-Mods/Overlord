@@ -11,13 +11,13 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.tag.Tag;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Nameable;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.crash.CrashReportSection;
@@ -54,7 +54,7 @@ public class SkeletonInventory implements Inventory, Nameable
     }
 
     private boolean canStackAddMore(ItemStack existingStack, ItemStack stack) {
-        return !existingStack.isEmpty() && this.areItemsEqual(existingStack, stack) && existingStack.isStackable() && existingStack.getCount() < existingStack.getMaxCount() && existingStack.getCount() < this.getInvMaxStackAmount();
+        return !existingStack.isEmpty() && this.areItemsEqual(existingStack, stack) && existingStack.isStackable() && existingStack.getCount() < existingStack.getMaxCount() && existingStack.getCount() < this.getMaxCountPerStack();
     }
 
     private boolean areItemsEqual(ItemStack stack1, ItemStack stack2) {
@@ -86,15 +86,15 @@ public class SkeletonInventory implements Inventory, Nameable
         int j = 0;
 
         int k;
-        for (k = 0; k < this.getInvSize(); ++k) {
-            ItemStack itemStack = this.getInvStack(k);
+        for (k = 0; k < this.size(); ++k) {
+            ItemStack itemStack = this.getStack(k);
             if (!itemStack.isEmpty() && predicate.test(itemStack)) {
                 int l = i <= 0 ? itemStack.getCount() : Math.min(i - j, itemStack.getCount());
                 j += l;
                 if (i != 0) {
                     itemStack.decrement(l);
                     if (itemStack.isEmpty()) {
-                        this.setInvStack(k, ItemStack.EMPTY);
+                        this.setStack(k, ItemStack.EMPTY);
                     }
 
                     if (i > 0 && j >= i) {
@@ -119,7 +119,7 @@ public class SkeletonInventory implements Inventory, Nameable
     private int addStack(int slot, ItemStack stack) {
         Item item = stack.getItem();
         int i = stack.getCount();
-        ItemStack itemStack = this.getInvStack(slot);
+        ItemStack itemStack = this.getStack(slot);
         if (itemStack.isEmpty()) {
             itemStack = new ItemStack(item, 0);
             if (stack.hasTag()) {
@@ -127,7 +127,7 @@ public class SkeletonInventory implements Inventory, Nameable
                 itemStack.setTag(stack.getTag().copy());
             }
 
-            this.setInvStack(slot, itemStack);
+            this.setStack(slot, itemStack);
         }
 
         int j = i;
@@ -135,8 +135,8 @@ public class SkeletonInventory implements Inventory, Nameable
             j = itemStack.getMaxCount() - itemStack.getCount();
         }
 
-        if (j > this.getInvMaxStackAmount() - itemStack.getCount()) {
-            j = this.getInvMaxStackAmount() - itemStack.getCount();
+        if (j > this.getMaxCountPerStack() - itemStack.getCount()) {
+            j = this.getMaxCountPerStack() - itemStack.getCount();
         }
 
         if (j != 0) {
@@ -148,9 +148,9 @@ public class SkeletonInventory implements Inventory, Nameable
     }
 
     public int getOccupiedSlotWithRoomForStack(ItemStack stack) {
-        if (this.canStackAddMore(this.getInvStack(MAIN_HAND_SLOT), stack)) {
+        if (this.canStackAddMore(this.getStack(MAIN_HAND_SLOT), stack)) {
             return MAIN_HAND_SLOT;
-        } else if (this.canStackAddMore(this.getInvStack(OFF_HAND_SLOT), stack)) {
+        } else if (this.canStackAddMore(this.getStack(OFF_HAND_SLOT), stack)) {
             return OFF_HAND_SLOT;
         } else {
             for (int i = 0; i < this.main.size(); ++i) {
@@ -233,13 +233,13 @@ public class SkeletonInventory implements Inventory, Nameable
                 break;
             }
 
-            int j = stack.getMaxCount() - this.getInvStack(i).getCount();
+            int j = stack.getMaxCount() - this.getStack(i).getCount();
             this.insertStack(i, stack.split(j));
         }
     }
 
     @Override
-    public ItemStack takeInvStack(int slot, int amount) {
+    public ItemStack removeStack(int slot, int amount) {
         Pair<DefaultedList<ItemStack>, Integer> listSlot = getInvAndSlot(slot);
         DefaultedList<ItemStack> list = listSlot.getKey();
         slot = listSlot.getValue();
@@ -259,7 +259,7 @@ public class SkeletonInventory implements Inventory, Nameable
     }
 
     @Override
-    public ItemStack removeInvStack(int slot) {
+    public ItemStack removeStack(int slot) {
         Pair<DefaultedList<ItemStack>, Integer> listSlot = getInvAndSlot(slot);
         DefaultedList<ItemStack> defaultedList = listSlot.getKey();
         slot = listSlot.getValue();
@@ -274,7 +274,7 @@ public class SkeletonInventory implements Inventory, Nameable
     }
 
     @Override
-    public void setInvStack(int slot, ItemStack stack) {
+    public void setStack(int slot, ItemStack stack) {
         Pair<DefaultedList<ItemStack>, Integer> listSlot = getInvAndSlot(slot);
         DefaultedList<ItemStack> defaultedList = listSlot.getKey();
         slot = listSlot.getValue();
@@ -299,44 +299,44 @@ public class SkeletonInventory implements Inventory, Nameable
     }
 
     public float getBlockBreakingSpeed(BlockState block) {
-        return this.getMainHandStack().getMiningSpeed(block);
+        return this.getMainHandStack().getMiningSpeedMultiplier(block);
     }
 
-    public ListTag serialize(ListTag tag) {
+    public NbtList serialize(NbtList tag) {
         int k;
-        CompoundTag compoundTag3;
+        NbtCompound compoundTag3;
         for (k = 0; k < this.main.size(); ++k) {
             if (!this.main.get(k).isEmpty()) {
-                compoundTag3 = new CompoundTag();
+                compoundTag3 = new NbtCompound();
                 compoundTag3.putByte("Slot", (byte) k);
-                this.main.get(k).toTag(compoundTag3);
+                this.main.get(k).writeNbt(compoundTag3);
                 tag.add(compoundTag3);
             }
         }
 
         for (k = 0; k < this.armor.size(); ++k) {
             if (!this.armor.get(k).isEmpty()) {
-                compoundTag3 = new CompoundTag();
+                compoundTag3 = new NbtCompound();
                 compoundTag3.putByte("Slot", (byte) (k + 100));
-                this.armor.get(k).toTag(compoundTag3);
+                this.armor.get(k).writeNbt(compoundTag3);
                 tag.add(compoundTag3);
             }
         }
 
         for (k = 0; k < this.mainHand.size(); ++k) {
             if (!this.mainHand.get(k).isEmpty()) {
-                compoundTag3 = new CompoundTag();
+                compoundTag3 = new NbtCompound();
                 compoundTag3.putByte("Slot", (byte) (k + 150));
-                this.mainHand.get(k).toTag(compoundTag3);
+                this.mainHand.get(k).writeNbt(compoundTag3);
                 tag.add(compoundTag3);
             }
         }
 
         for (k = 0; k < this.offHand.size(); ++k) {
             if (!this.offHand.get(k).isEmpty()) {
-                compoundTag3 = new CompoundTag();
+                compoundTag3 = new NbtCompound();
                 compoundTag3.putByte("Slot", (byte) (k + 200));
-                this.offHand.get(k).toTag(compoundTag3);
+                this.offHand.get(k).writeNbt(compoundTag3);
                 tag.add(compoundTag3);
             }
         }
@@ -344,16 +344,16 @@ public class SkeletonInventory implements Inventory, Nameable
         return tag;
     }
 
-    public void deserialize(ListTag tag) {
+    public void deserialize(NbtList tag) {
         this.main.clear();
         this.armor.clear();
         this.mainHand.clear();
         this.offHand.clear();
 
         for (int i = 0; i < tag.size(); ++i) {
-            CompoundTag compoundTag = tag.getCompound(i);
+            NbtCompound compoundTag = tag.getCompound(i);
             int j = compoundTag.getByte("Slot") & 255;
-            ItemStack itemStack = ItemStack.fromTag(compoundTag);
+            ItemStack itemStack = ItemStack.fromNbt(compoundTag);
             if (!itemStack.isEmpty()) {
                 if (j < this.main.size()) {
                     this.main.set(j, itemStack);
@@ -370,12 +370,12 @@ public class SkeletonInventory implements Inventory, Nameable
     }
 
     @Override
-    public int getInvSize() {
+    public int size() {
         return this.main.size() + this.armor.size() + this.mainHand.size() + this.offHand.size();
     }
 
     @Override
-    public boolean isInvEmpty() {
+    public boolean isEmpty() {
         Iterator<ItemStack> var1 = this.main.iterator();
 
         ItemStack itemStack3;
@@ -411,7 +411,7 @@ public class SkeletonInventory implements Inventory, Nameable
     }
 
     @Override
-    public ItemStack getInvStack(int slot) {
+    public ItemStack getStack(int slot) {
         Pair<DefaultedList<ItemStack>, Integer> listSlot = getInvAndSlot(slot);
         DefaultedList<ItemStack> list = listSlot.getKey();
         slot = listSlot.getValue();
@@ -425,7 +425,7 @@ public class SkeletonInventory implements Inventory, Nameable
     }
 
     public boolean isUsingEffectiveTool(BlockState blockState) {
-        return this.getMainHandStack().isEffectiveOn(blockState);
+        return this.getMainHandStack().isSuitableFor(blockState);
     }
 
     public ItemStack getArmorStack(int slot) {
@@ -473,7 +473,7 @@ public class SkeletonInventory implements Inventory, Nameable
     }
 
     @Override
-    public boolean canPlayerUseInv(PlayerEntity player) {
+    public boolean canPlayerUse(PlayerEntity player) {
         if (this.skeleton.removed) {
             return false;
         } else {
@@ -506,8 +506,8 @@ public class SkeletonInventory implements Inventory, Nameable
     }
 
     public void clone(SkeletonInventory other) {
-        for (int i = 0; i < this.getInvSize(); ++i) {
-            this.setInvStack(i, other.getInvStack(i));
+        for (int i = 0; i < this.size(); ++i) {
+            this.setStack(i, other.getStack(i));
         }
     }
 

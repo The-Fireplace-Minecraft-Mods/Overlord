@@ -8,7 +8,7 @@ import dev.the_fireplace.overlord.model.aiconfig.movement.MovementCategory;
 import dev.the_fireplace.overlord.model.aiconfig.movement.MovementCategoryImpl;
 import dev.the_fireplace.overlord.model.aiconfig.tasks.TasksCategory;
 import dev.the_fireplace.overlord.model.aiconfig.tasks.TasksCategoryImpl;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 
 public class AISettings implements SettingsComponent {
 
@@ -18,8 +18,8 @@ public class AISettings implements SettingsComponent {
     private final TasksCategoryImpl tasks = new TasksCategoryImpl();
 
     @Override
-    public CompoundTag toTag() {
-        CompoundTag tag = new CompoundTag();
+    public NbtCompound toTag() {
+        NbtCompound tag = new NbtCompound();
 
         tag.put("misc", misc.toTag());
         tag.put("combat", combat.toTag());
@@ -30,7 +30,7 @@ public class AISettings implements SettingsComponent {
     }
 
     @Override
-    public void readTag(CompoundTag tag) {
+    public void readTag(NbtCompound tag) {
         if (tag.contains("misc")) {
             misc.readTag(tag.getCompound("misc"));
         }

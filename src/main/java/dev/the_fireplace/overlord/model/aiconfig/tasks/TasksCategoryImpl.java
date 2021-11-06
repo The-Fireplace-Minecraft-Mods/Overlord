@@ -2,7 +2,7 @@ package dev.the_fireplace.overlord.model.aiconfig.tasks;
 
 import dev.the_fireplace.overlord.model.AIListManager;
 import dev.the_fireplace.overlord.model.aiconfig.SettingsComponent;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 
 import java.util.UUID;
 
@@ -36,8 +36,8 @@ public final class TasksCategoryImpl implements SettingsComponent, TasksCategory
     private UUID breedingEntityList = AIListManager.ALL_ANIMALS_LIST_ID;
 
     @Override
-    public CompoundTag toTag() {
-        CompoundTag tag = new CompoundTag();
+    public NbtCompound toTag() {
+        NbtCompound tag = new NbtCompound();
 
         tag.putBoolean("enabled", enabled);
         tag.putBoolean("woodcutting", woodcutting);
@@ -62,7 +62,7 @@ public final class TasksCategoryImpl implements SettingsComponent, TasksCategory
     }
 
     @Override
-    public void readTag(CompoundTag tag) {
+    public void readTag(NbtCompound tag) {
         if (tag.contains("enabled")) {
             enabled = tag.getBoolean("enabled");
         }

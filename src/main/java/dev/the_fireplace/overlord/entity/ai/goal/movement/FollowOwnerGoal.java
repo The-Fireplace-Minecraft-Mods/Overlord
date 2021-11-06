@@ -89,7 +89,7 @@ public class FollowOwnerGoal extends Goal
     }
 
     private void tryTeleport() {
-        BlockPos blockPos = new BlockPos(this.owner);
+        BlockPos blockPos = new BlockPos(this.owner.getPos());
 
         for (int i = 0; i < 10; ++i) {
             int j = this.getRandomInt(-3, 3);
@@ -116,7 +116,7 @@ public class FollowOwnerGoal extends Goal
     }
 
     private boolean canTeleportTo(BlockPos pos) {
-        PathNodeType pathNodeType = LandPathNodeMaker.getPathNodeType(this.world, pos.getX(), pos.getY(), pos.getZ());
+        PathNodeType pathNodeType = LandPathNodeMaker.getLandNodeType(this.world, new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ()));
         if (pathNodeType != PathNodeType.WALKABLE) {
             return false;
         } else {
@@ -124,8 +124,8 @@ public class FollowOwnerGoal extends Goal
             if (!this.leavesAllowed && blockState.getBlock() instanceof LeavesBlock) {
                 return false;
             } else {
-                BlockPos blockPos = pos.subtract(new BlockPos(this.armyEntity));
-                return this.world.doesNotCollide(this.armyEntity, this.armyEntity.getBoundingBox().offset(blockPos));
+                BlockPos blockPos = pos.subtract(new BlockPos(this.armyEntity.getPos()));
+                return this.world.getBlockCollisions(this.armyEntity, this.armyEntity.getBoundingBox().offset(blockPos)).toArray().length == 0;
             }
         }
     }

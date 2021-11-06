@@ -13,9 +13,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.PacketByteBuf;
 
 import javax.inject.Inject;
 import java.util.Objects;
@@ -49,7 +49,7 @@ public final class OpenOrdersGUIPacketReceiverImpl implements OpenOrdersGUIPacke
             Overlord.getLogger().info("Received open orders packet for non orderable entity: {}", Objects.toString(entity));
             return;
         }
-        CompoundTag aiCompound = buf.readCompoundTag();
+        NbtCompound aiCompound = buf.readNbt();
         if (aiCompound == null) {
             Overlord.getLogger().error("Received open orders packet with null ai settings!");
             return;

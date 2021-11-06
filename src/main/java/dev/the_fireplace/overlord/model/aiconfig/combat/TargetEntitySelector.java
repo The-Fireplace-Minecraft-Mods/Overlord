@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.model.aiconfig.combat;
 
 import dev.the_fireplace.overlord.model.AIListManager;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 
 import java.util.UUID;
 
@@ -12,27 +12,27 @@ public class TargetEntitySelector {
     private UUID targetAnimalsList = AIListManager.ALL_ANIMALS_LIST_ID;
     private boolean targetMobs = true;
     private UUID targetMobsList = AIListManager.ALL_MOBS_LIST_ID;
-    
+
     private final Access access = new Access();
-    
+
     public Access getData() {
         return access;
     }
 
-    public CompoundTag toTag() {
-        CompoundTag tag = new CompoundTag();
-        
+    public NbtCompound toTag() {
+        NbtCompound tag = new NbtCompound();
+
         tag.putBoolean("targetPlayers", targetPlayers);
         tag.putUuid("targetPlayersBlacklist", targetPlayersBlacklist);
         tag.putBoolean("targetAnimals", targetAnimals);
         tag.putUuid("targetAnimalsList", targetAnimalsList);
         tag.putBoolean("targetMobs", targetMobs);
         tag.putUuid("targetMobsList", targetMobsList);
-        
+
         return tag;
     }
-    
-    public void readTag(CompoundTag tag) {
+
+    public void readTag(NbtCompound tag) {
         if (tag.contains("targetPlayers")) {
             targetPlayers = tag.getBoolean("targetPlayers");
         }
