@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "grave_marker",
+  "pattern": [
+    "%%%",
+    " # ",
+    " # "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:warped_fence"
+    },
+    "%": {
+      "item": "minecraft:warped_slab"
+    }
+  },
+  "result": {
+    "item": "overlord:warped_grave_marker",
+    "count": 2
+  }
+}

@@ -83,6 +83,8 @@ public class RecipesProvider implements DataProvider
         ShapedRecipeJsonFactory.create(OverlordBlocks.JUNGLE_GRAVE_MARKER, 2).input('#', Items.JUNGLE_FENCE).input('%', Items.JUNGLE_SLAB).pattern("%%%").pattern(" # ").pattern(" # ").group("grave_marker").criterion("has_fence", this.conditionsFromItem(Items.JUNGLE_FENCE)).offerTo(consumer);
         ShapedRecipeJsonFactory.create(OverlordBlocks.OAK_GRAVE_MARKER, 2).input('#', Items.OAK_FENCE).input('%', Items.OAK_SLAB).pattern("%%%").pattern(" # ").pattern(" # ").group("grave_marker").criterion("has_fence", this.conditionsFromItem(Items.OAK_FENCE)).offerTo(consumer);
         ShapedRecipeJsonFactory.create(OverlordBlocks.DARK_OAK_GRAVE_MARKER, 2).input('#', Items.DARK_OAK_FENCE).input('%', Items.DARK_OAK_SLAB).pattern("%%%").pattern(" # ").pattern(" # ").group("grave_marker").criterion("has_fence", this.conditionsFromItem(Items.DARK_OAK_FENCE)).offerTo(consumer);
+        ShapedRecipeJsonFactory.create(OverlordBlocks.CRIMSON_GRAVE_MARKER, 2).input('#', Items.CRIMSON_FENCE).input('%', Items.CRIMSON_SLAB).pattern("%%%").pattern(" # ").pattern(" # ").group("grave_marker").criterion("has_fence", this.conditionsFromItem(Items.CRIMSON_FENCE)).offerTo(consumer);
+        ShapedRecipeJsonFactory.create(OverlordBlocks.WARPED_GRAVE_MARKER, 2).input('#', Items.WARPED_FENCE).input('%', Items.WARPED_SLAB).pattern("%%%").pattern(" # ").pattern(" # ").group("grave_marker").criterion("has_fence", this.conditionsFromItem(Items.WARPED_FENCE)).offerTo(consumer);
     }
 
     public String getName() {
