@@ -1,0 +1,7 @@
+{
+  "parent": "overlord:block/grave_marker",
+  "textures": {
+    "sign": "block/warped_planks",
+    "pole": "block/stripped_warped_stem"
+  }
+}

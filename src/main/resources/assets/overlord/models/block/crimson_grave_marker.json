@@ -1,0 +1,7 @@
+{
+  "parent": "overlord:block/grave_marker",
+  "textures": {
+    "sign": "block/crimson_planks",
+    "pole": "block/stripped_crimson_stem"
+  }
+}
