@@ -93,7 +93,7 @@ import com.modrinth.minotaur.TaskModrinthUpload
 if (hasProperty('modrinthApiKey')) {
     task publishModrinth(type: TaskModrinthUpload) {
         token = modrinthApiKey
-        projectId = '00000000'
+        projectId = 'HPV4V5CV'
         versionNumber = version
         versionName = project.mod_version
         uploadFile = new File(new File(buildDir, 'libs'), "$archivesBaseName-${version}.jar")
