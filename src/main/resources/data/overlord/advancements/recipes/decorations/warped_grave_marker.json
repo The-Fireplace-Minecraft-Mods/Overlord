@@ -11,9 +11,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:warped_fence"
-            ]
+            "item": "minecraft:warped_fence"
           }
         ]
       }
