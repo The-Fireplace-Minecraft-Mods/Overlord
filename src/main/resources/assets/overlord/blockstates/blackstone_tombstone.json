@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "overlord:block/blackstone_tombstone"
+    },
+    "facing=east": {
+      "model": "overlord:block/blackstone_tombstone",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "overlord:block/blackstone_tombstone",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "overlord:block/blackstone_tombstone",
+      "y": 270
+    }
+  }
+}

@@ -6,6 +6,8 @@
     "overlord:jungle_grave_marker",
     "overlord:spruce_grave_marker",
     "overlord:acacia_grave_marker",
-    "overlord:dark_oak_grave_marker"
+    "overlord:dark_oak_grave_marker",
+    "overlord:warped_grave_marker",
+    "overlord:crimson_grave_marker"
   ]
 }

@@ -37,7 +37,9 @@ public final class OverlordBlockEntities
                 OverlordBlocks.SPRUCE_CASKET,
                 OverlordBlocks.JUNGLE_CASKET,
                 OverlordBlocks.ACACIA_CASKET,
-                OverlordBlocks.DARK_OAK_CASKET
+                OverlordBlocks.DARK_OAK_CASKET,
+                OverlordBlocks.WARPED_CASKET,
+                OverlordBlocks.CRIMSON_CASKET
             ).build(null)
         );
         CASKET_SCREEN_HANDLER = ScreenHandlerRegistry.registerExtended(CASKET_BLOCK_ENTITY_ID, (syncId, playerInventory, buf) -> {
@@ -56,7 +58,9 @@ public final class OverlordBlockEntities
                 OverlordBlocks.JUNGLE_GRAVE_MARKER,
                 OverlordBlocks.SPRUCE_GRAVE_MARKER,
                 OverlordBlocks.ACACIA_GRAVE_MARKER,
-                OverlordBlocks.DARK_OAK_GRAVE_MARKER
+                OverlordBlocks.DARK_OAK_GRAVE_MARKER,
+                OverlordBlocks.WARPED_GRAVE_MARKER,
+                OverlordBlocks.CRIMSON_GRAVE_MARKER
             ).build(null)
         );
         TOMBSTONE_BLOCK_ENTITY = Registry.register(
@@ -67,7 +71,8 @@ public final class OverlordBlockEntities
                 OverlordBlocks.STONE_TOMBSTONE,
                 OverlordBlocks.DIORITE_TOMBSTONE,
                 OverlordBlocks.GRANITE_TOMBSTONE,
-                OverlordBlocks.ANDESITE_TOMBSTONE
+                OverlordBlocks.ANDESITE_TOMBSTONE,
+                OverlordBlocks.BLACKSTONE_TOMBSTONE
             ).build(null)
         );
     }

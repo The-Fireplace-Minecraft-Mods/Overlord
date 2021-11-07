@@ -25,7 +25,9 @@ public class BlockTagsProvider extends AbstractTagProvider<Block> {
             OverlordBlocks.JUNGLE_CASKET,
             OverlordBlocks.SPRUCE_CASKET,
             OverlordBlocks.ACACIA_CASKET,
-            OverlordBlocks.DARK_OAK_CASKET
+            OverlordBlocks.DARK_OAK_CASKET,
+            OverlordBlocks.WARPED_CASKET,
+            OverlordBlocks.CRIMSON_CASKET
         );
         this.getOrCreateTagBuilder(OverlordBlockTags.GRAVE_MARKERS).add(
             OverlordBlocks.OAK_GRAVE_MARKER,
@@ -33,7 +35,9 @@ public class BlockTagsProvider extends AbstractTagProvider<Block> {
             OverlordBlocks.JUNGLE_GRAVE_MARKER,
             OverlordBlocks.SPRUCE_GRAVE_MARKER,
             OverlordBlocks.ACACIA_GRAVE_MARKER,
-            OverlordBlocks.DARK_OAK_GRAVE_MARKER
+            OverlordBlocks.DARK_OAK_GRAVE_MARKER,
+            OverlordBlocks.WARPED_GRAVE_MARKER,
+            OverlordBlocks.CRIMSON_GRAVE_MARKER
         );
         this.getOrCreateTagBuilder(OverlordBlockTags.DIRT).add(Blocks.DIRT, Blocks.COARSE_DIRT, Blocks.GRASS_BLOCK, Blocks.PODZOL, Blocks.MYCELIUM, OverlordBlocks.BLOOD_SOAKED_SOIL);
     }

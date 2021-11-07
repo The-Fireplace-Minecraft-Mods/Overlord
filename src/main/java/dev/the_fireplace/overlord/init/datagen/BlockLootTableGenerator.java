@@ -47,16 +47,21 @@ public class BlockLootTableGenerator implements Consumer<BiConsumer<Identifier, 
         registerForSelfDrop(OverlordBlocks.SPRUCE_GRAVE_MARKER);
         registerForSelfDrop(OverlordBlocks.ACACIA_GRAVE_MARKER);
         registerForSelfDrop(OverlordBlocks.DARK_OAK_GRAVE_MARKER);
+        registerForSelfDrop(OverlordBlocks.WARPED_GRAVE_MARKER);
+        registerForSelfDrop(OverlordBlocks.CRIMSON_GRAVE_MARKER);
         registerMultiblock(OverlordBlocks.OAK_CASKET, Properties.BED_PART, BedPart.HEAD);
         registerMultiblock(OverlordBlocks.BIRCH_CASKET, Properties.BED_PART, BedPart.HEAD);
         registerMultiblock(OverlordBlocks.JUNGLE_CASKET, Properties.BED_PART, BedPart.HEAD);
         registerMultiblock(OverlordBlocks.SPRUCE_CASKET, Properties.BED_PART, BedPart.HEAD);
         registerMultiblock(OverlordBlocks.ACACIA_CASKET, Properties.BED_PART, BedPart.HEAD);
         registerMultiblock(OverlordBlocks.DARK_OAK_CASKET, Properties.BED_PART, BedPart.HEAD);
+        registerMultiblock(OverlordBlocks.WARPED_CASKET, Properties.BED_PART, BedPart.HEAD);
+        registerMultiblock(OverlordBlocks.CRIMSON_CASKET, Properties.BED_PART, BedPart.HEAD);
         registerForSelfDrop(OverlordBlocks.STONE_TOMBSTONE);
         registerForSelfDrop(OverlordBlocks.DIORITE_TOMBSTONE);
         registerForSelfDrop(OverlordBlocks.ANDESITE_TOMBSTONE);
         registerForSelfDrop(OverlordBlocks.GRANITE_TOMBSTONE);
+        registerForSelfDrop(OverlordBlocks.BLACKSTONE_TOMBSTONE);
 
 
         Set<Identifier> set = Sets.newHashSet();
