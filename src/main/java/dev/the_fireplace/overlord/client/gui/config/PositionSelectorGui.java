@@ -5,6 +5,8 @@ import dev.the_fireplace.overlord.model.aiconfig.movement.PositionSetting;
 import io.netty.util.concurrent.DefaultEventExecutor;
 import io.netty.util.concurrent.DefaultPromise;
 import io.netty.util.concurrent.Promise;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -15,6 +17,7 @@ import net.minecraft.text.Text;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+@Environment(EnvType.CLIENT)
 public class PositionSelectorGui extends Screen implements CustomButtonScreen<String>
 {
     public static final Predicate<String> IS_NUMBER = (testStr) -> {
