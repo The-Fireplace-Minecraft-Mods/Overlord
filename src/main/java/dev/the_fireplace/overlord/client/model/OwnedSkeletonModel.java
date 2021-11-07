@@ -32,7 +32,7 @@ public class OwnedSkeletonModel extends PlayerEntityModel<OwnedSkeletonEntity>
 
     private void resizeLimbs() {
         float armorExtra = isArmor ? 0.5F : 0;
-        float extraXZ = armorExtra + (hasThickLimbs ? 0F : -1F);
+        float extraXZ = armorExtra + (hasThickLimbs ? (isArmor ? -0.02F : 0F) : -1F);
         float armWidth = hasThinArmTexture ? 3 : 4;
         float leftArmStartX = hasThickLimbs ? -1F : -2F;
         float rightArmStartX = hasThickLimbs ? -3.0F : -2F;
