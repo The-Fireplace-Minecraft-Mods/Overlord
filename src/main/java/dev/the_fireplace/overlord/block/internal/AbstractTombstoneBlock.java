@@ -1,17 +1,17 @@
 package dev.the_fireplace.overlord.block.internal;
 
-import dev.the_fireplace.overlord.blockentity.TombstoneBlockEntity;
 import dev.the_fireplace.overlord.blockentity.internal.AbstractTombstoneBlockEntity;
 import dev.the_fireplace.overlord.domain.mechanic.Tombstone;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -20,7 +20,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
 public abstract class AbstractTombstoneBlock extends HorizontalFacingBlock implements BlockEntityProvider, Waterloggable {
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
@@ -51,12 +50,12 @@ public abstract class AbstractTombstoneBlock extends HorizontalFacingBlock imple
     }
 
     @Override
-    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof TombstoneBlockEntity) {
-            ((TombstoneBlockEntity) blockEntity).tick();
-        }
+    @Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return type == getType() ? (world1, pos, state1, be) -> AbstractTombstoneBlockEntity.tick(world1, pos, state1, (AbstractTombstoneBlockEntity) be) : null;
     }
+
+    public abstract BlockEntityType<? extends AbstractTombstoneBlockEntity> getType();
 
     public abstract AbstractTombstoneBlockEntity createTombstone(BlockPos pos, BlockState state);
 

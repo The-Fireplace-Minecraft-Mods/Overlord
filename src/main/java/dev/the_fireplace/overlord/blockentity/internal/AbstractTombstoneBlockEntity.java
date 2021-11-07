@@ -12,8 +12,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-
-import java.util.Objects;
+import net.minecraft.world.World;
 
 public abstract class AbstractTombstoneBlockEntity extends BlockEntity implements Tombstone
 {
@@ -21,24 +20,23 @@ public abstract class AbstractTombstoneBlockEntity extends BlockEntity implement
         super(type, pos, state);
     }
 
-    public void tick() {
-        if (!hasWorld() || Objects.requireNonNull(getWorld()).isClient) {
+    public static void tick(World world, BlockPos pos, BlockState state, AbstractTombstoneBlockEntity be) {
+        if (world.isClient()) {
             return;
         }
-        assert world != null;
-        if (!isNearMidnight()) {
+        if (!isNearMidnight(world)) {
             return;
         }
-        Direction facing = this.world.getBlockState(getPos()).get(HorizontalFacingBlock.FACING);
-        BlockPos casketPos = this.getPos().offset(facing).down(2);
-        BlockEntity blockEntity = world.getBlockEntity(casketPos);
-        if (!(blockEntity instanceof CasketBlockEntity)) {
+        Direction facing = state.get(HorizontalFacingBlock.FACING);
+        BlockPos casketPos = pos.offset(facing).down(2);
+        BlockEntity blockEntityAtCasketPos = world.getBlockEntity(casketPos);
+        if (!(blockEntityAtCasketPos instanceof CasketBlockEntity)) {
             return;
         }
-        CasketBlockEntity casketEntity = (CasketBlockEntity) blockEntity;
+        CasketBlockEntity casketEntity = (CasketBlockEntity) blockEntityAtCasketPos;
         BlockPos soilPos1 = casketPos.up();
         BlockPos soilPos2 = soilPos1.offset(facing);
-        if (!isSoil(soilPos1) && !isSoil(soilPos2)) {
+        if (!isSoil(world, soilPos1) && !isSoil(world, soilPos2)) {
             return;
         }
         if (!world.isSkyVisible(soilPos1.up()) || !world.isSkyVisible(soilPos2.up()) || !world.isSkyVisible(pos.up())) {
@@ -47,18 +45,18 @@ public abstract class AbstractTombstoneBlockEntity extends BlockEntity implement
         if (!SkeletonBuilder.hasEssentialContents(casketEntity)) {
             return;
         }
-        OwnedSkeletonEntity skeleton = SkeletonBuilder.build(casketEntity, casketEntity.getWorld(), this);
+        OwnedSkeletonEntity skeleton = SkeletonBuilder.build(casketEntity, casketEntity.getWorld(), be);
         skeleton.updatePosition(soilPos1.getX(), soilPos1.getY() + 1, soilPos1.getZ());
         skeleton.getAISettings().getMovement().setHome(new PositionSetting(soilPos1.getX(), soilPos1.getY() + 1, soilPos1.getZ()));
         world.spawnEntity(skeleton);
         //TODO dirt particles around skeleton
     }
 
-    private boolean isSoil(BlockPos blockPos) {
-        return world != null && world.getBlockState(blockPos).getMaterial().equals(Material.SOIL);
+    private static boolean isSoil(World world, BlockPos blockPos) {
+        return world.getBlockState(blockPos).getMaterial().equals(Material.SOIL);
     }
 
-    private boolean isNearMidnight() {
-        return world != null && world.getTimeOfDay() >= 17500 && world.getTimeOfDay() <= 18500 && (world.getTimeOfDay() + 100) % 200 == 0;
+    private static boolean isNearMidnight(World world) {
+        return world.getTimeOfDay() >= 17500 && world.getTimeOfDay() <= 18500 && (world.getTimeOfDay() + 100) % 200 == 0;
     }
 }

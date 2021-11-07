@@ -6,11 +6,13 @@ import dev.the_fireplace.overlord.blockentity.TombstoneBlockEntity;
 import dev.the_fireplace.overlord.blockentity.internal.AbstractTombstoneBlockEntity;
 import dev.the_fireplace.overlord.domain.network.ServerToClientPacketIDs;
 import dev.the_fireplace.overlord.domain.network.server.OpenTombstoneGUIBufferBuilder;
+import dev.the_fireplace.overlord.init.OverlordBlockEntities;
 import dev.the_fireplace.overlord.util.BlockUtils;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -45,6 +47,11 @@ public class TombstoneBlock extends AbstractTombstoneBlock
         super(settings);
         serverToClientPacketIDs = DIContainer.get().getInstance(ServerToClientPacketIDs.class);
         openTombstoneGUIBufferBuilder = DIContainer.get().getInstance(OpenTombstoneGUIBufferBuilder.class);
+    }
+
+    @Override
+    public BlockEntityType<? extends AbstractTombstoneBlockEntity> getType() {
+        return OverlordBlockEntities.TOMBSTONE_BLOCK_ENTITY;
     }
 
     @Override
