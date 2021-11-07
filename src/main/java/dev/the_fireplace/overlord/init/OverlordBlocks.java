@@ -45,6 +45,7 @@ public final class OverlordBlocks
     public static final Block GRANITE_TOMBSTONE = new TombstoneBlock(FabricBlockSettings.copyOf(Blocks.GRANITE));
     public static final Block ANDESITE_TOMBSTONE = new TombstoneBlock(FabricBlockSettings.copyOf(Blocks.ANDESITE));
     public static final Block BLACKSTONE_TOMBSTONE = new TombstoneBlock(FabricBlockSettings.copyOf(Blocks.BLACKSTONE));
+    public static final Block DEEPSLATE_TOMBSTONE = new TombstoneBlock(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
     public static final Block BLOOD_SOAKED_SOIL = new BloodSoakedSoil(FabricBlockSettings.of(Material.SOIL)
         .strength(0.5F, 0.1F)
         .sounds(BlockSoundGroup.WET_GRASS)
@@ -75,6 +76,7 @@ public final class OverlordBlocks
         registerBlockWithItem("granite_tombstone", GRANITE_TOMBSTONE, ItemGroup.DECORATIONS);
         registerBlockWithItem("andesite_tombstone", ANDESITE_TOMBSTONE, ItemGroup.DECORATIONS);
         registerBlockWithItem("blackstone_tombstone", BLACKSTONE_TOMBSTONE, ItemGroup.DECORATIONS);
+        registerBlockWithItem("deepslate_tombstone", DEEPSLATE_TOMBSTONE, ItemGroup.DECORATIONS);
         registerBlockWithItem("blood_soaked_soil", BLOOD_SOAKED_SOIL, ItemGroup.BUILDING_BLOCKS);
     }
 

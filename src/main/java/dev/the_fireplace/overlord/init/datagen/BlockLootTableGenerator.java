@@ -62,6 +62,7 @@ public class BlockLootTableGenerator implements Consumer<BiConsumer<Identifier, 
         registerForSelfDrop(OverlordBlocks.ANDESITE_TOMBSTONE);
         registerForSelfDrop(OverlordBlocks.GRANITE_TOMBSTONE);
         registerForSelfDrop(OverlordBlocks.BLACKSTONE_TOMBSTONE);
+        registerForSelfDrop(OverlordBlocks.DEEPSLATE_TOMBSTONE);
 
 
         Set<Identifier> set = Sets.newHashSet();

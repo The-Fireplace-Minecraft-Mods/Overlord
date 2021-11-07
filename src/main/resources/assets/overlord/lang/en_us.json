@@ -21,6 +21,7 @@
   "block.overlord.granite_tombstone": "Granite Tombstone",
   "block.overlord.andesite_tombstone": "Andesite Tombstone",
   "block.overlord.blackstone_tombstone": "Blackstone Tombstone",
+  "block.overlord.deepslate_tombstone": "Deepslate Tombstone",
   "container.casket": "Casket",
   "entity.overlord.owned_skeleton": "Army Skeleton",
   "item.overlord.owned_skeleton_spawn_egg": "Army Skeleton Spawn Egg",

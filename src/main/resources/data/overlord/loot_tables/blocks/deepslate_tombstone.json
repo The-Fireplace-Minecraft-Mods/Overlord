@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "overlord:crimson_grave_marker"
+          "name": "overlord:deepslate_tombstone"
         }
       ],
       "conditions": [

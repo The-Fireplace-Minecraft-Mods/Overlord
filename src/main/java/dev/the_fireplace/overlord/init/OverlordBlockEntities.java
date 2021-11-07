@@ -73,7 +73,8 @@ public final class OverlordBlockEntities
                 OverlordBlocks.DIORITE_TOMBSTONE,
                 OverlordBlocks.GRANITE_TOMBSTONE,
                 OverlordBlocks.ANDESITE_TOMBSTONE,
-                OverlordBlocks.BLACKSTONE_TOMBSTONE
+                OverlordBlocks.BLACKSTONE_TOMBSTONE,
+                OverlordBlocks.DEEPSLATE_TOMBSTONE
             ).build(null)
         );
     }

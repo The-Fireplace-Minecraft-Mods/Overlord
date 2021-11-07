@@ -2,17 +2,17 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "overlord:blackstone_tombstone_from_stonecutting"
+      "overlord:deepslate_tombstone_from_stonecutting"
     ]
   },
   "criteria": {
-    "has_polished_blackstone": {
+    "has_polished_deepslate": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:polished_blackstone"
+              "minecraft:polished_deepslate"
             ]
           }
         ]
@@ -21,13 +21,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "overlord:blackstone_tombstone_from_stonecutting"
+        "recipe": "overlord:deepslate_tombstone_from_stonecutting"
       }
     }
   },
   "requirements": [
     [
-      "has_polished_blackstone",
+      "has_polished_deepslate",
       "has_the_recipe"
     ]
   ]
