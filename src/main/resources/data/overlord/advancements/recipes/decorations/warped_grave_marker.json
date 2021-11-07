@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "overlord:warped_grave_marker"
+    ]
+  },
+  "criteria": {
+    "has_fence": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:warped_fence"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "overlord:warped_grave_marker"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_fence",
+      "has_the_recipe"
+    ]
+  ]
+}
