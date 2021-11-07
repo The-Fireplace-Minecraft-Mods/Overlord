@@ -30,6 +30,7 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -62,6 +63,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, CrossbowUser, AnimatedMilkDrinker, AugmentBearer
@@ -79,6 +81,12 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     private static final TrackedData<Boolean> HAS_MUSCLES = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Optional<UUID>> SKINSUIT = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     private static final TrackedData<ItemStack> AUGMENT_BLOCK = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.ITEM_STACK);
+    private static final UUID MUSCLE_ATTACK_BONUS_ID = MathHelper.randomUuid(new Random("Muscle Attack Bonus".hashCode()));
+    private static final UUID MUSCLE_TOUGHNESS_BONUS_ID = MathHelper.randomUuid(new Random("Muscle Toughness Bonus".hashCode()));
+    private static final UUID MUSCLE_SPEED_BONUS_ID = MathHelper.randomUuid(new Random("Muscle Speed Bonus".hashCode()));
+    private static final EntityAttributeModifier MUSCLE_ATTACK_BONUS = new EntityAttributeModifier(MUSCLE_ATTACK_BONUS_ID, "Muscle Attack Bonus", 2.0D, EntityAttributeModifier.Operation.ADDITION);
+    private static final EntityAttributeModifier MUSCLE_TOUGHNESS_BONUS = new EntityAttributeModifier(MUSCLE_TOUGHNESS_BONUS_ID, "Muscle Toughness Bonus", 0.25D, EntityAttributeModifier.Operation.ADDITION);
+    private static final EntityAttributeModifier MUSCLE_SPEED_BONUS = new EntityAttributeModifier(MUSCLE_SPEED_BONUS_ID, "Muscle Speed Bonus", 0.05D, EntityAttributeModifier.Operation.ADDITION);
 
     private UUID owner = new UUID(801295133947085751L, -7395604847578632613L);
     private int milkBucketsDrank = 0;
@@ -360,7 +368,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         NbtList inventoryTag = tag.getList("Inventory", 10);
         this.inventory.deserialize(inventoryTag);
         this.owner = tag.getUuid("Owner");
-        this.dataTracker.set(HAS_MUSCLES, tag.getBoolean("Muscles"));
         this.dataTracker.set(HAS_SKIN, tag.getBoolean("Skin"));
         this.dataTracker.set(
             SKINSUIT,
@@ -368,6 +375,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
                 ? Optional.of(tag.getUuid("Skinsuit"))
                 : Optional.empty()
         );
+        this.setHasMuscles(tag.getBoolean("Muscles"));
         this.setGrowthPhase(SkeletonGrowthPhase.values()[tag.getInt("GrowthPhase")]);
         this.updateAISettings(tag.getCompound("aiSettings"));
         this.milkBucketsDrank = tag.getInt("milkBucketsDrank");
@@ -696,6 +704,15 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
     public void setHasMuscles(boolean hasMuscles) {
         this.dataTracker.set(HAS_MUSCLES, hasMuscles);
+
+        this.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).removeModifier(MUSCLE_ATTACK_BONUS);
+        this.getAttributeInstance(EntityAttributes.GENERIC_ARMOR_TOUGHNESS).removeModifier(MUSCLE_TOUGHNESS_BONUS);
+        this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).removeModifier(MUSCLE_SPEED_BONUS);
+        if (hasMuscles) {
+            this.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).addPersistentModifier(MUSCLE_ATTACK_BONUS);
+            this.getAttributeInstance(EntityAttributes.GENERIC_ARMOR_TOUGHNESS).addPersistentModifier(MUSCLE_TOUGHNESS_BONUS);
+            this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).addPersistentModifier(MUSCLE_SPEED_BONUS);
+        }
     }
 
     @Override
