@@ -33,7 +33,8 @@ import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 @Implementation
-public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory {
+public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory
+{
 	private static final String TRANSLATION_BASE = "gui." + Overlord.MODID + ".aisettings.";
 	private static final String OPTION_TRANSLATION_BASE = TRANSLATION_BASE + "option.";
 	private static final String COMBAT_TRANSLATION_BASE = OPTION_TRANSLATION_BASE + "combat.";

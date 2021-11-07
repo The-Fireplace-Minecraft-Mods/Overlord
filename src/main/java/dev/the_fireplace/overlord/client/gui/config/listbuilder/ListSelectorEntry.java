@@ -1,13 +1,17 @@
 package dev.the_fireplace.overlord.client.gui.config.listbuilder;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
-public class ListSelectorEntry extends AlwaysSelectedEntryListWidget.Entry<ListSelectorEntry> {
+@Environment(EnvType.CLIENT)
+public class ListSelectorEntry extends AlwaysSelectedEntryListWidget.Entry<ListSelectorEntry>
+{
     protected final MinecraftClient client;
     protected final ListSelectorWidget list;
 

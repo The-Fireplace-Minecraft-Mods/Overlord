@@ -11,7 +11,8 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-public class BloodSoakedSoil extends SnowyBlock implements Fertilizable {
+public class BloodSoakedSoil extends SnowyBlock implements Fertilizable
+{
     public BloodSoakedSoil(Block.Settings settings) {
         super(settings);
     }
@@ -33,9 +34,10 @@ public class BloodSoakedSoil extends SnowyBlock implements Fertilizable {
     public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
         world.setBlockState(pos, Blocks.COARSE_DIRT.getDefaultState());
         ZombieEntity zombie = random.nextInt(10000) == 1 ? new ZombieVillagerEntity(EntityType.ZOMBIE_VILLAGER, world) : new ZombieEntity(EntityType.ZOMBIE, world);
-        if(random.nextInt(3) == 1)
+        if (random.nextInt(3) == 1) {
             zombie.setBaby(true);
-        zombie.updatePosition(pos.getX(), pos.getY()+1, pos.getZ());
+        }
+        zombie.updatePosition(pos.getX(), pos.getY() + 1, pos.getZ());
         world.spawnEntity(zombie);
     }
 }

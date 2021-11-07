@@ -21,7 +21,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public abstract class AbstractTombstoneBlock extends HorizontalFacingBlock implements BlockEntityProvider, Waterloggable {
+public abstract class AbstractTombstoneBlock extends HorizontalFacingBlock implements BlockEntityProvider, Waterloggable
+{
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public AbstractTombstoneBlock(Settings settings) {
@@ -77,10 +78,11 @@ public abstract class AbstractTombstoneBlock extends HorizontalFacingBlock imple
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
-        if(placer != null) {
+        if (placer != null) {
             BlockEntity be = world.getBlockEntity(pos);
-            if (be instanceof Tombstone)
+            if (be instanceof Tombstone) {
                 ((Tombstone) be).setOwner(placer.getUuid());
+            }
         }
     }
 }
