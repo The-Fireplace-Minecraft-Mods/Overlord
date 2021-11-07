@@ -4,6 +4,8 @@ import dev.the_fireplace.lib.api.client.interfaces.CustomButtonScreen;
 import io.netty.util.concurrent.DefaultEventExecutor;
 import io.netty.util.concurrent.DefaultPromise;
 import io.netty.util.concurrent.Promise;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -12,8 +14,9 @@ import net.minecraft.text.Text;
 import java.util.Optional;
 import java.util.UUID;
 
-public class ListBuilderGui extends Screen implements CustomButtonScreen<String> {
-
+@Environment(EnvType.CLIENT)
+public class ListBuilderGui extends Screen implements CustomButtonScreen<String>
+{
     private final Promise<Optional<String>> resultPromise;
     private final Screen parent;
     private UUID selected;

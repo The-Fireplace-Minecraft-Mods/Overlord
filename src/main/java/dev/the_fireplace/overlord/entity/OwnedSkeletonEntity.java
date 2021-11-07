@@ -10,7 +10,6 @@ import dev.the_fireplace.overlord.domain.entity.AugmentBearer;
 import dev.the_fireplace.overlord.domain.inventory.InventorySearcher;
 import dev.the_fireplace.overlord.domain.mechanic.Ownable;
 import dev.the_fireplace.overlord.domain.registry.HeadBlockAugmentRegistry;
-import dev.the_fireplace.overlord.domain.world.BreakSpeedModifiers;
 import dev.the_fireplace.overlord.domain.world.DaylightDetector;
 import dev.the_fireplace.overlord.domain.world.MeleeAttackExecutor;
 import dev.the_fireplace.overlord.domain.world.UndeadDaylightDamager;
@@ -96,7 +95,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     private final DaylightDetector daylightDetector;
     private final UndeadDaylightDamager undeadDaylightDamager;
     private final MeleeAttackExecutor meleeAttackExecutor;
-    private final BreakSpeedModifiers breakSpeedModifiers;
     private final InventorySearcher inventorySearcher;
     private final AIEquipmentHelper equipmentHelper;
     private final HeadBlockAugmentRegistry headBlockAugmentRegistry;
@@ -113,7 +111,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         daylightDetector = injector.getInstance(DaylightDetector.class);
         undeadDaylightDamager = injector.getInstance(UndeadDaylightDamager.class);
         meleeAttackExecutor = injector.getInstance(MeleeAttackExecutor.class);
-        breakSpeedModifiers = injector.getInstance(BreakSpeedModifiers.class);
         inventorySearcher = injector.getInstance(InventorySearcher.class);
         equipmentHelper = injector.getInstance(AIEquipmentHelper.class);
         headBlockAugmentRegistry = injector.getInstance(HeadBlockAugmentRegistry.class);
@@ -547,10 +544,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         super.travel(movementInput);
     }
 
-    protected boolean doesNotSuffocate(BlockPos pos) {
-        return !this.world.getBlockState(pos).canSuffocate(this.world, pos);
-    }
-
     @Override
     public float getMovementSpeed() {
         return (float) this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).getValue();
@@ -756,16 +749,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         return entity instanceof LivingEntity ? (LivingEntity) entity : null;
     }
 
-    public float getBlockBreakingSpeed(BlockState block) {
-        float breakSpeed = this.inventory.getBlockBreakingSpeed(block);
-
-        return breakSpeedModifiers.applyApplicable(this, breakSpeed);
-    }
-
-    public boolean isUsingEffectiveTool(BlockState block) {
-        return block.getMaterial().canBreakByHand() || this.inventory.isUsingEffectiveTool(block);
-    }
-
     public OwnedSkeletonContainer getContainer(PlayerInventory playerInv, int syncId) {
         return new OwnedSkeletonContainer(playerInv, !world.isClient, this, syncId);
     }
@@ -944,16 +927,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
     public void setAugmentBlock(ItemStack augmentBlock) {
         this.dataTracker.set(AUGMENT_BLOCK, augmentBlock);
-    }
-
-    @Nullable
-    public Identifier getAugment() {
-        Item augmentBlockItem = getAugmentBlockStack().getItem();
-        if (augmentBlockItem instanceof BlockItem) {
-            return headBlockAugmentRegistry.get(((BlockItem) augmentBlockItem).getBlock());
-        }
-
-        return null;
     }
 
     @Environment(EnvType.CLIENT)
