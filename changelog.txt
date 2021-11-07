@@ -1,1 +1,1 @@
-Insert your changelog here
+Mark the minimum required Fabric API version in the mod dependencies
