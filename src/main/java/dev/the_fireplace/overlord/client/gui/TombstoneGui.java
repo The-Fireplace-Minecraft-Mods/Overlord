@@ -119,13 +119,12 @@ public class TombstoneGui extends Screen
         float backgroundItemScale = 3.5f;
         matrixStack.scale(backgroundItemScale, backgroundItemScale, -backgroundItemScale);
         VertexConsumerProvider.Immediate immediate = this.minecraft.getBufferBuilders().getEntityVertexConsumers();
-        int overlay = OverlayTexture.packUv(OverlayTexture.getU(0), OverlayTexture.getV(false));
         int light = 0xF000F0;
         this.minecraft.getItemRenderer().renderItem(
             new ItemStack(blockState.getBlock()),
             ModelTransformation.Mode.FIXED,
             light,
-            overlay,
+            OverlayTexture.DEFAULT_UV,
             matrixStack,
             immediate
         );
