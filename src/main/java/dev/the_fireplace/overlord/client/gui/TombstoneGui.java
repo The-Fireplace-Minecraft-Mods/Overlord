@@ -195,7 +195,10 @@ public class TombstoneGui extends Screen
         }
 
         matrixStack.pop();
+        matrixStack.push();
+        matrixStack.translate(0, 0, 25);
         DiffuseLighting.enableGuiDepthLighting();
         super.render(mouseX, mouseY, delta);
+        matrixStack.pop();
     }
 }
