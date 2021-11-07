@@ -1,6 +1,7 @@
 package dev.the_fireplace.overlord.client.renderer;
 
 import dev.the_fireplace.overlord.blockentity.TombstoneBlockEntity;
+import dev.the_fireplace.overlord.init.OverlordBlocks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.WallSignBlock;
@@ -34,7 +35,8 @@ public class TombstoneBlockEntityRenderer extends BlockEntityRenderer<TombstoneB
         matrices.translate(0.0D, 0.3333333432674408D, 0.046666666865348816D);
         float scale = 0.010416667F / 2f;
         matrices.scale(scale, -scale, scale);
-        int baseTextColor = 0x000000;
+        //TODO calculate this in the BlockEntity instead of hardcoding, make GUI render color and text colors consistent with this
+        int baseTextColor = blockEntity.getCachedState().getBlock() == OverlordBlocks.BLACKSTONE_TOMBSTONE ? 0xFFFFFF : 0x000000;
         double colorScale = 0.4D;
         int red = (int) ((double) NativeImage.getRed(baseTextColor) * colorScale);
         int green = (int) ((double) NativeImage.getGreen(baseTextColor) * colorScale);
