@@ -31,6 +31,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RangedAttackMob;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -729,13 +730,13 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     public void setHasMuscles(boolean hasMuscles) {
         this.dataTracker.set(HAS_MUSCLES, hasMuscles);
 
-        this.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).removeModifier(MUSCLE_ATTACK_BONUS);
-        this.getAttributeInstance(EntityAttributes.GENERIC_ARMOR_TOUGHNESS).removeModifier(MUSCLE_TOUGHNESS_BONUS);
-        this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).removeModifier(MUSCLE_SPEED_BONUS);
+        this.getAttributeInstance(EntityAttributes.ATTACK_DAMAGE).removeModifier(MUSCLE_ATTACK_BONUS);
+        this.getAttributeInstance(EntityAttributes.ARMOR_TOUGHNESS).removeModifier(MUSCLE_TOUGHNESS_BONUS);
+        this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).removeModifier(MUSCLE_SPEED_BONUS);
         if (hasMuscles) {
-            this.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).addPersistentModifier(MUSCLE_ATTACK_BONUS);
-            this.getAttributeInstance(EntityAttributes.GENERIC_ARMOR_TOUGHNESS).addPersistentModifier(MUSCLE_TOUGHNESS_BONUS);
-            this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).addPersistentModifier(MUSCLE_SPEED_BONUS);
+            this.getAttributeInstance(EntityAttributes.ATTACK_DAMAGE).addModifier(MUSCLE_ATTACK_BONUS);
+            this.getAttributeInstance(EntityAttributes.ARMOR_TOUGHNESS).addModifier(MUSCLE_TOUGHNESS_BONUS);
+            this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).addModifier(MUSCLE_SPEED_BONUS);
         }
     }
 
