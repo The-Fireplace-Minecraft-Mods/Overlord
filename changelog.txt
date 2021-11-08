@@ -1,1 +1,1 @@
-Insert your changelog here
+Prevent army skeletons from despawning

@@ -275,4 +275,14 @@ public abstract class ArmyEntity extends PathAwareEntity implements Ownable, Ord
     public static DefaultAttributeContainer.Builder createArmyAttributes() {
         return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_ATTACK_DAMAGE).add(EntityAttributes.GENERIC_ATTACK_SPEED);
     }
+
+    @Override
+    public boolean cannotDespawn() {
+        return true;
+    }
+
+    @Override
+    public boolean canImmediatelyDespawn(double distanceSquared) {
+        return false;
+    }
 }
