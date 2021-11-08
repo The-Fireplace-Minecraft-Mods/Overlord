@@ -1,1 +1,2 @@
 Mark the minimum required Fabric API version in the mod dependencies
+Prevent army skeletons from despawning
