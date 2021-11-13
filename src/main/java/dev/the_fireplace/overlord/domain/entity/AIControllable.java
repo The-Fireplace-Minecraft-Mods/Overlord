@@ -1,4 +1,4 @@
-package dev.the_fireplace.overlord.domain.mechanic;
+package dev.the_fireplace.overlord.domain.entity;
 
 import dev.the_fireplace.overlord.model.aiconfig.AISettings;
 

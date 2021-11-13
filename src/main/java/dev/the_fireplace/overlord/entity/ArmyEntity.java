@@ -1,7 +1,9 @@
 package dev.the_fireplace.overlord.entity;
 
+import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
-import dev.the_fireplace.overlord.domain.mechanic.Ownable;
+import dev.the_fireplace.overlord.domain.entity.Ownable;
+import dev.the_fireplace.overlord.domain.entity.logic.EntityAlliances;
 import dev.the_fireplace.overlord.entity.ai.GoalSelectorHelper;
 import dev.the_fireplace.overlord.entity.ai.goal.combat.ArmyBowAttackGoal;
 import dev.the_fireplace.overlord.entity.ai.goal.combat.ArmyCrossbowAttackGoal;
@@ -43,12 +45,14 @@ import javax.annotation.Nullable;
 
 public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, OrderableEntity
 {
+    protected final EntityAlliances entityAlliances;
     protected final AISettings aiSettings;
     protected boolean isSwappingEquipment;
 
     protected ArmyEntity(EntityType<? extends ArmyEntity> type, World world) {
         super(type, world);
-        aiSettings = createBaseAISettings();
+        this.entityAlliances = DIContainer.get().getInstance(EntityAlliances.class);
+        this.aiSettings = createBaseAISettings();
         reloadGoals();
     }
 
@@ -216,7 +220,7 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
 
     @Override
     public boolean canAttackWithOwner(LivingEntity target, LivingEntity owner) {
-        return true;
+        return !entityAlliances.isAlliedTo(this, target);
     }
 
     public BlockPos getHome() {

@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.blockentity.internal;
 
 import dev.the_fireplace.overlord.blockentity.CasketBlockEntity;
-import dev.the_fireplace.overlord.domain.mechanic.Tombstone;
+import dev.the_fireplace.overlord.domain.blockentity.Tombstone;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import dev.the_fireplace.overlord.model.aiconfig.movement.PositionSetting;
 import dev.the_fireplace.overlord.util.SkeletonBuilder;
