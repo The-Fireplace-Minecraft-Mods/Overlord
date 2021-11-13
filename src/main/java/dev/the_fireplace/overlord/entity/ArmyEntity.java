@@ -22,10 +22,7 @@ import dev.the_fireplace.overlord.model.aiconfig.movement.MovementCategory;
 import dev.the_fireplace.overlord.model.aiconfig.movement.PositionSetting;
 import dev.the_fireplace.overlord.model.aiconfig.tasks.TasksCategory;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.CrossbowUser;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -43,8 +40,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
-public abstract class ArmyEntity extends PathAwareEntity implements Ownable, OrderableEntity
+public abstract class ArmyEntity extends PathAwareEntity implements Ownable, OrderableEntity, Tameable
 {
     protected final EntityAlliances entityAlliances;
     protected final AISettings aiSettings;
@@ -288,5 +286,10 @@ public abstract class ArmyEntity extends PathAwareEntity implements Ownable, Ord
     @Override
     public boolean canImmediatelyDespawn(double distanceSquared) {
         return false;
+    }
+
+    @Override
+    public UUID getOwnerUuid() {
+        return getOwnerId();
     }
 }
