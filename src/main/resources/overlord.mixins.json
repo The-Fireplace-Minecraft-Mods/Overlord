@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_16",
   "mixins": [
     "GoalSelectorAccessor",
-    "MeleeAttackGoalAccessor"
+    "MeleeAttackGoalAccessor",
+    "WolfEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

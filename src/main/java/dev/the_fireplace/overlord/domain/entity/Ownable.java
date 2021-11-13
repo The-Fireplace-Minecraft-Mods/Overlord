@@ -1,4 +1,4 @@
-package dev.the_fireplace.overlord.domain.mechanic;
+package dev.the_fireplace.overlord.domain.entity;
 
 import net.minecraft.entity.LivingEntity;
 

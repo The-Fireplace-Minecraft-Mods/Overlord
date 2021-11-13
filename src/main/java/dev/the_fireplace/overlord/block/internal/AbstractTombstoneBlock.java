@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.block.internal;
 
 import dev.the_fireplace.overlord.blockentity.internal.AbstractTombstoneBlockEntity;
-import dev.the_fireplace.overlord.domain.mechanic.Tombstone;
+import dev.the_fireplace.overlord.domain.blockentity.Tombstone;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;

@@ -3,7 +3,7 @@ package dev.the_fireplace.overlord.network.server;
 import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
-import dev.the_fireplace.overlord.domain.mechanic.Ownable;
+import dev.the_fireplace.overlord.domain.entity.Ownable;
 import dev.the_fireplace.overlord.domain.network.ClientToServerPacketIDs;
 import dev.the_fireplace.overlord.domain.network.server.SaveAIPacketReceiver;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
