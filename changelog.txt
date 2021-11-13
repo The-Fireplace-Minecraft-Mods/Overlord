@@ -1,1 +1,1 @@
-Prevent army skeletons from despawning
+Fix a player's army skeletons and pet dogs being able to attack each other

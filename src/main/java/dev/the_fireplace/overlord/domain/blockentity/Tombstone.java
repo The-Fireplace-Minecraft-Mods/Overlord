@@ -1,4 +1,4 @@
-package dev.the_fireplace.overlord.domain.mechanic;
+package dev.the_fireplace.overlord.domain.blockentity;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
