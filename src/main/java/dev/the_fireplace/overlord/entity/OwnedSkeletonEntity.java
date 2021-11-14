@@ -173,11 +173,13 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
     @Override
     public boolean interactMob(PlayerEntity player, Hand hand) {
-        if (!player.world.isClient() && !player.isSneaking()) {
-            ContainerProviderRegistry.INSTANCE.openContainer(OverlordEntities.OWNED_SKELETON_ID, player, buf -> buf.writeUuid(this.getUuid()));
+        if (!player.isSneaking()) {
+            if (!player.world.isClient() && player.getUuid().equals(getOwnerUuid())) {
+                ContainerProviderRegistry.INSTANCE.openContainer(OverlordEntities.OWNED_SKELETON_ID, player, buf -> buf.writeUuid(this.getUuid()));
+            }
+            return ActionResult.SUCCESS;
         }
-        if (player.isSneaking()
-            && player.isCreative()
+        if (player.isCreative()
             && player.getUuid().equals(getOwnerUuid())
             && player.getMainHandStack().getItem() == Items.MILK_BUCKET
             && canGrow()
