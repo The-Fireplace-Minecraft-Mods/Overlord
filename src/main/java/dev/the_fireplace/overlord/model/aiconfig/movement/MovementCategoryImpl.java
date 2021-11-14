@@ -33,7 +33,8 @@ public final class MovementCategoryImpl implements SettingsComponent, MovementCa
 
         tag.putBoolean("enabled", enabled);
         tag.putString("moveMode", moveMode.toString());
-        tag.putByte("followDistance", minimumFollowDistance);
+        tag.putByte("minimumFollowDistance", minimumFollowDistance);
+        tag.putByte("maximumFollowDistance", maximumFollowDistance);
         tag.putUuid("patrolPosList", patrolPosList);
         tag.putBoolean("patrolLoop", patrolLoop);
         if (home != null) {
@@ -58,7 +59,7 @@ public final class MovementCategoryImpl implements SettingsComponent, MovementCa
             minimumFollowDistance = tag.getByte("minimumFollowDistance");
         }
         if (tag.contains("maximumFollowDistance")) {
-            minimumFollowDistance = tag.getByte("maximumFollowDistance");
+            maximumFollowDistance = tag.getByte("maximumFollowDistance");
         }
         if (tag.contains("patrolPosList")) {
             patrolPosList = tag.getUuid("patrolPosList");
