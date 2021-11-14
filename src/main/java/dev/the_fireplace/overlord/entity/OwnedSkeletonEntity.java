@@ -352,6 +352,9 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         ListTag inventoryTag = tag.getList("Inventory", 10);
         this.inventory.deserialize(inventoryTag);
         this.dataTracker.set(HAS_SKIN, tag.getBoolean("Skin"));
+        if (tag.containsUuid("Owner")) {
+            this.setOwnerUuid(tag.getUuid("Owner"));
+        }
         this.dataTracker.set(
             SKINSUIT,
             tag.containsUuid("Skinsuit")
