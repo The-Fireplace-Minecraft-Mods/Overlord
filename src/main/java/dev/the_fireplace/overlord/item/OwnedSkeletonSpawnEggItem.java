@@ -1,6 +1,7 @@
 package dev.the_fireplace.overlord.item;
 
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
+import dev.the_fireplace.overlord.model.aiconfig.movement.PositionSetting;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.entity.Entity;
@@ -91,9 +92,11 @@ public class OwnedSkeletonSpawnEggItem extends SpawnEggItem {
             return TypedActionResult.pass(itemStack);
         } else if (world.canPlayerModifyAt(user, blockPos) && user.canPlaceOn(blockPos, hitResult.getSide(), itemStack)) {
             EntityType<?> entityType = this.getEntityType(itemStack.getTag());
-            if (entityType.spawnFromItemStack((ServerWorld) world, itemStack, user, blockPos, SpawnReason.SPAWN_EGG, false, false) == null) {
+            Entity spawnedEntity = entityType.spawnFromItemStack((ServerWorld) world, itemStack, user, blockPos, SpawnReason.SPAWN_EGG, false, false);
+            if (spawnedEntity == null) {
                 return TypedActionResult.pass(itemStack);
             } else {
+                ((OwnedSkeletonEntity) spawnedEntity).getAISettings().getMovement().setHome(new PositionSetting(spawnedEntity.getBlockX(), spawnedEntity.getBlockY(), spawnedEntity.getBlockZ()));
                 if (!user.abilities.creativeMode) {
                     itemStack.decrement(1);
                 }
