@@ -5,6 +5,7 @@ import dev.the_fireplace.annotateddi.api.entrypoints.DIModInitializer;
 import dev.the_fireplace.overlord.augment.Augments;
 import dev.the_fireplace.overlord.block.OverlordBlocks;
 import dev.the_fireplace.overlord.blockentity.OverlordBlockEntities;
+import dev.the_fireplace.overlord.datapack.OverlordDataPacks;
 import dev.the_fireplace.overlord.domain.network.server.ServerPacketRegistry;
 import dev.the_fireplace.overlord.domain.registry.HeadBlockAugmentRegistry;
 import dev.the_fireplace.overlord.entity.OverlordEntities;
@@ -33,5 +34,6 @@ public final class Overlord implements DIModInitializer {
         OverlordEntities.register();
         Augments.register(diContainer.getInstance(HeadBlockAugmentRegistry.class));
         diContainer.getInstance(ServerPacketRegistry.class).registerPacketHandlers();
+        OverlordDataPacks.register(diContainer);
     }
 }
