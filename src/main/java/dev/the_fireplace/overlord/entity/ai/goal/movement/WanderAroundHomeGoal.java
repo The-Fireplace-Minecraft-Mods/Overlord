@@ -30,6 +30,6 @@ public class WanderAroundHomeGoal extends WanderAroundGoal
             return TargetFinder.findTargetTowards(this.armyEntity, 10, 7, home);
         }
 
-        return TargetFinder.findTarget(this.armyEntity, 10, 7);
+        return TargetFinder.findTarget(this.armyEntity, Math.min(10, radius), 7);
     }
 }
