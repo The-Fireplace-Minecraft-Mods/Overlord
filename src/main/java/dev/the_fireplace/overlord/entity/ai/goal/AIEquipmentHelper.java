@@ -33,7 +33,11 @@ public class AIEquipmentHelper
     }
 
     public boolean hasAmmoEquipped(ArmyEntity armyEntity) {
-        return EquipmentUtils.isAmmoFor(armyEntity.getMainHandStack(), armyEntity.getOffHandStack());
+        return EquipmentUtils.isAmmoFor(armyEntity.getMainHandStack(), armyEntity.getOffHandStack()) || !requiresAmmoForRangedWeapon(armyEntity);
+    }
+
+    public boolean requiresAmmoForRangedWeapon(ArmyEntity armyEntity) {
+        return EquipmentUtils.requiresAmmo(armyEntity.getMainHandStack());
     }
 
     public boolean shouldEquipShield(ArmyEntity armyEntity) {
