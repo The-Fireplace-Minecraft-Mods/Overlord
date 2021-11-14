@@ -30,6 +30,7 @@ public class FollowOwnerGoal extends Goal
         this.world = armyEntity.world;
         this.speed = speed;
         this.navigation = armyEntity.getNavigation();
+        //TODO look more at the minDistance and maxDistance usages - it seems they aren't used like their names imply
         this.minDistance = minDistance;
         this.maxDistance = maxDistance;
         this.leavesAllowed = leavesAllowed;
@@ -39,6 +40,7 @@ public class FollowOwnerGoal extends Goal
         }
     }
 
+    @Override
     public boolean canStart() {
         LivingEntity owner = this.armyEntity.getOwner();
         if (owner == null) {
@@ -53,6 +55,7 @@ public class FollowOwnerGoal extends Goal
         }
     }
 
+    @Override
     public boolean shouldContinue() {
         if (this.navigation.isIdle()) {
             return false;
@@ -61,24 +64,28 @@ public class FollowOwnerGoal extends Goal
         }
     }
 
+    @Override
     public void start() {
         this.updateCountdownTicks = 0;
         this.oldWaterPathfindingPenalty = this.armyEntity.getPathfindingPenalty(PathNodeType.WATER);
         this.armyEntity.setPathfindingPenalty(PathNodeType.WATER, 0.0F);
     }
 
+    @Override
     public void stop() {
         this.owner = null;
         this.navigation.stop();
         this.armyEntity.setPathfindingPenalty(PathNodeType.WATER, this.oldWaterPathfindingPenalty);
     }
 
+    @Override
     public void tick() {
         this.armyEntity.getLookControl().lookAt(this.owner, 10.0F, (float) this.armyEntity.getLookPitchSpeed());
         if (--this.updateCountdownTicks <= 0) {
             this.updateCountdownTicks = 10;
             if (!this.armyEntity.isLeashed() && !this.armyEntity.hasVehicle()) {
-                if (this.armyEntity.squaredDistanceTo(this.owner) >= 144.0D) {
+                double distanceToOwner = Math.sqrt(this.armyEntity.squaredDistanceTo(this.owner));
+                if (distanceToOwner > maxDistance && distanceToOwner > minDistance) {
                     this.tryTeleport();
                 } else {
                     this.navigation.startMovingTo(this.owner, this.speed);
@@ -89,18 +96,18 @@ public class FollowOwnerGoal extends Goal
     }
 
     private void tryTeleport() {
-        BlockPos blockPos = new BlockPos(this.owner.getPos());
+        BlockPos ownerPos = new BlockPos(this.owner.getPos());
 
         for (int i = 0; i < 10; ++i) {
-            int j = this.getRandomInt(-3, 3);
-            int k = this.getRandomInt(-1, 1);
-            int l = this.getRandomInt(-3, 3);
-            boolean bl = this.tryTeleportTo(blockPos.getX() + j, blockPos.getY() + k, blockPos.getZ() + l);
-            if (bl) {
+            //TODO improve this, we want to put them somewhere random just outside the minimum
+            int xOffset = this.getRandomInt(-3, 3);
+            int yOffset = this.getRandomInt(-1, 1);
+            int zOffset = this.getRandomInt(-3, 3);
+            boolean wasTeleported = this.tryTeleportTo(ownerPos.getX() + xOffset, ownerPos.getY() + yOffset, ownerPos.getZ() + zOffset);
+            if (wasTeleported) {
                 return;
             }
         }
-
     }
 
     private boolean tryTeleportTo(int x, int y, int z) {
@@ -109,7 +116,7 @@ public class FollowOwnerGoal extends Goal
         } else if (!this.canTeleportTo(new BlockPos(x, y, z))) {
             return false;
         } else {
-            this.armyEntity.refreshPositionAndAngles((double) ((float) x + 0.5F), (double) y, (double) ((float) z + 0.5F), this.armyEntity.getYaw(), this.armyEntity.getPitch());
+            this.armyEntity.refreshPositionAndAngles((float) x + 0.5F, y, (float) z + 0.5F, this.armyEntity.getYaw(), this.armyEntity.getPitch());
             this.navigation.stop();
             return true;
         }
