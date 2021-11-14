@@ -1,6 +1,7 @@
 package dev.the_fireplace.overlord.util;
 
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EntityGroup;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -32,5 +33,13 @@ public final class EquipmentUtils
         //TODO proper ammo/AI registry for easy mod support
         return (weapon.getItem() instanceof CrossbowItem && RangedWeaponItem.CROSSBOW_HELD_PROJECTILES.test(testItem))
             || (weapon.getItem() instanceof BowItem && RangedWeaponItem.BOW_PROJECTILES.test(testItem));
+    }
+
+    public static boolean requiresAmmo(ItemStack weapon) {
+        if (weapon.getItem() instanceof BowItem && EnchantmentHelper.getLevel(Enchantments.INFINITY, weapon) > 0) {
+            return false;
+        }
+
+        return isRangedWeapon(weapon);
     }
 }
