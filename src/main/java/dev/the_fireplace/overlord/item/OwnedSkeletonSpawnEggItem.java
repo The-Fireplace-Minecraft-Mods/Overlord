@@ -96,7 +96,7 @@ public class OwnedSkeletonSpawnEggItem extends SpawnEggItem {
             if (spawnedEntity == null) {
                 return TypedActionResult.pass(itemStack);
             } else {
-                ((OwnedSkeletonEntity) spawnedEntity).getAISettings().getMovement().setHome(new PositionSetting(spawnedEntity.getBlockX(), spawnedEntity.getBlockY(), spawnedEntity.getBlockZ()));
+                ((OwnedSkeletonEntity) spawnedEntity).getAISettings().getMovement().setHome(new PositionSetting((int) spawnedEntity.getX(), (int) spawnedEntity.getY(), (int) spawnedEntity.getZ()));
                 if (!user.abilities.creativeMode) {
                     itemStack.decrement(1);
                 }
