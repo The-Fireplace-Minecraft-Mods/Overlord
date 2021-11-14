@@ -2,11 +2,11 @@ package dev.the_fireplace.overlord.block;
 
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.overlord.block.internal.AbstractTombstoneBlock;
+import dev.the_fireplace.overlord.blockentity.OverlordBlockEntities;
 import dev.the_fireplace.overlord.blockentity.TombstoneBlockEntity;
 import dev.the_fireplace.overlord.blockentity.internal.AbstractTombstoneBlockEntity;
 import dev.the_fireplace.overlord.domain.network.ServerToClientPacketIDs;
 import dev.the_fireplace.overlord.domain.network.server.OpenTombstoneGUIBufferBuilder;
-import dev.the_fireplace.overlord.init.OverlordBlockEntities;
 import dev.the_fireplace.overlord.util.BlockUtils;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;

@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.client.gui.config;
 
 import dev.the_fireplace.lib.api.client.interfaces.CustomButtonScreen;
-import dev.the_fireplace.overlord.model.aiconfig.movement.PositionSetting;
+import dev.the_fireplace.overlord.entity.ai.aiconfig.movement.PositionSetting;
 import io.netty.util.concurrent.DefaultEventExecutor;
 import io.netty.util.concurrent.DefaultPromise;
 import io.netty.util.concurrent.Promise;

@@ -2,8 +2,8 @@ package dev.the_fireplace.overlord.block;
 
 import dev.the_fireplace.overlord.block.internal.AbstractTombstoneBlock;
 import dev.the_fireplace.overlord.blockentity.GraveMarkerBlockEntity;
+import dev.the_fireplace.overlord.blockentity.OverlordBlockEntities;
 import dev.the_fireplace.overlord.blockentity.internal.AbstractTombstoneBlockEntity;
-import dev.the_fireplace.overlord.init.OverlordBlockEntities;
 import dev.the_fireplace.overlord.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

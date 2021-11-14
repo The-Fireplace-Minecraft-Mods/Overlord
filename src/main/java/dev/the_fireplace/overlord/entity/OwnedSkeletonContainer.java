@@ -1,7 +1,6 @@
 package dev.the_fireplace.overlord.entity;
 
 import dev.the_fireplace.overlord.container.ContainerEquipmentSlot;
-import dev.the_fireplace.overlord.init.OverlordEntities;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
