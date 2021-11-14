@@ -31,6 +31,6 @@ public class WanderAroundHomeGoal extends WanderAroundGoal
             return FuzzyTargeting.findTo(this.armyEntity, 10, 7, home);
         }
 
-        return NoPenaltyTargeting.find(this.armyEntity, 10, 7);
+        return NoPenaltyTargeting.find(this.armyEntity, Math.min(10, radius), 7);
     }
 }
