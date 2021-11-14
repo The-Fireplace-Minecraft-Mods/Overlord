@@ -10,6 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 
+import java.util.Objects;
+
 public class OwnedSkeletonContainer extends ScreenHandler
 {
     private static final EquipmentSlot[] EQUIPMENT_SLOT_ORDER = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
@@ -146,7 +148,7 @@ public class OwnedSkeletonContainer extends ScreenHandler
 
     @Override
     public boolean canUse(PlayerEntity player) {
-        return FabricLoader.getInstance().isDevelopmentEnvironment() || owner.getOwnerId().equals(player.getUuid());
+        return FabricLoader.getInstance().isDevelopmentEnvironment() || Objects.equals(owner.getOwnerUuid(), player.getUuid());
     }
 
     public OwnedSkeletonEntity getOwner() {

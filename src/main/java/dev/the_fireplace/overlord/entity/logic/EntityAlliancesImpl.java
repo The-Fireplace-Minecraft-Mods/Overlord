@@ -3,7 +3,7 @@ package dev.the_fireplace.overlord.entity.logic;
 import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.domain.entity.logic.EntityAlliances;
 import dev.the_fireplace.overlord.domain.entity.logic.EntityOwnership;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Entity;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -20,7 +20,7 @@ public class EntityAlliancesImpl implements EntityAlliances
     }
 
     @Override
-    public boolean isAlliedTo(LivingEntity entity, UUID player) {
+    public boolean isAlliedTo(Entity entity, UUID player) {
         Collection<UUID> owners = entityOwnership.getOwnersOrSelf(entity);
 
         //TODO player alliance check once that system is in place
@@ -28,7 +28,7 @@ public class EntityAlliancesImpl implements EntityAlliances
     }
 
     @Override
-    public boolean isAlliedTo(LivingEntity entity, LivingEntity otherEntity) {
+    public boolean isAlliedTo(Entity entity, Entity otherEntity) {
         Collection<UUID> owners = entityOwnership.getOwnersOrSelf(entity);
         Collection<UUID> otherOwners = entityOwnership.getOwnersOrSelf(otherEntity);
 
