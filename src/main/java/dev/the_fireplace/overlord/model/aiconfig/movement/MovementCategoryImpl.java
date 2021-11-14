@@ -15,7 +15,7 @@ public final class MovementCategoryImpl implements SettingsComponent, MovementCa
     private EnumMovementMode moveMode = EnumMovementMode.FOLLOW;
     //How close the skeleton follows the player
     private byte minimumFollowDistance = 6;
-    private byte maximumFollowDistance = 8;
+    private byte maximumFollowDistance = 16;
     private UUID patrolPosList = AIListManager.EMPTY_LIST_ID;
     //Should the skeleton go from last directly to first or turn around and navigate the path in reverse?
     private boolean patrolLoop = false;
