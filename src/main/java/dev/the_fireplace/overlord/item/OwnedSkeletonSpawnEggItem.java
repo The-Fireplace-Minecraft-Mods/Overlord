@@ -69,7 +69,7 @@ public class OwnedSkeletonSpawnEggItem extends SpawnEggItem {
                     ((OwnedSkeletonEntity) spawnedEntity).readCustomDataFromNbt(savedSkeletonData);
                 }
                 if (context.getPlayer() != null) {
-                    ((OwnedSkeletonEntity) spawnedEntity).setOwner(context.getPlayer().getUuid());
+                    ((OwnedSkeletonEntity) spawnedEntity).setOwnerUuid(context.getPlayer().getUuid());
                 }
             }
             itemStack.decrement(1);
