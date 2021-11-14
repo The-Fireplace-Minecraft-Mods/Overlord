@@ -44,12 +44,13 @@ public class ArmyCrossbowAttackGoal<T extends ArmyEntity & RangedAttackMob & Cro
 	}
 
 	private boolean isEntityHoldingCrossbow() {
-		return this.armyEntity.getMainHandStack().getItem() instanceof CrossbowItem && equipmentHelper.hasAmmoEquipped(this.armyEntity);
+		return this.armyEntity.getMainHandStack().getItem() instanceof CrossbowItem
+			&& (equipmentHelper.hasAmmoEquipped(this.armyEntity) || CrossbowItem.isCharged(this.armyEntity.getMainHandStack()));
 	}
 
 	@Override
 	public boolean shouldContinue() {
-		return this.hasAliveTarget() && (this.canStart() || !this.armyEntity.getNavigation().isIdle()) && this.isEntityHoldingCrossbow();
+		return this.hasAliveTarget() && this.isEntityHoldingCrossbow();
 	}
 
 	private boolean hasAliveTarget() {

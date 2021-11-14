@@ -3,3 +3,4 @@ Improve compatibility between army skeletons and various vanilla and modded syst
 Fix skeletons not having an initial home if spawned using the egg.
 Fix follow distance settings not saving
 Fix skeletons not respecting Infinity on bows
+Fix ranged AI starting and immediately stopping, particularly involving crossbows
