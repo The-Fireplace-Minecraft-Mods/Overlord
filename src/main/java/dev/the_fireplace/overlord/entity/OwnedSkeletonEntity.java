@@ -60,7 +60,10 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 
 public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, CrossbowUser, AnimatedMilkDrinker, AugmentBearer
 {
@@ -116,7 +119,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
     public static OwnedSkeletonEntity create(World world, @Nullable UUID owner) {
         OwnedSkeletonEntity e = new OwnedSkeletonEntity(OverlordEntities.OWNED_SKELETON_TYPE, world);
-        e.setOwnerUuid(Objects.requireNonNullElseGet(owner, () -> new UUID(801295133947085751L, -7395604847578632613L)));
+        e.setOwnerUuid(owner != null ? owner : new UUID(801295133947085751L, -7395604847578632613L));
         return e;
     }
 
@@ -813,7 +816,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         ItemStack arrowStack = this.getArrowType(this.getMainHandStack());
         PersistentProjectileEntity projectileEntity = this.createArrowProjectile(arrowStack, f);
         boolean hasInfinity = EnchantmentHelper.getLevel(Enchantments.INFINITY, getMainHandStack()) > 0;
-        boolean usingInfinity = hasInfinity && arrowStack.isOf(Items.ARROW);
+        boolean usingInfinity = hasInfinity && arrowStack.getItem().equals(Items.ARROW);
         if (!usingInfinity) {
             projectileEntity.pickupType = PersistentProjectileEntity.PickupPermission.ALLOWED;
         }

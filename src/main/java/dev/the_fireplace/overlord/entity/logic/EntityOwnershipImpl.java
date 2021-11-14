@@ -1,9 +1,10 @@
 package dev.the_fireplace.overlord.entity.logic;
 
 import dev.the_fireplace.annotateddi.api.di.Implementation;
+import dev.the_fireplace.overlord.domain.entity.Ownable;
 import dev.the_fireplace.overlord.domain.entity.logic.EntityOwnership;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.Tameable;
+import net.minecraft.entity.passive.TameableEntity;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -16,8 +17,14 @@ public class EntityOwnershipImpl implements EntityOwnership
     public Collection<UUID> getOwners(Entity entity) {
         Collection<UUID> owners = new HashSet<>();
 
-        if (entity instanceof Tameable) {
-            UUID ownerUuid = ((Tameable) entity).getOwnerUuid();
+        if (entity instanceof TameableEntity) {
+            UUID ownerUuid = ((TameableEntity) entity).getOwnerUuid();
+            if (ownerUuid != null) {
+                owners.add(ownerUuid);
+            }
+        }
+        if (entity instanceof Ownable) {
+            UUID ownerUuid = ((Ownable) entity).getOwnerUuid();
             if (ownerUuid != null) {
                 owners.add(ownerUuid);
             }
