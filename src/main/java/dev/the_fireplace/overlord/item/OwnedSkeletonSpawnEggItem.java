@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.item;
 
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
-import dev.the_fireplace.overlord.model.aiconfig.movement.PositionSetting;
+import dev.the_fireplace.overlord.entity.ai.aiconfig.movement.PositionSetting;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.entity.Entity;

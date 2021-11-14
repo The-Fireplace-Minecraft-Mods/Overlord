@@ -1,7 +1,6 @@
 package dev.the_fireplace.overlord.blockentity;
 
 import dev.the_fireplace.overlord.blockentity.internal.AbstractTombstoneBlockEntity;
-import dev.the_fireplace.overlord.init.OverlordBlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
 
