@@ -810,7 +810,11 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     public void shootBow(LivingEntity target, float f) {
         ItemStack arrowStack = this.getArrowType(this.getMainHandStack());
         PersistentProjectileEntity projectileEntity = this.createArrowProjectile(arrowStack, f);
-        projectileEntity.pickupType = PersistentProjectileEntity.PickupPermission.ALLOWED;
+        boolean hasInfinity = EnchantmentHelper.getLevel(Enchantments.INFINITY, getMainHandStack()) > 0;
+        boolean usingInfinity = hasInfinity && arrowStack.isOf(Items.ARROW);
+        if (!usingInfinity) {
+            projectileEntity.pickupType = PersistentProjectileEntity.PickupPermission.ALLOWED;
+        }
         double d = target.getX() - this.getX();
         double e = target.getBodyY(1.0 / 3.0) - projectileEntity.getY();
         double g = target.getZ() - this.getZ();
@@ -818,10 +822,12 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         projectileEntity.setVelocity(d, e + h * 0.2, g, 1.6F, (float) (14 - this.world.getDifficulty().getId() * 4));
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
         this.world.spawnEntity(projectileEntity);
-        if (arrowStack.getCount() == 1) {
-            setStackInHand(Hand.OFF_HAND, ItemStack.EMPTY);
-        } else {
-            getOffHandStack().setCount(arrowStack.getCount() - 1);
+        if (!usingInfinity) {
+            if (arrowStack.getCount() == 1) {
+                setStackInHand(Hand.OFF_HAND, ItemStack.EMPTY);
+            } else {
+                getOffHandStack().setCount(arrowStack.getCount() - 1);
+            }
         }
         this.getMainHandStack().damage(1, this, (entity) -> entity.sendToolBreakStatus(Hand.MAIN_HAND));
     }
