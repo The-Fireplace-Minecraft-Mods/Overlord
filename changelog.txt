@@ -6,3 +6,4 @@ Fix skeletons not respecting Infinity on bows
 Fix ranged AI starting and immediately stopping, particularly involving crossbows
 Fix wander radius using the wrong translation
 Improve wander within radius precision somewhat
+Fix items getting used when you right click a skeleton to open the GUI
