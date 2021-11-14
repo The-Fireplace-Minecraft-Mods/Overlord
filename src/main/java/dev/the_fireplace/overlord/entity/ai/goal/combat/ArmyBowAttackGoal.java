@@ -45,16 +45,20 @@ public class ArmyBowAttackGoal<T extends ArmyEntity & RangedAttackMob> extends G
             return false;
         }
         this.lastUpdateTime = worldTime;
-        return this.armyEntity.getTarget() != null && this.isHoldingBow();
+        return this.hasAliveTarget() && this.isHoldingBow();
     }
 
     protected boolean isHoldingBow() {
         return this.armyEntity.getMainHandStack().getItem() instanceof BowItem && equipmentHelper.hasAmmoEquipped(this.armyEntity);
     }
 
+    private boolean hasAliveTarget() {
+        return this.armyEntity.getTarget() != null && this.armyEntity.getTarget().isAlive();
+    }
+
     @Override
     public boolean shouldContinue() {
-        return (this.canStart() || !this.armyEntity.getNavigation().isIdle()) && this.isHoldingBow();
+        return this.hasAliveTarget() && this.isHoldingBow();
     }
 
     @Override
