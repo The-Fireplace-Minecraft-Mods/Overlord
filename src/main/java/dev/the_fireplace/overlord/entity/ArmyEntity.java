@@ -307,7 +307,7 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
 
     @Nullable
     @Override
-    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
+    public PassiveEntity createChild(PassiveEntity mate) {
         return null;
     }
 }

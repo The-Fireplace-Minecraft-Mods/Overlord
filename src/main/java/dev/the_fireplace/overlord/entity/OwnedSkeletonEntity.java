@@ -180,7 +180,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
             if (!player.world.isClient() && player.getUuid().equals(getOwnerUuid())) {
                 ContainerProviderRegistry.INSTANCE.openContainer(OverlordEntities.OWNED_SKELETON_ID, player, buf -> buf.writeUuid(this.getUuid()));
             }
-            return ActionResult.SUCCESS;
+            return true;
         }
         if (player.isCreative()
             && player.getUuid().equals(getOwnerUuid())
