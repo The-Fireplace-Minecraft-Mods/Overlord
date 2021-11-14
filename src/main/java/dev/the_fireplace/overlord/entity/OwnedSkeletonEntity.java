@@ -176,27 +176,29 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (!player.world.isClient() && !player.isSneaking()) {
-            player.openHandledScreen(new ExtendedScreenHandlerFactory()
-            {
-                @Override
-                public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-                    buf.writeUuid(OwnedSkeletonEntity.this.getUuid());
-                }
+        if (!player.isSneaking()) {
+            if (!player.world.isClient() && player.getUuid().equals(getOwnerUuid())) {
+                player.openHandledScreen(new ExtendedScreenHandlerFactory()
+                {
+                    @Override
+                    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
+                        buf.writeUuid(OwnedSkeletonEntity.this.getUuid());
+                    }
 
-                @Override
-                public Text getDisplayName() {
-                    return OwnedSkeletonEntity.this.getDisplayName();
-                }
+                    @Override
+                    public Text getDisplayName() {
+                        return OwnedSkeletonEntity.this.getDisplayName();
+                    }
 
-                @Override
-                public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-                    return OwnedSkeletonEntity.this.getContainer(inv, syncId);
-                }
-            });
+                    @Override
+                    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+                        return OwnedSkeletonEntity.this.getContainer(inv, syncId);
+                    }
+                });
+            }
+            return ActionResult.SUCCESS;
         }
-        if (player.isSneaking()
-            && player.isCreative()
+        if (player.isCreative()
             && player.getUuid().equals(getOwnerUuid())
             && player.getMainHandStack().getItem() == Items.MILK_BUCKET
             && canGrow()
