@@ -1,3 +1,4 @@
 Fix a player's army skeletons and pet dogs being able to attack each other
 Improve compatibility between army skeletons and various vanilla and modded systems.
 Fix skeletons not having an initial home if spawned using the egg.
+Fix follow distance settings not saving
