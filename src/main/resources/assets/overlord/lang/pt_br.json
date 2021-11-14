@@ -53,7 +53,6 @@
   "gui.overlord.aisettings.option.movement.home.desc": "O ponto o esqueleto ira retornar quando estacionario, ou andar em volta enquanto procurando.",
   "gui.overlord.aisettings.option.movement.exploringWander": "Procurador Explorador",
   "gui.overlord.aisettings.option.movement.exploringWander.desc": "Explorar sem ficar perto de casa.",
-  "gui.overlord.aisettings.option.movement.wanderRadius": "Procurador Explorador",
   "gui.overlord.aisettings.option.movement.wanderRadius.desc": "O quao longe de casa o esquelto pode andar.",
   "gui.overlord.aisettings.option.task.woodcutting": "Cortador de Madeira",
   "gui.overlord.aisettings.option.task.woodcuttingWithoutTools": "Cortar Madeira sem Ferramentas",

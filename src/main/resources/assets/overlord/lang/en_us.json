@@ -53,7 +53,7 @@
   "gui.overlord.aisettings.option.movement.home.desc": "The point a skeleton will return to when stationed, or wander in a radius around when wandering.",
   "gui.overlord.aisettings.option.movement.exploringWander": "Exploring Wander",
   "gui.overlord.aisettings.option.movement.exploringWander.desc": "Wander away without staying near Home Position.",
-  "gui.overlord.aisettings.option.movement.wanderRadius": "Exploring Wander",
+  "gui.overlord.aisettings.option.movement.wanderRadius": "Wander Radius",
   "gui.overlord.aisettings.option.movement.wanderRadius.desc": "How far from Home Position this can wander.",
   "gui.overlord.aisettings.option.task.woodcutting": "Woodcutting",
   "gui.overlord.aisettings.option.task.woodcuttingWithoutTools": "Cut Wood Without Tools",
