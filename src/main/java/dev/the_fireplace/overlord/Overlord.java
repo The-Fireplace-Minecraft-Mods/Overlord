@@ -2,9 +2,13 @@ package dev.the_fireplace.overlord;
 
 import com.google.inject.Injector;
 import dev.the_fireplace.annotateddi.api.entrypoints.DIModInitializer;
+import dev.the_fireplace.overlord.augment.Augments;
+import dev.the_fireplace.overlord.block.OverlordBlocks;
+import dev.the_fireplace.overlord.blockentity.OverlordBlockEntities;
 import dev.the_fireplace.overlord.domain.network.server.ServerPacketRegistry;
 import dev.the_fireplace.overlord.domain.registry.HeadBlockAugmentRegistry;
-import dev.the_fireplace.overlord.init.*;
+import dev.the_fireplace.overlord.entity.OverlordEntities;
+import dev.the_fireplace.overlord.item.OverlordItems;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

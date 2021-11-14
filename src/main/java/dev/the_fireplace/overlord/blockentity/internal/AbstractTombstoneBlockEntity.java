@@ -3,7 +3,7 @@ package dev.the_fireplace.overlord.blockentity.internal;
 import dev.the_fireplace.overlord.blockentity.CasketBlockEntity;
 import dev.the_fireplace.overlord.domain.blockentity.Tombstone;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
-import dev.the_fireplace.overlord.model.aiconfig.movement.PositionSetting;
+import dev.the_fireplace.overlord.entity.ai.aiconfig.movement.PositionSetting;
 import dev.the_fireplace.overlord.util.SkeletonBuilder;
 import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.Material;
