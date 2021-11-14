@@ -1,12 +1,12 @@
 package dev.the_fireplace.overlord.domain.entity.logic;
 
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Entity;
 
 import java.util.UUID;
 
 public interface EntityAlliances
 {
-    boolean isAlliedTo(LivingEntity entity, UUID player);
+    boolean isAlliedTo(Entity entity, UUID player);
 
-    boolean isAlliedTo(LivingEntity entity, LivingEntity otherEntity);
+    boolean isAlliedTo(Entity entity, Entity otherEntity);
 }

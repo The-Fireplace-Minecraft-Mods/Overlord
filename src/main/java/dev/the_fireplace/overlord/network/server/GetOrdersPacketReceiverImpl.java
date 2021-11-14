@@ -52,8 +52,8 @@ public final class GetOrdersPacketReceiverImpl implements GetOrdersPacketReceive
             return;
         }
 
-        if (entity instanceof Ownable && !((Ownable) entity).getOwnerId().equals(player.getUuid())) {
-            Overlord.getLogger().warn("Get Orders packet received with wrong player ID, expected {} and got {}.", ((Ownable) entity).getOwnerId(), player.getUuid());
+        if (entity instanceof Ownable && !Objects.equals(((Ownable) entity).getOwnerUuid(), player.getUuid())) {
+            Overlord.getLogger().warn("Get Orders packet received with wrong player ID, expected {} and got {}.", ((Ownable) entity).getOwnerUuid(), player.getUuid());
             return;
         }
         PacketByteBuf ordersPacketBuffer = openOrdersGUIBufferBuilder.build(entityId, ((OrderableEntity) entity).getAISettings());

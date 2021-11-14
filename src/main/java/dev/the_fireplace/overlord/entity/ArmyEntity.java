@@ -30,21 +30,22 @@ import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.MobEntityWithAi;
 import net.minecraft.entity.mob.Monster;
+import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.UUID;
 
-public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, OrderableEntity, Tameable
+public abstract class ArmyEntity extends TameableEntity implements Ownable, OrderableEntity
 {
     protected final EntityAlliances entityAlliances;
     protected final AISettings aiSettings;
@@ -293,8 +294,20 @@ public abstract class ArmyEntity extends MobEntityWithAi implements Ownable, Ord
         return false;
     }
 
+    @Nullable
     @Override
-    public UUID getOwnerUuid() {
-        return getOwnerId();
+    public LivingEntity getOwner() {
+        if (this.world == null || !(world instanceof ServerWorld)) {
+            return null;
+        }
+
+        Entity entity = ((ServerWorld) this.world).getEntity(this.getOwnerUuid());
+        return entity instanceof LivingEntity ? (LivingEntity) entity : null;
+    }
+
+    @Nullable
+    @Override
+    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
+        return null;
     }
 }

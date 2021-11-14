@@ -7,7 +7,6 @@ import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.domain.entity.AnimatedMilkDrinker;
 import dev.the_fireplace.overlord.domain.entity.AugmentBearer;
-import dev.the_fireplace.overlord.domain.entity.Ownable;
 import dev.the_fireplace.overlord.domain.inventory.InventorySearcher;
 import dev.the_fireplace.overlord.domain.registry.HeadBlockAugmentRegistry;
 import dev.the_fireplace.overlord.domain.world.DaylightDetector;
@@ -45,7 +44,6 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
@@ -59,10 +57,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, CrossbowUser, AnimatedMilkDrinker, AugmentBearer
 {
@@ -86,7 +81,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     private static final EntityAttributeModifier MUSCLE_TOUGHNESS_BONUS = new EntityAttributeModifier(MUSCLE_TOUGHNESS_BONUS_ID, "Muscle Toughness Bonus", 0.25D, EntityAttributeModifier.Operation.ADDITION);
     private static final EntityAttributeModifier MUSCLE_SPEED_BONUS = new EntityAttributeModifier(MUSCLE_SPEED_BONUS_ID, "Muscle Speed Bonus", 0.05D, EntityAttributeModifier.Operation.ADDITION);
 
-    private UUID owner = new UUID(801295133947085751L, -7395604847578632613L);
     private int milkBucketsDrank = 0;
 
     private final SkeletonInventory inventory = new SkeletonInventory(this);
@@ -119,9 +113,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
     public static OwnedSkeletonEntity create(World world, @Nullable UUID owner) {
         OwnedSkeletonEntity e = new OwnedSkeletonEntity(OverlordEntities.OWNED_SKELETON_TYPE, world);
-        if (owner != null) {
-            e.setOwner(owner);
-        }
+        e.setOwnerUuid(Objects.requireNonNullElseGet(owner, () -> new UUID(801295133947085751L, -7395604847578632613L)));
         return e;
     }
 
@@ -186,7 +178,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         }
         if (player.isSneaking()
             && player.isCreative()
-            && player.getUuid().equals(getOwnerId())
+            && player.getUuid().equals(getOwnerUuid())
             && player.getMainHandStack().getItem() == Items.MILK_BUCKET
             && canGrow()
         ) {
@@ -289,8 +281,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     @Override
     public boolean isTeammate(Entity other) {
         return super.isTeammate(other)
-            || other.getUuid().equals(getOwnerId())
-            || (other instanceof Ownable && ((Ownable) other).getOwnerId().equals(getOwnerId()));
+            || entityAlliances.isAlliedTo(this, other);
     }
 
     @Override
@@ -355,7 +346,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         super.readCustomDataFromTag(tag);
         ListTag inventoryTag = tag.getList("Inventory", 10);
         this.inventory.deserialize(inventoryTag);
-        this.owner = tag.getUuid("Owner");
         this.dataTracker.set(HAS_SKIN, tag.getBoolean("Skin"));
         this.dataTracker.set(
             SKINSUIT,
@@ -375,7 +365,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         super.writeCustomDataToTag(tag);
         tag.putInt("DataVersion", SharedConstants.getGameVersion().getWorldVersion());
         tag.put("Inventory", this.inventory.serialize(new ListTag()));
-        tag.putUuid("Owner", this.owner);
         tag.putBoolean("Muscles", hasMuscles());
         tag.putBoolean("Skin", hasSkin());
         if (this.hasSkinsuit()) {
@@ -733,22 +722,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         }
     }
 
-    @Override
-    public UUID getOwnerId() {
-        return owner;
-    }
-
-    @Nullable
-    @Override
-    public LivingEntity getOwner() {
-        if (this.world == null || !(world instanceof ServerWorld)) {
-            return null;
-        }
-
-        Entity entity = ((ServerWorld) this.world).getEntity(this.getOwnerId());
-        return entity instanceof LivingEntity ? (LivingEntity) entity : null;
-    }
-
     public OwnedSkeletonContainer getContainer(PlayerInventory playerInv, int syncId) {
         return new OwnedSkeletonContainer(playerInv, !world.isClient, this, syncId);
     }
@@ -761,10 +734,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     @Override
     public SkeletonInventory getInventory() {
         return inventory;
-    }
-
-    public void setOwner(UUID newOwner) {
-        this.owner = newOwner;
     }
 
     @Override

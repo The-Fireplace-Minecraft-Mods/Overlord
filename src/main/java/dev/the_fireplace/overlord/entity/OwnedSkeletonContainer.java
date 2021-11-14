@@ -9,11 +9,15 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 
-public class OwnedSkeletonContainer extends Container {
+import java.util.Objects;
+
+public class OwnedSkeletonContainer extends Container
+{
     private static final EquipmentSlot[] EQUIPMENT_SLOT_ORDER = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     public final boolean onServer;
     private final OwnedSkeletonEntity owner;
     private final SkeletonInventory inventory;
+
     public OwnedSkeletonContainer(PlayerInventory playerInventory, boolean onServer, OwnedSkeletonEntity owner, int syncId) {
         super(null, syncId);
         this.onServer = onServer;
@@ -143,7 +147,7 @@ public class OwnedSkeletonContainer extends Container {
 
     @Override
     public boolean canUse(PlayerEntity player) {
-        return FabricLoader.getInstance().isDevelopmentEnvironment() || owner.getOwnerId().equals(player.getUuid());
+        return FabricLoader.getInstance().isDevelopmentEnvironment() || Objects.equals(owner.getOwnerUuid(), player.getUuid());
     }
 
     public OwnedSkeletonEntity getOwner() {
