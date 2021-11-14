@@ -1,150 +1,89 @@
-package dev.the_fireplace.overlord.util;
+package dev.the_fireplace.overlord.entity.creation;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.mojang.authlib.GameProfile;
 import dev.the_fireplace.annotateddi.api.DIContainer;
+import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.domain.blockentity.Tombstone;
+import dev.the_fireplace.overlord.domain.entity.creation.SkeletonBuilder;
 import dev.the_fireplace.overlord.domain.inventory.CommonPriorityMappers;
 import dev.the_fireplace.overlord.domain.inventory.InventorySearcher;
 import dev.the_fireplace.overlord.domain.registry.HeadBlockAugmentRegistry;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
-import dev.the_fireplace.overlord.tags.OverlordItemTags;
+import dev.the_fireplace.overlord.util.EquipmentUtils;
+import dev.the_fireplace.overlord.util.PlayerNameHelper;
+import io.netty.util.internal.ConcurrentSet;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.*;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.UserCache;
 import net.minecraft.world.World;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import javax.inject.Singleton;
+import java.util.*;
 
-public class SkeletonBuilder
+@Implementation
+@Singleton
+public class SkeletonBuilderImpl implements SkeletonBuilder
 {
-    public static final int REQUIRED_BONE_COUNT = 64;
-    public static final int REQUIRED_MILK_COUNT = 2;
-    public static final int REQUIRED_MUSCLE_COUNT = 32;
-    public static final int REQUIRED_SKIN_COUNT = 32;
-    public static final int REQUIRED_DYE_COUNT = 8;
+    private final Collection<SkeletonRecipe> skeletonRecipes = new ConcurrentSet<>();
 
-    public static boolean hasEssentialContents(Inventory casket) {
-        int boneCount = 0, milkCount = 0;
-        for (int slot = 0; slot < casket.size(); slot++) {
-            ItemStack stack = casket.getStack(slot);
-            if (stack.isEmpty()) {
-                continue;
-            }
-            if (stack.getItem().equals(Items.BONE)) {
-                boneCount += stack.getCount();
-            } else if (stack.getItem().equals(Items.MILK_BUCKET)) {
-                milkCount += stack.getCount();
-            }
-        }
-        return boneCount >= REQUIRED_BONE_COUNT && milkCount >= REQUIRED_MILK_COUNT;
+    @Override
+    public boolean canBuildWithIngredients(Inventory inventory) {
+        return skeletonRecipes.stream().anyMatch(recipe -> recipe.hasEssentialContents(inventory));
     }
 
-    public static void removeEssentialContents(Inventory casket) {
-        int boneCount = REQUIRED_BONE_COUNT, milkCount = REQUIRED_MILK_COUNT;
-        for (int slot = 0; slot < casket.size() && (boneCount > 0 || milkCount > 0); slot++) {
-            ItemStack stack = casket.getStack(slot);
-            if (stack.isEmpty()) {
-                continue;
-            }
-            if (stack.getItem().equals(Items.BONE) && boneCount > 0) {
-                boneCount = reduceStack(casket, slot, stack, boneCount);
-            } else if (stack.getItem().equals(Items.MILK_BUCKET) && milkCount > 0) {
-                milkCount = reduceStack(casket, slot, stack, milkCount);
+    @Override
+    public OwnedSkeletonEntity build(Inventory inventory, World world, Tombstone tombstone) {
+        Optional<SkeletonRecipe> recipeOrEmpty = skeletonRecipes.stream().filter(filterRecipe -> filterRecipe.hasEssentialContents(inventory)).findFirst();
+        if (recipeOrEmpty.isEmpty()) {
+            return null;
+        }
+        SkeletonRecipe recipe = recipeOrEmpty.get();
+        Collection<ItemStack> byproducts = new HashSet<>(recipe.processEssentialIngredients(inventory));
+        OwnedSkeletonEntity entity = OwnedSkeletonEntity.create(world, tombstone.getOwner());
+        if (recipe.hasMuscleContents(inventory)) {
+            byproducts.addAll(recipe.processMuscleIngredients(inventory));
+            entity.setHasMuscles(true);
+        }
+        String tombstoneName = tombstone.getNameText().trim();
+        if (recipe.hasSkinContents(inventory)) {
+            byproducts.addAll(recipe.processSkinIngredients(inventory));
+            entity.setHasSkin(true);
+            if (!tombstoneName.isEmpty() && PlayerNameHelper.VALID_NAME_REGEX.matcher(tombstoneName).matches() && recipe.hasPlayerColorContents(inventory)) {
+                UserCache.setUseRemote(true);
+                Optional<GameProfile> profile = world.getServer().getUserCache().findByName(tombstoneName);
+                if (profile.isPresent()) {
+                    byproducts.addAll(recipe.processPlayerColorIngredients(inventory));
+                    entity.setSkinsuit(profile.get().getId());
+                }
             }
         }
-    }
-
-    public static boolean hasMuscles(Inventory casket) {
-        int muscleCount = 0;
-        for (int slot = 0; slot < casket.size(); slot++) {
-            ItemStack stack = casket.getStack(slot);
-            if (stack.isEmpty()) {
-                continue;
-            }
-            if (OverlordItemTags.MUSCLE_MEAT.contains(stack.getItem())) {
-                muscleCount += stack.getCount();
-            }
+        if (!tombstoneName.isEmpty()) {
+            entity.setCustomName(Text.of(tombstoneName));
         }
-        return muscleCount >= REQUIRED_MUSCLE_COUNT;
-    }
-
-    public static void removeMuscles(Inventory casket) {
-        int muscleCount = REQUIRED_MUSCLE_COUNT;
-        for (int slot = 0; slot < casket.size() && muscleCount > 0; slot++) {
-            ItemStack stack = casket.getStack(slot);
-            if (stack.isEmpty()) {
-                continue;
-            }
-            if (OverlordItemTags.MUSCLE_MEAT.contains(stack.getItem())) {
-                muscleCount = reduceStack(casket, slot, stack, muscleCount);
-            }
+        for (ItemStack byproduct : byproducts) {
+            entity.getInventory().insertStack(byproduct);
         }
+        findAndEquipArmor(entity, inventory);
+        gatherWeapons(entity, inventory);
+        // gather augment before armor - no deception from wearing the skeleton skulls instead of using them as augments
+        gatherAugment(entity, inventory);
+        gatherExtraArmor(entity, inventory);
+
+        return entity;
     }
 
-    public static boolean hasSkin(Inventory casket) {
-        int skinCount = 0;
-        for (int slot = 0; slot < casket.size(); slot++) {
-            ItemStack stack = casket.getStack(slot);
-            if (stack.isEmpty()) {
-                continue;
-            }
-            if (OverlordItemTags.FLESH.contains(stack.getItem())) {
-                skinCount += stack.getCount();
-            }
-        }
-        return skinCount >= REQUIRED_SKIN_COUNT;
+    public void setSkeletonRecipes(Collection<SkeletonRecipe> skeletonRecipes) {
+        this.skeletonRecipes.clear();
+        this.skeletonRecipes.addAll(skeletonRecipes);
     }
 
-    public static void removeSkin(Inventory casket) {
-        int skinCount = REQUIRED_SKIN_COUNT;
-        for (int slot = 0; slot < casket.size() && skinCount > 0; slot++) {
-            ItemStack stack = casket.getStack(slot);
-            if (stack.isEmpty()) {
-                continue;
-            }
-            if (OverlordItemTags.FLESH.contains(stack.getItem())) {
-                skinCount = reduceStack(casket, slot, stack, skinCount);
-            }
-        }
-    }
-
-    public static boolean hasDye(Inventory casket) {
-        int dyeCount = 0;
-        for (int slot = 0; slot < casket.size(); slot++) {
-            ItemStack stack = casket.getStack(slot);
-            if (stack.isEmpty()) {
-                continue;
-            }
-            if (stack.getItem() instanceof DyeItem) {
-                dyeCount += stack.getCount();
-            }
-        }
-        return dyeCount >= REQUIRED_DYE_COUNT;
-    }
-
-    public static void removeDye(Inventory casket) {
-        int dyeCount = REQUIRED_DYE_COUNT;
-        for (int slot = 0; slot < casket.size() && dyeCount > 0; slot++) {
-            ItemStack stack = casket.getStack(slot);
-            if (stack.isEmpty()) {
-                continue;
-            }
-            if (stack.getItem() instanceof DyeItem) {
-                dyeCount = reduceStack(casket, slot, stack, dyeCount);
-            }
-        }
-    }
-
-    public static void findAndEquipArmor(OwnedSkeletonEntity entity, Inventory casket) {
+    private void findAndEquipArmor(OwnedSkeletonEntity entity, Inventory casket) {
         CommonPriorityMappers commonPriorityMappers = DIContainer.get().getInstance(CommonPriorityMappers.class);
         Map<Integer, ItemStack> armorSlots = Maps.newHashMap();
         for (int slot = 0; slot < casket.size(); slot++) {
@@ -182,7 +121,7 @@ public class SkeletonBuilder
         }
     }
 
-    public static void gatherWeapons(OwnedSkeletonEntity entity, Inventory casket) {
+    private void gatherWeapons(OwnedSkeletonEntity entity, Inventory casket) {
         CommonPriorityMappers commonPriorityMappers = DIContainer.get().getInstance(CommonPriorityMappers.class);
         Map<Integer, ItemStack> weaponSlots = Maps.newHashMap();
         boolean equippedOffhand = false;
@@ -252,7 +191,7 @@ public class SkeletonBuilder
         }
     }
 
-    public static void gatherExtraArmor(OwnedSkeletonEntity entity, Inventory casket) {
+    private void gatherExtraArmor(OwnedSkeletonEntity entity, Inventory casket) {
         CommonPriorityMappers commonPriorityMappers = DIContainer.get().getInstance(CommonPriorityMappers.class);
         Map<Integer, ItemStack> armorSlots = Maps.newHashMap();
         for (int slot = 0; slot < casket.size(); slot++) {
@@ -273,7 +212,7 @@ public class SkeletonBuilder
         }
     }
 
-    public static void gatherAugment(OwnedSkeletonEntity entity, Inventory casket) {
+    private void gatherAugment(OwnedSkeletonEntity entity, Inventory casket) {
         InventorySearcher inventorySearcher = DIContainer.get().getInstance(InventorySearcher.class);
         HeadBlockAugmentRegistry headBlockAugmentRegistry = DIContainer.get().getInstance(HeadBlockAugmentRegistry.class);
         Integer slot = inventorySearcher.getFirstSlotMatching(casket, stack -> {
@@ -291,39 +230,7 @@ public class SkeletonBuilder
         entity.setAugmentBlock(augmentStack);
     }
 
-    public static OwnedSkeletonEntity build(Inventory casket, World world, Tombstone tombstone) {
-        OwnedSkeletonEntity entity = OwnedSkeletonEntity.create(world, tombstone.getOwner());
-        removeEssentialContents(casket);
-        boolean hasSkin = hasSkin(casket);
-        if (hasMuscles(casket)) {
-            entity.setHasMuscles(true);
-            removeMuscles(casket);
-        }
-        if (hasSkin) {
-            entity.setHasSkin(true);
-            removeSkin(casket);
-        }
-        if (!tombstone.getNameText().isEmpty()) {
-            String skinName = tombstone.getNameText().trim();
-            if (hasSkin && PlayerNameHelper.VALID_NAME_REGEX.matcher(skinName).matches() && hasDye(casket)) {
-                UserCache.setUseRemote(true);
-                Optional<GameProfile> profile = world.getServer().getUserCache().findByName(skinName);
-                if (profile.isPresent()) {
-                    removeDye(casket);
-                    entity.setSkinsuit(profile.get().getId());
-                }
-            }
-            entity.setCustomName(new LiteralText(tombstone.getNameText()));
-        }
-        findAndEquipArmor(entity, casket);
-        gatherWeapons(entity, casket);
-        // gather augment before armor - no deception from wearing the skeleton skulls instead of using them as augments
-        gatherAugment(entity, casket);
-        gatherExtraArmor(entity, casket);
-        return entity;
-    }
-
-    public static int reduceStack(Inventory inv, int slot, ItemStack stack, int amount) {
+    private int reduceStack(Inventory inv, int slot, ItemStack stack, int amount) {
         if (stack.getCount() > amount) {
             stack.setCount(stack.getCount() - amount);
             return 0;

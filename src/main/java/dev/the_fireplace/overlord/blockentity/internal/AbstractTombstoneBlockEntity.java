@@ -1,10 +1,11 @@
 package dev.the_fireplace.overlord.blockentity.internal;
 
+import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.overlord.blockentity.CasketBlockEntity;
 import dev.the_fireplace.overlord.domain.blockentity.Tombstone;
+import dev.the_fireplace.overlord.domain.entity.creation.SkeletonBuilder;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import dev.the_fireplace.overlord.entity.ai.aiconfig.movement.PositionSetting;
-import dev.the_fireplace.overlord.util.SkeletonBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.Material;
@@ -16,8 +17,11 @@ import net.minecraft.world.World;
 
 public abstract class AbstractTombstoneBlockEntity extends BlockEntity implements Tombstone
 {
+    protected final SkeletonBuilder skeletonBuilder;
+
     public AbstractTombstoneBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+        this.skeletonBuilder = DIContainer.get().getInstance(SkeletonBuilder.class);
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, AbstractTombstoneBlockEntity be) {
@@ -42,10 +46,10 @@ public abstract class AbstractTombstoneBlockEntity extends BlockEntity implement
         if (!world.isSkyVisible(soilPos1.up()) || !world.isSkyVisible(soilPos2.up()) || !world.isSkyVisible(pos.up())) {
             return;
         }
-        if (!SkeletonBuilder.hasEssentialContents(casketEntity)) {
+        if (!be.skeletonBuilder.canBuildWithIngredients(casketEntity)) {
             return;
         }
-        OwnedSkeletonEntity skeleton = SkeletonBuilder.build(casketEntity, casketEntity.getWorld(), be);
+        OwnedSkeletonEntity skeleton = be.skeletonBuilder.build(casketEntity, casketEntity.getWorld(), be);
         skeleton.updatePosition(soilPos1.getX(), soilPos1.getY() + 1, soilPos1.getZ());
         skeleton.getAISettings().getMovement().setHome(new PositionSetting(soilPos1.getX(), soilPos1.getY() + 1, soilPos1.getZ()));
         world.spawnEntity(skeleton);
