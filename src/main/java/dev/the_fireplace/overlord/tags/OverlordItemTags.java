@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.tags;
 
 import dev.the_fireplace.overlord.Overlord;
-import net.fabricmc.fabric.api.tag.TagRegistry;
+import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.item.Item;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
@@ -14,6 +14,6 @@ public final class OverlordItemTags
     public static Tag.Identified<Item> MUSCLE_MEAT = build("muscle_meat");
 
     private static Tag.Identified<Item> build(String name) {
-        return (Tag.Identified<Item>) TagRegistry.item(new Identifier(Overlord.MODID, name));
+        return TagFactory.ITEM.create(new Identifier(Overlord.MODID, name));
     }
 }
