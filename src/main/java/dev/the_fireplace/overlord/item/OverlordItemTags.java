@@ -14,6 +14,7 @@ public final class OverlordItemTags
     public static Tag<Item> MUSCLE_MEAT = build("muscle_meat");
 
     public static Tag<Item> DYES = buildCommon("dyes");
+    public static Tag<Item> BONES = buildCommon("bones");
 
     private static Tag<Item> build(String name) {
         return TagRegistry.item(new Identifier(Overlord.MODID, name));

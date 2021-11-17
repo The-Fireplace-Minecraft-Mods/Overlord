@@ -37,6 +37,9 @@ public class ItemTagsProvider extends AbstractTagProvider<Item> {
             Items.LEATHER,
             Items.PHANTOM_MEMBRANE
         );
+        this.getOrCreateTagBuilder(OverlordItemTags.BONES).add(
+            Items.BONE
+        );
         this.getOrCreateTagBuilder(OverlordItemTags.DYES).add(
             Items.WHITE_DYE,
             Items.ORANGE_DYE,

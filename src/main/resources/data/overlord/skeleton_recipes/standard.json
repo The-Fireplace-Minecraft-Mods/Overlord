@@ -3,8 +3,8 @@
   "essential": {
     "ingredients": [
       {
-        "type": "item",
-        "id": "minecraft:bone",
+        "type": "tag",
+        "id": "c:bones",
         "count": 64
       },
       {
