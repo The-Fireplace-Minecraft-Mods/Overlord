@@ -1,4 +1,4 @@
-package dev.the_fireplace.overlord.client;
+package dev.the_fireplace.overlord.entrypoints;
 
 import com.google.inject.Injector;
 import dev.the_fireplace.annotateddi.api.entrypoints.ClientDIModInitializer;
@@ -32,7 +32,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 @Environment(EnvType.CLIENT)
-public final class OverlordClient implements ClientDIModInitializer {
+public final class Client implements ClientDIModInitializer
+{
     @Override
     public void onInitializeClient(Injector diContainer) {
         registerEntityRenderers();
