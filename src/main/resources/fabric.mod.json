@@ -20,10 +20,10 @@
   "environment": "*",
   "entrypoints": {
     "di-main": [
-      "dev.the_fireplace.overlord.Overlord"
+      "dev.the_fireplace.overlord.entrypoints.Main"
     ],
     "di-client": [
-      "dev.the_fireplace.overlord.client.OverlordClient"
+      "dev.the_fireplace.overlord.entrypoints.Client"
     ]
   },
   "mixins": [
