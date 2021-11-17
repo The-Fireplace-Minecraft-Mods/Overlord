@@ -1,9 +1,8 @@
 package dev.the_fireplace.overlord.datagen;
 
+import dev.the_fireplace.overlord.block.OverlordBlockTags;
 import dev.the_fireplace.overlord.block.OverlordBlocks;
-import dev.the_fireplace.overlord.tags.OverlordBlockTags;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.server.AbstractTagProvider;
 import net.minecraft.tag.Tag;
@@ -39,7 +38,6 @@ public class BlockTagsProvider extends AbstractTagProvider<Block> {
             OverlordBlocks.WARPED_GRAVE_MARKER,
             OverlordBlocks.CRIMSON_GRAVE_MARKER
         );
-        this.getOrCreateTagBuilder(OverlordBlockTags.DIRT).add(Blocks.DIRT, Blocks.COARSE_DIRT, Blocks.GRASS_BLOCK, Blocks.PODZOL, Blocks.MYCELIUM, OverlordBlocks.BLOOD_SOAKED_SOIL);
     }
 
     @Override
