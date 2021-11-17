@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.datagen;
 
-import dev.the_fireplace.overlord.tags.OverlordBlockTags;
-import dev.the_fireplace.overlord.tags.OverlordItemTags;
+import dev.the_fireplace.overlord.block.OverlordBlockTags;
+import dev.the_fireplace.overlord.item.OverlordItemTags;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.server.AbstractTagProvider;
@@ -38,6 +38,24 @@ public class ItemTagsProvider extends AbstractTagProvider<Item>
         this.getOrCreateTagBuilder(OverlordItemTags.FLESH).add(
             Items.LEATHER,
             Items.PHANTOM_MEMBRANE
+        );
+        this.getOrCreateTagBuilder(OverlordItemTags.DYES).add(
+            Items.WHITE_DYE,
+            Items.ORANGE_DYE,
+            Items.MAGENTA_DYE,
+            Items.LIGHT_BLUE_DYE,
+            Items.YELLOW_DYE,
+            Items.LIME_DYE,
+            Items.PINK_DYE,
+            Items.GRAY_DYE,
+            Items.LIGHT_GRAY_DYE,
+            Items.CYAN_DYE,
+            Items.PURPLE_DYE,
+            Items.BLUE_DYE,
+            Items.BROWN_DYE,
+            Items.GREEN_DYE,
+            Items.RED_DYE,
+            Items.BLACK_DYE
         );
     }
 

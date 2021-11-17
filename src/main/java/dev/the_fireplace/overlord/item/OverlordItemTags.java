@@ -1,4 +1,4 @@
-package dev.the_fireplace.overlord.tags;
+package dev.the_fireplace.overlord.item;
 
 import dev.the_fireplace.overlord.Overlord;
 import net.fabricmc.fabric.api.tag.TagFactory;
@@ -13,7 +13,13 @@ public final class OverlordItemTags
     public static Tag.Identified<Item> FLESH = build("flesh");
     public static Tag.Identified<Item> MUSCLE_MEAT = build("muscle_meat");
 
+    public static Tag.Identified<Item> DYES = buildCommon("dyes");
+
     private static Tag.Identified<Item> build(String name) {
         return TagFactory.ITEM.create(new Identifier(Overlord.MODID, name));
+    }
+
+    private static Tag.Identified<Item> buildCommon(String name) {
+        return TagFactory.ITEM.create(new Identifier("c", name));
     }
 }
