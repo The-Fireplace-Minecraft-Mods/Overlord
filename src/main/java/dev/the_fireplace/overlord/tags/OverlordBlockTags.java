@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.tags;
 
 import dev.the_fireplace.overlord.Overlord;
-import net.fabricmc.fabric.api.tag.TagRegistry;
+import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.block.Block;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
@@ -14,6 +14,6 @@ public final class OverlordBlockTags
     public static Tag.Identified<Block> DIRT = build("dirt");
 
     private static Tag.Identified<Block> build(String name) {
-        return (Tag.Identified<Block>) TagRegistry.block(new Identifier(Overlord.MODID, name));
+        return TagFactory.BLOCK.create(new Identifier(Overlord.MODID, name));
     }
 }
