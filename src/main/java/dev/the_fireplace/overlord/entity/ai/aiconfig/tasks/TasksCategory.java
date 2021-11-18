@@ -23,6 +23,10 @@ public interface TasksCategory {
 
     void setBeekeeping(boolean beekeeping);
 
+    boolean isGatheringMilk();
+
+    void setGatheringMilk(boolean gatheringMilk);
+
     boolean isFarming();
 
     void setFarming(boolean farming);

@@ -24,6 +24,9 @@ public abstract class SwapEquipmentGoal extends Goal
         armyEntity.setSwappingEquipment(false);
     }
 
+    /**
+     * DO NOT call this from shouldContinue, it has a delay built in to reduce lag. Always call super.canStart() before your own canStart conditions
+     */
     @Override
     public boolean canStart() {
         long worldTime = this.armyEntity.world.getTime();
