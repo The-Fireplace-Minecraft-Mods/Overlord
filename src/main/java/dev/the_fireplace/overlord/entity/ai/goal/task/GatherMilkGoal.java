@@ -17,8 +17,8 @@ import java.util.function.Predicate;
 
 public class GatherMilkGoal extends TaskGoal
 {
-    protected static final int COW_SEARCH_DISTANCE = 8;
     protected static final Predicate<ItemStack> EMPTY_BUCKET_MATCHER = stack -> stack.isOf(Items.BUCKET);
+    protected final short searchDistance;
 
     protected byte postSwapCooldownTicks;
     protected CowEntity cow;
@@ -29,8 +29,9 @@ public class GatherMilkGoal extends TaskGoal
     private int updateCountdownTicks;
     protected float speed = 1;
 
-    public GatherMilkGoal(ArmyEntity armyEntity) {
+    public GatherMilkGoal(ArmyEntity armyEntity, short searchDistance) {
         super(armyEntity);
+        this.searchDistance = searchDistance;
         this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }
 
@@ -63,7 +64,7 @@ public class GatherMilkGoal extends TaskGoal
             armyEntity.getX(),
             armyEntity.getY(),
             armyEntity.getZ(),
-            armyEntity.getBoundingBox().expand(COW_SEARCH_DISTANCE)
+            armyEntity.getBoundingBox().expand(searchDistance)
         );
     }
 
@@ -119,6 +120,8 @@ public class GatherMilkGoal extends TaskGoal
             }
             this.armyEntity.giveItemStack(new ItemStack(Items.MILK_BUCKET));
             this.postSwapCooldownTicks = this.armyEntity.getEquipmentSwapTicks();
+
+            //TODO maybe spook the cow if the skeleton isn't playerlike?
         }
     }
 
