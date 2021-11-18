@@ -6,11 +6,12 @@ import net.minecraft.nbt.CompoundTag;
 
 import java.util.UUID;
 
-public final class TasksCategoryImpl implements SettingsComponent, TasksCategory {
-
+public final class TasksCategoryImpl implements SettingsComponent, TasksCategory
+{
     private boolean enabled = true;
 
     //Tasks
+    private boolean pickUpItems = true;
     private boolean woodcutting = false;
     private boolean mining = false;
     private boolean digging = false;
@@ -21,6 +22,9 @@ public final class TasksCategoryImpl implements SettingsComponent, TasksCategory
     private boolean breeding = false;
     private boolean depositItems = false;
     private boolean withdrawItems = false;
+    //Pick Up Items settings
+    private byte itemSearchDistance = 16;
+    private UUID pickUpItemsList = AIListManager.EMPTY_LIST_ID;
     //Woodcutting settings
     private UUID woodcuttingBlockList = AIListManager.EMPTY_LIST_ID;
     private boolean woodcuttingWithoutTools = true;
@@ -43,6 +47,7 @@ public final class TasksCategoryImpl implements SettingsComponent, TasksCategory
         CompoundTag tag = new CompoundTag();
 
         tag.putBoolean("enabled", enabled);
+        tag.putBoolean("pickUpItems", pickUpItems);
         tag.putBoolean("woodcutting", woodcutting);
         tag.putBoolean("mining", mining);
         tag.putBoolean("digging", digging);
@@ -53,6 +58,8 @@ public final class TasksCategoryImpl implements SettingsComponent, TasksCategory
         tag.putBoolean("breeding", breeding);
         tag.putBoolean("depositItems", depositItems);
         tag.putBoolean("withdrawItems", withdrawItems);
+        tag.putByte("itemSearchDistance", itemSearchDistance);
+        tag.putUuid("pickUpItemsList", pickUpItemsList);
         tag.putUuid("woodcuttingBlockList", woodcuttingBlockList);
         tag.putBoolean("woodcuttingWithoutTools", woodcuttingWithoutTools);
         tag.putUuid("miningBlockList", miningBlockList);
@@ -70,6 +77,9 @@ public final class TasksCategoryImpl implements SettingsComponent, TasksCategory
     public void readTag(CompoundTag tag) {
         if (tag.contains("enabled")) {
             enabled = tag.getBoolean("enabled");
+        }
+        if (tag.contains("pickUpItems")) {
+            pickUpItems = tag.getBoolean("pickUpItems");
         }
         if (tag.contains("woodcutting")) {
             woodcutting = tag.getBoolean("woodcutting");
@@ -100,6 +110,12 @@ public final class TasksCategoryImpl implements SettingsComponent, TasksCategory
         }
         if (tag.contains("withdrawItems")) {
             withdrawItems = tag.getBoolean("withdrawItems");
+        }
+        if (tag.contains("itemSearchDistance")) {
+            itemSearchDistance = tag.getByte("itemSearchDistance");
+        }
+        if (tag.contains("pickUpItemsList")) {
+            pickUpItemsList = tag.getUuid("pickUpItemsList");
         }
         if (tag.contains("woodcuttingBlockList")) {
             woodcuttingBlockList = tag.getUuid("woodcuttingBlockList");
@@ -138,6 +154,36 @@ public final class TasksCategoryImpl implements SettingsComponent, TasksCategory
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    @Override
+    public boolean isPickUpItems() {
+        return this.pickUpItems;
+    }
+
+    @Override
+    public void setPickUpItems(boolean enabled) {
+        this.pickUpItems = enabled;
+    }
+
+    @Override
+    public byte getItemSearchDistance() {
+        return this.itemSearchDistance;
+    }
+
+    @Override
+    public void setItemSearchDistance(byte itemSearchDistance) {
+        this.itemSearchDistance = itemSearchDistance;
+    }
+
+    @Override
+    public UUID getPickUpItemsList() {
+        return this.pickUpItemsList;
+    }
+
+    @Override
+    public void setPickUpItemsList(UUID pickUpItemsList) {
+        this.pickUpItemsList = pickUpItemsList;
     }
 
     @Override

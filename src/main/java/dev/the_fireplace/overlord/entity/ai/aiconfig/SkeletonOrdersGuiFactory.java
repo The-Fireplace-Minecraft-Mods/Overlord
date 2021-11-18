@@ -36,6 +36,7 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory
 {
 	private static final String TRANSLATION_BASE = "gui." + Overlord.MODID + ".aisettings.";
 	private static final String OPTION_TRANSLATION_BASE = TRANSLATION_BASE + "option.";
+	private static final String ENABLED_TRANSLATION_KEY = OPTION_TRANSLATION_BASE + "enabled";
 	private static final String COMBAT_TRANSLATION_BASE = OPTION_TRANSLATION_BASE + "combat.";
 	private static final String MOVEMENT_TRANSLATION_BASE = OPTION_TRANSLATION_BASE + "movement.";
 	private static final String TASK_TRANSLATION_BASE = OPTION_TRANSLATION_BASE + "task.";
@@ -97,7 +98,7 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory
 	private void addCombatCategory(CombatCategory currentSettings) {
 		CombatCategory defaults = defaultSettings.getCombat();
 		OptionBuilder<Boolean> enabled = this.screenBuilder.addBoolToggle(
-			OPTION_TRANSLATION_BASE + "enabled",
+			ENABLED_TRANSLATION_KEY,
 			currentSettings.isEnabled(),
 			defaults.isEnabled(),
 			currentSettings::setEnabled
@@ -171,7 +172,7 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory
 	private void addMovementCategory(MovementCategory currentSettings) {
 		MovementCategory defaults = defaultSettings.getMovement();
 		OptionBuilder<Boolean> enabled = this.screenBuilder.addBoolToggle(
-			OPTION_TRANSLATION_BASE + "enabled",
+			ENABLED_TRANSLATION_KEY,
 			currentSettings.isEnabled(),
 			defaults.isEnabled(),
 			currentSettings::setEnabled
@@ -237,14 +238,14 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory
 	private void addTasksCategory(TasksCategory currentSettings) {
 		TasksCategory defaults = defaultSettings.getTasks();
 		OptionBuilder<Boolean> enabled = this.screenBuilder.addBoolToggle(
-			OPTION_TRANSLATION_BASE + "enabled",
+			ENABLED_TRANSLATION_KEY,
 			currentSettings.isEnabled(),
 			defaults.isEnabled(),
 			currentSettings::setEnabled
 		).setDescriptionRowCount((byte) 0);
 		this.screenBuilder.startSubCategory(TASK_TRANSLATION_BASE + "gatherMilk");
 		OptionBuilder<Boolean> gatherMilkEnabled = this.screenBuilder.addBoolToggle(
-			OPTION_TRANSLATION_BASE + "enabled",
+			ENABLED_TRANSLATION_KEY,
 			currentSettings.isGatheringMilk(),
 			defaults.isGatheringMilk(),
 			currentSettings::setGatheringMilk
@@ -256,11 +257,34 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory
 			currentSettings::setCowSearchDistance
 		).setMinimum((short) 1).setMaximum((short) 512).setDescriptionRowCount((byte) 0).addDependency(gatherMilkEnabled);
 		this.screenBuilder.endSubCategory();
+		this.screenBuilder.startSubCategory(TASK_TRANSLATION_BASE + "gatherItems");
+		OptionBuilder<Boolean> gatherItemsEnabled = this.screenBuilder.addBoolToggle(
+			ENABLED_TRANSLATION_KEY,
+			currentSettings.isPickUpItems(),
+			defaults.isPickUpItems(),
+			currentSettings::setPickUpItems
+		).setDescriptionRowCount((byte) 0).addDependency(enabled);
+		this.screenBuilder.addByteField(
+			TASK_TRANSLATION_BASE + "itemSearchDistance",
+			currentSettings.getItemSearchDistance(),
+			defaults.getItemSearchDistance(),
+			currentSettings::setItemSearchDistance
+		).setMinimum((byte) 1).setMaximum(Byte.MAX_VALUE).setDescriptionRowCount((byte) 0).addDependency(gatherItemsEnabled);
+		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+			this.addUniversalList(
+				TASK_TRANSLATION_BASE + "gatherItemsList",
+				currentSettings.getPickUpItemsList(),
+				defaults.getPickUpItemsList(),
+				currentSettings::setPickUpItemsList
+			).addDependency(gatherItemsEnabled);
+		}
+		this.screenBuilder.endSubCategory();
 
 
 		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-			OptionBuilder<Boolean> woodcutting = this.screenBuilder.addBoolToggle(
-				TASK_TRANSLATION_BASE + "woodcutting",
+			this.screenBuilder.startSubCategory(TASK_TRANSLATION_BASE + "woodcutting");
+			OptionBuilder<Boolean> woodcuttingEnabled = this.screenBuilder.addBoolToggle(
+				ENABLED_TRANSLATION_KEY,
 				currentSettings.isWoodcutting(),
 				defaults.isWoodcutting(),
 				currentSettings::setWoodcutting
@@ -270,13 +294,14 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory
 				currentSettings.getWoodcuttingBlockList(),
 				defaults.getWoodcuttingBlockList(),
 				currentSettings::setWoodcuttingBlockList
-			).addDependency(woodcutting);
+			).addDependency(woodcuttingEnabled);
 			this.screenBuilder.addBoolToggle(
 				TASK_TRANSLATION_BASE + "woodcuttingWithoutTools",
 				currentSettings.isWoodcuttingWithoutTools(),
 				defaults.isWoodcuttingWithoutTools(),
 				currentSettings::setWoodcuttingWithoutTools
-			).setDescriptionRowCount((byte) 0).addDependency(woodcutting);
+			).setDescriptionRowCount((byte) 0).addDependency(woodcuttingEnabled);
+			this.screenBuilder.endSubCategory();
 		}
 	}
 

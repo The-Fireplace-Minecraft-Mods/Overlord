@@ -1,3 +1,4 @@
 Make skeleton creation recipe(s) customizable with data packs
 Make a config for the milk amounts needed to grow skeletons
-Allow skeletons to gather milk on their own
+Add the ability for skeletons to gather milk
+Add the ability for skeletons to pick up items
