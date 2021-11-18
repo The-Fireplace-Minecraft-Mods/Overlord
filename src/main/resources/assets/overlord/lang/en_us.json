@@ -60,5 +60,11 @@
   "gui.overlord.aisettings.option.task.woodcuttingBlockList": "Woodcutting Block Targets",
   "gui.overlord.aisettings.option.misc.saveDamagedEquipment": "Save Damaged Equipment",
   "gui.overlord.aisettings.option.misc.saveEquipmentList": "Equipment to Save",
-  "gui.overlord.aisettings.option.misc.loadChunks": "Load Chunks"
+  "gui.overlord.aisettings.option.misc.loadChunks": "Load Chunks",
+  "text.config.overlord.title": "Overlord Config",
+  "text.config.overlord.milkAmounts": "Skeleton Growth Total Milk Amounts",
+  "text.config.overlord.option.quarterGrownMilkCount": "Quarter Grown",
+  "text.config.overlord.option.halfGrownMilkCount": "Half Grown",
+  "text.config.overlord.option.threeQuartersGrownMilkCount": "Three Quarters Grown",
+  "text.config.overlord.option.fullyGrownMilkCount": "Fully Grown"
 }
