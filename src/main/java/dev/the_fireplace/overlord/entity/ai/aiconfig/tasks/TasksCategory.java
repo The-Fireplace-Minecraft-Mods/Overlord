@@ -27,6 +27,10 @@ public interface TasksCategory {
 
     void setGatheringMilk(boolean gatheringMilk);
 
+    short getCowSearchDistance();
+
+    void setCowSearchDistance(short distance);
+
     boolean isFarming();
 
     void setFarming(boolean farming);

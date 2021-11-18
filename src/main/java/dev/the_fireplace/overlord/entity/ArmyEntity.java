@@ -138,7 +138,7 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
     protected int addTaskGoals(int goalWeight, TasksCategory tasks) {
         if (tasks.isEnabled()) {
             if (tasks.isGatheringMilk()) {
-                this.goalSelector.add(goalWeight++, new GatherMilkGoal(this));
+                this.goalSelector.add(goalWeight++, new GatherMilkGoal(this, tasks.getCowSearchDistance()));
             }
         }
         return goalWeight;

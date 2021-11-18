@@ -35,6 +35,8 @@ public final class TasksCategoryImpl implements SettingsComponent, TasksCategory
     private boolean harvestAngryHives = false;
     //Breeding settings
     private UUID breedingEntityList = AIListManager.ALL_ANIMALS_LIST_ID;
+    //Gathering Milk settings
+    private short cowSearchDistance = 16;
 
     @Override
     public NbtCompound toTag() {
@@ -59,6 +61,7 @@ public final class TasksCategoryImpl implements SettingsComponent, TasksCategory
         tag.putBoolean("diggingWithoutTools", diggingWithoutTools);
         tag.putBoolean("harvestAngryHives", harvestAngryHives);
         tag.putUuid("breedingEntityList", breedingEntityList);
+        tag.putShort("cowSearchDistance", cowSearchDistance);
 
         return tag;
     }
@@ -122,6 +125,9 @@ public final class TasksCategoryImpl implements SettingsComponent, TasksCategory
         if (tag.contains("breedingEntityList")) {
             breedingEntityList = tag.getUuid("breedingEntityList");
         }
+        if (tag.contains("cowSearchDistance")) {
+            cowSearchDistance = tag.getShort("cowSearchDistance");
+        }
     }
 
     @Override
@@ -182,6 +188,16 @@ public final class TasksCategoryImpl implements SettingsComponent, TasksCategory
     @Override
     public void setGatheringMilk(boolean gatheringMilk) {
         this.gatheringMilk = gatheringMilk;
+    }
+
+    @Override
+    public short getCowSearchDistance() {
+        return cowSearchDistance;
+    }
+
+    @Override
+    public void setCowSearchDistance(short distance) {
+        this.cowSearchDistance = distance;
     }
 
     @Override

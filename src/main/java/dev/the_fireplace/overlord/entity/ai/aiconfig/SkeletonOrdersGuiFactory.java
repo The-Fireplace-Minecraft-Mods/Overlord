@@ -1,4 +1,4 @@
-package dev.the_fireplace.overlord.client.gui;
+package dev.the_fireplace.overlord.entity.ai.aiconfig;
 
 import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.lib.api.chat.injectables.TranslatorFactory;
@@ -14,7 +14,6 @@ import dev.the_fireplace.overlord.domain.client.OrdersGuiFactory;
 import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
 import dev.the_fireplace.overlord.domain.network.ClientToServerPacketIDs;
 import dev.the_fireplace.overlord.domain.network.client.SaveAIPacketBufferBuilder;
-import dev.the_fireplace.overlord.entity.ai.aiconfig.AISettings;
 import dev.the_fireplace.overlord.entity.ai.aiconfig.combat.CombatCategory;
 import dev.the_fireplace.overlord.entity.ai.aiconfig.misc.MiscCategory;
 import dev.the_fireplace.overlord.entity.ai.aiconfig.movement.EnumMovementMode;
@@ -237,18 +236,26 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory
 
 	private void addTasksCategory(TasksCategory currentSettings) {
 		TasksCategory defaults = defaultSettings.getTasks();
-		this.screenBuilder.addBoolToggle(
+		OptionBuilder<Boolean> enabled = this.screenBuilder.addBoolToggle(
 			OPTION_TRANSLATION_BASE + "enabled",
 			currentSettings.isEnabled(),
 			defaults.isEnabled(),
 			currentSettings::setEnabled
 		).setDescriptionRowCount((byte) 0);
-		this.screenBuilder.addBoolToggle(
-			TASK_TRANSLATION_BASE + "gatherMilk",
+		this.screenBuilder.startSubCategory(TASK_TRANSLATION_BASE + "gatherMilk");
+		OptionBuilder<Boolean> gatherMilkEnabled = this.screenBuilder.addBoolToggle(
+			OPTION_TRANSLATION_BASE + "enabled",
 			currentSettings.isGatheringMilk(),
 			defaults.isGatheringMilk(),
 			currentSettings::setGatheringMilk
-		).setDescriptionRowCount((byte) 0);
+		).setDescriptionRowCount((byte) 0).addDependency(enabled);
+		this.screenBuilder.addShortField(
+			TASK_TRANSLATION_BASE + "cowSearchDistance",
+			currentSettings.getCowSearchDistance(),
+			defaults.getCowSearchDistance(),
+			currentSettings::setCowSearchDistance
+		).setMinimum((short) 1).setMaximum((short) 512).setDescriptionRowCount((byte) 0).addDependency(gatherMilkEnabled);
+		this.screenBuilder.endSubCategory();
 
 
 		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
