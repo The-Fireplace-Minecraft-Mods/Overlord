@@ -86,10 +86,10 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory
 		this.screenBuilder.startCategory(TRANSLATION_BASE + "movement");
 		addMovementCategory(currentSettings.getMovement());
 
-		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-			this.screenBuilder.startCategory(TRANSLATION_BASE + "tasks");
-			addTasksCategory(currentSettings.getTasks());
+		this.screenBuilder.startCategory(TRANSLATION_BASE + "tasks");
+		addTasksCategory(currentSettings.getTasks());
 
+		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
 			this.screenBuilder.startCategory(TRANSLATION_BASE + "misc");
 			addMiscCategory(currentSettings.getMisc());
 		}
@@ -243,24 +243,34 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory
 			defaults.isEnabled(),
 			currentSettings::setEnabled
 		).setDescriptionRowCount((byte) 0);
-		OptionBuilder<Boolean> woodcutting = this.screenBuilder.addBoolToggle(
-			TASK_TRANSLATION_BASE + "woodcutting",
-			currentSettings.isWoodcutting(),
-			defaults.isWoodcutting(),
-			currentSettings::setWoodcutting
-		).setDescriptionRowCount((byte) 0);
-		this.addUniversalList(
-			TASK_TRANSLATION_BASE + "woodcuttingBlockList",
-			currentSettings.getWoodcuttingBlockList(),
-			defaults.getWoodcuttingBlockList(),
-			currentSettings::setWoodcuttingBlockList
-		).addDependency(woodcutting);
 		this.screenBuilder.addBoolToggle(
-			TASK_TRANSLATION_BASE + "woodcuttingWithoutTools",
-			currentSettings.isWoodcuttingWithoutTools(),
-			defaults.isWoodcuttingWithoutTools(),
-			currentSettings::setWoodcuttingWithoutTools
-		).setDescriptionRowCount((byte) 0).addDependency(woodcutting);
+			TASK_TRANSLATION_BASE + "gatherMilk",
+			currentSettings.isGatheringMilk(),
+			defaults.isGatheringMilk(),
+			currentSettings::setGatheringMilk
+		).setDescriptionRowCount((byte) 0);
+
+
+		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+			OptionBuilder<Boolean> woodcutting = this.screenBuilder.addBoolToggle(
+				TASK_TRANSLATION_BASE + "woodcutting",
+				currentSettings.isWoodcutting(),
+				defaults.isWoodcutting(),
+				currentSettings::setWoodcutting
+			).setDescriptionRowCount((byte) 0);
+			this.addUniversalList(
+				TASK_TRANSLATION_BASE + "woodcuttingBlockList",
+				currentSettings.getWoodcuttingBlockList(),
+				defaults.getWoodcuttingBlockList(),
+				currentSettings::setWoodcuttingBlockList
+			).addDependency(woodcutting);
+			this.screenBuilder.addBoolToggle(
+				TASK_TRANSLATION_BASE + "woodcuttingWithoutTools",
+				currentSettings.isWoodcuttingWithoutTools(),
+				defaults.isWoodcuttingWithoutTools(),
+				currentSettings::setWoodcuttingWithoutTools
+			).setDescriptionRowCount((byte) 0).addDependency(woodcutting);
+		}
 	}
 
 	private void addMiscCategory(MiscCategory currentSettings) {

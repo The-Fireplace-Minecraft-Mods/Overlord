@@ -16,6 +16,7 @@ public final class TasksCategoryImpl implements SettingsComponent, TasksCategory
     private boolean digging = false;
     private boolean beekeeping = false;
     private boolean farming = false;
+    private boolean gatheringMilk = true;
     private boolean building = false;
     private boolean breeding = false;
     private boolean depositItems = false;
@@ -45,6 +46,7 @@ public final class TasksCategoryImpl implements SettingsComponent, TasksCategory
         tag.putBoolean("digging", digging);
         tag.putBoolean("beekeeping", beekeeping);
         tag.putBoolean("farming", farming);
+        tag.putBoolean("gatheringMilk", gatheringMilk);
         tag.putBoolean("building", building);
         tag.putBoolean("breeding", breeding);
         tag.putBoolean("depositItems", depositItems);
@@ -80,6 +82,9 @@ public final class TasksCategoryImpl implements SettingsComponent, TasksCategory
         }
         if (tag.contains("farming")) {
             farming = tag.getBoolean("farming");
+        }
+        if (tag.contains("gatheringMilk")) {
+            gatheringMilk = tag.getBoolean("gatheringMilk");
         }
         if (tag.contains("building")) {
             building = tag.getBoolean("building");
@@ -167,6 +172,16 @@ public final class TasksCategoryImpl implements SettingsComponent, TasksCategory
     @Override
     public void setBeekeeping(boolean beekeeping) {
         this.beekeeping = beekeeping;
+    }
+
+    @Override
+    public boolean isGatheringMilk() {
+        return gatheringMilk;
+    }
+
+    @Override
+    public void setGatheringMilk(boolean gatheringMilk) {
+        this.gatheringMilk = gatheringMilk;
     }
 
     @Override
