@@ -25,6 +25,7 @@
   "container.casket": "Casket",
   "entity.overlord.owned_skeleton": "Army Skeleton",
   "item.overlord.owned_skeleton_spawn_egg": "Army Skeleton Spawn Egg",
+  "item.overlord.sans_mask": "Sans Mask",
   "gui.overlord.tombstone.edit": "Set Tombstone Name",
   "gui.overlord.owned_skeleton.orders": "Orders",
   "gui.overlord.aisettings.name": "Orders",
