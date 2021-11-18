@@ -24,6 +24,9 @@
     ],
     "di-client": [
       "dev.the_fireplace.overlord.entrypoints.Client"
+    ],
+    "modmenu": [
+      "dev.the_fireplace.overlord.entrypoints.ModMenu"
     ]
   },
   "mixins": [
