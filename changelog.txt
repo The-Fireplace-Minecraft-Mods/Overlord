@@ -1,1 +1,2 @@
 Make skeleton creation recipe(s) customizable with data packs
+Make a config for the milk amounts needed to grow skeletons

@@ -6,6 +6,7 @@ import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.augment.Augments;
+import dev.the_fireplace.overlord.domain.config.ConfigValues;
 import dev.the_fireplace.overlord.domain.entity.AnimatedMilkDrinker;
 import dev.the_fireplace.overlord.domain.entity.AugmentBearer;
 import dev.the_fireplace.overlord.domain.inventory.InventorySearcher;
@@ -62,11 +63,6 @@ import java.util.*;
 
 public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, CrossbowUser, AnimatedMilkDrinker, AugmentBearer
 {
-    public static final int CHILD_REQUIRED_MILK = 4;
-    public static final int PRETEEN_REQUIRED_MILK = 16;
-    public static final int TEEN_REQUIRED_MILK = 64;
-    public static final int ADULT_REQUIRED_MILK = 256;
-
     private static final TrackedData<Boolean> CHARGING = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Boolean> DRINKING_MILK = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Boolean> HAS_TARGET = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -93,6 +89,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     private final InventorySearcher inventorySearcher;
     private final AIEquipmentHelper equipmentHelper;
     private final HeadBlockAugmentRegistry headBlockAugmentRegistry;
+    private final ConfigValues configValues;
 
     /**
      * @deprecated Only public because Minecraft requires it to be. Use the factory.
@@ -109,6 +106,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         inventorySearcher = injector.getInstance(InventorySearcher.class);
         equipmentHelper = injector.getInstance(AIEquipmentHelper.class);
         headBlockAugmentRegistry = injector.getInstance(HeadBlockAugmentRegistry.class);
+        configValues = injector.getInstance(ConfigValues.class);
         calculateDimensions();
     }
 
@@ -203,20 +201,20 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         ) {
             switch (getGrowthPhase()) {
                 case BABY:
-                    setGrowthPhase(SkeletonGrowthPhase.CHILD);
-                    milkBucketsDrank = CHILD_REQUIRED_MILK;
+                    setGrowthPhase(SkeletonGrowthPhase.QUARTER);
+                    milkBucketsDrank = configValues.getQuarterGrownMilkCount();
                     break;
-                case CHILD:
-                    setGrowthPhase(SkeletonGrowthPhase.PRETEEN);
-                    milkBucketsDrank = PRETEEN_REQUIRED_MILK;
+                case QUARTER:
+                    setGrowthPhase(SkeletonGrowthPhase.HALF);
+                    milkBucketsDrank = configValues.getHalfGrownMilkCount();
                     break;
-                case PRETEEN:
-                    setGrowthPhase(SkeletonGrowthPhase.TEEN);
-                    milkBucketsDrank = TEEN_REQUIRED_MILK;
+                case HALF:
+                    setGrowthPhase(SkeletonGrowthPhase.THREE_QUARTERS);
+                    milkBucketsDrank = configValues.getThreeQuartersGrownMilkCount();
                     break;
-                case TEEN:
+                case THREE_QUARTERS:
                     setGrowthPhase(SkeletonGrowthPhase.ADULT);
-                    milkBucketsDrank = ADULT_REQUIRED_MILK;
+                    milkBucketsDrank = configValues.getFullyGrownMilkCount();
                     break;
             }
             return ActionResult.SUCCESS;
@@ -351,7 +349,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     private boolean hasPlayerlikeBody() {
-        return hasMuscles() && getGrowthPhase().ordinal() >= SkeletonGrowthPhase.TEEN.ordinal();
+        return hasMuscles() && getGrowthPhase().ordinal() >= SkeletonGrowthPhase.THREE_QUARTERS.ordinal();
     }
 
     @Override
@@ -608,11 +606,11 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         switch (this.getGrowthPhase()) {
             case BABY:
                 return 40;
-            case CHILD:
+            case QUARTER:
                 return 30;
-            case PRETEEN:
+            case HALF:
                 return 20;
-            case TEEN:
+            case THREE_QUARTERS:
                 return 10;
             case ADULT:
                 return 5;
@@ -831,22 +829,22 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         //TODO particles?
         switch (this.getGrowthPhase()) {
             case BABY:
-                if (milkBucketsDrank >= CHILD_REQUIRED_MILK) {
-                    setGrowthPhase(SkeletonGrowthPhase.CHILD);
+                if (milkBucketsDrank >= configValues.getQuarterGrownMilkCount()) {
+                    setGrowthPhase(SkeletonGrowthPhase.QUARTER);
                 }
                 break;
-            case CHILD:
-                if (milkBucketsDrank >= PRETEEN_REQUIRED_MILK) {
-                    setGrowthPhase(SkeletonGrowthPhase.PRETEEN);
+            case QUARTER:
+                if (milkBucketsDrank >= configValues.getHalfGrownMilkCount()) {
+                    setGrowthPhase(SkeletonGrowthPhase.HALF);
                 }
                 break;
-            case PRETEEN:
-                if (milkBucketsDrank >= TEEN_REQUIRED_MILK) {
-                    setGrowthPhase(SkeletonGrowthPhase.TEEN);
+            case HALF:
+                if (milkBucketsDrank >= configValues.getThreeQuartersGrownMilkCount()) {
+                    setGrowthPhase(SkeletonGrowthPhase.THREE_QUARTERS);
                 }
                 break;
-            case TEEN:
-                if (milkBucketsDrank >= ADULT_REQUIRED_MILK) {
+            case THREE_QUARTERS:
+                if (milkBucketsDrank >= configValues.getFullyGrownMilkCount()) {
                     setGrowthPhase(SkeletonGrowthPhase.ADULT);
                 }
                 break;
