@@ -21,6 +21,7 @@ import dev.the_fireplace.overlord.entity.ai.goal.movement.ReturnHomeGoal;
 import dev.the_fireplace.overlord.entity.ai.goal.movement.WanderAroundHomeGoal;
 import dev.the_fireplace.overlord.entity.ai.goal.target.ArmyAttackWithOwnerGoal;
 import dev.the_fireplace.overlord.entity.ai.goal.target.ArmyTrackOwnerAttackerGoal;
+import dev.the_fireplace.overlord.entity.ai.goal.task.GatherItemGoal;
 import dev.the_fireplace.overlord.entity.ai.goal.task.GatherMilkGoal;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.CrossbowUser;
@@ -139,6 +140,9 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
         if (tasks.isEnabled()) {
             if (tasks.isGatheringMilk()) {
                 this.goalSelector.add(goalWeight++, new GatherMilkGoal(this, tasks.getCowSearchDistance()));
+            }
+            if (tasks.isPickUpItems()) {
+                this.goalSelector.add(goalWeight++, new GatherItemGoal(this, tasks.getItemSearchDistance()));
             }
         }
         return goalWeight;

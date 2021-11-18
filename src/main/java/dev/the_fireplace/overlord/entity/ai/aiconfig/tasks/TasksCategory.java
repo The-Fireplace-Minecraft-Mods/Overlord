@@ -2,10 +2,23 @@ package dev.the_fireplace.overlord.entity.ai.aiconfig.tasks;
 
 import java.util.UUID;
 
-public interface TasksCategory {
+public interface TasksCategory
+{
     boolean isEnabled();
 
     void setEnabled(boolean enabled);
+
+    boolean isPickUpItems();
+
+    void setPickUpItems(boolean enabled);
+
+    byte getItemSearchDistance();
+
+    void setItemSearchDistance(byte itemSearchDistance);
+
+    UUID getPickUpItemsList();
+
+    void setPickUpItemsList(UUID pickUpItemsList);
 
     boolean isWoodcutting();
 
