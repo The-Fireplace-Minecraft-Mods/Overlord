@@ -1,6 +1,7 @@
 package dev.the_fireplace.overlord.item;
 
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
+import dev.the_fireplace.overlord.entity.ai.aiconfig.AISettings;
 import dev.the_fireplace.overlord.entity.ai.aiconfig.movement.PositionSetting;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
@@ -74,10 +75,17 @@ public class OwnedSkeletonSpawnEggItem extends SpawnEggItem {
                 if (context.getPlayer() != null) {
                     ((OwnedSkeletonEntity) spawnedEntity).setOwnerUuid(context.getPlayer().getUuid());
                 }
+                setHomeToCurrentPosition((OwnedSkeletonEntity) spawnedEntity);
             }
             itemStack.decrement(1);
         }
         return ActionResult.SUCCESS;
+    }
+
+    private void setHomeToCurrentPosition(OwnedSkeletonEntity spawnedEntity) {
+        AISettings aiSettings = spawnedEntity.getAISettings();
+        aiSettings.getMovement().setHome(new PositionSetting(spawnedEntity.getBlockX(), spawnedEntity.getBlockY(), spawnedEntity.getBlockZ()));
+        spawnedEntity.updateAISettings(aiSettings.toTag());
     }
 
     @Override
@@ -98,7 +106,7 @@ public class OwnedSkeletonSpawnEggItem extends SpawnEggItem {
             if (spawnedEntity == null) {
                 return TypedActionResult.pass(itemStack);
             } else {
-                ((OwnedSkeletonEntity) spawnedEntity).getAISettings().getMovement().setHome(new PositionSetting(spawnedEntity.getBlockX(), spawnedEntity.getBlockY(), spawnedEntity.getBlockZ()));
+                setHomeToCurrentPosition((OwnedSkeletonEntity) spawnedEntity);
                 if (!user.getAbilities().creativeMode) {
                     itemStack.decrement(1);
                 }
