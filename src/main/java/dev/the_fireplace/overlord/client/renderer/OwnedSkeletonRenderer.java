@@ -6,6 +6,7 @@ import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.client.model.OwnedSkeletonModel;
 import dev.the_fireplace.overlord.client.renderer.feature.AugmentHeadFeatureRenderer;
+import dev.the_fireplace.overlord.client.renderer.feature.SquadCapeFeatureRenderer;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import dev.the_fireplace.overlord.entity.SkeletonGrowthPhase;
 import net.fabricmc.api.EnvType;
@@ -71,6 +72,7 @@ public class OwnedSkeletonRenderer extends BipedEntityRenderer<OwnedSkeletonEnti
 
         this.addFeature(this.standardArmorRenderer);
         this.addFeature(new AugmentHeadFeatureRenderer<>(this));
+        this.addFeature(new SquadCapeFeatureRenderer<>(this));
         this.addFeature(new StuckArrowsFeatureRenderer<>(this));
         this.addFeature(new StuckStingersFeatureRenderer<>(this));
 
