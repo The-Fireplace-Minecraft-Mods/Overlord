@@ -1,6 +1,7 @@
 package dev.the_fireplace.overlord.entity;
 
 import dev.the_fireplace.annotateddi.api.DIContainer;
+import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
 import dev.the_fireplace.overlord.domain.entity.Ownable;
 import dev.the_fireplace.overlord.domain.entity.logic.EntityAlliances;
@@ -52,12 +53,22 @@ import java.util.UUID;
 public abstract class ArmyEntity extends TameableEntity implements Ownable, OrderableEntity
 {
     protected final EntityAlliances entityAlliances;
+    protected final EmptyUUID emptyUUID;
     protected final AISettings aiSettings;
     protected boolean isSwappingEquipment;
+    public double prevCapeX;
+    public double prevCapeY;
+    public double prevCapeZ;
+    public double capeX;
+    public double capeY;
+    public double capeZ;
+    public float prevStrideDistance;
+    public float strideDistance;
 
     protected ArmyEntity(EntityType<? extends ArmyEntity> type, World world) {
         super(type, world);
         this.entityAlliances = DIContainer.get().getInstance(EntityAlliances.class);
+        this.emptyUUID = DIContainer.get().getInstance(EmptyUUID.class);
         this.aiSettings = createBaseAISettings();
         reloadGoals();
     }
@@ -315,6 +326,80 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
         return null;
+    }
+
+    public UUID getSquad() {
+        //TODO
+        return emptyUUID.get();
+    }
+
+    public boolean hasSquad() {
+        //TODO and squad exists
+        return !emptyUUID.is(getSquad());
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        this.updateCapeAngles();
+    }
+
+    protected void updateCapeAngles() {
+        this.prevCapeX = this.capeX;
+        this.prevCapeY = this.capeY;
+        this.prevCapeZ = this.capeZ;
+        double capeOffsetX = this.getX() - this.capeX;
+        double capeOffsetY = this.getY() - this.capeY;
+        double capeOffsetZ = this.getZ() - this.capeZ;
+        double minOffsetAmount = 10.0D;
+        if (capeOffsetX > minOffsetAmount) {
+            this.capeX = this.getX();
+            this.prevCapeX = this.capeX;
+        }
+
+        if (capeOffsetZ > minOffsetAmount) {
+            this.capeZ = this.getZ();
+            this.prevCapeZ = this.capeZ;
+        }
+
+        if (capeOffsetY > minOffsetAmount) {
+            this.capeY = this.getY();
+            this.prevCapeY = this.capeY;
+        }
+
+        if (capeOffsetX < -minOffsetAmount) {
+            this.capeX = this.getX();
+            this.prevCapeX = this.capeX;
+        }
+
+        if (capeOffsetZ < -minOffsetAmount) {
+            this.capeZ = this.getZ();
+            this.prevCapeZ = this.capeZ;
+        }
+
+        if (capeOffsetY < -minOffsetAmount) {
+            this.capeY = this.getY();
+            this.prevCapeY = this.capeY;
+        }
+
+        this.capeX += capeOffsetX * 0.25D;
+        this.capeZ += capeOffsetZ * 0.25D;
+        this.capeY += capeOffsetY * 0.25D;
+    }
+
+    @Override
+    public void tickMovement() {
+        this.prevStrideDistance = this.strideDistance;
+        super.tickMovement();
+        float g;
+        if (this.onGround && !this.isDead() && !this.isSwimming()) {
+            g = Math.min(0.1F, (float) this.getVelocity().horizontalLength());
+        } else {
+            g = 0.0F;
+        }
+
+        this.strideDistance += (g - this.strideDistance) * 0.4F;
     }
 
     @Nullable
