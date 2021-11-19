@@ -229,14 +229,4 @@ public class SkeletonBuilderImpl implements SkeletonBuilder
         }
         entity.setAugmentBlock(augmentStack);
     }
-
-    private int reduceStack(Inventory inv, int slot, ItemStack stack, int amount) {
-        if (stack.getCount() > amount) {
-            stack.setCount(stack.getCount() - amount);
-            return 0;
-        } else {
-            inv.setInvStack(slot, stack.getItem() instanceof BucketItem ? new ItemStack(Items.BUCKET) : ItemStack.EMPTY);
-            return amount - stack.getCount();
-        }
-    }
 }
