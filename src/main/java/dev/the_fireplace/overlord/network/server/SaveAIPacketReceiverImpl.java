@@ -43,8 +43,8 @@ public final class SaveAIPacketReceiverImpl implements SaveAIPacketReceiver {
             return;
         }
 
-        if (entity instanceof Ownable && !Objects.equals(((Ownable) entity).getOwnerUuid(), player.getUuid())) {
-            Overlord.getLogger().warn("Save AI packet received with wrong player ID, expected {} and got {}.", ((Ownable) entity).getOwnerUuid(), player.getUuid());
+        if (entity instanceof Ownable && !Objects.equals(((Ownable) entity).getOwnerUniqueId(), player.getUuid())) {
+            Overlord.getLogger().warn("Save AI packet received with wrong player ID, expected {} and got {}.", ((Ownable) entity).getOwnerUniqueId(), player.getUuid());
             return;
         }
 

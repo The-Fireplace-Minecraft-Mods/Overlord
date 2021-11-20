@@ -1,9 +1,1 @@
-Fix a player's army skeletons and pet dogs being able to attack each other
-Improve compatibility between army skeletons and various vanilla and modded systems.
-Fix skeletons not having an initial home if spawned using the egg.
-Fix follow distance settings not saving
-Fix skeletons not respecting Infinity on bows
-Fix ranged AI starting and immediately stopping, particularly involving crossbows
-Fix wander radius using the wrong translation
-Improve wander within radius precision somewhat
-Fix items getting used when you right click a skeleton to open the GUI
+Fix a few crashes

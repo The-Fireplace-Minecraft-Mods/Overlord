@@ -24,7 +24,7 @@ public class EntityOwnershipImpl implements EntityOwnership
             }
         }
         if (entity instanceof Ownable) {
-            UUID ownerUuid = ((Ownable) entity).getOwnerUuid();
+            UUID ownerUuid = ((Ownable) entity).getOwnerUniqueId();
             if (ownerUuid != null) {
                 owners.add(ownerUuid);
             }
