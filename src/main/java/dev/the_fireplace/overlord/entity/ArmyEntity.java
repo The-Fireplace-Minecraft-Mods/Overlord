@@ -45,6 +45,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 public abstract class ArmyEntity extends TameableEntity implements Ownable, OrderableEntity
 {
@@ -307,5 +308,16 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
         return null;
+    }
+
+    @Nullable
+    @Override
+    public final UUID getOwnerUniqueId() {
+        return getOwnerUuid();
+    }
+
+    @Override
+    public final void setOwnerUniqueId(@Nullable UUID uuid) {
+        setOwnerUuid(uuid);
     }
 }
