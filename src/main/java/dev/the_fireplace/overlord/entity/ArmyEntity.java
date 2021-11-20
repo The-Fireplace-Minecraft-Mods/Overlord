@@ -275,7 +275,7 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
     public abstract int getOffHandSlot();
 
     @Override
-    public int getEntityIdNumber() {
+    public final int getEntityIdNumber() {
         return getEntityId();
     }
 
