@@ -1,1 +1,1 @@
-Fix a few crashes
+Fix errors when caskets are broken
