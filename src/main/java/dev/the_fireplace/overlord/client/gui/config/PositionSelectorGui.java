@@ -13,7 +13,9 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -32,16 +34,18 @@ public class PositionSelectorGui extends Screen implements CustomButtonScreen<St
     private final Promise<Optional<String>> resultPromise;
     private final Screen parent;
     private final PositionSetting previousSelection;
+    private final BlockPos currentPosition;
     private ButtonWidget confirmButton;
     private TextFieldWidget xWidget;
     private TextFieldWidget yWidget;
     private TextFieldWidget zWidget;
 
-    public PositionSelectorGui(Text title, Screen parent, String currentValue) {
+    public PositionSelectorGui(Text title, Screen parent, String currentValue, @Nullable BlockPos currentPosition) {
         super(title);
         this.resultPromise = new DefaultPromise<>(new DefaultEventExecutor());
         this.parent = parent;
         this.previousSelection = PositionSetting.fromString(currentValue);
+        this.currentPosition = currentPosition;
     }
 
     @Override
@@ -51,9 +55,16 @@ public class PositionSelectorGui extends Screen implements CustomButtonScreen<St
 
     @Override
     protected void init() {
+        if (client == null) {
+            throw new IllegalStateException("Cannot initialize with null client!");
+        }
         this.addButton(xWidget = new TextFieldWidget(client.textRenderer, this.width / 2 - 75 - 2, this.height / 2, 50, 20, Text.of("X")));
         this.addButton(yWidget = new TextFieldWidget(client.textRenderer, this.width / 2 - 25, this.height / 2, 50, 20, Text.of("Y")));
         this.addButton(zWidget = new TextFieldWidget(client.textRenderer, this.width / 2 + 25 + 2, this.height / 2, 50, 20, Text.of("Z")));
+        ButtonWidget currentPositionButton = new ButtonWidget(this.width / 2 - 100, this.height / 2 - 30, 200, 20, Text.of("Use Current Position"), (button) -> {
+            setCoordinates(currentPosition.getX(), currentPosition.getY(), currentPosition.getZ());
+        });
+        this.addDrawableChild(currentPositionButton);
         this.addButton(confirmButton = new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, Text.of("Confirm and exit"), (button) -> {
             PositionSetting newPosition = new PositionSetting(Integer.parseInt(xWidget.getText()), Integer.parseInt(yWidget.getText()), Integer.parseInt(zWidget.getText()));
             resultPromise.setSuccess(Optional.of(newPosition.toString()));
@@ -63,9 +74,14 @@ public class PositionSelectorGui extends Screen implements CustomButtonScreen<St
             resultPromise.setSuccess(Optional.empty());
             closeScreen();
         }));
-        xWidget.setText(String.valueOf(previousSelection.getX()));
-        yWidget.setText(String.valueOf(previousSelection.getY()));
-        zWidget.setText(String.valueOf(previousSelection.getZ()));
+        currentPositionButton.visible = currentPosition != null;
+        setCoordinates(previousSelection.getX(), previousSelection.getY(), previousSelection.getZ());
+    }
+
+    private void setCoordinates(int x, int y, int z) {
+        xWidget.setText(String.valueOf(x));
+        yWidget.setText(String.valueOf(y));
+        zWidget.setText(String.valueOf(z));
     }
 
     private void closeScreen() {
