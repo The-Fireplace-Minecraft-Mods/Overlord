@@ -42,6 +42,9 @@
       "links": {
         "modmenu.discord": "https://discord.gg/QXQYPj5"
       }
+    },
+    "lithium:options": {
+      "mixin.ai.nearby_entity_tracking.goals": false
     }
   }
 }
