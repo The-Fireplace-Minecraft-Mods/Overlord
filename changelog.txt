@@ -1,1 +1,2 @@
 Fix errors when caskets are broken
+Fix crash when updating AI with Lithium installed
