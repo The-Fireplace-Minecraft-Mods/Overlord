@@ -13,6 +13,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
@@ -61,16 +62,16 @@ public class PositionSelectorGui extends Screen implements CustomButtonScreen<St
         this.addDrawableChild(xWidget = new TextFieldWidget(client.textRenderer, this.width / 2 - 75 - 2, this.height / 2, 50, 20, Text.of("X")));
         this.addDrawableChild(yWidget = new TextFieldWidget(client.textRenderer, this.width / 2 - 25, this.height / 2, 50, 20, Text.of("Y")));
         this.addDrawableChild(zWidget = new TextFieldWidget(client.textRenderer, this.width / 2 + 25 + 2, this.height / 2, 50, 20, Text.of("Z")));
-        ButtonWidget currentPositionButton = new ButtonWidget(this.width / 2 - 100, this.height / 2 - 30, 200, 20, Text.of("Use Current Position"), (button) -> {
+        ButtonWidget currentPositionButton = new ButtonWidget(this.width / 2 - 100, this.height / 2 - 30, 200, 20, new TranslatableText("gui.overlord.select_position.use_current"), (button) -> {
             setCoordinates(currentPosition.getX(), currentPosition.getY(), currentPosition.getZ());
         });
         this.addDrawableChild(currentPositionButton);
-        this.addDrawableChild(confirmButton = new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, Text.of("Confirm and exit"), (button) -> {
+        this.addDrawableChild(confirmButton = new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, new TranslatableText("gui.overlord.select_position.confirm"), (button) -> {
             PositionSetting newPosition = new PositionSetting(Integer.parseInt(xWidget.getText()), Integer.parseInt(yWidget.getText()), Integer.parseInt(zWidget.getText()));
             resultPromise.setSuccess(Optional.of(newPosition.toString()));
             closeScreen();
         }));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, Text.of("Cancel"), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, new TranslatableText("gui.cancel"), (button) -> {
             resultPromise.setSuccess(Optional.empty());
             closeScreen();
         }));
