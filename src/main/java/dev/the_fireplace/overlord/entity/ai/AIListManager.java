@@ -34,14 +34,19 @@ public class AIListManager
     private final BiMap<UUID, ImmutableList<Identifier>> lists = HashBiMap.create();
 
     public UUID getId(List<Identifier> list) {
-        //Use ImmutableSortedSet.copyOf instead of ImmutableList.sortedCopyOf because we want to deduplicate if there are duplicates as well as sort the data.
-        list = ImmutableSortedSet.copyOf(list).asList();
+        list = deduplicateAndSort(list);
         if (lists.containsValue(list)) {
             return lists.inverse().get(list);
         }
         UUID id = UuidUtil.getTimeBasedUuid();
         lists.put(id, (ImmutableList<Identifier>) list);
         return id;
+    }
+
+    private ImmutableList<Identifier> deduplicateAndSort(List<Identifier> list) {
+        //TODO unit test as proof that it still works instead of using this comment as a reminder
+        //Use ImmutableSortedSet.copyOf instead of ImmutableList.sortedCopyOf because ImmutableList does not deduplicate.
+        return ImmutableSortedSet.copyOf(list).asList();
     }
 
     public ImmutableList<Identifier> getList(UUID id) {

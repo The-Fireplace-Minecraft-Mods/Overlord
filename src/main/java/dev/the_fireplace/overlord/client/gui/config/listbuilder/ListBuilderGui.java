@@ -35,6 +35,8 @@ public class ListBuilderGui extends Screen implements CustomButtonScreen<String>
 
     @Override
     protected void init() {
+        ListSelectorWidget listSelectorWidget = createListSelector();
+        this.addDrawableChild(listSelectorWidget);
         this.addButton(new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, "Confirm and exit", (button) -> {
             closeScreen();
         }));
@@ -42,6 +44,12 @@ public class ListBuilderGui extends Screen implements CustomButtonScreen<String>
             resultPromise.setSuccess(Optional.empty());
             closeScreen();
         }));
+    }
+
+    private ListSelectorWidget createListSelector() {
+        ListSelectorWidget listSelectorWidget = new ListSelectorWidget(this.client, this.width / 3, this.height - 34, 0, this.height - 34, 40);
+        //TODO add entries
+        return listSelectorWidget;
     }
 
     private void closeScreen() {
