@@ -1,7 +1,9 @@
 package dev.the_fireplace.overlord.impl.data;
 
+import com.google.common.collect.ImmutableSet;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import dev.the_fireplace.annotateddi.api.di.Implementation;
+import dev.the_fireplace.lib.api.io.injectables.SaveBasedStorageReader;
 import dev.the_fireplace.lib.api.io.interfaces.access.StorageReadBuffer;
 import dev.the_fireplace.lib.api.io.interfaces.access.StorageWriteBuffer;
 import dev.the_fireplace.lib.api.lazyio.injectables.SaveDataStateManager;
@@ -14,43 +16,112 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.nbt.visitor.StringNbtWriter;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Function;
 
 @Implementation
 @Singleton
 public final class SquadsImpl implements Squads
 {
+    private static final Function<UUID, ConcurrentMap<UUID, SquadImpl>> NEW_CONCURRENT_MAP = (unused) -> new ConcurrentHashMap<>();
+    private static final String DATABASE = Overlord.MODID;
+    private static final String TABLE = "squads";
+
     private final SaveDataStateManager saveDataStateManager;
-    private final ConcurrentMap<UUID, ConcurrentMap<UUID, Squad>> squadCache;
+    private final SaveBasedStorageReader storageReader;
+    private final ConcurrentMap<UUID, ConcurrentMap<UUID, SquadImpl>> squadCache;
 
     @Inject
-    public SquadsImpl(SaveDataStateManager saveDataStateManager) {
+    public SquadsImpl(SaveDataStateManager saveDataStateManager, SaveBasedStorageReader storageReader) {
         this.saveDataStateManager = saveDataStateManager;
+        this.storageReader = storageReader;
         this.squadCache = new ConcurrentHashMap<>();
     }
 
-    @Override
-    public void saveSquad(Squad squad) {
-
-    }
-
+    @Nullable
     @Override
     public Squad getSquad(UUID owner, UUID squadId) {
-        return null;
+        SquadImpl squad = squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP).get(squadId);
+        if (squad == null) {
+            squad = new SquadImpl(squadId, owner);
+            if (storageReader.isStored(squad)) {
+                squad.init();
+                squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP).put(squadId, squad);
+            } else {
+                return null;
+            }
+        }
+
+        return squad;
+    }
+
+    @Nullable
+    @Override
+    public Squad createNewSquad(UUID owner, String capeBase, ItemStack stack, String name) {
+        if (!isCapeUnused(capeBase, stack)) {
+            return null;
+        }
+        UUID newSquadId;
+        do {
+            newSquadId = UUID.randomUUID();
+        } while (squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP).containsKey(newSquadId));
+
+        SquadImpl squad = new SquadImpl(newSquadId, owner);
+        squad.updateCape(capeBase, stack);
+        squad.setName(name);
+        squad.init();
+        return squad;
     }
 
     @Override
-    public Squad removeSquad(UUID owner, UUID squadId) {
-        return null;
+    public void removeSquad(UUID owner, UUID squadId) {
+        //TODO handle if squad is not yet cached for some reason, if needed
+        SquadImpl squad = squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP).remove(squadId);
+        if (squad != null) {
+            squad.delete();
+        }
+    }
+
+    @Override
+    public Collection<? extends Squad> getSquadsWithOwner(UUID owner) {
+        loadSquadCacheForOwner(owner);
+        return ImmutableSet.copyOf(squadCache.get(owner).values());
+    }
+
+    private void loadSquadCacheForOwner(UUID owner) {
+        ConcurrentMap<UUID, SquadImpl> cachedOwnerSquads = squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP);
+        Iterator<String> databaseIdIterator = storageReader.getStoredIdsIterator(DATABASE, TABLE);
+        while (databaseIdIterator.hasNext()) {
+            String id = databaseIdIterator.next();
+            if (id.startsWith(owner.toString())) {
+                UUID squadId = UUID.fromString(id.substring(owner.toString().length()));
+                if (!cachedOwnerSquads.containsKey(squadId)) {
+                    SquadImpl squad = new SquadImpl(squadId, owner);
+                    squad.init();
+                    cachedOwnerSquads.put(squadId, squad);
+                }
+            }
+        }
     }
 
     @Override
     public boolean isCapeUnused(String capeBase, ItemStack stack) {
+        for (ConcurrentMap<UUID, SquadImpl> squadEntries : squadCache.values()) {
+            for (SquadImpl squad : squadEntries.values()) {
+                if (squad.capeItem.equals(stack) && squad.capeBase.equals(capeBase)) {
+                    return false;
+                }
+            }
+        }
+
         return true;
     }
 
@@ -74,6 +145,9 @@ public final class SquadsImpl implements Squads
             this.capeBase = "missing_texture";
             this.capeItem = new ItemStack(Blocks.BARRIER);
             this.name = "Missingno";
+        }
+
+        private void init() {
             saveDataStateManager.initializeWithAutosave(this, (byte) 10);
         }
 
@@ -140,12 +214,12 @@ public final class SquadsImpl implements Squads
 
         @Override
         public String getDatabase() {
-            return Overlord.MODID;
+            return DATABASE;
         }
 
         @Override
         public String getTable() {
-            return "squads";
+            return TABLE;
         }
 
         @Override
@@ -153,13 +227,8 @@ public final class SquadsImpl implements Squads
             return getOwner().toString() + getSquadId().toString();
         }
 
-        private void tearDown() {
-            saveDataStateManager.tearDown(this);
-        }
-
         private void delete() {
-            tearDown();
-
+            saveDataStateManager.delete(this);
         }
     }
 }
