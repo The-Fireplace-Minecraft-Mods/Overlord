@@ -1,15 +1,14 @@
-package dev.the_fireplace.overlord.network.server;
+package dev.the_fireplace.overlord.network.server.receiver;
 
 import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
 import dev.the_fireplace.overlord.domain.entity.Ownable;
 import dev.the_fireplace.overlord.domain.network.ClientToServerPacketIDs;
-import dev.the_fireplace.overlord.domain.network.ServerToClientPacketIDs;
-import dev.the_fireplace.overlord.domain.network.server.GetOrdersPacketReceiver;
-import dev.the_fireplace.overlord.domain.network.server.OpenOrdersGUIBufferBuilder;
+import dev.the_fireplace.overlord.domain.network.server.SaveAIPacketReceiver;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -20,26 +19,18 @@ import javax.inject.Inject;
 import java.util.Objects;
 
 @Implementation
-public final class GetOrdersPacketReceiverImpl implements GetOrdersPacketReceiver {
+public final class SaveAIPacketReceiverImpl implements SaveAIPacketReceiver {
 
     private final ClientToServerPacketIDs clientToServerPacketIDs;
-    private final ServerToClientPacketIDs serverToClientPacketIDs;
-    private final OpenOrdersGUIBufferBuilder openOrdersGUIBufferBuilder;
 
     @Inject
-    public GetOrdersPacketReceiverImpl(
-        ClientToServerPacketIDs clientToServerPacketIDs,
-        ServerToClientPacketIDs serverToClientPacketIDs,
-        OpenOrdersGUIBufferBuilder openOrdersGUIBufferBuilder
-    ) {
+    private SaveAIPacketReceiverImpl(ClientToServerPacketIDs clientToServerPacketIDs) {
         this.clientToServerPacketIDs = clientToServerPacketIDs;
-        this.serverToClientPacketIDs = serverToClientPacketIDs;
-        this.openOrdersGUIBufferBuilder = openOrdersGUIBufferBuilder;
     }
 
     @Override
     public Identifier getId() {
-        return clientToServerPacketIDs.getOrdersPacketID();
+        return clientToServerPacketIDs.saveAiPacketID();
     }
 
     @Override
@@ -53,10 +44,15 @@ public final class GetOrdersPacketReceiverImpl implements GetOrdersPacketReceive
         }
 
         if (entity instanceof Ownable && !Objects.equals(((Ownable) entity).getOwnerUuid(), player.getUuid())) {
-            Overlord.getLogger().warn("Get Orders packet received with wrong player ID, expected {} and got {}.", ((Ownable) entity).getOwnerUuid(), player.getUuid());
+            Overlord.getLogger().warn("Save AI packet received with wrong player ID, expected {} and got {}.", ((Ownable) entity).getOwnerUuid(), player.getUuid());
             return;
         }
-        PacketByteBuf ordersPacketBuffer = openOrdersGUIBufferBuilder.build(entityId, ((OrderableEntity) entity).getAISettings());
-        responseSender.sendPacket(serverToClientPacketIDs.openOrdersGuiPacketID(), ordersPacketBuffer);
+
+        NbtCompound aiTag = buf.readNbt();
+        if (aiTag != null) {
+            ((OrderableEntity) entity).updateAISettings(aiTag);
+        } else {
+            Overlord.getLogger().error("No settings found in packet.");
+        }
     }
 }

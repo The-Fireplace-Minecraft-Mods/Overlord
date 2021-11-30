@@ -31,13 +31,13 @@ import java.util.function.Function;
 @Singleton
 public final class SquadsImpl implements Squads
 {
-    private static final Function<UUID, ConcurrentMap<UUID, SquadImpl>> NEW_CONCURRENT_MAP = (unused) -> new ConcurrentHashMap<>();
+    private static final Function<UUID, ConcurrentMap<UUID, SavedSquad>> NEW_CONCURRENT_MAP = (unused) -> new ConcurrentHashMap<>();
     private static final String DATABASE = Overlord.MODID;
     private static final String TABLE = "squads";
 
     private final SaveDataStateManager saveDataStateManager;
     private final SaveBasedStorageReader storageReader;
-    private final ConcurrentMap<UUID, ConcurrentMap<UUID, SquadImpl>> squadCache;
+    private final ConcurrentMap<UUID, ConcurrentMap<UUID, SavedSquad>> squadCache;
 
     @Inject
     public SquadsImpl(SaveDataStateManager saveDataStateManager, SaveBasedStorageReader storageReader) {
@@ -49,9 +49,9 @@ public final class SquadsImpl implements Squads
     @Nullable
     @Override
     public Squad getSquad(UUID owner, UUID squadId) {
-        SquadImpl squad = squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP).get(squadId);
+        SavedSquad squad = squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP).get(squadId);
         if (squad == null) {
-            squad = new SquadImpl(squadId, owner);
+            squad = new SavedSquad(squadId, owner);
             if (storageReader.isStored(squad)) {
                 squad.init();
                 squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP).put(squadId, squad);
@@ -74,7 +74,7 @@ public final class SquadsImpl implements Squads
             newSquadId = UUID.randomUUID();
         } while (squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP).containsKey(newSquadId));
 
-        SquadImpl squad = new SquadImpl(newSquadId, owner);
+        SavedSquad squad = new SavedSquad(newSquadId, owner);
         squad.updateCape(capeBase, stack);
         squad.setName(name);
         squad.init();
@@ -84,7 +84,7 @@ public final class SquadsImpl implements Squads
     @Override
     public void removeSquad(UUID owner, UUID squadId) {
         //TODO handle if squad is not yet cached for some reason, if needed
-        SquadImpl squad = squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP).remove(squadId);
+        SavedSquad squad = squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP).remove(squadId);
         if (squad != null) {
             squad.delete();
         }
@@ -97,14 +97,14 @@ public final class SquadsImpl implements Squads
     }
 
     private void loadSquadCacheForOwner(UUID owner) {
-        ConcurrentMap<UUID, SquadImpl> cachedOwnerSquads = squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP);
+        ConcurrentMap<UUID, SavedSquad> cachedOwnerSquads = squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP);
         Iterator<String> databaseIdIterator = storageReader.getStoredIdsIterator(DATABASE, TABLE);
         while (databaseIdIterator.hasNext()) {
             String id = databaseIdIterator.next();
             if (id.startsWith(owner.toString())) {
                 UUID squadId = UUID.fromString(id.substring(owner.toString().length()));
                 if (!cachedOwnerSquads.containsKey(squadId)) {
-                    SquadImpl squad = new SquadImpl(squadId, owner);
+                    SavedSquad squad = new SavedSquad(squadId, owner);
                     squad.init();
                     cachedOwnerSquads.put(squadId, squad);
                 }
@@ -114,8 +114,8 @@ public final class SquadsImpl implements Squads
 
     @Override
     public boolean isCapeUnused(String capeBase, ItemStack stack) {
-        for (ConcurrentMap<UUID, SquadImpl> squadEntries : squadCache.values()) {
-            for (SquadImpl squad : squadEntries.values()) {
+        for (ConcurrentMap<UUID, SavedSquad> squadEntries : squadCache.values()) {
+            for (SavedSquad squad : squadEntries.values()) {
                 if (squad.capeItem.equals(stack) && squad.capeBase.equals(capeBase)) {
                     return false;
                 }
@@ -131,7 +131,7 @@ public final class SquadsImpl implements Squads
         return true;
     }
 
-    private class SquadImpl implements Squad, SaveData
+    private class SavedSquad implements Squad, SaveData
     {
         private final UUID id;
         private final UUID owner;
@@ -139,7 +139,7 @@ public final class SquadsImpl implements Squads
         private ItemStack capeItem;
         private String name;
 
-        private SquadImpl(UUID id, UUID owner) {
+        private SavedSquad(UUID id, UUID owner) {
             this.id = id;
             this.owner = owner;
             this.capeBase = "missing_texture";

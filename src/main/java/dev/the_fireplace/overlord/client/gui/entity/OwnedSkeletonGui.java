@@ -1,4 +1,4 @@
-package dev.the_fireplace.overlord.client.gui;
+package dev.the_fireplace.overlord.client.gui.entity;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.the_fireplace.annotateddi.api.DIContainer;
@@ -43,6 +43,7 @@ public class OwnedSkeletonGui extends HandledScreen<OwnedSkeletonContainer>
         super.init();
         //x, y, width, height
         addDrawableChild(new ButtonWidget(x + 109, y + 58, 60, 20, new TranslatableText("gui.overlord.owned_skeleton.orders"), (b) -> guiOpener.openOrdersGUI(entity)));
+        addDrawableChild(new ButtonWidget(x + 109, y + 38, 60, 20, new TranslatableText("gui.overlord.owned_skeleton.select_squad"), (b) -> guiOpener.openSquadSelectorGUI(entity)));
     }
 
     @Override
