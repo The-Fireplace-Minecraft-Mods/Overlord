@@ -24,6 +24,7 @@
   "gui.overlord.owned_skeleton.orders": "Orders",
   "gui.overlord.owned_skeleton.select_squad": "Select Squad",
   "gui.overlord.squad_manager.name": "Squad Manager",
+  "gui.overlord.create_squad.name": "Create Squad",
   "gui.overlord.aisettings.name": "Orders",
   "gui.overlord.aisettings.combat": "Combat",
   "gui.overlord.aisettings.combat.meleeSwitching": "Switch to Melee settings",
