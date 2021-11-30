@@ -34,6 +34,7 @@ public class SquadSelectorEntry extends AlwaysSelectedEntryListWidget.Entry<Squa
             trimmedName = font.trimToWidth(trimmedName, maxNameWidth - font.getWidth("...")) + "...";
         }
         font.draw(matrixStack, trimmedName, y + 32 + 3, index + 1, 0xFFFFFF);
+        //TODO render cape as icon to the left
     }
 
     @Override
