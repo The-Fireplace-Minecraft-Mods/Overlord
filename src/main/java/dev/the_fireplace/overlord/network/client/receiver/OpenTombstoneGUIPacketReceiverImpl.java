@@ -1,9 +1,9 @@
-package dev.the_fireplace.overlord.network.client;
+package dev.the_fireplace.overlord.network.client.receiver;
 
 import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.blockentity.TombstoneBlockEntity;
-import dev.the_fireplace.overlord.client.gui.TombstoneGui;
+import dev.the_fireplace.overlord.client.gui.block.TombstoneGui;
 import dev.the_fireplace.overlord.domain.network.ServerToClientPacketIDs;
 import dev.the_fireplace.overlord.domain.network.client.OpenTombstoneGUIPacketReceiver;
 import net.fabricmc.api.EnvType;

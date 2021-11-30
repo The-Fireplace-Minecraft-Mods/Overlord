@@ -1,4 +1,4 @@
-package dev.the_fireplace.overlord.client.gui;
+package dev.the_fireplace.overlord.client.gui.block;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;

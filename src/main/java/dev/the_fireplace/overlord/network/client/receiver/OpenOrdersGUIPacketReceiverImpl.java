@@ -1,4 +1,4 @@
-package dev.the_fireplace.overlord.network.client;
+package dev.the_fireplace.overlord.network.client.receiver;
 
 import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.Overlord;
