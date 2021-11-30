@@ -8,7 +8,8 @@ import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 @Environment(EnvType.CLIENT)
 public class ListSelectorWidget extends AlwaysSelectedEntryListWidget<ListSelectorEntry>
 {
-    public ListSelectorWidget(MinecraftClient minecraftClient, int i, int j, int k, int l, int m) {
-        super(minecraftClient, i, j, k, l, m);
+    public ListSelectorWidget(MinecraftClient minecraftClient, int width, int height, int top, int bottom, int itemHeight) {
+        super(minecraftClient, width, height, top, bottom, itemHeight);
+        this.setRenderBackground(false);
     }
 }
