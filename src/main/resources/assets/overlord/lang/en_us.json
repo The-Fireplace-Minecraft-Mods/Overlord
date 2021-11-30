@@ -22,6 +22,8 @@
   "item.overlord.sans_mask": "Sans Mask",
   "gui.overlord.tombstone.edit": "Set Tombstone Name",
   "gui.overlord.owned_skeleton.orders": "Orders",
+  "gui.overlord.owned_skeleton.select_squad": "Select Squad",
+  "gui.overlord.squad_manager.name": "Squad Manager",
   "gui.overlord.aisettings.name": "Orders",
   "gui.overlord.aisettings.combat": "Combat",
   "gui.overlord.aisettings.combat.meleeSwitching": "Switch to Melee settings",

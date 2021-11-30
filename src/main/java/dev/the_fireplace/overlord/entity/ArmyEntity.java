@@ -2,6 +2,7 @@ package dev.the_fireplace.overlord.entity;
 
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
+import dev.the_fireplace.overlord.domain.data.objects.Squad;
 import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
 import dev.the_fireplace.overlord.domain.entity.Ownable;
 import dev.the_fireplace.overlord.domain.entity.logic.EntityAlliances;
@@ -333,6 +334,10 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
     public UUID getSquad() {
         //TODO
         return emptyUUID.get();
+    }
+
+    public void setSquad(Squad squad) {
+        //TODO
     }
 
     public boolean hasSquad() {
