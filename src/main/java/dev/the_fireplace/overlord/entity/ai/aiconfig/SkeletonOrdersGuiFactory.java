@@ -25,7 +25,10 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -48,6 +51,8 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory
 	private final ClientToServerPacketIDs clientToServerPacketIDs;
 	private final SaveAIPacketBufferBuilder saveAIPacketBufferBuilder;
 	private ConfigScreenBuilder screenBuilder;
+	@Nullable
+	private BlockPos currentPosition = null;
 
 	@Inject
 	public SkeletonOrdersGuiFactory(
@@ -74,6 +79,7 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory
 				saveAIPacketBufferBuilder.build(aiEntity)
 			)
 		);
+		this.currentPosition = aiEntity instanceof Entity ? ((Entity) aiEntity).getBlockPos() : null;
 
 		buildCategories(aiEntity.getAISettings());
 
@@ -353,7 +359,7 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory
 			currentValue.toString(),
 			defaultValue.toString(),
 			stringValue -> saveFunction.accept(PositionSetting.fromString(stringValue)),
-			(parent, current) -> new PositionSelectorGui(translator.getTranslatedText(optionTranslationBase), parent, current)
+			(parent, current) -> new PositionSelectorGui(translator.getTranslatedText(optionTranslationBase), parent, current, currentPosition)
 		);
 	}
 }
