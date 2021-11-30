@@ -3,3 +3,4 @@ Make a config for the milk amounts needed to grow skeletons
 Add the ability for skeletons to gather milk
 Add the ability for skeletons to pick up items
 Fix army skeleton spawn eggs not setting skeleton home position
+Add a "Use Current Position" button for picking the skeleton home position
