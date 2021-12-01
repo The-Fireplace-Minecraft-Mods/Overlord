@@ -142,7 +142,7 @@ public class CasketBlockEntity extends LockableContainerBlockEntity
             state = this.world.getBlockState(pos);
         }
         cachedIsFoot = state != null ?
-            getType().supports(state)
+            getType().supports(state.getBlock())
                 && state.contains(CasketBlock.PART)
                 && state.get(CasketBlock.PART).equals(BedPart.FOOT)
             : null;
@@ -155,7 +155,7 @@ public class CasketBlockEntity extends LockableContainerBlockEntity
             return this;
         }
         BlockState casketState = this.world.getBlockState(pos);
-        if (!getType().supports(casketState) || !casketState.contains(HorizontalFacingBlock.FACING)) {
+        if (!getType().supports(casketState.getBlock()) || !casketState.contains(HorizontalFacingBlock.FACING)) {
             return this;
         }
         BlockPos headPosition = pos.offset(CasketBlock.getDirectionTowardsOtherPart(
