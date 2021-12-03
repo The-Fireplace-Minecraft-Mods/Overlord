@@ -62,7 +62,7 @@ public class SquadCapeFeatureRenderer<T extends ArmyEntity, M extends PlayerEnti
         matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(s / 2.0F));
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F - s / 2.0F));
 
-        Identifier squadCapeTexture = new Identifier(Overlord.MODID, "textures/entity/cape/red_bed_cape.png");
+        Identifier squadCapeTexture = new Identifier(Overlord.MODID, "textures/entity/cape/red_bed.png");
 
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(squadCapeTexture));
         this.getContextModel().renderCape(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
