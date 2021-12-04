@@ -1,18 +1,22 @@
 package dev.the_fireplace.overlord.client.gui.squad;
 
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
+import dev.the_fireplace.overlord.entity.ArmyEntity;
+import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Environment(EnvType.CLIENT)
 public class SquadSelectorGui extends Screen
@@ -48,10 +52,57 @@ public class SquadSelectorGui extends Screen
             closeScreen();
         }));
         this.addDrawableChild(new ButtonWidget(0, this.height - 54, this.width / 3, 20, Text.of("Create Squad"), (button) -> {
-            //noinspection ConstantConditions
-            client.openScreen(new SquadCreatorGui(this));
+            Collection<ItemStack> squadItems = getSquadItems();
+            this.client.openScreen(new SquadCreatorGui(this, squadItems));
         }));
         //TODO delete squad button
+    }
+
+    private Collection<ItemStack> getSquadItems() {
+        Objects.requireNonNull(this.client);
+        Collection<ItemStack> squadItems = new ArrayList<>();
+        Entity entity = this.entityId != null && this.client.world != null ? this.client.world.getEntityById(entityId) : null;
+        if (entity instanceof ArmyEntity) {
+            if (entity instanceof OwnedSkeletonEntity) {
+                squadItems.add(((OwnedSkeletonEntity) entity).getAugmentBlockStack().copy());
+            }
+            Inventory entityInventory = ((ArmyEntity) entity).getInventory();
+            squadItems.addAll(getStacksFromInventory(entityInventory));
+        }
+        ClientPlayerEntity player = this.client.player;
+        if (player != null) {
+            Inventory playerInventory = player.getInventory();
+            squadItems.addAll(getStacksFromInventory(playerInventory));
+        }
+        return reduceAndDeduplicate(squadItems);
+    }
+
+    private Collection<ItemStack> getStacksFromInventory(Inventory inventory) {
+        Collection<ItemStack> inventoryItems = new ArrayList<>(inventory.size() / 2);
+        for (int slotIndex = 0; slotIndex < inventory.size(); slotIndex++) {
+            ItemStack stack = inventory.getStack(slotIndex);
+            if (!stack.isEmpty()) {
+                inventoryItems.add(stack.copy());
+            }
+        }
+        return inventoryItems;
+    }
+
+    private Collection<ItemStack> reduceAndDeduplicate(Collection<ItemStack> itemStacks) {
+        Collection<ItemStack> reducedStacks = new ArrayList<>(itemStacks.size() - 2);
+        for (ItemStack stack : itemStacks) {
+            if (stack.isEmpty()) {
+                continue;
+            }
+            stack = stack.copy();
+            stack.setCount(1);
+            ItemStack finalStack = stack;
+            if (reducedStacks.stream().noneMatch(reducedStack -> ItemStack.areEqual(reducedStack, finalStack))) {
+                reducedStacks.add(stack);
+            }
+        }
+
+        return reducedStacks;
     }
 
     private SquadSelectorWidget createSquadSelector() {
