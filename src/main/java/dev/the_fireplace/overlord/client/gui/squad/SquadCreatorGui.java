@@ -12,7 +12,10 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.TranslatableText;
+
+import java.util.Collection;
 
 @Environment(EnvType.CLIENT)
 public class SquadCreatorGui extends Screen
@@ -23,17 +26,21 @@ public class SquadCreatorGui extends Screen
 
     private TextFieldWidget squadNameWidget;
 
-    protected SquadCreatorGui(SquadSelectorGui parent) {
+    private final Collection<ItemStack> stacks;
+
+    protected SquadCreatorGui(SquadSelectorGui parent, Collection<ItemStack> squadItems) {
         super(new TranslatableText("gui.overlord.create_squad.name"));
         this.parent = parent;
+        this.stacks = squadItems;
     }
 
     @Override
     protected void init() {
+        //TODO persist state outside the widgets and re-add here, both for editing and for resizing the window, which reinitializes all of this.
         PatternSelectionScreenPart patternSelectionScreenPart = new PatternSelectionScreenPart(4, 4, this.width / 2 - 4, this.height - 4 - 30);
+        ItemSelectionScreenPart itemSelectionScreenPart = new ItemSelectionScreenPart(this.width / 2, 44, this.width / 2 - 4, this.height - 30 - 4 - 44, this.stacks);
         this.addPartialScreenChildren(patternSelectionScreenPart);
-
-        //TODO item slot/selector
+        this.addPartialScreenChildren(itemSelectionScreenPart);
         this.addDrawableChild(squadNameWidget = new TextFieldWidget(this.textRenderer, this.width * 3 / 4 - 100, 20, 200, 20, SQUAD_NAME_FIELD_TITLE));
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, new TranslatableText("gui.overlord.confirm_exit"), (button) -> {
             //TODO send save packet and disable, response should close GUI

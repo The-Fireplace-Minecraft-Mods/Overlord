@@ -3,26 +3,24 @@ package dev.the_fireplace.overlord.client.gui.squad;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.item.ItemStack;
 
 @Environment(EnvType.CLIENT)
-public class PatternButtonWidget extends ButtonWidget
+public class ItemButtonWidget extends ButtonWidget
 {
-    protected final Identifier pattern;
+    protected final ItemStack stack;
     protected boolean isUsed = false;
 
-    public PatternButtonWidget(int x, int y, int width, int height, Text text, Identifier pattern, PressAction pressAction) {
-        this(x, y, width, height, text, pattern, pressAction, EMPTY);
+    public ItemButtonWidget(int x, int y, int width, int height, ItemStack stack, PressAction pressAction) {
+        this(x, y, width, height, stack, pressAction, EMPTY);
     }
 
-    public PatternButtonWidget(int x, int y, int width, int height, Text text, Identifier pattern, PressAction pressAction, TooltipSupplier tooltipSupplier) {
-        super(x, y, width, height, text, pressAction, tooltipSupplier);
-        this.pattern = pattern;
+    public ItemButtonWidget(int x, int y, int width, int height, ItemStack stack, PressAction pressAction, TooltipSupplier tooltipSupplier) {
+        super(x, y, width, height, stack.getName(), pressAction, tooltipSupplier);
+        this.stack = stack;
     }
 
     @Override
@@ -36,18 +34,14 @@ public class PatternButtonWidget extends ButtonWidget
 
     private void drawCustomButton(MatrixStack matrices, int mouseX, int mouseY) {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        TextRenderer textRenderer = minecraftClient.textRenderer;
-
-        PatternRenderHelper.drawPattern(matrices, this.pattern, this.x + 2 + (this.width - 4) / 5, this.y + 2, (this.width - 4) * 3 / 5, this.height - 4, this.alpha);
+        ItemRenderer itemRenderer = minecraftClient.getItemRenderer();
+        itemRenderer.renderInGui(this.stack, this.x + 2, this.y + 2);
         drawBox(matrices);
 
         this.renderBackground(matrices, minecraftClient, mouseX, mouseY);
-        int j = this.active ? 16777215 : 10526880;
-        drawCenteredText(matrices, textRenderer, this.getMessage(), this.x + this.width / 2, this.y + this.height - 4 - 9, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
     }
 
     private void drawBox(MatrixStack matrices) {
-        //TODO color and/or dotted/dashed change if unlocked or not
         int color = this.hovered ? 0xEED489BF : 0xFFFFFFBF;
         drawBox(matrices, 1, color);
         if (isUsed) {
@@ -66,7 +60,7 @@ public class PatternButtonWidget extends ButtonWidget
         this.drawHorizontalLine(matrices, boxStartX, boxEndX, boxEndY, color);
     }
 
-    public void notifyOfActivePattern(Identifier pattern) {
-        this.isUsed = this.pattern.equals(pattern);
+    public void notifyOfActiveStack(ItemStack stack) {
+        this.isUsed = this.stack.equals(stack);
     }
 }
