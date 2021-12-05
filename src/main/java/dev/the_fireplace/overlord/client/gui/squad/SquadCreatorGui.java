@@ -1,5 +1,6 @@
 package dev.the_fireplace.overlord.client.gui.squad;
 
+import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.client.gui.PartialScreen;
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
 import net.fabricmc.api.EnvType;
@@ -14,7 +15,9 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Identifier;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 @Environment(EnvType.CLIENT)
@@ -23,25 +26,36 @@ public class SquadCreatorGui extends Screen
     private static final TranslatableText SQUAD_NAME_FIELD_TITLE = new TranslatableText("gui.overlord.create_squad.squad_name");
 
     private final SquadSelectorGui parent;
-
-    private TextFieldWidget squadNameWidget;
-
     private final Collection<ItemStack> stacks;
+    private final PatternSelectionScreenPart.State patternState;
+    private final ItemSelectionScreenPart.State itemState;
+    private String squadName = "";
 
-    protected SquadCreatorGui(SquadSelectorGui parent, Collection<ItemStack> squadItems) {
+    protected SquadCreatorGui(SquadSelectorGui parent, Collection<ItemStack> squadItems, @Nullable Squad currentSquad) {
         super(new TranslatableText("gui.overlord.create_squad.name"));
         this.parent = parent;
         this.stacks = squadItems;
+        String pattern = "";
+        ItemStack stack = ItemStack.EMPTY;
+        if (currentSquad != null) {
+            squadName = currentSquad.getName();
+            pattern = currentSquad.getPattern();
+            stack = currentSquad.getItem();
+        }
+        this.patternState = new PatternSelectionScreenPart.State(new Identifier(Overlord.MODID, pattern));
+        this.itemState = new ItemSelectionScreenPart.State(stack);
     }
 
     @Override
     protected void init() {
-        //TODO persist state outside the widgets and re-add here, both for editing and for resizing the window, which reinitializes all of this.
-        PatternSelectionScreenPart patternSelectionScreenPart = new PatternSelectionScreenPart(4, 4, this.width / 2 - 4, this.height - 4 - 30);
-        ItemSelectionScreenPart itemSelectionScreenPart = new ItemSelectionScreenPart(this.width / 2, 44, this.width / 2 - 4, this.height - 30 - 4 - 44, this.stacks);
+        PatternSelectionScreenPart patternSelectionScreenPart = new PatternSelectionScreenPart(4, 4, this.width / 2 - 4, this.height - 4 - 30, patternState);
+        ItemSelectionScreenPart itemSelectionScreenPart = new ItemSelectionScreenPart(this.width / 2, 44, this.width / 2 - 4, this.height - 30 - 4 - 44, this.stacks, itemState);
         this.addPartialScreenChildren(patternSelectionScreenPart);
         this.addPartialScreenChildren(itemSelectionScreenPart);
-        this.addDrawableChild(squadNameWidget = new TextFieldWidget(this.textRenderer, this.width * 3 / 4 - 100, 20, 200, 20, SQUAD_NAME_FIELD_TITLE));
+        TextFieldWidget squadNameField = new TextFieldWidget(this.textRenderer, this.width * 3 / 4 - 100, 20, 200, 20, SQUAD_NAME_FIELD_TITLE);
+        squadNameField.setText(this.squadName);
+        squadNameField.setChangedListener(newSquadName -> this.squadName = newSquadName);
+        this.addDrawableChild(squadNameField);
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, new TranslatableText("gui.overlord.confirm_exit"), (button) -> {
             //TODO send save packet and disable, response should close GUI
         }));
