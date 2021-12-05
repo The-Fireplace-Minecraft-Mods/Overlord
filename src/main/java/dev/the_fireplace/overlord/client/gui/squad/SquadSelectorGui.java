@@ -55,6 +55,7 @@ public class SquadSelectorGui extends Screen
             Collection<ItemStack> squadItems = getSquadItems();
             this.client.openScreen(new SquadCreatorGui(this, squadItems, null));
         }));
+        //TODO edit squad button
         //TODO delete squad button
     }
 

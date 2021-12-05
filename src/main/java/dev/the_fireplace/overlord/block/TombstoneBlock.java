@@ -1,11 +1,10 @@
 package dev.the_fireplace.overlord.block;
 
-import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.overlord.block.internal.AbstractTombstoneBlock;
 import dev.the_fireplace.overlord.blockentity.TombstoneBlockEntity;
 import dev.the_fireplace.overlord.blockentity.internal.AbstractTombstoneBlockEntity;
-import dev.the_fireplace.overlord.domain.network.ServerToClientPacketIDs;
-import dev.the_fireplace.overlord.domain.network.server.OpenTombstoneGUIBufferBuilder;
+import dev.the_fireplace.overlord.network.ServerToClientPacketIDs;
+import dev.the_fireplace.overlord.network.server.builder.OpenTombstoneGUIBufferBuilder;
 import dev.the_fireplace.overlord.util.BlockUtils;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
@@ -38,13 +37,8 @@ public class TombstoneBlock extends AbstractTombstoneBlock
         Block.createCuboidShape(4, 0, 2, 12, 3, 14)
     ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
 
-    private final ServerToClientPacketIDs serverToClientPacketIDs;
-    private final OpenTombstoneGUIBufferBuilder openTombstoneGUIBufferBuilder;
-
     public TombstoneBlock(Settings settings) {
         super(settings);
-        serverToClientPacketIDs = DIContainer.get().getInstance(ServerToClientPacketIDs.class);
-        openTombstoneGUIBufferBuilder = DIContainer.get().getInstance(OpenTombstoneGUIBufferBuilder.class);
     }
 
     @Override
@@ -64,8 +58,8 @@ public class TombstoneBlock extends AbstractTombstoneBlock
         if (!world.isClient() && placer instanceof ServerPlayerEntity) {
             ServerPlayNetworkHandler networkHandler = ((ServerPlayerEntity) placer).networkHandler;
             networkHandler.sendPacket(ServerPlayNetworking.createS2CPacket(
-                serverToClientPacketIDs.openTombstoneGuiPacketID(),
-                openTombstoneGUIBufferBuilder.build(pos)
+                ServerToClientPacketIDs.OPEN_TOMBSTONE_GUI,
+                OpenTombstoneGUIBufferBuilder.build(pos)
             ));
         }
     }
