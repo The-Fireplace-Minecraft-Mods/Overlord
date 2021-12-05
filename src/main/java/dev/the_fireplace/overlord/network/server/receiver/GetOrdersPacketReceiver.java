@@ -1,36 +1,27 @@
 package dev.the_fireplace.overlord.network.server.receiver;
 
-import dev.the_fireplace.annotateddi.api.di.Implementation;
+import dev.the_fireplace.lib.api.network.interfaces.ServerPacketReceiver;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
 import dev.the_fireplace.overlord.domain.entity.Ownable;
-import dev.the_fireplace.overlord.domain.network.ClientToServerPacketIDs;
-import dev.the_fireplace.overlord.domain.network.server.SaveAIPacketReceiver;
+import dev.the_fireplace.overlord.network.ClientToServerPacketIDs;
+import dev.the_fireplace.overlord.network.ServerToClientPacketIDs;
+import dev.the_fireplace.overlord.network.server.builder.OpenOrdersGUIBufferBuilder;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
-import javax.inject.Inject;
 import java.util.Objects;
 
-@Implementation
-public final class SaveAIPacketReceiverImpl implements SaveAIPacketReceiver {
-
-    private final ClientToServerPacketIDs clientToServerPacketIDs;
-
-    @Inject
-    private SaveAIPacketReceiverImpl(ClientToServerPacketIDs clientToServerPacketIDs) {
-        this.clientToServerPacketIDs = clientToServerPacketIDs;
-    }
-
+public final class GetOrdersPacketReceiver implements ServerPacketReceiver
+{
     @Override
     public Identifier getId() {
-        return clientToServerPacketIDs.saveAiPacketID();
+        return ClientToServerPacketIDs.GET_ORDERS;
     }
 
     @Override
@@ -44,15 +35,10 @@ public final class SaveAIPacketReceiverImpl implements SaveAIPacketReceiver {
         }
 
         if (entity instanceof Ownable && !Objects.equals(((Ownable) entity).getOwnerUniqueId(), player.getUuid())) {
-            Overlord.getLogger().warn("Save AI packet received with wrong player ID, expected {} and got {}.", ((Ownable) entity).getOwnerUniqueId(), player.getUuid());
+            Overlord.getLogger().warn("Get Orders packet received with wrong player ID, expected {} and got {}.", ((Ownable) entity).getOwnerUniqueId(), player.getUuid());
             return;
         }
-
-        CompoundTag aiTag = buf.readCompoundTag();
-        if (aiTag != null) {
-            ((OrderableEntity) entity).updateAISettings(aiTag);
-        } else {
-            Overlord.getLogger().error("No settings found in packet.");
-        }
+        PacketByteBuf ordersPacketBuffer = OpenOrdersGUIBufferBuilder.build(entityId, ((OrderableEntity) entity).getAISettings());
+        responseSender.sendPacket(ServerToClientPacketIDs.OPEN_ORDERS_GUI, ordersPacketBuffer);
     }
 }

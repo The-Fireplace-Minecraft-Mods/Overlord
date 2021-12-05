@@ -65,8 +65,8 @@ public final class SquadsImpl implements Squads
 
     @Nullable
     @Override
-    public Squad createNewSquad(UUID owner, String capeBase, ItemStack stack, String name) {
-        if (!isCapeUnused(capeBase, stack)) {
+    public Squad createNewSquad(UUID owner, String pattern, ItemStack stack, String name) {
+        if (!isCapeUnused(pattern, stack)) {
             return null;
         }
         UUID newSquadId;
@@ -75,7 +75,7 @@ public final class SquadsImpl implements Squads
         } while (squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP).containsKey(newSquadId));
 
         SavedSquad squad = new SavedSquad(newSquadId, owner);
-        squad.updatePattern(capeBase, stack);
+        squad.updatePattern(pattern, stack);
         squad.setName(name);
         squad.init();
         return squad;
@@ -113,10 +113,10 @@ public final class SquadsImpl implements Squads
     }
 
     @Override
-    public boolean isCapeUnused(String capeBase, ItemStack stack) {
+    public boolean isCapeUnused(String pattern, ItemStack stack) {
         for (ConcurrentMap<UUID, SavedSquad> squadEntries : squadCache.values()) {
             for (SavedSquad squad : squadEntries.values()) {
-                if (squad.capeItem.equals(stack) && squad.capeBase.equals(capeBase)) {
+                if (squad.item.equals(stack) && squad.pattern.equals(pattern)) {
                     return false;
                 }
             }
@@ -126,7 +126,7 @@ public final class SquadsImpl implements Squads
     }
 
     @Override
-    public boolean canUseCapeBase(UUID player, String capeBase) {
+    public boolean canUseCapeBase(UUID player, String pattern) {
         //TODO adjust when more capes are added
         return true;
     }
@@ -135,15 +135,15 @@ public final class SquadsImpl implements Squads
     {
         private final UUID id;
         private final UUID owner;
-        private String capeBase;
-        private ItemStack capeItem;
+        private String pattern;
+        private ItemStack item;
         private String name;
 
         private SavedSquad(UUID id, UUID owner) {
             this.id = id;
             this.owner = owner;
-            this.capeBase = "missing_texture";
-            this.capeItem = new ItemStack(Blocks.BARRIER);
+            this.pattern = "missing_texture";
+            this.item = new ItemStack(Blocks.BARRIER);
             this.name = "Missingno";
         }
 
@@ -163,24 +163,24 @@ public final class SquadsImpl implements Squads
 
         @Override
         public String getPattern() {
-            return capeBase;
+            return pattern;
         }
 
         @Override
         public ItemStack getItem() {
-            return capeItem;
+            return item;
         }
 
         @Override
         public void updatePattern(String capeBase, ItemStack capeItem) {
-            if (this.capeBase.equals(capeBase) && this.capeItem.equals(capeItem)) {
+            if (this.pattern.equals(capeBase) && this.item.equals(capeItem)) {
                 return;
             }
             if (!isCapeUnused(capeBase, capeItem)) {
                 return;
             }
-            this.capeBase = capeBase;
-            this.capeItem = capeItem;
+            this.pattern = capeBase;
+            this.item = capeItem;
             saveDataStateManager.markChanged(this);
         }
 
@@ -197,9 +197,9 @@ public final class SquadsImpl implements Squads
 
         @Override
         public void readFrom(StorageReadBuffer buffer) {
-            this.capeBase = buffer.readString("capeBase", this.capeBase);
+            this.pattern = buffer.readString("pattern", this.pattern);
             try {
-                this.capeItem = ItemStack.fromNbt(StringNbtReader.parse(buffer.readString("capeItem", "")));
+                this.item = ItemStack.fromNbt(StringNbtReader.parse(buffer.readString("item", "")));
             } catch (CommandSyntaxException ignored) {
             }
             this.name = buffer.readString("name", this.name);
@@ -207,8 +207,8 @@ public final class SquadsImpl implements Squads
 
         @Override
         public void writeTo(StorageWriteBuffer buffer) {
-            buffer.writeString("capeBase", capeBase);
-            buffer.writeString("capeItem", new StringNbtWriter().apply(capeItem.writeNbt(new NbtCompound())));
+            buffer.writeString("pattern", pattern);
+            buffer.writeString("item", new StringNbtWriter().apply(item.writeNbt(new NbtCompound())));
             buffer.writeString("name", name);
         }
 

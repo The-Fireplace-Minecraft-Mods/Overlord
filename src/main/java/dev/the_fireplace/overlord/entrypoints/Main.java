@@ -7,10 +7,10 @@ import dev.the_fireplace.overlord.augment.Augments;
 import dev.the_fireplace.overlord.block.OverlordBlocks;
 import dev.the_fireplace.overlord.blockentity.OverlordBlockEntities;
 import dev.the_fireplace.overlord.datapack.OverlordDataPacks;
-import dev.the_fireplace.overlord.domain.network.server.ServerPacketRegistry;
 import dev.the_fireplace.overlord.domain.registry.HeadBlockAugmentRegistry;
 import dev.the_fireplace.overlord.entity.OverlordEntities;
 import dev.the_fireplace.overlord.item.OverlordItems;
+import dev.the_fireplace.overlord.network.server.ServerPacketRegistry;
 
 public final class Main implements DIModInitializer
 {

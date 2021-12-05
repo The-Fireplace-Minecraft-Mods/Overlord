@@ -1,11 +1,10 @@
 package dev.the_fireplace.overlord.network.client.receiver;
 
-import dev.the_fireplace.annotateddi.api.di.Implementation;
+import dev.the_fireplace.lib.api.network.interfaces.ClientPacketReceiver;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.domain.client.OrdersGuiFactory;
 import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
-import dev.the_fireplace.overlord.domain.network.ServerToClientPacketIDs;
-import dev.the_fireplace.overlord.domain.network.client.OpenOrdersGUIPacketReceiver;
+import dev.the_fireplace.overlord.network.ServerToClientPacketIDs;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -21,21 +20,18 @@ import javax.inject.Inject;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
-@Implementation
-public final class OpenOrdersGUIPacketReceiverImpl implements OpenOrdersGUIPacketReceiver {
-
-    private final ServerToClientPacketIDs serverToClientPacketIDs;
+public final class OpenOrdersGUIPacketReceiver implements ClientPacketReceiver
+{
     private final OrdersGuiFactory ordersGuiFactory;
 
     @Inject
-    public OpenOrdersGUIPacketReceiverImpl(ServerToClientPacketIDs serverToClientPacketIDs, OrdersGuiFactory ordersGuiFactory) {
-        this.serverToClientPacketIDs = serverToClientPacketIDs;
+    public OpenOrdersGUIPacketReceiver(OrdersGuiFactory ordersGuiFactory) {
         this.ordersGuiFactory = ordersGuiFactory;
     }
 
     @Override
     public Identifier getId() {
-        return serverToClientPacketIDs.openOrdersGuiPacketID();
+        return ServerToClientPacketIDs.OPEN_ORDERS_GUI;
     }
 
     @Override

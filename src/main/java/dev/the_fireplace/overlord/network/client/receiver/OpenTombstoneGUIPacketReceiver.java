@@ -1,11 +1,10 @@
 package dev.the_fireplace.overlord.network.client.receiver;
 
-import dev.the_fireplace.annotateddi.api.di.Implementation;
+import dev.the_fireplace.lib.api.network.interfaces.ClientPacketReceiver;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.blockentity.TombstoneBlockEntity;
 import dev.the_fireplace.overlord.client.gui.block.TombstoneGui;
-import dev.the_fireplace.overlord.domain.network.ServerToClientPacketIDs;
-import dev.the_fireplace.overlord.domain.network.client.OpenTombstoneGUIPacketReceiver;
+import dev.the_fireplace.overlord.network.ServerToClientPacketIDs;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -15,22 +14,12 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
-import javax.inject.Inject;
-
 @Environment(EnvType.CLIENT)
-@Implementation
-public final class OpenTombstoneGUIPacketReceiverImpl implements OpenTombstoneGUIPacketReceiver
+public final class OpenTombstoneGUIPacketReceiver implements ClientPacketReceiver
 {
-    private final ServerToClientPacketIDs serverToClientPacketIDs;
-
-    @Inject
-    public OpenTombstoneGUIPacketReceiverImpl(ServerToClientPacketIDs serverToClientPacketIDs) {
-        this.serverToClientPacketIDs = serverToClientPacketIDs;
-    }
-
     @Override
     public Identifier getId() {
-        return serverToClientPacketIDs.openTombstoneGuiPacketID();
+        return ServerToClientPacketIDs.OPEN_TOMBSTONE_GUI;
     }
 
     @Override

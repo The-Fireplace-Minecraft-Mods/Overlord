@@ -331,9 +331,10 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
         return null;
     }
 
+    @Nullable
     public UUID getSquad() {
         //TODO
-        return emptyUUID.get();
+        return null;
     }
 
     public void setSquad(Squad squad) {
@@ -342,7 +343,7 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
 
     public boolean hasSquad() {
         //TODO and squad exists
-        return !emptyUUID.is(getSquad());
+        return getSquad() != null;
     }
 
     @Override

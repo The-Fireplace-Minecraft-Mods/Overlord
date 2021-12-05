@@ -10,7 +10,5 @@ public interface GuiOpener
 {
     void openOrdersGUI(OrderableEntity entity);
 
-    void openSquadManagerGUI();
-
     void openSquadSelectorGUI(ArmyEntity entity);
 }

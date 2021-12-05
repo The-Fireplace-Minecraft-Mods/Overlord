@@ -12,14 +12,14 @@ import dev.the_fireplace.overlord.client.gui.config.PositionSelectorGui;
 import dev.the_fireplace.overlord.client.gui.config.listbuilder.ListBuilderGui;
 import dev.the_fireplace.overlord.domain.client.OrdersGuiFactory;
 import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
-import dev.the_fireplace.overlord.domain.network.ClientToServerPacketIDs;
-import dev.the_fireplace.overlord.domain.network.client.SaveAIPacketBufferBuilder;
 import dev.the_fireplace.overlord.entity.ai.aiconfig.combat.CombatCategory;
 import dev.the_fireplace.overlord.entity.ai.aiconfig.misc.MiscCategory;
 import dev.the_fireplace.overlord.entity.ai.aiconfig.movement.EnumMovementMode;
 import dev.the_fireplace.overlord.entity.ai.aiconfig.movement.MovementCategory;
 import dev.the_fireplace.overlord.entity.ai.aiconfig.movement.PositionSetting;
 import dev.the_fireplace.overlord.entity.ai.aiconfig.tasks.TasksCategory;
+import dev.the_fireplace.overlord.network.ClientToServerPacketIDs;
+import dev.the_fireplace.overlord.network.client.builder.UpdateAIBufferBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -37,35 +37,31 @@ import java.util.function.Consumer;
 @Implementation
 public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory
 {
-    private static final String TRANSLATION_BASE = "gui." + Overlord.MODID + ".aisettings.";
-    private static final String OPTION_TRANSLATION_BASE = TRANSLATION_BASE + "option.";
-    private static final String ENABLED_TRANSLATION_KEY = OPTION_TRANSLATION_BASE + "enabled";
-    private static final String COMBAT_TRANSLATION_BASE = OPTION_TRANSLATION_BASE + "combat.";
-    private static final String MOVEMENT_TRANSLATION_BASE = OPTION_TRANSLATION_BASE + "movement.";
-    private static final String TASK_TRANSLATION_BASE = OPTION_TRANSLATION_BASE + "task.";
-    private static final String MISC_TRANSLATION_BASE = OPTION_TRANSLATION_BASE + "misc.";
+	private static final String TRANSLATION_BASE = "gui." + Overlord.MODID + ".aisettings.";
+	private static final String OPTION_TRANSLATION_BASE = TRANSLATION_BASE + "option.";
+	private static final String ENABLED_TRANSLATION_KEY = OPTION_TRANSLATION_BASE + "enabled";
+	private static final String COMBAT_TRANSLATION_BASE = OPTION_TRANSLATION_BASE + "combat.";
+	private static final String MOVEMENT_TRANSLATION_BASE = OPTION_TRANSLATION_BASE + "movement.";
+	private static final String TASK_TRANSLATION_BASE = OPTION_TRANSLATION_BASE + "task.";
+	private static final String MISC_TRANSLATION_BASE = OPTION_TRANSLATION_BASE + "misc.";
 
-    private final AISettings defaultSettings = new AISettings();
-    private final Translator translator;
-    private final ConfigScreenBuilderFactory configScreenBuilderFactory;
-    private final ClientToServerPacketIDs clientToServerPacketIDs;
-    private final SaveAIPacketBufferBuilder saveAIPacketBufferBuilder;
-    private ConfigScreenBuilder screenBuilder;
-    @Nullable
-    private BlockPos currentPosition = null;
+	private final AISettings defaultSettings = new AISettings();
+	private final Translator translator;
+	private final ConfigScreenBuilderFactory configScreenBuilderFactory;
+	private ConfigScreenBuilder screenBuilder;
+	@Nullable
+	private BlockPos currentPosition = null;
 
-    @Inject
-    public SkeletonOrdersGuiFactory(
-        TranslatorFactory translatorFactory,
-        ConfigScreenBuilderFactory configScreenBuilderFactory,
-        ClientToServerPacketIDs clientToServerPacketIDs,
-        SaveAIPacketBufferBuilder saveAIPacketBufferBuilder
-    ) {
-        this.translator = translatorFactory.getTranslator(Overlord.MODID);
-        this.configScreenBuilderFactory = configScreenBuilderFactory;
-        this.clientToServerPacketIDs = clientToServerPacketIDs;
-        this.saveAIPacketBufferBuilder = saveAIPacketBufferBuilder;
-    }
+	@Inject
+	public SkeletonOrdersGuiFactory(
+		TranslatorFactory translatorFactory,
+		ConfigScreenBuilderFactory configScreenBuilderFactory
+
+	) {
+		this.translator = translatorFactory.getTranslator(Overlord.MODID);
+		this.configScreenBuilderFactory = configScreenBuilderFactory;
+
+	}
 
     @Override
     public Screen build(Screen parent, OrderableEntity aiEntity) {
@@ -75,9 +71,9 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory
             TRANSLATION_BASE + "combat",
             parent,
             () -> ClientPlayNetworking.send(
-                clientToServerPacketIDs.saveAiPacketID(),
-                saveAIPacketBufferBuilder.build(aiEntity)
-            )
+				ClientToServerPacketIDs.UPDATE_AI,
+				UpdateAIBufferBuilder.build(aiEntity)
+			)
         );
         this.currentPosition = aiEntity instanceof Entity ? ((Entity) aiEntity).getBlockPos() : null;
 

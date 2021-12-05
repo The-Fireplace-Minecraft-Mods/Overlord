@@ -1,10 +1,9 @@
 package dev.the_fireplace.overlord.network.server.receiver;
 
-import dev.the_fireplace.annotateddi.api.di.Implementation;
+import dev.the_fireplace.lib.api.network.interfaces.ServerPacketReceiver;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.blockentity.TombstoneBlockEntity;
-import dev.the_fireplace.overlord.domain.network.ClientToServerPacketIDs;
-import dev.the_fireplace.overlord.domain.network.server.SaveTombstonePacketReceiver;
+import dev.the_fireplace.overlord.network.ClientToServerPacketIDs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.MinecraftServer;
@@ -14,21 +13,11 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 
-import javax.inject.Inject;
-
-@Implementation
-public final class SaveTombstonePacketReceiverImpl implements SaveTombstonePacketReceiver
+public final class SaveTombstonePacketReceiver implements ServerPacketReceiver
 {
-    private final ClientToServerPacketIDs clientToServerPacketIDs;
-
-    @Inject
-    public SaveTombstonePacketReceiverImpl(ClientToServerPacketIDs clientToServerPacketIDs) {
-        this.clientToServerPacketIDs = clientToServerPacketIDs;
-    }
-
     @Override
     public Identifier getId() {
-        return clientToServerPacketIDs.saveTombstonePacketID();
+        return ClientToServerPacketIDs.SAVE_TOMBSTONE;
     }
 
     @Override

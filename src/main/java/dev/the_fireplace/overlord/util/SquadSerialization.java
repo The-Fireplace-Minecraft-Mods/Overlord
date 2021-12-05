@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
-import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -105,12 +104,12 @@ public class SquadSerialization
 
         @Override
         public void updatePattern(String capeBase, ItemStack capeItem) {
-            throw new NotImplementedException("Cannot save squad data on the client!");
+            throw new UnsupportedOperationException("Cannot save squad data on the client!");
         }
 
         @Override
         public void setName(String name) {
-            throw new NotImplementedException("Cannot save squad data on the client!");
+            throw new UnsupportedOperationException("Cannot save squad data on the client!");
         }
     }
 }
