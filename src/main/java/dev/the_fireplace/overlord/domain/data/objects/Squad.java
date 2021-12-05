@@ -10,11 +10,11 @@ public interface Squad
 
     UUID getOwner();
 
-    String getCapeBase();
+    String getPattern();
 
-    ItemStack getCapeItem();
+    ItemStack getItem();
 
-    void updateCape(String capeBase, ItemStack capeItem);
+    void updatePattern(String capeBase, ItemStack capeItem);
 
     String getName();
 

@@ -24,20 +24,19 @@ public class PatternSelectionScreenPart implements PartialScreen
     private final int y;
     private final int width;
     private final int height;
+    private final State state;
 
     private final List<PatternButtonWidget> patternWidgets = new ArrayList<>();
-    private byte patternPage = 0;
     private ButtonWidget previousButton;
     private ButtonWidget nextButton;
-    private Identifier selectedPattern = new Identifier("");
 
-    public PatternSelectionScreenPart(int x, int y, int width, int height) {
+    public PatternSelectionScreenPart(int x, int y, int width, int height, State state) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.state = state;
         createWidgets();
-        setPatternVisibility();
     }
 
     @SuppressWarnings("unchecked")
@@ -52,39 +51,20 @@ public class PatternSelectionScreenPart implements PartialScreen
     }
 
     private void createWidgets() {
-        previousButton = new ButtonWidget(x, y, this.width / 2 - 2, 20, new TranslatableText("gui.overlord.create_squad.previous"), buttonWidget -> {
-            if (--this.patternPage <= 0) {
-                buttonWidget.active = false;
-            }
-            if (!nextButton.active) {
-                nextButton.active = true;
-            }
-            setPatternVisibility();
-        });
-        previousButton.active = false;
-        nextButton = new ButtonWidget(x + width / 2 + 4, y, this.width / 2 - 6, 20, new TranslatableText("gui.overlord.create_squad.next"), buttonWidget -> {
-            if (++this.patternPage >= getPageCount() - 1) {
-                buttonWidget.active = false;
-            }
-            if (!previousButton.active) {
-                previousButton.active = true;
-            }
-            setPatternVisibility();
-        });
         createPatternWidgets();
-        nextButton.active = patternWidgets.size() > getPatternsPerPage();
+        calculateStartingPage();
+        updatePatternVisibility();
+        createPageChangeButtons();
     }
 
     private void createPatternWidgets() {
         patternWidgets.clear();
         int columnIndex = 0;
         int rowIndex = 0;
-        int patternAreaWidth = getPatternAreaWidth();
-        int patternAreaHeight = getPatternAreaHeight();
-        int widgetWidth = getPatternWidgetWidth(patternAreaWidth);
-        int widgetHeight = getPatternWidgetHeight(patternAreaHeight);
-        int displayedColumnCount = getColumnCount(patternAreaWidth);
-        int displayedRowCount = getRowCount(patternAreaHeight);
+        int widgetWidth = getPatternWidgetWidth();
+        int widgetHeight = getPatternWidgetHeight();
+        int displayedColumnCount = getColumnCount();
+        int displayedRowCount = getRowCount();
         for (String pattern : SquadPatterns.getPatterns()) {
             int column = columnIndex % displayedColumnCount;
             int row = rowIndex % displayedRowCount;
@@ -100,8 +80,8 @@ public class PatternSelectionScreenPart implements PartialScreen
                 widgetName,
                 patternId,
                 patternWidget -> {
-                    this.selectedPattern = patternId;
-                    updateActivePattern();
+                    this.state.patternId = patternId;
+                    notifyChildrenOfPattern();
                 }
             );
             this.patternWidgets.add(patternButtonWidget);
@@ -110,6 +90,7 @@ public class PatternSelectionScreenPart implements PartialScreen
                 rowIndex++;
             }
         }
+        notifyChildrenOfPattern();
     }
 
     private int getPatternAreaHeight() {
@@ -120,32 +101,32 @@ public class PatternSelectionScreenPart implements PartialScreen
         return this.width;
     }
 
-    private int getPatternWidgetHeight(int patternAreaHeight) {
-        return patternAreaHeight / getRowCount(patternAreaHeight) - 4;
+    private int getPatternWidgetHeight() {
+        return getPatternAreaHeight() / getRowCount() - 4;
     }
 
-    private int getPatternWidgetWidth(int patternAreaWidth) {
-        return patternAreaWidth / getColumnCount(patternAreaWidth) - 4;
+    private int getPatternWidgetWidth() {
+        return getPatternAreaWidth() / getColumnCount() - 4;
     }
 
-    private int getColumnCount(int patternAreaWidth) {
+    private int getColumnCount() {
         int minimumPatternWidth = 70;
-        return Math.max(1, patternAreaWidth / minimumPatternWidth);
+        return Math.max(1, getPatternAreaWidth() / minimumPatternWidth);
     }
 
-    private int getRowCount(int patternAreaHeight) {
+    private int getRowCount() {
         int minimumPatternHeight = 70;
-        return Math.max(1, patternAreaHeight / minimumPatternHeight);
+        return Math.max(1, getPatternAreaHeight() / minimumPatternHeight);
     }
 
     private int getPatternsPerPage() {
-        return getColumnCount(getPatternAreaWidth()) * getRowCount(getPatternAreaHeight());
+        return getColumnCount() * getRowCount();
     }
 
-    private void setPatternVisibility() {
+    private void updatePatternVisibility() {
         for (int index = 0; index < patternWidgets.size(); index++) {
             int patternPage = index / getPatternsPerPage();
-            patternWidgets.get(index).visible = patternPage == this.patternPage;
+            patternWidgets.get(index).visible = patternPage == this.state.currentPage;
         }
     }
 
@@ -155,13 +136,58 @@ public class PatternSelectionScreenPart implements PartialScreen
         return patternCount / patternsPerPage + (patternCount % patternsPerPage == 0 ? 0 : 1);
     }
 
-    private void updateActivePattern() {
+    private void calculateStartingPage() {
+        if (this.state.patternId.getPath().isEmpty()) {
+            this.state.currentPage = 0;
+            return;
+        }
+        int widgetIndex = 0;
+        for (PatternButtonWidget patternWidget : this.patternWidgets) {
+            if (patternWidget.pattern.equals(this.state.patternId)) {
+                this.state.currentPage = (byte) (widgetIndex / getPatternsPerPage());
+                return;
+            }
+            widgetIndex++;
+        }
+        this.state.currentPage = 0;
+    }
+
+    private void createPageChangeButtons() {
+        previousButton = new ButtonWidget(x, y, this.width / 2 - 2, 20, new TranslatableText("gui.overlord.create_squad.previous"), buttonWidget -> {
+            this.state.currentPage--;
+            updatePageChangeButtonUsability();
+            updatePatternVisibility();
+        });
+        nextButton = new ButtonWidget(x + width / 2 + 4, y, this.width / 2 - 6, 20, new TranslatableText("gui.overlord.create_squad.next"), buttonWidget -> {
+            this.state.currentPage++;
+            updatePageChangeButtonUsability();
+            updatePatternVisibility();
+        });
+        updatePageChangeButtonUsability();
+    }
+
+    private void updatePageChangeButtonUsability() {
+        this.previousButton.active = this.state.currentPage > 0;
+        this.nextButton.active = this.state.currentPage < getPageCount();
+    }
+
+    private void notifyChildrenOfPattern() {
         for (PatternButtonWidget patternWidget : patternWidgets) {
-            patternWidget.notifyOfActivePattern(this.selectedPattern);
+            patternWidget.notifyOfActivePattern(this.state.patternId);
         }
     }
 
-    public Identifier getSelectedPatternId() {
-        return selectedPattern;
+    static class State
+    {
+        private byte currentPage = 0;
+        private Identifier patternId;
+
+        public State(Identifier patternId) {
+            this.patternId = patternId;
+        }
+
+        public Identifier getPatternId() {
+            return patternId;
+        }
     }
 }

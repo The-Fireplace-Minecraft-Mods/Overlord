@@ -23,21 +23,20 @@ public class ItemSelectionScreenPart implements PartialScreen
     private final int width;
     private final int height;
     private final Collection<ItemStack> items;
+    private final State state;
 
     private final List<ItemButtonWidget> itemWidgets = new ArrayList<>();
-    private byte itemPage = 0;
     private ButtonWidget previousButton;
     private ButtonWidget nextButton;
-    private ItemStack selectedStack = ItemStack.EMPTY;
 
-    public ItemSelectionScreenPart(int x, int y, int width, int height, Collection<ItemStack> items) {
+    public ItemSelectionScreenPart(int x, int y, int width, int height, Collection<ItemStack> items, State state) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.items = items;
+        this.state = state;
         createWidgets();
-        setItemVisibility();
     }
 
     @SuppressWarnings("unchecked")
@@ -52,27 +51,10 @@ public class ItemSelectionScreenPart implements PartialScreen
     }
 
     private void createWidgets() {
-        previousButton = new ButtonWidget(x, y, this.width / 2 - 2, 20, new TranslatableText("gui.overlord.create_squad.previous"), buttonWidget -> {
-            if (--this.itemPage <= 0) {
-                buttonWidget.active = false;
-            }
-            if (!nextButton.active) {
-                nextButton.active = true;
-            }
-            setItemVisibility();
-        });
-        previousButton.active = false;
-        nextButton = new ButtonWidget(x + width / 2 + 4, y, this.width / 2 - 6, 20, new TranslatableText("gui.overlord.create_squad.next"), buttonWidget -> {
-            if (++this.itemPage >= getPageCount() - 1) {
-                buttonWidget.active = false;
-            }
-            if (!previousButton.active) {
-                previousButton.active = true;
-            }
-            setItemVisibility();
-        });
         createItemWidgets();
-        nextButton.active = itemWidgets.size() > getItemsPerPage();
+        calculateStartingPage();
+        updateItemVisibility();
+        createPageChangeButtons();
     }
 
     private void createItemWidgets() {
@@ -94,8 +76,8 @@ public class ItemSelectionScreenPart implements PartialScreen
                 widgetSize,
                 item,
                 itemWidget -> {
-                    this.selectedStack = item;
-                    updateActiveItem();
+                    this.state.selectedStack = item;
+                    notifyChildrenOfItem();
                 }
             );
             this.itemWidgets.add(itemButtonWidget);
@@ -104,6 +86,7 @@ public class ItemSelectionScreenPart implements PartialScreen
                 rowIndex++;
             }
         }
+        notifyChildrenOfItem();
     }
 
     private int getItemAreaHeight() {
@@ -130,10 +113,10 @@ public class ItemSelectionScreenPart implements PartialScreen
         return getColumnCount() * getRowCount();
     }
 
-    private void setItemVisibility() {
+    private void updateItemVisibility() {
         for (int index = 0; index < itemWidgets.size(); index++) {
             int itemPage = index / getItemsPerPage();
-            itemWidgets.get(index).visible = itemPage == this.itemPage;
+            itemWidgets.get(index).visible = itemPage == this.state.currentPage;
         }
     }
 
@@ -143,13 +126,58 @@ public class ItemSelectionScreenPart implements PartialScreen
         return itemCount / itemsPerPage + (itemCount % itemsPerPage == 0 ? 0 : 1);
     }
 
-    private void updateActiveItem() {
+    private void calculateStartingPage() {
+        if (this.state.selectedStack.isEmpty()) {
+            this.state.currentPage = 0;
+            return;
+        }
+        int widgetIndex = 0;
+        for (ItemButtonWidget itemWidget : this.itemWidgets) {
+            if (ItemStack.areEqual(itemWidget.stack, this.state.selectedStack)) {
+                this.state.currentPage = (byte) (widgetIndex / getItemsPerPage());
+                return;
+            }
+            widgetIndex++;
+        }
+        this.state.currentPage = 0;
+    }
+
+    private void createPageChangeButtons() {
+        previousButton = new ButtonWidget(x, y, this.width / 2 - 2, 20, new TranslatableText("gui.overlord.create_squad.previous"), buttonWidget -> {
+            this.state.currentPage--;
+            updatePageChangeButtonUsability();
+            updateItemVisibility();
+        });
+        nextButton = new ButtonWidget(x + width / 2 + 4, y, this.width / 2 - 6, 20, new TranslatableText("gui.overlord.create_squad.next"), buttonWidget -> {
+            this.state.currentPage++;
+            updatePageChangeButtonUsability();
+            updateItemVisibility();
+        });
+        updatePageChangeButtonUsability();
+    }
+
+    private void updatePageChangeButtonUsability() {
+        this.previousButton.active = this.state.currentPage > 0;
+        this.nextButton.active = this.state.currentPage < getPageCount();
+    }
+
+    private void notifyChildrenOfItem() {
         for (ItemButtonWidget itemWidget : itemWidgets) {
-            itemWidget.notifyOfActiveStack(this.selectedStack);
+            itemWidget.notifyOfActiveStack(this.state.selectedStack);
         }
     }
 
-    public ItemStack getSelectedStack() {
-        return selectedStack;
+    static class State
+    {
+        private byte currentPage = 0;
+        private ItemStack selectedStack;
+
+        public State(ItemStack selectedStack) {
+            this.selectedStack = selectedStack;
+        }
+
+        public ItemStack getStack() {
+            return selectedStack;
+        }
     }
 }

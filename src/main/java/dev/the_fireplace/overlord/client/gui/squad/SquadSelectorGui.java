@@ -53,7 +53,7 @@ public class SquadSelectorGui extends Screen
         }));
         this.addDrawableChild(new ButtonWidget(0, this.height - 54, this.width / 3, 20, Text.of("Create Squad"), (button) -> {
             Collection<ItemStack> squadItems = getSquadItems();
-            this.client.openScreen(new SquadCreatorGui(this, squadItems));
+            this.client.openScreen(new SquadCreatorGui(this, squadItems, null));
         }));
         //TODO delete squad button
     }
