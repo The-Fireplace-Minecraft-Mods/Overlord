@@ -74,6 +74,9 @@ public class SquadSelectorGui extends Screen
             Inventory playerInventory = player.getInventory();
             squadItems.addAll(getStacksFromInventory(playerInventory));
         }
+        for (Squad ownedSquad : ownedSquads) {
+            squadItems.add(ownedSquad.getItem());
+        }
         return reduceAndDeduplicate(squadItems);
     }
 
