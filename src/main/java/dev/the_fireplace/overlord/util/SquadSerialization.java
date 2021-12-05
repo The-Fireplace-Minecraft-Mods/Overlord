@@ -44,8 +44,8 @@ public class SquadSerialization
         compound.putUuid("owner", squad.getOwner());
         compound.putUuid("squadId", squad.getSquadId());
         compound.putString("name", squad.getName());
-        compound.putString("capeBase", squad.getCapeBase());
-        compound.put("capeItem", squad.getCapeItem().writeNbt(new NbtCompound()));
+        compound.putString("capeBase", squad.getPattern());
+        compound.put("capeItem", squad.getItem().writeNbt(new NbtCompound()));
 
         return compound;
     }
@@ -89,12 +89,12 @@ public class SquadSerialization
         }
 
         @Override
-        public String getCapeBase() {
+        public String getPattern() {
             return capeBase;
         }
 
         @Override
-        public ItemStack getCapeItem() {
+        public ItemStack getItem() {
             return capeItem;
         }
 
@@ -104,7 +104,7 @@ public class SquadSerialization
         }
 
         @Override
-        public void updateCape(String capeBase, ItemStack capeItem) {
+        public void updatePattern(String capeBase, ItemStack capeItem) {
             throw new NotImplementedException("Cannot save squad data on the client!");
         }
 

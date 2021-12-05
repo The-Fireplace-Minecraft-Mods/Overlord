@@ -75,7 +75,7 @@ public final class SquadsImpl implements Squads
         } while (squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP).containsKey(newSquadId));
 
         SavedSquad squad = new SavedSquad(newSquadId, owner);
-        squad.updateCape(capeBase, stack);
+        squad.updatePattern(capeBase, stack);
         squad.setName(name);
         squad.init();
         return squad;
@@ -162,17 +162,17 @@ public final class SquadsImpl implements Squads
         }
 
         @Override
-        public String getCapeBase() {
+        public String getPattern() {
             return capeBase;
         }
 
         @Override
-        public ItemStack getCapeItem() {
+        public ItemStack getItem() {
             return capeItem;
         }
 
         @Override
-        public void updateCape(String capeBase, ItemStack capeItem) {
+        public void updatePattern(String capeBase, ItemStack capeItem) {
             if (this.capeBase.equals(capeBase) && this.capeItem.equals(capeItem)) {
                 return;
             }
