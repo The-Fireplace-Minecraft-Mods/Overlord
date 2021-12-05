@@ -2,10 +2,9 @@ package dev.the_fireplace.overlord.client.gui.block;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.overlord.blockentity.TombstoneBlockEntity;
-import dev.the_fireplace.overlord.domain.network.ClientToServerPacketIDs;
-import dev.the_fireplace.overlord.domain.network.client.SaveTombstoneBufferBuilder;
+import dev.the_fireplace.overlord.network.ClientToServerPacketIDs;
+import dev.the_fireplace.overlord.network.client.builder.SaveTombstoneBufferBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -28,14 +27,9 @@ public class TombstoneGui extends Screen
     private int ticksSinceOpened;
     private SelectionManager selectionManager;
 
-    private final ClientToServerPacketIDs clientToServerPacketIDs;
-    private final SaveTombstoneBufferBuilder saveTombstoneBufferBuilder;
-
     public TombstoneGui(TombstoneBlockEntity tombstone) {
         super(new TranslatableText("gui.overlord.tombstone.edit"));
         this.tombstone = tombstone;
-        this.clientToServerPacketIDs = DIContainer.get().getInstance(ClientToServerPacketIDs.class);
-        this.saveTombstoneBufferBuilder = DIContainer.get().getInstance(SaveTombstoneBufferBuilder.class);
     }
 
     @Override
@@ -61,8 +55,8 @@ public class TombstoneGui extends Screen
         ClientPlayNetworkHandler clientPlayNetworkHandler = this.client.getNetworkHandler();
         if (clientPlayNetworkHandler != null) {
             clientPlayNetworkHandler.sendPacket(ClientPlayNetworking.createC2SPacket(
-                clientToServerPacketIDs.saveTombstonePacketID(),
-                saveTombstoneBufferBuilder.build(
+                ClientToServerPacketIDs.SAVE_TOMBSTONE,
+                SaveTombstoneBufferBuilder.build(
                     tombstone.getPos(),
                     tombstone.getNameText()
                 )

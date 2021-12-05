@@ -13,13 +13,13 @@ public interface Squads
     Squad getSquad(UUID owner, UUID squadId);
 
     @Nullable
-    Squad createNewSquad(UUID owner, String capeBase, ItemStack stack, String name);
+    Squad createNewSquad(UUID owner, String pattern, ItemStack stack, String name);
 
     void removeSquad(UUID owner, UUID squadId);
 
     Collection<? extends Squad> getSquadsWithOwner(UUID owner);
 
-    boolean isCapeUnused(String capeBase, ItemStack stack);
+    boolean isCapeUnused(String pattern, ItemStack stack);
 
-    boolean canUseCapeBase(UUID player, String capeBase);
+    boolean canUseCapeBase(UUID player, String pattern);
 }
