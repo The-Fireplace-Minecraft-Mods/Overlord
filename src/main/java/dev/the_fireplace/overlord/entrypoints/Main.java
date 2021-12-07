@@ -11,8 +11,6 @@ import dev.the_fireplace.overlord.domain.registry.HeadBlockAugmentRegistry;
 import dev.the_fireplace.overlord.entity.OverlordEntities;
 import dev.the_fireplace.overlord.item.OverlordItems;
 import dev.the_fireplace.overlord.network.server.ServerPacketRegistry;
-import dev.the_fireplace.overlord.util.SquadSync;
-import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
 
 public final class Main implements DIModInitializer
 {
@@ -26,8 +24,5 @@ public final class Main implements DIModInitializer
         Augments.register(diContainer.getInstance(HeadBlockAugmentRegistry.class));
         diContainer.getInstance(ServerPacketRegistry.class).registerPacketHandlers();
         OverlordDataPacks.register(diContainer);
-        ServerLoginConnectionEvents.QUERY_START.register((handler, server, sender, synchronizer) -> {
-            diContainer.getInstance(SquadSync.class).syncTo(sender);
-        });
     }
 }
