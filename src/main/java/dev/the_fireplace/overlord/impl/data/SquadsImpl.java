@@ -81,7 +81,7 @@ public final class SquadsImpl implements Squads
 
     @Override
     public void removeSquad(UUID owner, UUID squadId) {
-        //TODO handle if squad is not yet cached for some reason, if needed
+        loadFullSquadCache();
         SavedSquad squad = squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP).remove(squadId);
         if (squad != null) {
             squad.delete();
@@ -96,6 +96,7 @@ public final class SquadsImpl implements Squads
 
     @Override
     public Collection<? extends Squad> getSquads() {
+        loadFullSquadCache();
         Collection<Squad> squads = new ArrayList<>();
         squadCache.values().forEach(entry -> squads.addAll(entry.values()));
         return squads;
@@ -115,6 +116,32 @@ public final class SquadsImpl implements Squads
                 }
             }
         }
+    }
+
+    private void loadFullSquadCache() {
+        Overlord.getLogger().debug("Looking up Squads...");
+        int uuidStringLength = UUID.randomUUID().toString().replace("-", "").length();
+        Iterator<String> databaseIdIterator = storageReader.getStoredIdsIterator(DATABASE, TABLE);
+        while (databaseIdIterator.hasNext()) {
+            String id = databaseIdIterator.next();
+            UUID owner = storedUUIDtoUUID(id.substring(0, uuidStringLength));
+            UUID squadId = storedUUIDtoUUID(id.substring(uuidStringLength));
+            ConcurrentMap<UUID, SavedSquad> cachedOwnerSquads = squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP);
+            if (!cachedOwnerSquads.containsKey(squadId)) {
+                SavedSquad squad = new SavedSquad(squadId, owner);
+                squad.init();
+                cachedOwnerSquads.put(squadId, squad);
+            }
+        }
+    }
+
+    private UUID storedUUIDtoUUID(String storedUUID) {
+        return UUID.fromString(
+            storedUUID
+                .replaceFirst(
+                    "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)", "$1-$2-$3-$4-$5"
+                )
+        );
     }
 
     private class SavedSquad implements Squad, SaveData
