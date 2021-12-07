@@ -9,6 +9,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
@@ -18,6 +19,7 @@ import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 @Implementation(name = "client")
+@Singleton
 public final class ClientSquads implements Squads
 {
     private static final Function<UUID, ConcurrentMap<UUID, Squad>> NEW_CONCURRENT_MAP = (unused) -> new ConcurrentHashMap<>();
