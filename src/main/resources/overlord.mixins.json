@@ -6,7 +6,6 @@
     "AbstractSkeletonEntityMixin",
     "GoalSelectorAccessor",
     "MeleeAttackGoalAccessor",
-    "PlayerManagerMixin",
     "WolfEntityMixin"
   ],
   "client": [
