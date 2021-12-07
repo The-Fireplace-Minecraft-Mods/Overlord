@@ -159,7 +159,7 @@ public class ItemSelectionScreenPart implements PartialScreen
 
     private void updatePageChangeButtonUsability() {
         this.previousButton.active = this.state.currentPage > 0;
-        this.nextButton.active = this.state.currentPage < getPageCount();
+        this.nextButton.active = this.state.currentPage < getPageCount() - 1;
     }
 
     private void notifyChildrenOfItem() {
