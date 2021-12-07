@@ -16,6 +16,7 @@ import net.minecraft.util.Identifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public class PatternSelectionScreenPart implements PartialScreen
@@ -80,7 +81,7 @@ public class PatternSelectionScreenPart implements PartialScreen
                 widgetName,
                 patternId,
                 patternWidget -> {
-                    this.state.patternId = patternId;
+                    this.state.setPatternId(patternId);
                     notifyChildrenOfPattern();
                 }
             );
@@ -179,11 +180,18 @@ public class PatternSelectionScreenPart implements PartialScreen
 
     static class State
     {
+        private final Consumer<Identifier> onChanged;
         private byte currentPage = 0;
         private Identifier patternId;
 
-        public State(Identifier patternId) {
+        public State(Identifier patternId, Consumer<Identifier> onChanged) {
             this.patternId = patternId;
+            this.onChanged = onChanged;
+        }
+
+        private void setPatternId(Identifier patternId) {
+            this.patternId = patternId;
+            onChanged.accept(patternId);
         }
 
         public Identifier getPatternId() {

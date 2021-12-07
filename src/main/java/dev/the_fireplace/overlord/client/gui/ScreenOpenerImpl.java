@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.client.gui;
 
 import dev.the_fireplace.annotateddi.api.di.Implementation;
-import dev.the_fireplace.overlord.client.gui.squad.SquadSelectorGui;
+import dev.the_fireplace.overlord.client.gui.squad.SelectorScreen;
 import dev.the_fireplace.overlord.domain.client.GuiOpener;
 import dev.the_fireplace.overlord.domain.data.Squads;
 import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
@@ -19,13 +19,13 @@ import javax.inject.Named;
 
 @Implementation
 @Environment(EnvType.CLIENT)
-public final class GuiOpenerImpl implements GuiOpener
+public final class ScreenOpenerImpl implements GuiOpener
 {
     private final Squads squads;
     private final MinecraftClient client;
 
     @Inject
-    public GuiOpenerImpl(
+    public ScreenOpenerImpl(
         @Named("client") Squads squads
     ) {
         this.squads = squads;
@@ -39,7 +39,7 @@ public final class GuiOpenerImpl implements GuiOpener
 
     @Override
     public void openSquadSelectorGUI(ArmyEntity entity) {
-        client.openScreen(new SquadSelectorGui(
+        client.openScreen(new SelectorScreen(
             new TranslatableText("gui.overlord.squad_manager.name"),
             client.currentScreen,
             squads.getSquadsWithOwner(entity.getOwnerUuid()),

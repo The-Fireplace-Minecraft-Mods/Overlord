@@ -13,6 +13,7 @@ import net.minecraft.text.TranslatableText;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public class ItemSelectionScreenPart implements PartialScreen
@@ -76,7 +77,7 @@ public class ItemSelectionScreenPart implements PartialScreen
                 widgetSize,
                 item,
                 itemWidget -> {
-                    this.state.selectedStack = item;
+                    this.state.setSelectedStack(item);
                     notifyChildrenOfItem();
                 }
             );
@@ -169,11 +170,18 @@ public class ItemSelectionScreenPart implements PartialScreen
 
     static class State
     {
+        private final Consumer<ItemStack> onChanged;
         private byte currentPage = 0;
         private ItemStack selectedStack;
 
-        public State(ItemStack selectedStack) {
+        public State(ItemStack selectedStack, Consumer<ItemStack> onChanged) {
             this.selectedStack = selectedStack;
+            this.onChanged = onChanged;
+        }
+
+        public void setSelectedStack(ItemStack selectedStack) {
+            this.selectedStack = selectedStack;
+            this.onChanged.accept(selectedStack);
         }
 
         public ItemStack getStack() {

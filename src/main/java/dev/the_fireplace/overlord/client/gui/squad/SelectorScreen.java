@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 @Environment(EnvType.CLIENT)
-public class SquadSelectorGui extends Screen
+public class SelectorScreen extends Screen
 {
     private final Screen parent;
     private final Collection<? extends Squad> ownedSquads;
@@ -27,9 +27,9 @@ public class SquadSelectorGui extends Screen
     private final Integer entityId;
     @Nullable
     private final UUID currentSquad;
-    private SquadSelectorWidget squadSelectorWidget;
+    private SelectorWidget selectorWidget;
 
-    public SquadSelectorGui(Text title, Screen parent, Collection<? extends Squad> ownedSquads, @Nullable Integer entityId, @Nullable UUID currentSquad) {
+    public SelectorScreen(Text title, Screen parent, Collection<? extends Squad> ownedSquads, @Nullable Integer entityId, @Nullable UUID currentSquad) {
         super(title);
         this.parent = parent;
         this.currentSquad = currentSquad;
@@ -39,8 +39,8 @@ public class SquadSelectorGui extends Screen
 
     @Override
     protected void init() {
-        squadSelectorWidget = createSquadSelector();
-        this.addDrawableChild(squadSelectorWidget);
+        selectorWidget = createSquadSelector();
+        this.addDrawableChild(selectorWidget);
         //TODO select none?
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, Text.of("Confirm and exit"), (button) -> {
             if (entityId != null) {
@@ -53,7 +53,7 @@ public class SquadSelectorGui extends Screen
         }));
         this.addDrawableChild(new ButtonWidget(0, this.height - 54, this.width / 3, 20, Text.of("Create Squad"), (button) -> {
             Collection<ItemStack> squadItems = getSquadItems();
-            this.client.openScreen(new SquadCreatorGui(this, squadItems, null));
+            this.client.openScreen(new EditScreen(this, squadItems, null));
         }));
         //TODO edit squad button
         //TODO delete squad button
@@ -109,13 +109,13 @@ public class SquadSelectorGui extends Screen
         return reducedStacks;
     }
 
-    private SquadSelectorWidget createSquadSelector() {
-        SquadSelectorWidget squadSelectorWidget = new SquadSelectorWidget(this.client, this.width / 3, this.height - 56, 0, this.height - 56, 30);
-        squadSelectorWidget.addSquads(ownedSquads);
+    private SelectorWidget createSquadSelector() {
+        SelectorWidget selectorWidget = new SelectorWidget(this.client, this.width / 3, this.height - 56, 0, this.height - 56, 30);
+        selectorWidget.addSquads(ownedSquads);
         if (currentSquad != null) {
-            squadSelectorWidget.selectSquad(currentSquad);
+            selectorWidget.selectSquad(currentSquad);
         }
-        return squadSelectorWidget;
+        return selectorWidget;
     }
 
     private void closeScreen() {
@@ -130,7 +130,7 @@ public class SquadSelectorGui extends Screen
     }
 
     public void displayNewSquad(Squad squad) {
-        squadSelectorWidget.addSquads(Set.of(squad));
-        squadSelectorWidget.selectSquad(squad.getSquadId());
+        selectorWidget.addSquads(Set.of(squad));
+        selectorWidget.selectSquad(squad.getSquadId());
     }
 }
