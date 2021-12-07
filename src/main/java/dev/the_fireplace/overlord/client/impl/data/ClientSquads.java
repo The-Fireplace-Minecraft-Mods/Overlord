@@ -9,6 +9,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,7 +29,6 @@ public final class ClientSquads implements Squads
         return squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP).get(squadId);
     }
 
-    @Nullable
     @Override
     public Squad createNewSquad(UUID owner, String pattern, ItemStack stack, String name) {
         throw new UnsupportedOperationException("Do not call this from the client!");
@@ -45,22 +45,10 @@ public final class ClientSquads implements Squads
     }
 
     @Override
-    public boolean isCapeUnused(String pattern, ItemStack stack) {
-        for (ConcurrentMap<UUID, ? extends Squad> squadEntries : squadCache.values()) {
-            for (Squad squad : squadEntries.values()) {
-                if (squad.getItem().equals(stack) && squad.getPattern().equals(pattern)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    @Override
-    public boolean canUseCapeBase(UUID player, String pattern) {
-        //TODO
-        return true;
+    public Collection<? extends Squad> getSquads() {
+        Collection<Squad> squads = new ArrayList<>();
+        squadCache.values().forEach(entry -> squads.addAll(entry.values()));
+        return squads;
     }
 
     public void setSquads(Collection<? extends Squad> squads) {

@@ -5,6 +5,7 @@
   "mixins": [
     "AbstractSkeletonEntityMixin",
     "GoalSelectorAccessor",
+    "PlayerManagerMixin",
     "WolfEntityMixin"
   ],
   "client": [

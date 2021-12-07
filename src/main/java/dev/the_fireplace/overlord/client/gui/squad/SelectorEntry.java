@@ -13,12 +13,12 @@ import net.minecraft.text.Text;
 import java.util.UUID;
 
 @Environment(EnvType.CLIENT)
-public class SquadSelectorEntry extends AlwaysSelectedEntryListWidget.Entry<SquadSelectorEntry>
+public class SelectorEntry extends AlwaysSelectedEntryListWidget.Entry<SelectorEntry>
 {
     protected final MinecraftClient client;
     protected final Squad squad;
 
-    SquadSelectorEntry(Squad squad) {
+    SelectorEntry(Squad squad) {
         this.client = MinecraftClient.getInstance();
         this.squad = squad;
     }

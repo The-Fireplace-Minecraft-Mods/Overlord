@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.UUID;
@@ -63,21 +64,18 @@ public final class SquadsImpl implements Squads
         return squad;
     }
 
-    @Nullable
     @Override
     public Squad createNewSquad(UUID owner, String pattern, ItemStack stack, String name) {
-        if (!isCapeUnused(pattern, stack)) {
-            return null;
-        }
         UUID newSquadId;
         do {
             newSquadId = UUID.randomUUID();
         } while (squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP).containsKey(newSquadId));
 
         SavedSquad squad = new SavedSquad(newSquadId, owner);
+        squad.init();
         squad.updatePattern(pattern, stack);
         squad.setName(name);
-        squad.init();
+        squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP).put(newSquadId, squad);
         return squad;
     }
 
@@ -96,6 +94,13 @@ public final class SquadsImpl implements Squads
         return ImmutableSet.copyOf(squadCache.get(owner).values());
     }
 
+    @Override
+    public Collection<? extends Squad> getSquads() {
+        Collection<Squad> squads = new ArrayList<>();
+        squadCache.values().forEach(entry -> squads.addAll(entry.values()));
+        return squads;
+    }
+
     private void loadSquadCacheForOwner(UUID owner) {
         ConcurrentMap<UUID, SavedSquad> cachedOwnerSquads = squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP);
         Iterator<String> databaseIdIterator = storageReader.getStoredIdsIterator(DATABASE, TABLE);
@@ -110,25 +115,6 @@ public final class SquadsImpl implements Squads
                 }
             }
         }
-    }
-
-    @Override
-    public boolean isCapeUnused(String pattern, ItemStack stack) {
-        for (ConcurrentMap<UUID, SavedSquad> squadEntries : squadCache.values()) {
-            for (SavedSquad squad : squadEntries.values()) {
-                if (squad.item.equals(stack) && squad.pattern.equals(pattern)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    @Override
-    public boolean canUseCapeBase(UUID player, String pattern) {
-        //TODO adjust when more capes are added
-        return true;
     }
 
     private class SavedSquad implements Squad, SaveData
@@ -174,9 +160,6 @@ public final class SquadsImpl implements Squads
         @Override
         public void updatePattern(String capeBase, ItemStack capeItem) {
             if (this.pattern.equals(capeBase) && this.item.equals(capeItem)) {
-                return;
-            }
-            if (!isCapeUnused(capeBase, capeItem)) {
                 return;
             }
             this.pattern = capeBase;
