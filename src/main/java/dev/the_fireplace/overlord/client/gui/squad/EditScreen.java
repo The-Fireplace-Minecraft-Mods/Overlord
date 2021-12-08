@@ -123,7 +123,7 @@ public class EditScreen extends Screen
     }
 
     public void onSuccessfulCreation(Squad createdSquad) {
-        parent.displayNewSquad(createdSquad);
+        parent.displaySquad(createdSquad);
         closeScreen();
     }
 

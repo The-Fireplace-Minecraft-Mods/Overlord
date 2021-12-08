@@ -1,5 +1,6 @@
 package dev.the_fireplace.overlord.client.gui.squad;
 
+import com.google.common.collect.Lists;
 import dev.the_fireplace.overlord.client.gui.rendertools.OverlayButtonWidget;
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
 import dev.the_fireplace.overlord.entity.ArmyEntity;
@@ -15,6 +16,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -23,19 +25,26 @@ import java.util.*;
 public class SelectorScreen extends Screen
 {
     private final Screen parent;
-    private final Collection<? extends Squad> ownedSquads;
+    private final Collection<Squad> ownedSquads;
     @Nullable
     private final Integer entityId;
     @Nullable
     private final UUID currentSquad;
     private SelectorWidget selectorWidget;
+    private ButtonWidget editButton;
+    private UUID selectedSquad;
 
     public SelectorScreen(Text title, Screen parent, Collection<? extends Squad> ownedSquads, @Nullable Integer entityId, @Nullable UUID currentSquad) {
         super(title);
         this.parent = parent;
         this.currentSquad = currentSquad;
         this.entityId = entityId;
-        this.ownedSquads = ownedSquads;
+        this.ownedSquads = Lists.newArrayList(ownedSquads);
+        if (currentSquad != null) {
+            this.selectedSquad = currentSquad;
+        } else {
+            this.selectedSquad = null;
+        }
     }
 
     @Override
@@ -43,21 +52,26 @@ public class SelectorScreen extends Screen
         selectorWidget = createSquadSelector();
         this.addDrawableChild(selectorWidget);
         //TODO select none?
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, Text.of("Confirm and exit"), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, new TranslatableText("gui.overlord.confirm_exit"), (button) -> {
             if (entityId != null) {
                 //TODO send update packet
             }
             closeScreen();
         }));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, Text.of("Cancel"), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, new TranslatableText("gui.cancel"), (button) -> {
             closeScreen();
         }));
-        this.addDrawableChild(new OverlayButtonWidget(0, this.height - 54, this.width / 3, 20, Text.of("Create Squad"), (button) -> {
+        this.addDrawableChild(editButton = new OverlayButtonWidget(0, this.height - 54, this.width / 3, 20, Text.of(""), (button) -> {
             Collection<ItemStack> squadItems = getSquadItems();
-            this.client.openScreen(new EditScreen(this, squadItems, null));
+            Squad currentSquad = ownedSquads.stream().filter(squad -> squad.getSquadId().equals(selectedSquad)).findFirst().orElse(null);
+            this.client.openScreen(new EditScreen(this, squadItems, currentSquad));
         }));
-        //TODO edit squad button
+        updateEditButtonText();
         //TODO delete squad button
+    }
+
+    private void updateEditButtonText() {
+        editButton.setMessage(new TranslatableText("gui.overlord.squad_manager.create_squad"));
     }
 
     private Collection<ItemStack> getSquadItems() {
@@ -115,6 +129,7 @@ public class SelectorScreen extends Screen
         selectorWidget.addSquads(ownedSquads);
         if (currentSquad != null) {
             selectorWidget.selectSquad(currentSquad);
+            updateEditButtonText();
         }
         return selectorWidget;
     }
@@ -130,8 +145,15 @@ public class SelectorScreen extends Screen
         super.render(matrixStack, mouseX, mouseY, delta);
     }
 
-    public void displayNewSquad(Squad squad) {
+    public void displaySquad(Squad squad) {
+        Optional<Squad> existingSquad = ownedSquads.stream().filter(ownedSquad -> ownedSquad.getSquadId().equals(squad.getSquadId())).findFirst();
+        if (existingSquad.isPresent()) {
+            ownedSquads.remove(existingSquad.get());
+            selectorWidget.removeSquad(existingSquad.get());
+        }
+        ownedSquads.add(squad);
         selectorWidget.addSquads(Set.of(squad));
         selectorWidget.selectSquad(squad.getSquadId());
+        updateEditButtonText();
     }
 }
