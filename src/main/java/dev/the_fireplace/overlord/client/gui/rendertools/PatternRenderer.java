@@ -1,4 +1,4 @@
-package dev.the_fireplace.overlord.client.gui.squad;
+package dev.the_fireplace.overlord.client.gui.rendertools;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.the_fireplace.overlord.util.SquadPatterns;
@@ -10,7 +10,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
-public class PatternRenderHelper
+public class PatternRenderer
 {
     public static void drawPattern(MatrixStack matrices, Identifier patternId, int x, int y, int width, int height, float alpha) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);

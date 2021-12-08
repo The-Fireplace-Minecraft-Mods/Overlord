@@ -1,5 +1,6 @@
 package dev.the_fireplace.overlord.client.gui.squad;
 
+import dev.the_fireplace.overlord.client.gui.rendertools.BoxRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -43,21 +44,10 @@ public class ItemButtonWidget extends ButtonWidget
 
     private void drawBox(MatrixStack matrices) {
         int color = this.hovered ? 0xEED489BF : 0xFFFFFFBF;
-        drawBox(matrices, 1, color);
+        BoxRenderer.drawBox(matrices, x, y, width, height, 1, color);
         if (isUsed) {
-            drawBox(matrices, 2, color);
+            BoxRenderer.drawBox(matrices, x, y, width, height, 2, color);
         }
-    }
-
-    private void drawBox(MatrixStack matrices, int pixelsFromEdge, int color) {
-        int boxStartX = this.x + pixelsFromEdge;
-        int boxEndX = this.x + this.width - pixelsFromEdge - 1;
-        int boxStartY = this.y + pixelsFromEdge;
-        int boxEndY = this.y + this.height - pixelsFromEdge - 1;
-        this.drawVerticalLine(matrices, boxStartX, boxStartY, boxEndY, color);
-        this.drawVerticalLine(matrices, boxEndX, boxStartY, boxEndY, color);
-        this.drawHorizontalLine(matrices, boxStartX, boxEndX, boxStartY, color);
-        this.drawHorizontalLine(matrices, boxStartX, boxEndX, boxEndY, color);
     }
 
     public void notifyOfActiveStack(ItemStack stack) {
