@@ -1,5 +1,7 @@
 package dev.the_fireplace.overlord.client.gui.squad;
 
+import dev.the_fireplace.overlord.client.gui.rendertools.BoxRenderer;
+import dev.the_fireplace.overlord.client.gui.rendertools.PatternRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -38,7 +40,7 @@ public class PatternButtonWidget extends ButtonWidget
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
         TextRenderer textRenderer = minecraftClient.textRenderer;
 
-        PatternRenderHelper.drawPattern(matrices, this.pattern, this.x + 2 + (this.width - 4) / 5, this.y + 2, (this.width - 4) * 3 / 5, this.height - 4, this.alpha);
+        PatternRenderer.drawPattern(matrices, this.pattern, this.x + 2 + (this.width - 4) / 5, this.y + 2, (this.width - 4) * 3 / 5, this.height - 4, this.alpha);
         drawBox(matrices);
 
         this.renderBackground(matrices, minecraftClient, mouseX, mouseY);
@@ -49,21 +51,10 @@ public class PatternButtonWidget extends ButtonWidget
     private void drawBox(MatrixStack matrices) {
         //TODO color and/or dotted/dashed change if unlocked or not
         int color = this.hovered ? 0xEED489BF : 0xFFFFFFBF;
-        drawBox(matrices, 1, color);
+        BoxRenderer.drawBox(matrices, x, y, width, height, 1, color);
         if (isUsed) {
-            drawBox(matrices, 2, color);
+            BoxRenderer.drawBox(matrices, x, y, width, height, 2, color);
         }
-    }
-
-    private void drawBox(MatrixStack matrices, int pixelsFromEdge, int color) {
-        int boxStartX = this.x + pixelsFromEdge;
-        int boxEndX = this.x + this.width - pixelsFromEdge - 1;
-        int boxStartY = this.y + pixelsFromEdge;
-        int boxEndY = this.y + this.height - pixelsFromEdge - 1;
-        this.drawVerticalLine(matrices, boxStartX, boxStartY, boxEndY, color);
-        this.drawVerticalLine(matrices, boxEndX, boxStartY, boxEndY, color);
-        this.drawHorizontalLine(matrices, boxStartX, boxEndX, boxStartY, color);
-        this.drawHorizontalLine(matrices, boxStartX, boxEndX, boxEndY, color);
     }
 
     public void notifyOfActivePattern(Identifier pattern) {
