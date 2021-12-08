@@ -38,6 +38,9 @@ public class SelectorEntry extends AlwaysSelectedEntryListWidget.Entry<SelectorE
     }
 
     private void drawIcon(MatrixStack matrixStack, int entryTop, int entryLeft, int iconHeight, int iconWidth) {
+        if (squad.getPattern().isBlank() || squad.getItem().isEmpty()) {
+            return;
+        }
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.enableBlend();
         PatternRenderer.drawPattern(matrixStack, new Identifier(Overlord.MODID, squad.getPattern()), entryLeft, entryTop, iconWidth, iconHeight, 1.0f);

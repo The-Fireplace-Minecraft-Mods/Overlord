@@ -1,11 +1,18 @@
 package dev.the_fireplace.overlord.client.gui.squad;
 
+import dev.the_fireplace.annotateddi.api.DIContainer;
+import dev.the_fireplace.lib.api.chat.injectables.TranslatorFactory;
+import dev.the_fireplace.lib.api.chat.interfaces.Translator;
+import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
+import dev.the_fireplace.overlord.Overlord;
+import dev.the_fireplace.overlord.client.util.ClientSquad;
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.Collection;
@@ -16,11 +23,29 @@ import java.util.UUID;
 @Environment(EnvType.CLIENT)
 public class SelectorWidget extends AlwaysSelectedEntryListWidget<SelectorEntry>
 {
+    private final EmptyUUID emptyUUID;
+    private final Squad noneSquad;
+    private final SelectorEntry noneEntry;
     private boolean scrolling;
 
     public SelectorWidget(MinecraftClient minecraftClient, int width, int height, int top, int bottom, int itemHeight) {
         super(minecraftClient, width, height, top, bottom, itemHeight);
         this.setRenderBackground(false);
+
+        TranslatorFactory translatorFactory = DIContainer.get().getInstance(TranslatorFactory.class);
+        Translator translator = translatorFactory.getTranslator(Overlord.MODID);
+
+        this.emptyUUID = DIContainer.get().getInstance(EmptyUUID.class);
+        this.noneSquad = new ClientSquad(
+            emptyUUID.get(),
+            emptyUUID.get(),
+            "",
+            ItemStack.EMPTY,
+            translator.getTranslatedString("gui.overlord.squad_manager.none")
+        );
+        this.noneEntry = new SelectorEntry(noneSquad);
+        this.addEntry(noneEntry);
+        this.setSelected(noneEntry);
     }
 
     public void addSquads(Collection<? extends Squad> squads) {
@@ -29,9 +54,15 @@ public class SelectorWidget extends AlwaysSelectedEntryListWidget<SelectorEntry>
         }
     }
 
+    public void removeSquad(Squad squad) {
+        this.children().stream()
+            .filter(selectorEntry -> selectorEntry.squad.getSquadId().equals(squad.getSquadId()))
+            .forEach(selectorEntry -> this.children().remove(selectorEntry));
+    }
+
     public void selectSquad(UUID squadId) {
         Optional<SelectorEntry> firstMatchingSquad = this.children().stream().filter(entry -> entry.hasId(squadId)).findFirst();
-        firstMatchingSquad.ifPresent(this::setSelected);
+        this.setSelected(firstMatchingSquad.orElse(noneEntry));
     }
 
 
