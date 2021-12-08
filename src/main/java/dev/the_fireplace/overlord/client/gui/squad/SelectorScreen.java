@@ -1,5 +1,6 @@
 package dev.the_fireplace.overlord.client.gui.squad;
 
+import dev.the_fireplace.overlord.client.gui.rendertools.OverlayButtonWidget;
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
 import dev.the_fireplace.overlord.entity.ArmyEntity;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
@@ -51,7 +52,7 @@ public class SelectorScreen extends Screen
         this.addDrawableChild(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, Text.of("Cancel"), (button) -> {
             closeScreen();
         }));
-        this.addDrawableChild(new ButtonWidget(0, this.height - 54, this.width / 3, 20, Text.of("Create Squad"), (button) -> {
+        this.addDrawableChild(new OverlayButtonWidget(0, this.height - 54, this.width / 3, 20, Text.of("Create Squad"), (button) -> {
             Collection<ItemStack> squadItems = getSquadItems();
             this.client.openScreen(new EditScreen(this, squadItems, null));
         }));
