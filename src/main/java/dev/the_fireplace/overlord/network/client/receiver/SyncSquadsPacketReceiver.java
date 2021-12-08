@@ -3,9 +3,9 @@ package dev.the_fireplace.overlord.network.client.receiver;
 import dev.the_fireplace.lib.api.network.interfaces.ClientPacketReceiver;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.client.impl.data.ClientSquads;
+import dev.the_fireplace.overlord.client.util.SquadDeserialization;
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
 import dev.the_fireplace.overlord.network.ServerToClientPacketIDs;
-import dev.the_fireplace.overlord.util.SquadSerialization;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -45,7 +45,7 @@ public final class SyncSquadsPacketReceiver implements ClientPacketReceiver
         if (buf.isReadable()) {
             owner = buf.readUuid();
         }
-        Collection<? extends Squad> squads = SquadSerialization.collectionFromNbt(squadCompound);
+        Collection<? extends Squad> squads = SquadDeserialization.collectionFromNbt(squadCompound);
         if (owner != null) {
             clientSquads.setSquadsFromOwner(owner, squads);
         } else {

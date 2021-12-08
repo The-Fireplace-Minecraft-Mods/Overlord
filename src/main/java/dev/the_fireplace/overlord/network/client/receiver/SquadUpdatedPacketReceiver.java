@@ -3,9 +3,9 @@ package dev.the_fireplace.overlord.network.client.receiver;
 import dev.the_fireplace.lib.api.network.interfaces.ClientPacketReceiver;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.client.gui.squad.EditScreen;
+import dev.the_fireplace.overlord.client.util.SquadDeserialization;
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
 import dev.the_fireplace.overlord.network.ServerToClientPacketIDs;
-import dev.the_fireplace.overlord.util.SquadSerialization;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -32,7 +32,7 @@ public final class SquadUpdatedPacketReceiver implements ClientPacketReceiver
             return;
         }
         client.submit(() -> {
-            Squad updatedSquad = SquadSerialization.fromNbt(squadCompound);
+            Squad updatedSquad = SquadDeserialization.fromNbt(squadCompound);
             Screen currentScreen = client.currentScreen;
             if (currentScreen instanceof EditScreen editScreen) {
                 editScreen.onSuccessfulCreation(updatedSquad);

@@ -111,6 +111,7 @@ public final class UpdateSquadPacketReceiver implements ServerPacketReceiver
         if (!squadPatterns.canUsePattern(owner, pattern)) {
             errors.add(getStyledError("gui.overlord.create_squad.locked_pattern"));
         }
+        //TODO validate actually can use item
 
         return errors;
     }
