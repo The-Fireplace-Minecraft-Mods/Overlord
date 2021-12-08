@@ -110,7 +110,7 @@ public class SelectorScreen extends Screen
     }
 
     private SelectorWidget createSquadSelector() {
-        SelectorWidget selectorWidget = new SelectorWidget(this.client, this.width / 3, this.height - 56, 0, this.height - 56, 30);
+        SelectorWidget selectorWidget = new SelectorWidget(this.client, this.width / 3, this.height - 52, 0, this.height - 54, 30);
         selectorWidget.addSquads(ownedSquads);
         if (currentSquad != null) {
             selectorWidget.selectSquad(currentSquad);
