@@ -80,4 +80,17 @@ public class SelectorEntry extends AlwaysSelectedEntryListWidget.Entry<SelectorE
     public boolean hasId(UUID squadId) {
         return squad.getSquadId().equals(squadId);
     }
+
+    public UUID getSquadId() {
+        return squad.getSquadId();
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        return true;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
 }
