@@ -14,11 +14,13 @@ import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public class SelectorWidget extends AlwaysSelectedEntryListWidget<SelectorEntry>
@@ -26,10 +28,12 @@ public class SelectorWidget extends AlwaysSelectedEntryListWidget<SelectorEntry>
     private final EmptyUUID emptyUUID;
     private final Squad noneSquad;
     private final SelectorEntry noneEntry;
+    private final Consumer<UUID> onSquadUpdated;
     private boolean scrolling;
 
-    public SelectorWidget(MinecraftClient minecraftClient, int width, int height, int top, int bottom, int itemHeight) {
+    public SelectorWidget(MinecraftClient minecraftClient, int width, int height, int top, int bottom, int itemHeight, Consumer<UUID> onSquadUpdated) {
         super(minecraftClient, width, height, top, bottom, itemHeight);
+        this.onSquadUpdated = onSquadUpdated;
         this.setRenderBackground(false);
 
         TranslatorFactory translatorFactory = DIContainer.get().getInstance(TranslatorFactory.class);
@@ -103,6 +107,7 @@ public class SelectorWidget extends AlwaysSelectedEntryListWidget<SelectorEntry>
                 if (entry.mouseClicked(mouseX, mouseY, button)) {
                     this.setFocused(entry);
                     this.setDragging(true);
+                    this.setSelected(entry);
                     return true;
                 }
             } else if (button == 0) {
@@ -153,5 +158,22 @@ public class SelectorWidget extends AlwaysSelectedEntryListWidget<SelectorEntry>
     @Override
     protected int getMaxPosition() {
         return super.getMaxPosition() + 4;
+    }
+
+    @Override
+    public void setSelected(@Nullable SelectorEntry entry) {
+        super.setSelected(entry);
+        boolean foundSelection = false;
+        for (SelectorEntry checkEntry : children()) {
+            if (!checkEntry.equals(entry)) {
+                checkEntry.setSelected(false);
+            } else {
+                foundSelection = true;
+                checkEntry.setSelected(true);
+            }
+        }
+        if (!foundSelection) {
+            noneEntry.setSelected(true);
+        }
     }
 }

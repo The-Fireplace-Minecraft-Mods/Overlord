@@ -51,7 +51,6 @@ public class SelectorScreen extends Screen
     protected void init() {
         selectorWidget = createSquadSelector();
         this.addDrawableChild(selectorWidget);
-        //TODO select none?
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, new TranslatableText("gui.overlord.confirm_exit"), (button) -> {
             if (entityId != null) {
                 //TODO send update packet
@@ -71,7 +70,10 @@ public class SelectorScreen extends Screen
     }
 
     private void updateEditButtonText() {
-        editButton.setMessage(new TranslatableText("gui.overlord.squad_manager.create_squad"));
+        editButton.setMessage(selectedSquad != null
+            ? new TranslatableText("gui.overlord.squad_manager.edit_squad")
+            : new TranslatableText("gui.overlord.squad_manager.create_squad")
+        );
     }
 
     private Collection<ItemStack> getSquadItems() {
@@ -125,12 +127,19 @@ public class SelectorScreen extends Screen
     }
 
     private SelectorWidget createSquadSelector() {
-        SelectorWidget selectorWidget = new SelectorWidget(this.client, this.width / 3, this.height - 52, 0, this.height - 54, 30);
+        SelectorWidget selectorWidget = new SelectorWidget(
+            this.client,
+            this.width / 3,
+            this.height - 52,
+            0,
+            this.height - 54,
+            30,
+            newSquadId -> {
+                this.selectedSquad = newSquadId;
+                this.updateEditButtonText();
+            });
         selectorWidget.addSquads(ownedSquads);
-        if (currentSquad != null) {
-            selectorWidget.selectSquad(currentSquad);
-            updateEditButtonText();
-        }
+        selectorWidget.selectSquad(currentSquad);
         return selectorWidget;
     }
 
