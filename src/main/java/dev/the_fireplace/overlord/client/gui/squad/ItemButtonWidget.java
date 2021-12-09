@@ -51,6 +51,6 @@ public class ItemButtonWidget extends ButtonWidget
     }
 
     public void notifyOfActiveStack(ItemStack stack) {
-        this.isUsed = this.stack.equals(stack);
+        this.isUsed = ItemStack.areEqual(this.stack, stack);
     }
 }

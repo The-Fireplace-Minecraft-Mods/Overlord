@@ -92,8 +92,8 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     private final ConfigValues configValues;
 
     /**
-     * @deprecated Only public because Minecraft requires it to be. Use the factory.
-     * Intended for internal use, but it technically works. Use {@link OwnedSkeletonEntity#create(World, UUID)} when possible.
+     * @deprecated Only public because Minecraft requires it to be.
+     * Use {@link OwnedSkeletonEntity#create(World, UUID)} when possible.
      */
     @Deprecated
     public OwnedSkeletonEntity(EntityType<? extends OwnedSkeletonEntity> type, World world) {
