@@ -17,9 +17,11 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
+import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
@@ -84,10 +86,12 @@ public class SquadCapeFeatureRenderer<T extends ArmyEntity, M extends PlayerEnti
 
         matrices.push();
         matrices.translate(0, 0.5, -0.03);
-        matrices.scale(0.5f, 0.5f, 1.5f);
-        MinecraftClient.getInstance().getItemRenderer().renderItem(
+        ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
+        ItemStack itemStack = squad.getItem();
+        matrices.scale(0.5f, 0.5f, itemStack.getItem() instanceof BlockItem ? 0.25f : 1.5f);
+        itemRenderer.renderItem(
             entity,
-            squad.getItem(),
+            itemStack,
             ModelTransformation.Mode.FIXED,
             false,
             matrices,
