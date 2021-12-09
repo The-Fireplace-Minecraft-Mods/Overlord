@@ -6,6 +6,7 @@ import dev.the_fireplace.overlord.domain.data.objects.Squad;
 import dev.the_fireplace.overlord.entity.ArmyEntity;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import dev.the_fireplace.overlord.network.ClientToServerPacketIDs;
+import dev.the_fireplace.overlord.network.client.builder.DeleteSquadBufferBuilder;
 import dev.the_fireplace.overlord.network.client.builder.SetSquadBufferBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,6 +36,7 @@ public class SelectorScreen extends Screen
     private final UUID currentSquad;
     private SelectorWidget selectorWidget;
     private ButtonWidget editButton;
+    private ButtonWidget deleteButton;
     private UUID selectedSquad;
 
     public SelectorScreen(Text title, Screen parent, Collection<? extends Squad> ownedSquads, @Nullable Integer entityId, @Nullable UUID currentSquad) {
@@ -68,16 +70,27 @@ public class SelectorScreen extends Screen
             Squad currentSquad = ownedSquads.stream().filter(squad -> squad.getSquadId().equals(selectedSquad)).findFirst().orElse(null);
             this.client.openScreen(new EditScreen(this, squadItems, currentSquad));
         }));
-        updateEditButtonText();
-        //TODO delete squad button
+        this.addDrawableChild(deleteButton = new ButtonWidget(this.width - 102, 2, 100, 20, new TranslatableText("gui.overlord.squad_manager.delete_squad"), (button) -> {
+            ClientPlayNetworking.send(ClientToServerPacketIDs.DELETE_SQUAD, DeleteSquadBufferBuilder.build(selectedSquad));
+            Optional<Squad> selectedSquad = findSquadById(this.selectedSquad);
+            if (selectedSquad.isPresent()) {
+                ownedSquads.remove(selectedSquad.get());
+                selectorWidget.removeSquad(selectedSquad.get());
+            }
+            selectorWidget.selectSquad(null);
+        }));
+        updateButtons();
     }
 
-    private void updateEditButtonText() {
+    private void updateButtons() {
         if (editButton != null) {
             editButton.setMessage(selectedSquad != null
                 ? new TranslatableText("gui.overlord.squad_manager.edit_squad")
                 : new TranslatableText("gui.overlord.squad_manager.create_squad")
             );
+        }
+        if (deleteButton != null) {
+            deleteButton.active = selectedSquad != null;
         }
     }
 
@@ -141,7 +154,7 @@ public class SelectorScreen extends Screen
             30,
             newSquadId -> {
                 this.selectedSquad = newSquadId;
-                this.updateEditButtonText();
+                this.updateButtons();
             });
         selectorWidget.addSquads(ownedSquads);
         selectorWidget.selectSquad(currentSquad);
@@ -160,7 +173,7 @@ public class SelectorScreen extends Screen
     }
 
     public void displaySquad(Squad squad) {
-        Optional<Squad> existingSquad = ownedSquads.stream().filter(ownedSquad -> ownedSquad.getSquadId().equals(squad.getSquadId())).findFirst();
+        Optional<Squad> existingSquad = findSquadById(squad.getSquadId());
         if (existingSquad.isPresent()) {
             ownedSquads.remove(existingSquad.get());
             selectorWidget.removeSquad(existingSquad.get());
@@ -168,6 +181,10 @@ public class SelectorScreen extends Screen
         ownedSquads.add(squad);
         selectorWidget.addSquads(Set.of(squad));
         selectorWidget.selectSquad(squad.getSquadId());
-        updateEditButtonText();
+        updateButtons();
+    }
+
+    private Optional<Squad> findSquadById(UUID squadId) {
+        return ownedSquads.stream().filter(ownedSquad -> ownedSquad.getSquadId().equals(squadId)).findFirst();
     }
 }
