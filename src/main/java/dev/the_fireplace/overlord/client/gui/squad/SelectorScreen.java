@@ -5,8 +5,11 @@ import dev.the_fireplace.overlord.client.gui.rendertools.OverlayButtonWidget;
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
 import dev.the_fireplace.overlord.entity.ArmyEntity;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
+import dev.the_fireplace.overlord.network.ClientToServerPacketIDs;
+import dev.the_fireplace.overlord.network.client.builder.SetSquadBufferBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -53,7 +56,7 @@ public class SelectorScreen extends Screen
         this.addDrawableChild(selectorWidget);
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, new TranslatableText("gui.overlord.confirm_exit"), (button) -> {
             if (entityId != null) {
-                //TODO send update packet
+                ClientPlayNetworking.send(ClientToServerPacketIDs.SET_SQUAD, SetSquadBufferBuilder.build(selectedSquad, entityId));
             }
             closeScreen();
         }));
@@ -70,10 +73,12 @@ public class SelectorScreen extends Screen
     }
 
     private void updateEditButtonText() {
-        editButton.setMessage(selectedSquad != null
-            ? new TranslatableText("gui.overlord.squad_manager.edit_squad")
-            : new TranslatableText("gui.overlord.squad_manager.create_squad")
-        );
+        if (editButton != null) {
+            editButton.setMessage(selectedSquad != null
+                ? new TranslatableText("gui.overlord.squad_manager.edit_squad")
+                : new TranslatableText("gui.overlord.squad_manager.create_squad")
+            );
+        }
     }
 
     private Collection<ItemStack> getSquadItems() {
