@@ -1,10 +1,7 @@
 package dev.the_fireplace.overlord.network.server;
 
 import dev.the_fireplace.lib.api.network.injectables.ServerPacketReceiverRegistry;
-import dev.the_fireplace.overlord.network.server.receiver.GetOrdersPacketReceiver;
-import dev.the_fireplace.overlord.network.server.receiver.SaveTombstonePacketReceiver;
-import dev.the_fireplace.overlord.network.server.receiver.UpdateAIPacketReceiver;
-import dev.the_fireplace.overlord.network.server.receiver.UpdateSquadPacketReceiver;
+import dev.the_fireplace.overlord.network.server.receiver.*;
 
 import javax.inject.Inject;
 
@@ -15,6 +12,7 @@ public final class ServerPacketRegistry
     private final UpdateSquadPacketReceiver updateSquadPacketReceiver;
     private final UpdateAIPacketReceiver updateAIPacketReceiver;
     private final SaveTombstonePacketReceiver saveTombstonePacketReceiver;
+    private final SetSquadPacketReceiver setSquadPacketReceiver;
 
     @Inject
     public ServerPacketRegistry(
@@ -22,13 +20,15 @@ public final class ServerPacketRegistry
         GetOrdersPacketReceiver getOrdersPacketReceiver,
         UpdateSquadPacketReceiver updateSquadPacketReceiver,
         UpdateAIPacketReceiver updateAIPacketReceiver,
-        SaveTombstonePacketReceiver saveTombstonePacketReceiver
+        SaveTombstonePacketReceiver saveTombstonePacketReceiver,
+        SetSquadPacketReceiver setSquadPacketReceiver
     ) {
         this.registry = registry;
         this.getOrdersPacketReceiver = getOrdersPacketReceiver;
         this.updateSquadPacketReceiver = updateSquadPacketReceiver;
         this.updateAIPacketReceiver = updateAIPacketReceiver;
         this.saveTombstonePacketReceiver = saveTombstonePacketReceiver;
+        this.setSquadPacketReceiver = setSquadPacketReceiver;
     }
 
     public void registerPacketHandlers() {
@@ -36,5 +36,6 @@ public final class ServerPacketRegistry
         registry.register(updateSquadPacketReceiver);
         registry.register(updateAIPacketReceiver);
         registry.register(saveTombstonePacketReceiver);
+        registry.register(setSquadPacketReceiver);
     }
 }

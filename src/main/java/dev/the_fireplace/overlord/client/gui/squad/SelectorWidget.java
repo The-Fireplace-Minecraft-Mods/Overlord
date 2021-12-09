@@ -170,10 +170,12 @@ public class SelectorWidget extends AlwaysSelectedEntryListWidget<SelectorEntry>
             } else {
                 foundSelection = true;
                 checkEntry.setSelected(true);
+                onSquadUpdated.accept(checkEntry.getSquadId());
             }
         }
         if (!foundSelection) {
             noneEntry.setSelected(true);
+            onSquadUpdated.accept(noneEntry.getSquadId());
         }
     }
 }

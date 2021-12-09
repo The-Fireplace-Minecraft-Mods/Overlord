@@ -1,7 +1,14 @@
 package dev.the_fireplace.overlord.client.renderer.feature;
 
+import com.google.inject.Key;
+import com.google.inject.name.Names;
+import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.overlord.Overlord;
+import dev.the_fireplace.overlord.domain.data.Squads;
+import dev.the_fireplace.overlord.domain.data.objects.Squad;
 import dev.the_fireplace.overlord.entity.ArmyEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -19,19 +26,27 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
 
+@Environment(EnvType.CLIENT)
 public class SquadCapeFeatureRenderer<T extends ArmyEntity, M extends PlayerEntityModel<T>> extends FeatureRenderer<T, M>
 {
+    private final Squads squads;
+
     public SquadCapeFeatureRenderer(FeatureRendererContext<T, M> context) {
         super(context);
+        this.squads = DIContainer.get().getInstance(Key.get(Squads.class, Names.named("client")));
     }
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        if (!entity.hasSquad() || entity.isInvisible()) {
+        if (!entity.hasExistingSquad(squads) || entity.isInvisible()) {
             return;
         }
         ItemStack chestStack = entity.getEquippedStack(EquipmentSlot.CHEST);
         if (chestStack.isOf(Items.ELYTRA)) {
+            return;
+        }
+        Squad squad = squads.getSquad(entity.getOwnerUuid(), entity.getSquad());
+        if (squad == null) {
             return;
         }
         matrices.push();
@@ -62,7 +77,7 @@ public class SquadCapeFeatureRenderer<T extends ArmyEntity, M extends PlayerEnti
         matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(s / 2.0F));
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F - s / 2.0F));
 
-        Identifier squadCapeTexture = new Identifier(Overlord.MODID, "textures/entity/cape/red_bed.png");
+        Identifier squadCapeTexture = new Identifier(Overlord.MODID, "textures/entity/cape/" + squad.getPattern() + ".png");
 
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(squadCapeTexture));
         this.getContextModel().renderCape(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
@@ -70,10 +85,9 @@ public class SquadCapeFeatureRenderer<T extends ArmyEntity, M extends PlayerEnti
         matrices.push();
         matrices.translate(0, 0.5, -0.03);
         matrices.scale(0.5f, 0.5f, 1.5f);
-        ItemStack squadItem = new ItemStack(Items.NETHERITE_AXE);
         MinecraftClient.getInstance().getItemRenderer().renderItem(
             entity,
-            squadItem,
+            squad.getItem(),
             ModelTransformation.Mode.FIXED,
             false,
             matrices,

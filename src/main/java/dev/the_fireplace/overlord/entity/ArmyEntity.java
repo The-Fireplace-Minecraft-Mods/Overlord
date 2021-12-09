@@ -2,7 +2,7 @@ package dev.the_fireplace.overlord.entity;
 
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
-import dev.the_fireplace.overlord.domain.data.objects.Squad;
+import dev.the_fireplace.overlord.domain.data.Squads;
 import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
 import dev.the_fireplace.overlord.domain.entity.Ownable;
 import dev.the_fireplace.overlord.domain.entity.logic.EntityAlliances;
@@ -34,6 +34,9 @@ import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.PassiveEntity;
@@ -49,12 +52,15 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.UUID;
 
 public abstract class ArmyEntity extends TameableEntity implements Ownable, OrderableEntity
 {
+    protected static final TrackedData<Optional<UUID>> SQUAD = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     protected final EntityAlliances entityAlliances;
     protected final EmptyUUID emptyUUID;
+    protected final Squads squads;
     protected final AISettings aiSettings;
     protected boolean isSwappingEquipment;
     public double prevCapeX;
@@ -70,6 +76,7 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
         super(type, world);
         this.entityAlliances = DIContainer.get().getInstance(EntityAlliances.class);
         this.emptyUUID = DIContainer.get().getInstance(EmptyUUID.class);
+        this.squads = DIContainer.get().getInstance(Squads.class);
         this.aiSettings = createBaseAISettings();
         reloadGoals();
     }
@@ -229,6 +236,31 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
 
     public abstract boolean giveItemStack(ItemStack stack);
 
+    @Override
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(SQUAD, Optional.empty());
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        if (this.hasExistingSquad(null)) {
+            nbt.putUuid("Squad", this.getSquad());
+        }
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        this.dataTracker.set(
+            SQUAD,
+            nbt.containsUuid("Squad")
+                ? Optional.of(nbt.getUuid("Squad"))
+                : Optional.empty()
+        );
+    }
+
     public byte getEquipmentSwapTicks() {
         return 0;
     }
@@ -329,19 +361,19 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
         return null;
     }
 
-    @Nullable
     public UUID getSquad() {
-        //TODO
-        return null;
+        return dataTracker.get(SQUAD).orElse(emptyUUID.get());
     }
 
-    public void setSquad(Squad squad) {
-        //TODO
+    public void setSquad(UUID squadId) {
+        dataTracker.set(SQUAD, emptyUUID.is(squadId) ? Optional.empty() : Optional.of(squadId));
     }
 
-    public boolean hasSquad() {
-        //TODO and squad exists
-        return getSquad() != null;
+    public boolean hasExistingSquad(@Nullable Squads squads) {
+        if (squads == null) {
+            squads = this.squads;
+        }
+        return !emptyUUID.is(getSquad()) && squads.getSquad(getOwnerUuid(), getSquad()) != null;
     }
 
     @Override
