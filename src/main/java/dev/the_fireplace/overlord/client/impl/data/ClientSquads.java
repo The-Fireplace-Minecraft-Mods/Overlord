@@ -37,7 +37,7 @@ public final class ClientSquads implements Squads
     }
 
     @Override
-    public void removeSquad(UUID owner, UUID squadId) {
+    public boolean removeSquad(UUID owner, UUID squadId) {
         throw new UnsupportedOperationException("Do not call this from the client!");
     }
 

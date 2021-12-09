@@ -14,7 +14,7 @@ public interface Squads
 
     Squad createNewSquad(UUID owner, String pattern, ItemStack stack, String name);
 
-    void removeSquad(UUID owner, UUID squadId);
+    boolean removeSquad(UUID owner, UUID squadId);
 
     Collection<? extends Squad> getSquadsWithOwner(UUID owner);
 

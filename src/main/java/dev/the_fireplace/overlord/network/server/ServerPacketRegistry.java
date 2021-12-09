@@ -13,6 +13,7 @@ public final class ServerPacketRegistry
     private final UpdateAIPacketReceiver updateAIPacketReceiver;
     private final SaveTombstonePacketReceiver saveTombstonePacketReceiver;
     private final SetSquadPacketReceiver setSquadPacketReceiver;
+    private final DeleteSquadPacketReceiver deleteSquadPacketReceiver;
 
     @Inject
     public ServerPacketRegistry(
@@ -21,7 +22,8 @@ public final class ServerPacketRegistry
         UpdateSquadPacketReceiver updateSquadPacketReceiver,
         UpdateAIPacketReceiver updateAIPacketReceiver,
         SaveTombstonePacketReceiver saveTombstonePacketReceiver,
-        SetSquadPacketReceiver setSquadPacketReceiver
+        SetSquadPacketReceiver setSquadPacketReceiver,
+        DeleteSquadPacketReceiver deleteSquadPacketReceiver
     ) {
         this.registry = registry;
         this.getOrdersPacketReceiver = getOrdersPacketReceiver;
@@ -29,6 +31,7 @@ public final class ServerPacketRegistry
         this.updateAIPacketReceiver = updateAIPacketReceiver;
         this.saveTombstonePacketReceiver = saveTombstonePacketReceiver;
         this.setSquadPacketReceiver = setSquadPacketReceiver;
+        this.deleteSquadPacketReceiver = deleteSquadPacketReceiver;
     }
 
     public void registerPacketHandlers() {
@@ -37,5 +40,6 @@ public final class ServerPacketRegistry
         registry.register(updateAIPacketReceiver);
         registry.register(saveTombstonePacketReceiver);
         registry.register(setSquadPacketReceiver);
+        registry.register(deleteSquadPacketReceiver);
     }
 }
