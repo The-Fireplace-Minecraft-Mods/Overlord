@@ -11,7 +11,8 @@
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/overlord",
     "sources": "https://github.com/The-Fireplace-Minecraft-Mods/Overlord",
-    "issues": "https://github.com/The-Fireplace-Minecraft-Mods/Overlord/issues"
+    "issues": "https://github.com/The-Fireplace-Minecraft-Mods/Overlord/issues",
+    "modrinth": "https://modrinth.com/mod/overlord"
   },
 
   "license": "MPL-2.0",
