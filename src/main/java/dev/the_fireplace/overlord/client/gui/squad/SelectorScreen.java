@@ -1,6 +1,9 @@
 package dev.the_fireplace.overlord.client.gui.squad;
 
 import com.google.common.collect.Lists;
+import dev.the_fireplace.annotateddi.api.DIContainer;
+import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
+import dev.the_fireplace.overlord.client.gui.rendertools.DrawEntity;
 import dev.the_fireplace.overlord.client.gui.rendertools.OverlayButtonWidget;
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
 import dev.the_fireplace.overlord.entity.ArmyEntity;
@@ -28,6 +31,7 @@ import java.util.*;
 @Environment(EnvType.CLIENT)
 public class SelectorScreen extends Screen
 {
+    private final EmptyUUID emptyUUID;
     private final Screen parent;
     private final Collection<Squad> ownedSquads;
     @Nullable
@@ -38,9 +42,12 @@ public class SelectorScreen extends Screen
     private ButtonWidget editButton;
     private ButtonWidget deleteButton;
     private UUID selectedSquad;
+    private OwnedSkeletonEntity renderedSkeleton;
+    private long openTime;
 
     public SelectorScreen(Text title, Screen parent, Collection<? extends Squad> ownedSquads, @Nullable Integer entityId, @Nullable UUID currentSquad) {
         super(title);
+        this.emptyUUID = DIContainer.get().getInstance(EmptyUUID.class);
         this.parent = parent;
         this.currentSquad = currentSquad;
         this.entityId = entityId;
@@ -77,9 +84,22 @@ public class SelectorScreen extends Screen
                 ownedSquads.remove(selectedSquad.get());
                 selectorWidget.removeSquad(selectedSquad.get());
             }
-            selectorWidget.selectSquad(null);
+            selectorWidget.selectSquad(emptyUUID.get());
+            renderedSkeleton.setSquad(emptyUUID.get());
         }));
         updateButtons();
+
+        openTime = System.currentTimeMillis();
+        if (client != null && client.world != null) {
+            renderedSkeleton = OwnedSkeletonEntity.create(client.world, null);
+            if (entityId != null) {
+                Entity entity = client.world.getEntityById(entityId);
+                if (entity != null) {
+                    renderedSkeleton.copyFrom(entity);
+                }
+            }
+            renderedSkeleton.setPos(0, 0, 0);
+        }
     }
 
     private void updateButtons() {
@@ -154,6 +174,9 @@ public class SelectorScreen extends Screen
             30,
             newSquadId -> {
                 this.selectedSquad = newSquadId;
+                if (this.renderedSkeleton != null) {
+                    this.renderedSkeleton.setSquad(newSquadId);
+                }
                 this.updateButtons();
             });
         selectorWidget.addSquads(ownedSquads);
@@ -169,6 +192,7 @@ public class SelectorScreen extends Screen
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrixStack);
         //TODO draw selected squad's data
+        DrawEntity.drawEntityFacingAway(width / 2, height / 2 + 50, 100, this.openTime, System.currentTimeMillis(), renderedSkeleton);
         super.render(matrixStack, mouseX, mouseY, delta);
     }
 
@@ -181,6 +205,9 @@ public class SelectorScreen extends Screen
         ownedSquads.add(squad);
         selectorWidget.addSquads(Set.of(squad));
         selectorWidget.selectSquad(squad.getSquadId());
+        if (this.renderedSkeleton != null) {
+            renderedSkeleton.setSquad(squad.getSquadId());
+        }
         updateButtons();
     }
 
