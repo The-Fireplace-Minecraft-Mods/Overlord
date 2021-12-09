@@ -88,7 +88,7 @@ public class SquadCapeFeatureRenderer<T extends ArmyEntity, M extends PlayerEnti
         matrices.translate(0, 0.5, -0.03);
         ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
         ItemStack itemStack = squad.getItem();
-        matrices.scale(0.5f, 0.5f, itemStack.getItem() instanceof BlockItem ? 0.25f : 1.5f);
+        matrices.scale(0.5f, 0.5f, itemHas3DModel(itemRenderer, itemStack) ? 0.25f : 1.5f);
         itemRenderer.renderItem(
             entity,
             itemStack,
@@ -103,5 +103,10 @@ public class SquadCapeFeatureRenderer<T extends ArmyEntity, M extends PlayerEnti
         );
         matrices.pop();
         matrices.pop();
+    }
+
+    private boolean itemHas3DModel(ItemRenderer itemRenderer, ItemStack itemStack) {
+        //TODO better way to determine this
+        return itemStack.getItem() instanceof BlockItem;
     }
 }

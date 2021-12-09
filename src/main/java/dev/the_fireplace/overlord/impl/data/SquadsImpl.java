@@ -39,6 +39,7 @@ public final class SquadsImpl implements Squads
     private final SaveDataStateManager saveDataStateManager;
     private final SaveBasedStorageReader storageReader;
     private final ConcurrentMap<UUID, ConcurrentMap<UUID, SavedSquad>> squadCache;
+    private boolean cacheLoaded = false;
 
     @Inject
     public SquadsImpl(SaveDataStateManager saveDataStateManager, SaveBasedStorageReader storageReader) {
@@ -66,6 +67,7 @@ public final class SquadsImpl implements Squads
 
     @Override
     public Squad createNewSquad(UUID owner, String pattern, ItemStack stack, String name) {
+        ensureCachePopulated();
         UUID newSquadId;
         do {
             newSquadId = UUID.randomUUID();
@@ -80,45 +82,39 @@ public final class SquadsImpl implements Squads
     }
 
     @Override
-    public void removeSquad(UUID owner, UUID squadId) {
-        loadFullSquadCache();
+    public boolean removeSquad(UUID owner, UUID squadId) {
+        ensureCachePopulated();
         SavedSquad squad = squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP).remove(squadId);
         if (squad != null) {
             squad.delete();
+            return true;
         }
+        return false;
     }
 
     @Override
     public Collection<? extends Squad> getSquadsWithOwner(UUID owner) {
-        loadSquadCacheForOwner(owner);
+        ensureCachePopulated();
         return ImmutableSet.copyOf(squadCache.get(owner).values());
     }
 
     @Override
     public Collection<? extends Squad> getSquads() {
-        loadFullSquadCache();
+        ensureCachePopulated();
         Collection<Squad> squads = new ArrayList<>();
         squadCache.values().forEach(entry -> squads.addAll(entry.values()));
         return squads;
     }
 
-    private void loadSquadCacheForOwner(UUID owner) {
-        ConcurrentMap<UUID, SavedSquad> cachedOwnerSquads = squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP);
-        Iterator<String> databaseIdIterator = storageReader.getStoredIdsIterator(DATABASE, TABLE);
-        while (databaseIdIterator.hasNext()) {
-            String id = databaseIdIterator.next();
-            if (id.startsWith(owner.toString())) {
-                UUID squadId = UUID.fromString(id.substring(owner.toString().length()));
-                if (!cachedOwnerSquads.containsKey(squadId)) {
-                    SavedSquad squad = new SavedSquad(squadId, owner);
-                    squad.init();
-                    cachedOwnerSquads.put(squadId, squad);
-                }
-            }
+    private void ensureCachePopulated() {
+        if (cacheLoaded) {
+            return;
         }
+        populateCache();
     }
 
-    private void loadFullSquadCache() {
+    private void populateCache() {
+        cacheLoaded = true;
         Overlord.getLogger().debug("Looking up Squads...");
         int uuidStringLength = UUID.randomUUID().toString().replace("-", "").length();
         Iterator<String> databaseIdIterator = storageReader.getStoredIdsIterator(DATABASE, TABLE);
