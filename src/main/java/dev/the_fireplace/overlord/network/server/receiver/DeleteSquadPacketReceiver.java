@@ -26,7 +26,7 @@ public final class DeleteSquadPacketReceiver implements ServerPacketReceiver
 
     @Override
     public Identifier getId() {
-        return ClientToServerPacketIDs.SET_SQUAD;
+        return ClientToServerPacketIDs.DELETE_SQUAD;
     }
 
     @Override
