@@ -89,7 +89,8 @@ public class EditScreen extends Screen
                     squadId,
                     squadName,
                     patternState.getPatternId().getPath(),
-                    itemState.getStack()
+                    itemState.getStack(),
+                    parent.getEntityId()
                 )
             );
             this.saving = true;
