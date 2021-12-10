@@ -14,12 +14,15 @@ import java.util.UUID;
 @Environment(EnvType.CLIENT)
 public final class UpdateSquadBufferBuilder
 {
-    public static PacketByteBuf build(@Nullable UUID squadId, String squadName, String pattern, ItemStack item) {
+    public static PacketByteBuf build(@Nullable UUID squadId, String squadName, String pattern, ItemStack item, @Nullable Integer armyEntityId) {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeUuid(squadId != null ? squadId : DIContainer.get().getInstance(EmptyUUID.class).get());
         buffer.writeString(squadName);
         buffer.writeString(pattern);
         buffer.writeItemStack(item);
+        if (armyEntityId != null) {
+            buffer.writeInt(armyEntityId);
+        }
         return buffer;
     }
 }
