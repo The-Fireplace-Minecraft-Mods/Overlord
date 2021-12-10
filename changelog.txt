@@ -2,7 +2,8 @@ Make skeleton creation recipe(s) customizable with data packs
 Make a config for the milk amounts needed to grow skeletons
 Add the ability for skeletons to gather milk
 Add the ability for skeletons to pick up items
-Fix army skeleton spawn eggs not setting skeleton home position
+Add squads - assign your skeletons to squads to easily group them into categories.
 Add a "Use Current Position" button for picking the skeleton home position
 [1.16+] Make the Position Selector GUI translatable
-Added Modrinth link to mod info so Notify _should_ work.
+Added Modrinth link to mod info so Notify _should_ work with Overlord now.
+Fix army skeleton spawn eggs not setting skeleton home position
