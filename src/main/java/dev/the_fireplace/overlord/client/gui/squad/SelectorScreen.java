@@ -6,7 +6,7 @@ import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.client.gui.rendertools.DrawEntity;
 import dev.the_fireplace.overlord.client.gui.rendertools.OverlayButtonWidget;
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
-import dev.the_fireplace.overlord.entity.ArmyEntity;
+import dev.the_fireplace.overlord.domain.rule.SquadEligibleItems;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import dev.the_fireplace.overlord.network.ClientToServerPacketIDs;
 import dev.the_fireplace.overlord.network.client.builder.DeleteSquadBufferBuilder;
@@ -20,7 +20,6 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -32,6 +31,7 @@ import java.util.*;
 public class SelectorScreen extends Screen
 {
     private final EmptyUUID emptyUUID;
+    private final SquadEligibleItems squadEligibleItems;
     private final Screen parent;
     private final Collection<Squad> ownedSquads;
     @Nullable
@@ -48,6 +48,7 @@ public class SelectorScreen extends Screen
     public SelectorScreen(Text title, Screen parent, Collection<? extends Squad> ownedSquads, @Nullable Integer entityId, @Nullable UUID currentSquad) {
         super(title);
         this.emptyUUID = DIContainer.get().getInstance(EmptyUUID.class);
+        this.squadEligibleItems = DIContainer.get().getInstance(SquadEligibleItems.class);
         this.parent = parent;
         this.currentSquad = currentSquad;
         this.entityId = entityId;
@@ -112,52 +113,9 @@ public class SelectorScreen extends Screen
 
     private Collection<ItemStack> getSquadItems() {
         Objects.requireNonNull(this.client);
-        Collection<ItemStack> squadItems = new ArrayList<>();
         Entity entity = this.entityId != null && this.client.world != null ? this.client.world.getEntityById(entityId) : null;
-        if (entity instanceof ArmyEntity) {
-            if (entity instanceof OwnedSkeletonEntity) {
-                squadItems.add(((OwnedSkeletonEntity) entity).getAugmentBlockStack().copy());
-            }
-            Inventory entityInventory = ((ArmyEntity) entity).getInventory();
-            squadItems.addAll(getStacksFromInventory(entityInventory));
-        }
         ClientPlayerEntity player = this.client.player;
-        if (player != null) {
-            Inventory playerInventory = player.getInventory();
-            squadItems.addAll(getStacksFromInventory(playerInventory));
-        }
-        for (Squad ownedSquad : ownedSquads) {
-            squadItems.add(ownedSquad.getItem());
-        }
-        return reduceAndDeduplicate(squadItems);
-    }
-
-    private Collection<ItemStack> getStacksFromInventory(Inventory inventory) {
-        Collection<ItemStack> inventoryItems = new ArrayList<>(inventory.size() / 2);
-        for (int slotIndex = 0; slotIndex < inventory.size(); slotIndex++) {
-            ItemStack stack = inventory.getStack(slotIndex);
-            if (!stack.isEmpty()) {
-                inventoryItems.add(stack.copy());
-            }
-        }
-        return inventoryItems;
-    }
-
-    private Collection<ItemStack> reduceAndDeduplicate(Collection<ItemStack> itemStacks) {
-        Collection<ItemStack> reducedStacks = new ArrayList<>(itemStacks.size() - 2);
-        for (ItemStack stack : itemStacks) {
-            if (stack.isEmpty()) {
-                continue;
-            }
-            stack = stack.copy();
-            stack.setCount(1);
-            ItemStack finalStack = stack;
-            if (reducedStacks.stream().noneMatch(reducedStack -> ItemStack.areEqual(reducedStack, finalStack))) {
-                reducedStacks.add(stack);
-            }
-        }
-
-        return reducedStacks;
+        return this.squadEligibleItems.getEligibleItems(ownedSquads, player, entity);
     }
 
     private SelectorWidget createSquadSelector() {
@@ -209,5 +167,10 @@ public class SelectorScreen extends Screen
 
     private Optional<Squad> findSquadById(UUID squadId) {
         return ownedSquads.stream().filter(ownedSquad -> ownedSquad.getSquadId().equals(squadId)).findFirst();
+    }
+
+    @Nullable
+    public Integer getEntityId() {
+        return entityId;
     }
 }

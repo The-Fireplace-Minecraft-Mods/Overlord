@@ -45,6 +45,7 @@
   "gui.overlord.create_squad.name_required": "Squad Name must not be blank.",
   "gui.overlord.create_squad.pattern_required": "Squad Pattern must be selected.",
   "gui.overlord.create_squad.item_required": "Squad Item must be selected.",
+  "gui.overlord.create_squad.locked_item": "Unable to verify that you can use the selected item. Please use a different item or close and re-open the squad manager.",
   "gui.overlord.create_squad.saving": "Saving...",
   "gui.overlord.aisettings.name": "Orders",
   "gui.overlord.aisettings.combat": "Combat",
