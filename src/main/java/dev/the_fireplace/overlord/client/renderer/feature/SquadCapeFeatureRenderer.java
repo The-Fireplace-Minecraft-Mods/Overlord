@@ -18,10 +18,10 @@ import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
@@ -106,7 +106,7 @@ public class SquadCapeFeatureRenderer<T extends ArmyEntity, M extends PlayerEnti
     }
 
     private boolean itemHas3DModel(ItemRenderer itemRenderer, ItemStack itemStack) {
-        //TODO better way to determine this
-        return itemStack.getItem() instanceof BlockItem;
+        BakedModel model = itemRenderer.getModels().getModel(itemStack);
+        return model.hasDepth();
     }
 }

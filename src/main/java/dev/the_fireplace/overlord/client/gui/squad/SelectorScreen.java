@@ -52,11 +52,7 @@ public class SelectorScreen extends Screen
         this.currentSquad = currentSquad;
         this.entityId = entityId;
         this.ownedSquads = Lists.newArrayList(ownedSquads);
-        if (currentSquad != null) {
-            this.selectedSquad = currentSquad;
-        } else {
-            this.selectedSquad = null;
-        }
+        this.selectedSquad = currentSquad;
     }
 
     @Override
