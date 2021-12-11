@@ -58,6 +58,8 @@
   "gui.overlord.aisettings.option.enabled": "Enabled",
   "gui.overlord.aisettings.option.combat.onlyDefend": "Only Defend",
   "gui.overlord.aisettings.option.combat.onlyDefend.desc": "Only fight after the player is attacked.",
+  "gui.overlord.aisettings.option.combat.pursueTargets": "Pursue Targets",
+  "gui.overlord.aisettings.option.combat.pursueTargets.desc": "Skeleton will go after targets if necessary to fight them, regardless of movement settings.",
   "gui.overlord.aisettings.option.combat.melee": "Enable Melee",
   "gui.overlord.aisettings.option.combat.switchToMeleeWhenNoAmmo": "Switch to Melee when out of ammo",
   "gui.overlord.aisettings.option.combat.switchToMeleeWhenClose": "Switch to Melee when close to the enemy",

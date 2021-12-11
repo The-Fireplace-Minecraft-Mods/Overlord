@@ -12,9 +12,7 @@ import dev.the_fireplace.overlord.entity.ai.aiconfig.combat.CombatCategory;
 import dev.the_fireplace.overlord.entity.ai.aiconfig.movement.MovementCategory;
 import dev.the_fireplace.overlord.entity.ai.aiconfig.movement.PositionSetting;
 import dev.the_fireplace.overlord.entity.ai.aiconfig.tasks.TasksCategory;
-import dev.the_fireplace.overlord.entity.ai.goal.combat.ArmyBowAttackGoal;
-import dev.the_fireplace.overlord.entity.ai.goal.combat.ArmyCrossbowAttackGoal;
-import dev.the_fireplace.overlord.entity.ai.goal.combat.ArmyMeleeAttackGoal;
+import dev.the_fireplace.overlord.entity.ai.goal.combat.*;
 import dev.the_fireplace.overlord.entity.ai.goal.equipment.FindAmmoGoal;
 import dev.the_fireplace.overlord.entity.ai.goal.equipment.SwitchToMeleeWhenCloseGoal;
 import dev.the_fireplace.overlord.entity.ai.goal.equipment.SwitchToRangedWhenFarGoal;
@@ -134,20 +132,30 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
             }
 
             goalWeight++;
+            boolean pursueTargets = combat.isPursueCombatTargets();
             if (combat.isMelee()) {
-                this.goalSelector.add(goalWeight, new ArmyMeleeAttackGoal(this, 1.0D, true));
+                Goal meleeGoal = pursueTargets
+                    ? new ArmyMeleeAttackGoal(this, 1.0D, true)
+                    : new ArmyInPlaceMeleeAttackGoal(this);
+                this.goalSelector.add(goalWeight, meleeGoal);
             }
             if (combat.isRanged()) {
                 if (this instanceof CrossbowUser && this instanceof RangedAttackMob) {
                     int crossbowRange = 8;//TODO Figure out a good way to calc this number. Using 8 for now since that's Pillager range
                     //noinspection unchecked,rawtypes
-                    this.goalSelector.add(goalWeight, new ArmyCrossbowAttackGoal(this, 1.0D, crossbowRange));
+                    Goal crossbowGoal = pursueTargets
+                        ? new ArmyCrossbowAttackGoal(this, 1.0D, crossbowRange)
+                        : new ArmyInPlaceCrossbowAttackGoal(this, crossbowRange * 1.5f);
+                    this.goalSelector.add(goalWeight, crossbowGoal);
                 }
                 if (this instanceof RangedAttackMob) {
                     int bowRange = 15;//TODO Figure out a good way to calc this number. Using 15 for now since that's Skeleton range
                     int attackInterval = 20;
                     //noinspection unchecked,rawtypes
-                    this.goalSelector.add(goalWeight, new ArmyBowAttackGoal(this, 1.0D, attackInterval, bowRange));
+                    Goal bowGoal = pursueTargets
+                        ? new ArmyBowAttackGoal(this, 1.0D, attackInterval, bowRange)
+                        : new ArmyInPlaceBowAttackGoal(this, attackInterval, bowRange * 1.5f);
+                    this.goalSelector.add(goalWeight, bowGoal);
                 }
             }
         }
