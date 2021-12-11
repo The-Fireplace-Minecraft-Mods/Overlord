@@ -44,4 +44,8 @@ public interface CombatCategory {
     void setMeleeSwitchDistance(byte meleeSwitchDistance);
 
     TargetEntitySelector.Access getRangedTargets();
+
+    boolean isPursueCombatTargets();
+
+    void setPursueCombatTargets(boolean pursueCombatTargets);
 }

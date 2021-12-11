@@ -3,14 +3,15 @@ package dev.the_fireplace.overlord.entity.ai.aiconfig.combat;
 import dev.the_fireplace.overlord.entity.ai.aiconfig.SettingsComponent;
 import net.minecraft.nbt.NbtCompound;
 
-public final class CombatCategoryImpl implements SettingsComponent, CombatCategory {
-
+public final class CombatCategoryImpl implements SettingsComponent, CombatCategory
+{
     private boolean enabled = true;
     //Combat strategies
     private boolean melee = true;
     private boolean ranged = true;
     private boolean block = true;
     private boolean onlyDefendPlayer = false;
+    private boolean pursueCombatTargets = true;
     //Melee settings
     private boolean switchToRangedWhenFar = true;
     private byte rangedSwitchDistance = 4;
@@ -32,6 +33,7 @@ public final class CombatCategoryImpl implements SettingsComponent, CombatCatego
         tag.putBoolean("ranged", ranged);
         tag.putBoolean("block", block);
         tag.putBoolean("onlyDefendPlayer", onlyDefendPlayer);
+        tag.putBoolean("pursueCombatTargets", pursueCombatTargets);
         //Melee settings
         tag.putBoolean("switchToRangedWhenFar", switchToRangedWhenFar);
         tag.putByte("rangedSwitchDistance", rangedSwitchDistance);
@@ -62,6 +64,9 @@ public final class CombatCategoryImpl implements SettingsComponent, CombatCatego
         }
         if (tag.contains("onlyDefendPlayer")) {
             onlyDefendPlayer = tag.getBoolean("onlyDefendPlayer");
+        }
+        if (tag.contains("pursueCombatTargets")) {
+            pursueCombatTargets = tag.getBoolean("pursueCombatTargets");
         }
         //Melee settings
         if (tag.contains("switchToRangedWhenFar")) {
@@ -196,5 +201,15 @@ public final class CombatCategoryImpl implements SettingsComponent, CombatCatego
     @Override
     public TargetEntitySelector.Access getRangedTargets() {
         return rangedTargets.getData();
+    }
+
+    @Override
+    public boolean isPursueCombatTargets() {
+        return pursueCombatTargets;
+    }
+
+    @Override
+    public void setPursueCombatTargets(boolean pursueCombatTargets) {
+        this.pursueCombatTargets = pursueCombatTargets;
     }
 }

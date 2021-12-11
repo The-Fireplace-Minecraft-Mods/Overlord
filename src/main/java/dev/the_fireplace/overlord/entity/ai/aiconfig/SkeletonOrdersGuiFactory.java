@@ -125,6 +125,12 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory
 			defaults.isOnlyDefendPlayer(),
 			currentSettings::setOnlyDefendPlayer
 		).addDependency(enabled);
+		this.screenBuilder.addBoolToggle(
+			COMBAT_TRANSLATION_BASE + "pursueTargets",
+			currentSettings.isPursueCombatTargets(),
+			defaults.isPursueCombatTargets(),
+			currentSettings::setPursueCombatTargets
+		).addDependency(enabled);
 		addMeleeSettings(currentSettings, defaults, enabled);
 		addRangedSettings(currentSettings, defaults, enabled);
 	}
