@@ -5,6 +5,7 @@ Add the ability for skeletons to pick up items
 Add squads - assign your skeletons to squads to easily group them into categories.
 Add a "Use Current Position" button for picking the skeleton home position
 Add the Orders Wand, to issue orders to nearby skeletons
+Add the option to not pursue targets when in combat
 [1.16+] Make the Position Selector GUI translatable
 Added Modrinth link to mod info so Notify _should_ work with Overlord now.
 Fix army skeleton spawn eggs not setting skeleton home position
