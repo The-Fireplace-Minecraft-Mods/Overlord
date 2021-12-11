@@ -85,5 +85,11 @@ public final class OverlordConfigScreenFactory
             config::setFullyGrownMilkCount
         ).setMinimum(1).setDescriptionRowCount((byte) 0);
         configScreenBuilder.endSubCategory();
+        configScreenBuilder.addIntField(
+            OPTION_TRANSLATION_BASE + "localOrdersDistance",
+            config.getLocalOrdersDistance(),
+            defaultConfigValues.getLocalOrdersDistance(),
+            config::setLocalOrdersDistance
+        ).setMinimum(1);
     }
 }

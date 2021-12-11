@@ -5,9 +5,11 @@ import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.domain.data.Squads;
 import dev.the_fireplace.overlord.domain.entity.Ownable;
 import dev.the_fireplace.overlord.entity.ArmyEntity;
+import dev.the_fireplace.overlord.item.OrdersWandItem;
 import dev.the_fireplace.overlord.network.ClientToServerPacketIDs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -36,6 +38,22 @@ public final class SetSquadPacketReceiver implements ServerPacketReceiver
     public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
         UUID squadId = buf.readUuid();
         int entityId = buf.readInt();
+        boolean isWandSquad = entityId == -1;
+        if (isWandSquad) {
+            setWandSquad(player, squadId);
+        } else {
+            setEntitySquad(player, squadId, entityId);
+        }
+    }
+
+    private void setWandSquad(ServerPlayerEntity player, UUID squadId) {
+        ItemStack wandStack = OrdersWandItem.getActiveWand(player);
+        if (!wandStack.isEmpty()) {
+            wandStack.getOrCreateTag().putUuid("squad", squadId);
+        }
+    }
+
+    private void setEntitySquad(ServerPlayerEntity player, UUID squadId, int entityId) {
         Entity entity = player.getEntityWorld().getEntityById(entityId);
         if (!(entity instanceof ArmyEntity)) {
             Overlord.getLogger().info("Entity is not an army entity: {}", Objects.toString(entity));

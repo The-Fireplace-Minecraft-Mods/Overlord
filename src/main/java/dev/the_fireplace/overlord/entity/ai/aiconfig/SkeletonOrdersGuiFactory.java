@@ -63,21 +63,37 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory
 
 	@Override
 	public Screen build(Screen parent, OrderableEntity aiEntity) {
-		this.screenBuilder = configScreenBuilderFactory.create(
-			translator,
-			TRANSLATION_BASE + "name",
-			TRANSLATION_BASE + "combat",
-			parent,
-			() -> ClientPlayNetworking.send(
-				ClientToServerPacketIDs.UPDATE_AI,
-				UpdateAIBufferBuilder.build(aiEntity)
-			)
-		);
+		createScreenBuilder(parent, () -> ClientPlayNetworking.send(
+			ClientToServerPacketIDs.UPDATE_AI,
+			UpdateAIBufferBuilder.buildForEntity(aiEntity)
+		));
 		this.currentPosition = aiEntity instanceof Entity ? ((Entity) aiEntity).getBlockPos() : null;
 
 		buildCategories(aiEntity.getAISettings());
 
 		return this.screenBuilder.build();
+	}
+
+	@Override
+	public Screen build(Screen parent, AISettings ai) {
+		createScreenBuilder(parent, () -> ClientPlayNetworking.send(
+			ClientToServerPacketIDs.UPDATE_AI,
+			UpdateAIBufferBuilder.buildForWand(ai)
+		));
+
+		buildCategories(ai);
+
+		return this.screenBuilder.build();
+	}
+
+	private void createScreenBuilder(Screen parent, Runnable saveAction) {
+		this.screenBuilder = configScreenBuilderFactory.create(
+			translator,
+			TRANSLATION_BASE + "name",
+			TRANSLATION_BASE + "combat",
+			parent,
+			saveAction
+		);
 	}
 
 	private void buildCategories(AISettings currentSettings) {

@@ -9,4 +9,6 @@ public interface ConfigValues
     int getThreeQuartersGrownMilkCount();
 
     int getFullyGrownMilkCount();
+
+    int getLocalOrdersDistance();
 }

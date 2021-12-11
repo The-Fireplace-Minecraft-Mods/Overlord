@@ -22,6 +22,7 @@ public final class OverlordConfig implements Config, ConfigValues
     private int halfMilkCount;
     private int threeQuartersMilkCount;
     private int fullyGrownMilkCount;
+    private int localOrdersDistance;
 
     @Inject
     public OverlordConfig(ConfigStateManager configStateManager, @Named("default") ConfigValues defaultConfig) {
@@ -40,6 +41,7 @@ public final class OverlordConfig implements Config, ConfigValues
         halfMilkCount = buffer.readInt("halfMilkCount", defaultConfig.getHalfGrownMilkCount());
         threeQuartersMilkCount = buffer.readInt("threeQuartersMilkCount", defaultConfig.getThreeQuartersGrownMilkCount());
         fullyGrownMilkCount = buffer.readInt("fullyGrownMilkCount", defaultConfig.getFullyGrownMilkCount());
+        localOrdersDistance = buffer.readInt("localOrdersDistance", defaultConfig.getLocalOrdersDistance());
     }
 
     @Override
@@ -48,6 +50,7 @@ public final class OverlordConfig implements Config, ConfigValues
         buffer.writeInt("halfMilkCount", halfMilkCount);
         buffer.writeInt("threeQuartersMilkCount", threeQuartersMilkCount);
         buffer.writeInt("fullyGrownMilkCount", fullyGrownMilkCount);
+        buffer.writeInt("localOrdersDistance", localOrdersDistance);
     }
 
     @Override
@@ -84,5 +87,14 @@ public final class OverlordConfig implements Config, ConfigValues
 
     public void setFullyGrownMilkCount(int fullyGrownMilkCount) {
         this.fullyGrownMilkCount = fullyGrownMilkCount;
+    }
+
+    @Override
+    public int getLocalOrdersDistance() {
+        return this.localOrdersDistance;
+    }
+
+    public void setLocalOrdersDistance(int localOrdersDistance) {
+        this.localOrdersDistance = localOrdersDistance;
     }
 }

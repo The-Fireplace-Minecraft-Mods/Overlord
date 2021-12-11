@@ -8,6 +8,7 @@ import dev.the_fireplace.overlord.client.gui.rendertools.OverlayButtonWidget;
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
 import dev.the_fireplace.overlord.domain.rule.SquadEligibleItems;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
+import dev.the_fireplace.overlord.item.OrdersWandItem;
 import dev.the_fireplace.overlord.network.ClientToServerPacketIDs;
 import dev.the_fireplace.overlord.network.client.builder.DeleteSquadBufferBuilder;
 import dev.the_fireplace.overlord.network.client.builder.SetSquadBufferBuilder;
@@ -62,7 +63,12 @@ public class SelectorScreen extends Screen
         this.addDrawableChild(selectorWidget);
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, new TranslatableText("gui.overlord.confirm_exit"), (button) -> {
             if (entityId != null) {
-                ClientPlayNetworking.send(ClientToServerPacketIDs.SET_SQUAD, SetSquadBufferBuilder.build(selectedSquad, entityId));
+                ClientPlayNetworking.send(ClientToServerPacketIDs.SET_SQUAD, SetSquadBufferBuilder.buildForEntity(selectedSquad, entityId));
+            } else {
+                ClientPlayNetworking.send(ClientToServerPacketIDs.SET_SQUAD, SetSquadBufferBuilder.buildForWand(selectedSquad));
+                Objects.requireNonNull(client);
+                Objects.requireNonNull(client.player);
+                OrdersWandItem.getActiveWand(client.player).getOrCreateTag().putUuid("squad", selectedSquad);
             }
             closeScreen();
         }));
