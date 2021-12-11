@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "overlord:item/wood_orders_wand"
+  }
+}

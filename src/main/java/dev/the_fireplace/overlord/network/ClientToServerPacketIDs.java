@@ -11,4 +11,5 @@ public final class ClientToServerPacketIDs
     public static final Identifier UPDATE_SQUAD = new Identifier(Overlord.MODID, "update_squad");
     public static final Identifier DELETE_SQUAD = new Identifier(Overlord.MODID, "delete_squad");
     public static final Identifier SET_SQUAD = new Identifier(Overlord.MODID, "set_squad");
+    public static final Identifier ISSUE_LOCAL_ORDERS = new Identifier(Overlord.MODID, "issue_local_orders");
 }
