@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.client.renderer;
 
+import dev.the_fireplace.overlord.block.OverlordBlocks;
 import dev.the_fireplace.overlord.blockentity.TombstoneBlockEntity;
-import dev.the_fireplace.overlord.init.OverlordBlocks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;

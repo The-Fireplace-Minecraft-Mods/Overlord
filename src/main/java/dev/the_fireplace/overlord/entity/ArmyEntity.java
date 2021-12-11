@@ -1,13 +1,18 @@
 package dev.the_fireplace.overlord.entity;
 
 import dev.the_fireplace.annotateddi.api.DIContainer;
+import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
+import dev.the_fireplace.overlord.domain.data.Squads;
 import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
 import dev.the_fireplace.overlord.domain.entity.Ownable;
 import dev.the_fireplace.overlord.domain.entity.logic.EntityAlliances;
 import dev.the_fireplace.overlord.entity.ai.GoalSelectorHelper;
-import dev.the_fireplace.overlord.entity.ai.goal.combat.ArmyBowAttackGoal;
-import dev.the_fireplace.overlord.entity.ai.goal.combat.ArmyCrossbowAttackGoal;
-import dev.the_fireplace.overlord.entity.ai.goal.combat.ArmyMeleeAttackGoal;
+import dev.the_fireplace.overlord.entity.ai.aiconfig.AISettings;
+import dev.the_fireplace.overlord.entity.ai.aiconfig.combat.CombatCategory;
+import dev.the_fireplace.overlord.entity.ai.aiconfig.movement.MovementCategory;
+import dev.the_fireplace.overlord.entity.ai.aiconfig.movement.PositionSetting;
+import dev.the_fireplace.overlord.entity.ai.aiconfig.tasks.TasksCategory;
+import dev.the_fireplace.overlord.entity.ai.goal.combat.*;
 import dev.the_fireplace.overlord.entity.ai.goal.equipment.FindAmmoGoal;
 import dev.the_fireplace.overlord.entity.ai.goal.equipment.SwitchToMeleeWhenCloseGoal;
 import dev.the_fireplace.overlord.entity.ai.goal.equipment.SwitchToRangedWhenFarGoal;
@@ -16,11 +21,8 @@ import dev.the_fireplace.overlord.entity.ai.goal.movement.ReturnHomeGoal;
 import dev.the_fireplace.overlord.entity.ai.goal.movement.WanderAroundHomeGoal;
 import dev.the_fireplace.overlord.entity.ai.goal.target.ArmyAttackWithOwnerGoal;
 import dev.the_fireplace.overlord.entity.ai.goal.target.ArmyTrackOwnerAttackerGoal;
-import dev.the_fireplace.overlord.model.aiconfig.AISettings;
-import dev.the_fireplace.overlord.model.aiconfig.combat.CombatCategory;
-import dev.the_fireplace.overlord.model.aiconfig.movement.MovementCategory;
-import dev.the_fireplace.overlord.model.aiconfig.movement.PositionSetting;
-import dev.the_fireplace.overlord.model.aiconfig.tasks.TasksCategory;
+import dev.the_fireplace.overlord.entity.ai.goal.task.GatherItemGoal;
+import dev.the_fireplace.overlord.entity.ai.goal.task.GatherMilkGoal;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.CrossbowUser;
 import net.minecraft.entity.Entity;
@@ -30,6 +32,9 @@ import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.PassiveEntity;
@@ -45,16 +50,31 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
+import java.util.UUID;
 
 public abstract class ArmyEntity extends TameableEntity implements Ownable, OrderableEntity
 {
+    protected static final TrackedData<Optional<UUID>> SQUAD = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     protected final EntityAlliances entityAlliances;
+    protected final EmptyUUID emptyUUID;
+    protected final Squads squads;
     protected final AISettings aiSettings;
     protected boolean isSwappingEquipment;
+    public double prevCapeX;
+    public double prevCapeY;
+    public double prevCapeZ;
+    public double capeX;
+    public double capeY;
+    public double capeZ;
+    public float prevStrideDistance;
+    public float strideDistance;
 
     protected ArmyEntity(EntityType<? extends ArmyEntity> type, World world) {
         super(type, world);
         this.entityAlliances = DIContainer.get().getInstance(EntityAlliances.class);
+        this.emptyUUID = DIContainer.get().getInstance(EmptyUUID.class);
+        this.squads = DIContainer.get().getInstance(Squads.class);
         this.aiSettings = createBaseAISettings();
         reloadGoals();
     }
@@ -113,20 +133,30 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
             }
 
             goalWeight++;
+            boolean pursueTargets = combat.isPursueCombatTargets();
             if (combat.isMelee()) {
-                this.goalSelector.add(goalWeight, new ArmyMeleeAttackGoal(this, 1.0D, true));
+                Goal meleeGoal = pursueTargets
+                    ? new ArmyMeleeAttackGoal(this, 1.0D, true)
+                    : new ArmyInPlaceMeleeAttackGoal(this);
+                this.goalSelector.add(goalWeight, meleeGoal);
             }
             if (combat.isRanged()) {
                 if (this instanceof CrossbowUser) {
                     int crossbowRange = 8;//TODO Figure out a good way to calc this number. Using 8 for now since that's Pillager range
                     //noinspection unchecked,rawtypes
-                    this.goalSelector.add(goalWeight, new ArmyCrossbowAttackGoal(this, 1.0D, crossbowRange));
+                    Goal crossbowGoal = pursueTargets
+                        ? new ArmyCrossbowAttackGoal(this, 1.0D, crossbowRange)
+                        : new ArmyInPlaceCrossbowAttackGoal(this, crossbowRange * 1.5f);
+                    this.goalSelector.add(goalWeight, crossbowGoal);
                 }
                 if (this instanceof RangedAttackMob) {
                     int bowRange = 15;//TODO Figure out a good way to calc this number. Using 15 for now since that's Skeleton range
                     int attackInterval = 20;
                     //noinspection unchecked,rawtypes
-                    this.goalSelector.add(goalWeight, new ArmyBowAttackGoal(this, 1.0D, attackInterval, bowRange));
+                    Goal bowGoal = pursueTargets
+                        ? new ArmyBowAttackGoal(this, 1.0D, attackInterval, bowRange)
+                        : new ArmyInPlaceBowAttackGoal(this, attackInterval, bowRange * 1.5f);
+                    this.goalSelector.add(goalWeight, bowGoal);
                 }
             }
         }
@@ -135,7 +165,12 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
 
     protected int addTaskGoals(int goalWeight, TasksCategory tasks) {
         if (tasks.isEnabled()) {
-            goalWeight++;//TODO
+            if (tasks.isGatheringMilk()) {
+                this.goalSelector.add(goalWeight++, new GatherMilkGoal(this, tasks.getCowSearchDistance()));
+            }
+            if (tasks.isPickUpItems()) {
+                this.goalSelector.add(goalWeight++, new GatherItemGoal(this, tasks.getItemSearchDistance()));
+            }
         }
         return goalWeight;
     }
@@ -208,6 +243,31 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
     public abstract Inventory getInventory();
 
     public abstract boolean giveItemStack(ItemStack stack);
+
+    @Override
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(SQUAD, Optional.empty());
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        if (this.hasExistingSquad(null)) {
+            nbt.putUuid("Squad", this.getSquad());
+        }
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        this.dataTracker.set(
+            SQUAD,
+            nbt.containsUuid("Squad")
+                ? Optional.of(nbt.getUuid("Squad"))
+                : Optional.empty()
+        );
+    }
 
     public byte getEquipmentSwapTicks() {
         return 0;
@@ -307,5 +367,84 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
         return null;
+    }
+
+    public UUID getSquad() {
+        return dataTracker.get(SQUAD).orElse(emptyUUID.get());
+    }
+
+    public void setSquad(UUID squadId) {
+        dataTracker.set(SQUAD, emptyUUID.is(squadId) ? Optional.empty() : Optional.of(squadId));
+    }
+
+    public boolean hasExistingSquad(@Nullable Squads squads) {
+        if (squads == null) {
+            squads = this.squads;
+        }
+        return !emptyUUID.is(getSquad()) && squads.getSquad(getOwnerUuid(), getSquad()) != null;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        this.updateCapeAngles();
+    }
+
+    protected void updateCapeAngles() {
+        this.prevCapeX = this.capeX;
+        this.prevCapeY = this.capeY;
+        this.prevCapeZ = this.capeZ;
+        double capeOffsetX = this.getX() - this.capeX;
+        double capeOffsetY = this.getY() - this.capeY;
+        double capeOffsetZ = this.getZ() - this.capeZ;
+        double minOffsetAmount = 10.0D;
+        if (capeOffsetX > minOffsetAmount) {
+            this.capeX = this.getX();
+            this.prevCapeX = this.capeX;
+        }
+
+        if (capeOffsetZ > minOffsetAmount) {
+            this.capeZ = this.getZ();
+            this.prevCapeZ = this.capeZ;
+        }
+
+        if (capeOffsetY > minOffsetAmount) {
+            this.capeY = this.getY();
+            this.prevCapeY = this.capeY;
+        }
+
+        if (capeOffsetX < -minOffsetAmount) {
+            this.capeX = this.getX();
+            this.prevCapeX = this.capeX;
+        }
+
+        if (capeOffsetZ < -minOffsetAmount) {
+            this.capeZ = this.getZ();
+            this.prevCapeZ = this.capeZ;
+        }
+
+        if (capeOffsetY < -minOffsetAmount) {
+            this.capeY = this.getY();
+            this.prevCapeY = this.capeY;
+        }
+
+        this.capeX += capeOffsetX * 0.25D;
+        this.capeZ += capeOffsetZ * 0.25D;
+        this.capeY += capeOffsetY * 0.25D;
+    }
+
+    @Override
+    public void tickMovement() {
+        this.prevStrideDistance = this.strideDistance;
+        super.tickMovement();
+        float g;
+        if (this.onGround && !this.isDead() && !this.isSwimming()) {
+            g = Math.min(0.1F, (float) this.getVelocity().horizontalLength());
+        } else {
+            g = 0.0F;
+        }
+
+        this.strideDistance += (g - this.strideDistance) * 0.4F;
     }
 }

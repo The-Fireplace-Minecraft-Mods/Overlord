@@ -3,8 +3,10 @@
   "package": "dev.the_fireplace.overlord.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
+    "AbstractSkeletonEntityMixin",
     "GoalSelectorAccessor",
     "MeleeAttackGoalAccessor",
+    "PlayerManagerMixin",
     "WolfEntityMixin"
   ],
   "injectors": {

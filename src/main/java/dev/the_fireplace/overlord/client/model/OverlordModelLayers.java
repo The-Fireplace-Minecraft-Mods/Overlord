@@ -9,7 +9,7 @@ import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
-public class OverlordModelLayers
+public final class OverlordModelLayers
 {
     public static EntityModelLayer OWNED_SKELETON_MODEL = createModelLayer("standard_owned_skeleton");
     public static EntityModelLayer MUSCLE_OWNED_SKELETON_MODEL = createModelLayer("muscle_owned_skeleton");
