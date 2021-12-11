@@ -5,25 +5,28 @@ import dev.the_fireplace.overlord.network.server.receiver.*;
 
 import javax.inject.Inject;
 
-public final class ServerPacketRegistry
+public final class OverlordServerPacketReceivers
 {
     private final ServerPacketReceiverRegistry registry;
+
     private final GetOrdersPacketReceiver getOrdersPacketReceiver;
     private final UpdateSquadPacketReceiver updateSquadPacketReceiver;
     private final UpdateAIPacketReceiver updateAIPacketReceiver;
     private final SaveTombstonePacketReceiver saveTombstonePacketReceiver;
     private final SetSquadPacketReceiver setSquadPacketReceiver;
     private final DeleteSquadPacketReceiver deleteSquadPacketReceiver;
+    private final IssueLocalOrdersPacketReceiver issueLocalOrdersPacketReceiver;
 
     @Inject
-    public ServerPacketRegistry(
+    public OverlordServerPacketReceivers(
         ServerPacketReceiverRegistry registry,
         GetOrdersPacketReceiver getOrdersPacketReceiver,
         UpdateSquadPacketReceiver updateSquadPacketReceiver,
         UpdateAIPacketReceiver updateAIPacketReceiver,
         SaveTombstonePacketReceiver saveTombstonePacketReceiver,
         SetSquadPacketReceiver setSquadPacketReceiver,
-        DeleteSquadPacketReceiver deleteSquadPacketReceiver
+        DeleteSquadPacketReceiver deleteSquadPacketReceiver,
+        IssueLocalOrdersPacketReceiver issueLocalOrdersPacketReceiver
     ) {
         this.registry = registry;
         this.getOrdersPacketReceiver = getOrdersPacketReceiver;
@@ -32,6 +35,7 @@ public final class ServerPacketRegistry
         this.saveTombstonePacketReceiver = saveTombstonePacketReceiver;
         this.setSquadPacketReceiver = setSquadPacketReceiver;
         this.deleteSquadPacketReceiver = deleteSquadPacketReceiver;
+        this.issueLocalOrdersPacketReceiver = issueLocalOrdersPacketReceiver;
     }
 
     public void registerPacketHandlers() {
@@ -41,5 +45,6 @@ public final class ServerPacketRegistry
         registry.register(saveTombstonePacketReceiver);
         registry.register(setSquadPacketReceiver);
         registry.register(deleteSquadPacketReceiver);
+        registry.register(issueLocalOrdersPacketReceiver);
     }
 }

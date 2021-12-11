@@ -25,4 +25,9 @@ public final class DefaultConfigValues implements ConfigValues
     public int getFullyGrownMilkCount() {
         return 64;
     }
+
+    @Override
+    public int getLocalOrdersDistance() {
+        return 32;
+    }
 }

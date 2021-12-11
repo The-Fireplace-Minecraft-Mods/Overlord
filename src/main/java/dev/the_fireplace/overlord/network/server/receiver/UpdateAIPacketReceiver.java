@@ -4,9 +4,11 @@ import dev.the_fireplace.lib.api.network.interfaces.ServerPacketReceiver;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
 import dev.the_fireplace.overlord.domain.entity.Ownable;
+import dev.the_fireplace.overlord.item.OrdersWandItem;
 import dev.the_fireplace.overlord.network.ClientToServerPacketIDs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -26,7 +28,23 @@ public final class UpdateAIPacketReceiver implements ServerPacketReceiver
     @Override
     public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
         int entityId = buf.readInt();
-        //TODO Check which thread this runs on
+        NbtCompound aiTag = buf.readNbt();
+        boolean isWandUpdate = entityId == -1;
+        if (isWandUpdate) {
+            updateWandAISettings(player, aiTag);
+        } else {
+            updateEntityAISettings(player, entityId, aiTag);
+        }
+    }
+
+    private void updateWandAISettings(ServerPlayerEntity player, NbtCompound aiTag) {
+        ItemStack wandStack = OrdersWandItem.getActiveWand(player);
+        if (!wandStack.isEmpty()) {
+            wandStack.getOrCreateTag().put("ai", aiTag);
+        }
+    }
+
+    private void updateEntityAISettings(ServerPlayerEntity player, int entityId, NbtCompound aiTag) {
         Entity entity = player.getEntityWorld().getEntityById(entityId);
         if (!(entity instanceof OrderableEntity)) {
             Overlord.getLogger().info("Entity is not orderable: {}", Objects.toString(entity));

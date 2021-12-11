@@ -10,7 +10,7 @@ import dev.the_fireplace.overlord.datapack.OverlordDataPacks;
 import dev.the_fireplace.overlord.domain.registry.HeadBlockAugmentRegistry;
 import dev.the_fireplace.overlord.entity.OverlordEntities;
 import dev.the_fireplace.overlord.item.OverlordItems;
-import dev.the_fireplace.overlord.network.server.ServerPacketRegistry;
+import dev.the_fireplace.overlord.network.server.OverlordServerPacketReceivers;
 
 public final class Main implements DIModInitializer
 {
@@ -22,7 +22,7 @@ public final class Main implements DIModInitializer
         OverlordBlockEntities.register();
         OverlordEntities.register();
         Augments.register(diContainer.getInstance(HeadBlockAugmentRegistry.class));
-        diContainer.getInstance(ServerPacketRegistry.class).registerPacketHandlers();
+        diContainer.getInstance(OverlordServerPacketReceivers.class).registerPacketHandlers();
         OverlordDataPacks.register(diContainer);
     }
 }

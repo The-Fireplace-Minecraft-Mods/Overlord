@@ -3,14 +3,12 @@ package dev.the_fireplace.overlord.client.gui.entity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.overlord.Overlord;
-import dev.the_fireplace.overlord.domain.client.GuiOpener;
+import dev.the_fireplace.overlord.domain.client.ScreenOpener;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonContainer;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
-import net.minecraft.client.gui.widget.AbstractPressableButtonWidget;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -23,7 +21,7 @@ public class OwnedSkeletonGui extends ContainerScreen<OwnedSkeletonContainer> {
     private int mouseX;
     private int mouseY;
     private final OwnedSkeletonEntity entity;
-    private final GuiOpener guiOpener;
+    private final ScreenOpener screenOpener;
     public OwnedSkeletonGui(OwnedSkeletonEntity skeleton, PlayerInventory playerInventory, int syncId) {
         super(
             skeleton.getContainer(playerInventory, syncId),
@@ -32,21 +30,15 @@ public class OwnedSkeletonGui extends ContainerScreen<OwnedSkeletonContainer> {
         );
         entity = skeleton;
         containerHeight = 252;
-        this.guiOpener = DIContainer.get().getInstance(GuiOpener.class);
+        this.screenOpener = DIContainer.get().getInstance(ScreenOpener.class);
     }
 
     @Override
     protected void init() {
         super.init();
         //x, y, width, height
-        addButton(new AbstractPressableButtonWidget(x + 96, y + 58, 74, 20, I18n.translate("gui.overlord.owned_skeleton.orders"))
-        {
-            @Override
-            public void onPress() {
-                guiOpener.openOrdersGUI(entity);
-            }
-        });
-        addDrawableChild(new ButtonWidget(x + 96, y + 38, 74, 20, new TranslatableText("gui.overlord.owned_skeleton.select_squad"), (b) -> guiOpener.openSquadSelectorGUI(entity)));
+        addButton(new ButtonWidget(x + 96, y + 58, 74, 20, new TranslatableText("gui.overlord.orders"), (b) -> screenOpener.openOrdersGUI(entity)));
+        addDrawableChild(new ButtonWidget(x + 96, y + 38, 74, 20, new TranslatableText("gui.overlord.select_squad"), (b) -> screenOpener.openSquadSelectorGUI(entity)));
     }
 
     @Override

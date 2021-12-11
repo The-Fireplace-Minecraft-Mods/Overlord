@@ -13,10 +13,17 @@ import java.util.UUID;
 @Environment(EnvType.CLIENT)
 public final class SetSquadBufferBuilder
 {
-    public static PacketByteBuf build(@Nullable UUID squadId, int entityId) {
+    public static PacketByteBuf buildForEntity(@Nullable UUID squadId, int entityId) {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeUuid(squadId != null ? squadId : DIContainer.get().getInstance(EmptyUUID.class).get());
         buffer.writeInt(entityId);
+        return buffer;
+    }
+
+    public static PacketByteBuf buildForWand(@Nullable UUID squadId) {
+        PacketByteBuf buffer = PacketByteBufs.create();
+        buffer.writeUuid(squadId != null ? squadId : DIContainer.get().getInstance(EmptyUUID.class).get());
+        buffer.writeInt(-1);
         return buffer;
     }
 }

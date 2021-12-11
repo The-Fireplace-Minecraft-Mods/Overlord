@@ -13,7 +13,7 @@ import dev.the_fireplace.overlord.container.ContainerEquipmentSlot;
 import dev.the_fireplace.overlord.datagen.*;
 import dev.the_fireplace.overlord.entity.OverlordEntities;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonContainer;
-import dev.the_fireplace.overlord.network.client.ClientPacketRegistry;
+import dev.the_fireplace.overlord.network.client.OverlordClientPacketReceivers;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
@@ -39,7 +39,7 @@ public final class Client implements ClientDIModInitializer
         registerEntityRenderers();
         registerBlockEntityRenderers();
         registerGuis();
-        diContainer.getInstance(ClientPacketRegistry.class).registerPacketHandlers();
+        diContainer.getInstance(OverlordClientPacketReceivers.class).registerPacketHandlers();
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
             Overlord.getLogger().debug("Generating data...");
             DataGenerator gen = diContainer.getInstance(DataGeneratorFactory.class).createAdditive(Paths.get("..", "src", "main", "resources"));
