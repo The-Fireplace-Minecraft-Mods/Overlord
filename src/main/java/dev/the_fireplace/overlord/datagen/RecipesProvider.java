@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.block.OverlordBlocks;
+import dev.the_fireplace.overlord.item.OverlordItems;
 import net.minecraft.advancement.criterion.EnterBlockCriterion;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.block.Block;
@@ -84,6 +85,7 @@ public class RecipesProvider implements DataProvider
         ShapedRecipeJsonFactory.create(OverlordBlocks.JUNGLE_GRAVE_MARKER, 2).input('#', Items.JUNGLE_FENCE).input('%', Items.JUNGLE_SLAB).pattern("%%%").pattern(" # ").pattern(" # ").group("grave_marker").criterion("has_fence", this.conditionsFromItem(Items.JUNGLE_FENCE)).offerTo(consumer);
         ShapedRecipeJsonFactory.create(OverlordBlocks.OAK_GRAVE_MARKER, 2).input('#', Items.OAK_FENCE).input('%', Items.OAK_SLAB).pattern("%%%").pattern(" # ").pattern(" # ").group("grave_marker").criterion("has_fence", this.conditionsFromItem(Items.OAK_FENCE)).offerTo(consumer);
         ShapedRecipeJsonFactory.create(OverlordBlocks.DARK_OAK_GRAVE_MARKER, 2).input('#', Items.DARK_OAK_FENCE).input('%', Items.DARK_OAK_SLAB).pattern("%%%").pattern(" # ").pattern(" # ").group("grave_marker").criterion("has_fence", this.conditionsFromItem(Items.DARK_OAK_FENCE)).offerTo(consumer);
+        ShapedRecipeJsonFactory.create(OverlordItems.ORDERS_WAND, 1).input('#', Items.AMETHYST_SHARD).input('/', Items.STICK).pattern("  #").pattern(" / ").pattern("/  ").criterion("has_amethyst_shard", this.conditionsFromItem(Items.AMETHYST_SHARD)).offerTo(consumer);
     }
 
     public String getName() {
