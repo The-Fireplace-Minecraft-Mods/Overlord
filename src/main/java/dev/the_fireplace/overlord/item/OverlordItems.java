@@ -11,7 +11,7 @@ import static dev.the_fireplace.overlord.Overlord.MODID;
 public final class OverlordItems
 {
     public static final Item OWNED_SKELETON_SPAWN_EGG = new OwnedSkeletonSpawnEggItem(OverlordEntities.OWNED_SKELETON_TYPE, 0xC1C1C1, 0xC76462, new Item.Settings().group(ItemGroup.MISC));
-    public static final Item ORDERS_WAND = new OrdersWandItem(new Item.Settings().group(ItemGroup.TOOLS));
+    public static final Item ORDERS_WAND = new OrdersWandItem(new Item.Settings().group(ItemGroup.TOOLS).maxCount(1));
 
     public static void registerItems() {
         registerItem("owned_skeleton_spawn_egg", OWNED_SKELETON_SPAWN_EGG);
