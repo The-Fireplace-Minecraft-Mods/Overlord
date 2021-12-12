@@ -17,6 +17,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -157,6 +159,12 @@ public class SelectorScreen extends Screen
         this.renderBackground(matrixStack);
         //TODO draw selected squad's data
         DrawEntity.drawEntityFacingAway(width / 2, height / 2 + 50, 100, this.openTime, System.currentTimeMillis(), renderedSkeleton);
+        for (Element child : children) {
+            //noinspection SuspiciousMethodCalls
+            if (!buttons.contains(child) && child instanceof Drawable) {
+                ((Drawable) child).render(matrixStack, mouseX, mouseY, delta);
+            }
+        }
         super.render(matrixStack, mouseX, mouseY, delta);
     }
 

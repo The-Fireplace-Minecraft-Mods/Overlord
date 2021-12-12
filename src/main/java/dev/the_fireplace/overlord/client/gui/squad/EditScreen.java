@@ -119,6 +119,12 @@ public class EditScreen extends Screen
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
+        for (Element child : children) {
+            //noinspection SuspiciousMethodCalls
+            if (!buttons.contains(child) && child instanceof Drawable) {
+                ((Drawable) child).render(matrices, mouseX, mouseY, delta);
+            }
+        }
         super.render(matrices, mouseX, mouseY, delta);
         this.textRenderer.draw(matrices, SQUAD_NAME_FIELD_TITLE, this.width * 3f / 4f - textRenderer.getWidth(SQUAD_NAME_FIELD_TITLE) / 2f, 4, 0xFFFFFF);
     }
