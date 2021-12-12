@@ -101,6 +101,8 @@
   "text.config.overlord.option.halfGrownMilkCount": "Half Grown",
   "text.config.overlord.option.threeQuartersGrownMilkCount": "Three Quarters Grown",
   "text.config.overlord.option.fullyGrownMilkCount": "Fully Grown",
+  "text.config.overlord.option.localOrdersDistance": "Local Orders Distance",
+  "text.config.overlord.option.localOrdersDistance.desc": "How far away can players order their nearby skeletons from?",
   "squad.overlord.pattern.red_bed.name": "Red Blanket",
   "squad.overlord.pattern.white_bed.name": "White Blanket",
   "squad.overlord.pattern.black_bed.name": "Black Blanket",
