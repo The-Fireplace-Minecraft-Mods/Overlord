@@ -50,7 +50,6 @@ public class SelectorWidget extends AlwaysSelectedEntryListWidget<SelectorEntry>
         );
         this.noneEntry = new SelectorEntry(noneSquad);
         this.addEntry(noneEntry);
-        this.setSelected(noneEntry);
     }
 
     public void addSquads(Collection<? extends Squad> squads) {
