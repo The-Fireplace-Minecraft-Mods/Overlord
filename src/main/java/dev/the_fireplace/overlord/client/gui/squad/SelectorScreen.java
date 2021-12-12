@@ -43,8 +43,6 @@ public class SelectorScreen extends Screen
     private final Collection<Squad> ownedSquads;
     @Nullable
     private final Integer entityId;
-    @Nullable
-    private final UUID currentSquad;
     private SelectorWidget selectorWidget;
     private ButtonWidget editButton;
     private ButtonWidget deleteButton;
@@ -52,12 +50,11 @@ public class SelectorScreen extends Screen
     private OwnedSkeletonEntity renderedSkeleton;
     private long openTime;
 
-    public SelectorScreen(Text title, Screen parent, Collection<? extends Squad> ownedSquads, @Nullable Integer entityId, @Nullable UUID currentSquad) {
+    public SelectorScreen(Text title, Screen parent, Collection<? extends Squad> ownedSquads, @Nullable Integer entityId, UUID currentSquad) {
         super(title);
         this.emptyUUID = DIContainer.get().getInstance(EmptyUUID.class);
         this.squadEligibleItems = DIContainer.get().getInstance(SquadEligibleItems.class);
         this.parent = parent;
-        this.currentSquad = currentSquad;
         this.entityId = entityId;
         this.ownedSquads = Lists.newArrayList(ownedSquads);
         this.selectedSquad = currentSquad;
@@ -113,13 +110,13 @@ public class SelectorScreen extends Screen
 
     private void updateButtons() {
         if (editButton != null) {
-            editButton.setMessage(selectedSquad != null
+            editButton.setMessage(!emptyUUID.is(selectedSquad)
                 ? new TranslatableText("gui.overlord.squad_manager.edit_squad")
                 : new TranslatableText("gui.overlord.squad_manager.create_squad")
             );
         }
         if (deleteButton != null) {
-            deleteButton.active = selectedSquad != null;
+            deleteButton.active = !emptyUUID.is(selectedSquad);
         }
     }
 
@@ -146,7 +143,7 @@ public class SelectorScreen extends Screen
                 this.updateButtons();
             });
         selectorWidget.addSquads(ownedSquads);
-        selectorWidget.selectSquad(currentSquad);
+        selectorWidget.selectSquad(selectedSquad);
         return selectorWidget;
     }
 

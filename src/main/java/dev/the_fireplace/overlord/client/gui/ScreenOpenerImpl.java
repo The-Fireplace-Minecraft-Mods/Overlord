@@ -1,6 +1,7 @@
 package dev.the_fireplace.overlord.client.gui;
 
 import dev.the_fireplace.annotateddi.api.di.Implementation;
+import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.client.gui.squad.SelectorScreen;
 import dev.the_fireplace.overlord.domain.client.ScreenOpener;
 import dev.the_fireplace.overlord.domain.data.Squads;
@@ -28,13 +29,16 @@ import java.util.UUID;
 public final class ScreenOpenerImpl implements ScreenOpener
 {
     private final Squads squads;
+    private final EmptyUUID emptyUUID;
     private final MinecraftClient client;
 
     @Inject
     public ScreenOpenerImpl(
-        @Named("client") Squads squads
+        @Named("client") Squads squads,
+        EmptyUUID emptyUUID
     ) {
         this.squads = squads;
+        this.emptyUUID = emptyUUID;
         this.client = MinecraftClient.getInstance();
     }
 
@@ -60,7 +64,7 @@ public final class ScreenOpenerImpl implements ScreenOpener
             //noinspection ConstantConditions
             UUID currentSquad = activeWand.hasTag() && activeWand.getTag().contains("squad")
                 ? activeWand.getTag().getUuid("squad")
-                : null;
+                : emptyUUID.get();
             selectorScreen = new SelectorScreen(
                 new TranslatableText("gui.overlord.squad_manager.name"),
                 client.currentScreen,
