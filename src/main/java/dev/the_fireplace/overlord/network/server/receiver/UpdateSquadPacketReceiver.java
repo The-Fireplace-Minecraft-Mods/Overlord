@@ -73,7 +73,7 @@ public final class UpdateSquadPacketReceiver implements ServerPacketReceiver
         if (buf.isReadable()) {
             skeletonId = buf.readInt();
         }
-        if (squadName.isBlank() || pattern.isBlank() || item.isEmpty()) {
+        if (squadName.isEmpty() || pattern.isEmpty() || item.isEmpty()) {
             logInvalidPacketWarning(player);
             return;
         }

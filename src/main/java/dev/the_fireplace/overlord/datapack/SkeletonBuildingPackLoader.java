@@ -101,7 +101,7 @@ public class SkeletonBuildingPackLoader implements SimpleSynchronousResourceRelo
             JsonObject byproduct = byproductElement.getAsJsonObject();
             Identifier byproductIdentifier = new Identifier(byproduct.get("id").getAsString());
             Optional<Item> byproductItem = Registry.ITEM.getOrEmpty(byproductIdentifier);
-            if (byproductItem.isEmpty()) {
+            if (!byproductItem.isPresent()) {
                 Overlord.getLogger().warn("Byproduct not found, skipping: {}", byproductIdentifier.toString());
                 continue;
             }

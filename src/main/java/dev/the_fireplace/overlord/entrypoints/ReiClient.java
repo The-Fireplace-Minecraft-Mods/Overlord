@@ -1,17 +1,25 @@
 package dev.the_fireplace.overlord.entrypoints;
 
+import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.item.OverlordItems;
-import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
-import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
-import me.shedaniel.rei.api.common.util.EntryStacks;
+import me.shedaniel.rei.api.EntryRegistry;
+import me.shedaniel.rei.api.EntryStack;
+import me.shedaniel.rei.api.plugins.REIPluginV0;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
-public final class ReiClient implements REIClientPlugin
+public final class ReiClient implements REIPluginV0
 {
     @Override
     public void registerEntries(EntryRegistry registry) {
-        registry.removeEntry(EntryStacks.of(OverlordItems.SANS_MASK));
+        //noinspection UnstableApiUsage
+        registry.removeEntry(EntryStack.create(OverlordItems.SANS_MASK));
+    }
+
+    @Override
+    public Identifier getPluginIdentifier() {
+        return new Identifier(Overlord.MODID, Overlord.MODID);
     }
 }

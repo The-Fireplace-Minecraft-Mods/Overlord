@@ -62,10 +62,10 @@ public class LocalOrdersScreen extends Screen
             }
         };
         //x, y, width, height
-        addDrawableChild(new ButtonWidget(width / 2 - 50, height / 2, 100, 20, new TranslatableText("gui.overlord.orders"), openOrdersScreen));
-        addDrawableChild(new ButtonWidget(width / 2 - 50, height / 2 + 22, 100, 20, new TranslatableText("gui.overlord.select_squad"), (b) -> screenOpener.openSquadSelectorGUI(null)));
-        addDrawableChild(new ButtonWidget(width / 2 - 102, height / 2 + 44, 100, 20, new TranslatableText("gui.overlord.local_orders.issue_orders"), this::issueOrders));
-        addDrawableChild(new ButtonWidget(width / 2 + 2, height / 2 + 44, 100, 20, new TranslatableText("gui.done"), (b) -> this.closeScreen()));
+        addButton(new ButtonWidget(width / 2 - 50, height / 2, 100, 20, new TranslatableText("gui.overlord.orders"), openOrdersScreen));
+        addButton(new ButtonWidget(width / 2 - 50, height / 2 + 22, 100, 20, new TranslatableText("gui.overlord.select_squad"), (b) -> screenOpener.openSquadSelectorGUI(null)));
+        addButton(new ButtonWidget(width / 2 - 102, height / 2 + 44, 100, 20, new TranslatableText("gui.overlord.local_orders.issue_orders"), this::issueOrders));
+        addButton(new ButtonWidget(width / 2 + 2, height / 2 + 44, 100, 20, new TranslatableText("gui.done"), (b) -> this.closeScreen()));
     }
 
     private void closeScreen() {

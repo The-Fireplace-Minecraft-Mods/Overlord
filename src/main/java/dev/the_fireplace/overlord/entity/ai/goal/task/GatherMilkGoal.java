@@ -17,7 +17,7 @@ import java.util.function.Predicate;
 
 public class GatherMilkGoal extends TaskGoal
 {
-    protected static final Predicate<ItemStack> EMPTY_BUCKET_MATCHER = stack -> stack.isOf(Items.BUCKET);
+    protected static final Predicate<ItemStack> EMPTY_BUCKET_MATCHER = stack -> stack.getItem().equals(Items.BUCKET);
     protected final short searchDistance;
 
     protected byte postSwapCooldownTicks;
@@ -54,7 +54,7 @@ public class GatherMilkGoal extends TaskGoal
     private CowEntity findNearbyCow() {
         return armyEntity.getEntityWorld().getClosestEntity(
             CowEntity.class,
-            TargetPredicate.createNonAttackable().setPredicate(
+            new TargetPredicate().setPredicate(
                 cow -> !cow.isBaby()
                     && !cow.isInvisible()
                     && this.armyEntity.getNavigation().findPathTo(cow, 0) != null
@@ -153,7 +153,7 @@ public class GatherMilkGoal extends TaskGoal
     }
 
     private boolean swapToBucket() {
-        if (!armyEntity.getOffHandStack().isOf(Items.BUCKET)) {
+        if (!armyEntity.getOffHandStack().getItem().equals(Items.BUCKET)) {
             Inventory inventory = armyEntity.getInventory();
             int emptyBucketSlot = inventorySearcher.getFirstSlotMatching(inventory, EMPTY_BUCKET_MATCHER);
             int offHandSlot = armyEntity.getOffHandSlot();

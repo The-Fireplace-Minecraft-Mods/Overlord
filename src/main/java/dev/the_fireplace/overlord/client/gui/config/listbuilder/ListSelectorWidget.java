@@ -10,6 +10,7 @@ public class ListSelectorWidget extends AlwaysSelectedEntryListWidget<ListSelect
 {
     public ListSelectorWidget(MinecraftClient minecraftClient, int width, int height, int top, int bottom, int itemHeight) {
         super(minecraftClient, width, height, top, bottom, itemHeight);
-        this.setRenderBackground(false);
+        //setRenderBackground
+        this.method_31322(false);
     }
 }

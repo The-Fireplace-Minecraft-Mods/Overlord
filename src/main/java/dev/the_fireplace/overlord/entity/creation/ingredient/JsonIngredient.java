@@ -6,7 +6,7 @@ import com.google.gson.JsonParseException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.JsonOps;
 import dev.the_fireplace.overlord.domain.entity.creation.SkeletonIngredient;
-import net.fabricmc.fabric.api.tag.TagFactory;
+import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -28,11 +28,11 @@ public class JsonIngredient
         }
         Identifier identifier = new Identifier(jsonObject.get("id").getAsString());
         if (isTag) {
-            Tag<Item> itemTag = TagFactory.ITEM.create(identifier);
+            Tag<Item> itemTag = TagRegistry.item(identifier);
             ingredient = new TagIngredient(itemTag);
         } else {
             Optional<Item> item = Registry.ITEM.getOrEmpty(identifier);
-            if (item.isEmpty()) {
+            if (!item.isPresent()) {
                 throw new JsonParseException(String.format("Item not found: %s", identifier));
             }
             ingredient = new ItemIngredient(item.get());

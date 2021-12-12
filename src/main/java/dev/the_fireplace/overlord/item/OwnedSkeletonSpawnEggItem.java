@@ -81,7 +81,7 @@ public class OwnedSkeletonSpawnEggItem extends SpawnEggItem {
 
     private void setHomeToCurrentPosition(OwnedSkeletonEntity spawnedEntity) {
         AISettings aiSettings = spawnedEntity.getAISettings();
-        aiSettings.getMovement().setHome(new PositionSetting(spawnedEntity.getBlockX(), spawnedEntity.getBlockY(), spawnedEntity.getBlockZ()));
+        aiSettings.getMovement().setHome(new PositionSetting(spawnedEntity.getBlockPos().getX(), spawnedEntity.getBlockPos().getY(), spawnedEntity.getBlockPos().getZ()));
         spawnedEntity.updateAISettings(aiSettings.toTag());
     }
 

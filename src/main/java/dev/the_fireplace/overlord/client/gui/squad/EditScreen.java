@@ -1,5 +1,6 @@
 package dev.the_fireplace.overlord.client.gui.squad;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 import dev.the_fireplace.annotateddi.api.DIContainer;
@@ -16,7 +17,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -81,7 +81,7 @@ public class EditScreen extends Screen
             this.squadName = newSquadName;
             updateConfirmButtonEnabled();
         });
-        this.addDrawableChild(squadNameField);
+        this.children.add(squadNameField);
         ButtonWidget.PressAction confirmAction = (button) -> {
             ClientPlayNetworking.send(
                 ClientToServerPacketIDs.UPDATE_SQUAD,
@@ -98,17 +98,17 @@ public class EditScreen extends Screen
         };
         ButtonWidget.TooltipSupplier confirmTooltipSupplier = (buttonWidget, matrixStack, i, j) -> EditScreen.this.renderTooltip(matrixStack, errors, i, j);
         confirmButton = new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, new TranslatableText("gui.overlord.confirm_exit"), confirmAction, confirmTooltipSupplier);
-        this.addDrawableChild(confirmButton);
+        this.addButton(confirmButton);
         updateConfirmButtonEnabled();
-        this.addDrawableChild(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, new TranslatableText("gui.cancel"), (button) -> {
+        this.addButton(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, new TranslatableText("gui.cancel"), (button) -> {
             closeScreen();
         }));
     }
 
-    private <T extends Element & Drawable & Selectable> void addPartialScreenChildren(PartialScreen widget) {
+    private <T extends Element & Drawable> void addPartialScreenChildren(PartialScreen widget) {
         for (Element child : widget.getChildren()) {
             //noinspection unchecked
-            this.addDrawableChild((T) child);
+            this.addChild((T) child);
         }
     }
 
@@ -136,7 +136,7 @@ public class EditScreen extends Screen
 
     private void updateConfirmButtonEnabled() {
         if (saving) {
-            this.errors = List.of(createStyledError("gui.overlord.create_squad.saving"));
+            this.errors = Lists.newArrayList(createStyledError("gui.overlord.create_squad.saving"));
             this.confirmButton.active = false;
         } else {
             calculateErrors();
@@ -147,7 +147,7 @@ public class EditScreen extends Screen
     private void calculateErrors() {
         List<Text> errors = new ArrayList<>();
         boolean hasLookupPreventingErrors = false;
-        if (squadName.isBlank()) {
+        if (squadName.isEmpty()) {
             errors.add(createStyledError("gui.overlord.create_squad.name_required"));
         }
         String pattern = patternState.getPatternId().getPath();

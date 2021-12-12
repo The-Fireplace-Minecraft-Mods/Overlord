@@ -40,7 +40,7 @@ public class SkeletonBuilderImpl implements SkeletonBuilder
     @Override
     public OwnedSkeletonEntity build(Inventory inventory, World world, Tombstone tombstone) {
         Optional<SkeletonRecipe> recipeOrEmpty = skeletonRecipes.stream().filter(filterRecipe -> filterRecipe.hasEssentialContents(inventory)).findFirst();
-        if (recipeOrEmpty.isEmpty()) {
+        if (!recipeOrEmpty.isPresent()) {
             return null;
         }
         SkeletonRecipe recipe = recipeOrEmpty.get();
@@ -56,10 +56,10 @@ public class SkeletonBuilderImpl implements SkeletonBuilder
             entity.setHasSkin(true);
             if (!tombstoneName.isEmpty() && PlayerNameHelper.VALID_NAME_REGEX.matcher(tombstoneName).matches() && recipe.hasPlayerColorContents(inventory)) {
                 UserCache.setUseRemote(true);
-                Optional<GameProfile> profile = world.getServer().getUserCache().findByName(tombstoneName);
-                if (profile.isPresent()) {
+                GameProfile profile = world.getServer().getUserCache().findByName(tombstoneName);
+                if (profile != null) {
                     byproducts.addAll(recipe.processPlayerColorIngredients(inventory));
-                    entity.setSkinsuit(profile.get().getId());
+                    entity.setSkinsuit(profile.getId());
                 }
             }
         }

@@ -15,7 +15,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.StringNbtReader;
-import net.minecraft.nbt.visitor.StringNbtWriter;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
@@ -214,7 +213,7 @@ public final class SquadsImpl implements Squads
         @Override
         public void writeTo(StorageWriteBuffer buffer) {
             buffer.writeString("pattern", pattern);
-            buffer.writeString("item", new StringNbtWriter().apply(item.writeNbt(new NbtCompound())));
+            buffer.writeString("item", item.writeNbt(new NbtCompound()).toString());
             buffer.writeString("name", name);
         }
 

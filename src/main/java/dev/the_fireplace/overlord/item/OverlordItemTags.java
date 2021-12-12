@@ -21,6 +21,6 @@ public final class OverlordItemTags
     }
 
     private static Tag<Item> buildCommon(String name) {
-        return TagFactory.ITEM.create(new Identifier("c", name));
+        return (Tag.Identified<Item>) TagRegistry.item(new Identifier("c", name));
     }
 }

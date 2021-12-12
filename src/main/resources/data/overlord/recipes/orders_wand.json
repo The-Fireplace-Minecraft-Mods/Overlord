@@ -1,16 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "  #",
-    " / ",
+    " p#",
+    " /p",
     "/  "
   ],
   "key": {
     "#": {
-      "item": "minecraft:amethyst_shard"
+      "item": "minecraft:emerald"
     },
     "/": {
       "item": "minecraft:stick"
+    },
+    "p": {
+      "item": "minecraft:purple_dye"
     }
   },
   "result": {

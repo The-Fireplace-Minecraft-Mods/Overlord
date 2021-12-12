@@ -442,7 +442,7 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
         super.tickMovement();
         float g;
         if (this.onGround && !this.isDead() && !this.isSwimming()) {
-            g = Math.min(0.1F, (float) this.getVelocity().horizontalLength());
+            g = Math.min(0.1F, MathHelper.sqrt(squaredHorizontalLength(this.getVelocity())));
         } else {
             g = 0.0F;
         }

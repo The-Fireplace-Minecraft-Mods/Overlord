@@ -1,6 +1,7 @@
 package dev.the_fireplace.overlord.client.gui.squad;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.client.gui.rendertools.DrawEntity;
@@ -26,7 +27,10 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 @Environment(EnvType.CLIENT)
 public class SelectorScreen extends Screen
@@ -60,8 +64,8 @@ public class SelectorScreen extends Screen
     @Override
     protected void init() {
         selectorWidget = createSquadSelector();
-        this.addDrawableChild(selectorWidget);
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, new TranslatableText("gui.overlord.confirm_exit"), (button) -> {
+        this.children.add(selectorWidget);
+        this.addButton(new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, new TranslatableText("gui.overlord.confirm_exit"), (button) -> {
             if (entityId != null) {
                 ClientPlayNetworking.send(ClientToServerPacketIDs.SET_SQUAD, SetSquadBufferBuilder.buildForEntity(selectedSquad, entityId));
             } else {
@@ -72,15 +76,15 @@ public class SelectorScreen extends Screen
             }
             closeScreen();
         }));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, new TranslatableText("gui.cancel"), (button) -> {
+        this.addButton(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, new TranslatableText("gui.cancel"), (button) -> {
             closeScreen();
         }));
-        this.addDrawableChild(editButton = new OverlayButtonWidget(0, this.height - 54, this.width / 3, 20, Text.of(""), (button) -> {
+        this.addButton(editButton = new OverlayButtonWidget(0, this.height - 54, this.width / 3, 20, Text.of(""), (button) -> {
             Collection<ItemStack> squadItems = getSquadItems();
             Squad currentSquad = ownedSquads.stream().filter(squad -> squad.getSquadId().equals(selectedSquad)).findFirst().orElse(null);
             this.client.openScreen(new EditScreen(this, squadItems, currentSquad));
         }));
-        this.addDrawableChild(deleteButton = new ButtonWidget(this.width - 102, 2, 100, 20, new TranslatableText("gui.overlord.squad_manager.delete_squad"), (button) -> {
+        this.addButton(deleteButton = new ButtonWidget(this.width - 102, 2, 100, 20, new TranslatableText("gui.overlord.squad_manager.delete_squad"), (button) -> {
             ClientPlayNetworking.send(ClientToServerPacketIDs.DELETE_SQUAD, DeleteSquadBufferBuilder.build(selectedSquad));
             Optional<Squad> selectedSquad = findSquadById(this.selectedSquad);
             if (selectedSquad.isPresent()) {
@@ -163,7 +167,7 @@ public class SelectorScreen extends Screen
             selectorWidget.removeSquad(existingSquad.get());
         }
         ownedSquads.add(squad);
-        selectorWidget.addSquads(Set.of(squad));
+        selectorWidget.addSquads(Sets.newHashSet(squad));
         selectorWidget.selectSquad(squad.getSquadId());
         if (this.renderedSkeleton != null) {
             renderedSkeleton.setSquad(squad.getSquadId());

@@ -6,14 +6,12 @@
     ]
   },
   "criteria": {
-    "has_amethyst_shard": {
+    "has_emerald": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:amethyst_shard"
-            ]
+            "item": "minecraft:emerald"
           }
         ]
       }
@@ -27,7 +25,7 @@
   },
   "requirements": [
     [
-      "has_amethyst_shard",
+      "has_emerald",
       "has_the_recipe"
     ]
   ]

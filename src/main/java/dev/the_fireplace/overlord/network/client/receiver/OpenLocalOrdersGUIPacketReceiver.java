@@ -31,7 +31,7 @@ public final class OpenLocalOrdersGUIPacketReceiver implements ClientPacketRecei
         int orderDistance = buf.readInt();
         ItemStack mainHandStack = client.player.getMainHandStack();
         ItemStack offHandStack = client.player.getOffHandStack();
-        if (!mainHandStack.isOf(OverlordItems.ORDERS_WAND) && !offHandStack.isOf(OverlordItems.ORDERS_WAND)) {
+        if (!mainHandStack.getItem().equals(OverlordItems.ORDERS_WAND) && !offHandStack.getItem().equals(OverlordItems.ORDERS_WAND)) {
             return;
         }
         client.submit(() -> client.openScreen(new LocalOrdersScreen(orderDistance)));

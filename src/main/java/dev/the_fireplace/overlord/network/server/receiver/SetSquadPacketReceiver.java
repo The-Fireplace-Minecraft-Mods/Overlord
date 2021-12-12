@@ -60,8 +60,8 @@ public final class SetSquadPacketReceiver implements ServerPacketReceiver
             return;
         }
 
-        if (!Objects.equals(((Ownable) entity).getOwnerUuid(), player.getUuid())) {
-            Overlord.getLogger().warn("Set Squad packet received with wrong player ID, expected {} and got {}.", ((Ownable) entity).getOwnerUuid(), player.getUuid());
+        if (!Objects.equals(((Ownable) entity).getOwnerUniqueId(), player.getUuid())) {
+            Overlord.getLogger().warn("Set Squad packet received with wrong player ID, expected {} and got {}.", ((Ownable) entity).getOwnerUniqueId(), player.getUuid());
             return;
         }
 
