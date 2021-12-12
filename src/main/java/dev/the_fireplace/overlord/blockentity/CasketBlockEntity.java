@@ -27,8 +27,15 @@ public class CasketBlockEntity extends LockableContainerBlockEntity
     private Boolean cachedIsFoot = null;
 
     public CasketBlockEntity() {
+        this(false);
+    }
+
+    public CasketBlockEntity(boolean isKnownCasketFoot) {
         super(OverlordBlockEntities.CASKET_BLOCK_ENTITY);
         this.inventory = DefaultedList.ofSize(54, ItemStack.EMPTY);
+        if (isKnownCasketFoot) {
+            this.cachedIsFoot = true;
+        }
     }
 
     @Override
@@ -72,16 +79,16 @@ public class CasketBlockEntity extends LockableContainerBlockEntity
     @Override
     public ItemStack takeInvStack(int slot, int amount) {
         ItemStack itemStack = Inventories.splitStack(getHead().inventory, slot, amount);
-        if (!itemStack.isEmpty()) {
-            this.getHead().markDirty();
-        }
+        this.getHead().markDirty();
 
         return itemStack;
     }
 
     @Override
     public ItemStack removeInvStack(int slot) {
-        return Inventories.removeStack(getHead().inventory, slot);
+        ItemStack stack = Inventories.removeStack(getHead().inventory, slot);
+        getHead().markDirty();
+        return stack;
     }
 
     @Override
@@ -93,7 +100,7 @@ public class CasketBlockEntity extends LockableContainerBlockEntity
             stack.setCount(maxStackAmount);
         }
 
-        this.markDirty();
+        this.getHead().markDirty();
     }
 
     @Override
@@ -108,13 +115,14 @@ public class CasketBlockEntity extends LockableContainerBlockEntity
     @Override
     public void clear() {
         this.getHead().inventory.clear();
+        this.getHead().markDirty();
     }
 
     @Override
     public void fromTag(CompoundTag compoundTag) {
         super.fromTag(compoundTag);
+        this.inventory = DefaultedList.ofSize(this.getInvSize(), ItemStack.EMPTY);
         if (!isCasketFoot()) {
-            this.inventory = DefaultedList.ofSize(this.getInvSize(), ItemStack.EMPTY);
             Inventories.fromTag(compoundTag, this.inventory);
         }
     }
@@ -124,6 +132,8 @@ public class CasketBlockEntity extends LockableContainerBlockEntity
         super.toTag(compoundTag);
         if (!isCasketFoot()) {
             Inventories.toTag(compoundTag, this.inventory);
+        } else {
+            Inventories.writeNbt(compoundTag, DefaultedList.ofSize(this.size(), ItemStack.EMPTY));
         }
 
         return compoundTag;
