@@ -85,10 +85,13 @@ public class SquadCapeFeatureRenderer<T extends ArmyEntity, M extends PlayerEnti
         this.getContextModel().renderCape(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
 
         matrices.push();
-        matrices.translate(0, 0.5, -0.03);
+        matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0F));
+        double zTranslate = entity.getEquippedStack(EquipmentSlot.CHEST).isEmpty() ? -0.03 : -0.1;
+        matrices.translate(0, -0.5, zTranslate);
         ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
         ItemStack itemStack = squad.getItem();
-        matrices.scale(0.5f, 0.5f, itemHas3DModel(itemRenderer, itemStack) ? 0.25f : 1.5f);
+        float zScale = itemHas3DModel(itemRenderer, itemStack) ? 0.25f : 1.5f;
+        matrices.scale(0.5f, 0.5f, zScale);
         itemRenderer.renderItem(
             entity,
             itemStack,
