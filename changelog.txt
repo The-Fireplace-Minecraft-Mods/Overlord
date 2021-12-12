@@ -1,1 +1,2 @@
 Fix Orders Wand max stack size
+Fix missing translation for Local Orders Distance config option
