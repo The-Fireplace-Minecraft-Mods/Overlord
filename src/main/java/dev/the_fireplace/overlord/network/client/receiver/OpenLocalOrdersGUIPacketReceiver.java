@@ -34,6 +34,6 @@ public final class OpenLocalOrdersGUIPacketReceiver implements ClientPacketRecei
         if (!mainHandStack.isOf(OverlordItems.ORDERS_WAND) && !offHandStack.isOf(OverlordItems.ORDERS_WAND)) {
             return;
         }
-        client.submit(() -> client.openScreen(new LocalOrdersScreen(orderDistance)));
+        client.submit(() -> client.setScreen(new LocalOrdersScreen(orderDistance)));
     }
 }

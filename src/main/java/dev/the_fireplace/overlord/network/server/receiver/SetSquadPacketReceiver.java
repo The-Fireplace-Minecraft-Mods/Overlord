@@ -49,7 +49,7 @@ public final class SetSquadPacketReceiver implements ServerPacketReceiver
     private void setWandSquad(ServerPlayerEntity player, UUID squadId) {
         ItemStack wandStack = OrdersWandItem.getActiveWand(player);
         if (!wandStack.isEmpty()) {
-            wandStack.getOrCreateTag().putUuid("squad", squadId);
+            wandStack.getOrCreateNbt().putUuid("squad", squadId);
         }
     }
 

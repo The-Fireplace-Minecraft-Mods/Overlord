@@ -115,7 +115,7 @@ public class EditScreen extends Screen
     }
 
     private void closeScreen() {
-        MinecraftClient.getInstance().openScreen(parent);
+        MinecraftClient.getInstance().setScreen(parent);
     }
 
     @Override

@@ -58,7 +58,7 @@ public class SkeletonInventory implements Inventory, Nameable
     }
 
     private boolean areItemsEqual(ItemStack stack1, ItemStack stack2) {
-        return stack1.getItem() == stack2.getItem() && ItemStack.areTagsEqual(stack1, stack2);
+        return stack1.getItem() == stack2.getItem() && ItemStack.areNbtEqual(stack1, stack2);
     }
 
     public int getEmptySlot() {
@@ -122,9 +122,9 @@ public class SkeletonInventory implements Inventory, Nameable
         ItemStack itemStack = this.getStack(slot);
         if (itemStack.isEmpty()) {
             itemStack = new ItemStack(item, 0);
-            if (stack.hasTag()) {
-                assert stack.getTag() != null;
-                itemStack.setTag(stack.getTag().copy());
+            if (stack.hasNbt()) {
+                assert stack.getNbt() != null;
+                itemStack.setNbt(stack.getNbt().copy());
             }
 
             this.setStack(slot, itemStack);
@@ -142,7 +142,7 @@ public class SkeletonInventory implements Inventory, Nameable
         if (j != 0) {
             i -= j;
             itemStack.increment(j);
-            itemStack.setCooldown(5);
+            itemStack.setBobbingAnimationTime(5);
         }
         return i;
     }
@@ -189,7 +189,7 @@ public class SkeletonInventory implements Inventory, Nameable
 
                 if (slot >= 0) {
                     this.main.set(slot, stack.copy());
-                    this.main.get(slot).setCooldown(5);
+                    this.main.get(slot).setBobbingAnimationTime(5);
                     stack.setCount(0);
                     return true;
                 } else {

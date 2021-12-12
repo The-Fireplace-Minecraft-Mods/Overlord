@@ -42,11 +42,11 @@ public final class Client implements ClientDIModInitializer
             Overlord.getLogger().debug("Generating data...");
             DataGenerator gen = diContainer.getInstance(DataGeneratorFactory.class).createAdditive(Paths.get("..", "src", "main", "resources"));
             BlockTagsProvider blockTagsProvider = new BlockTagsProvider(gen);
-            gen.install(blockTagsProvider);
-            gen.install(new EntityTypeTagsProvider(gen));
-            gen.install(new ItemTagsProvider(gen, blockTagsProvider));
-            gen.install(new RecipesProvider(gen));
-            gen.install(new LootTablesProvider(gen));
+            gen.addProvider(blockTagsProvider);
+            gen.addProvider(new EntityTypeTagsProvider(gen));
+            gen.addProvider(new ItemTagsProvider(gen, blockTagsProvider));
+            gen.addProvider(new RecipesProvider(gen));
+            gen.addProvider(new LootTablesProvider(gen));
             try {
                 gen.run();
             } catch (IOException e) {

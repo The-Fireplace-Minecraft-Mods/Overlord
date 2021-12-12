@@ -56,7 +56,7 @@ public class OwnedSkeletonSpawnEggItem extends SpawnEggItem {
             blockPos3 = blockPos.offset(direction);
         }
 
-        EntityType<?> spawningEntityType = this.getEntityType(itemStack.getTag());
+        EntityType<?> spawningEntityType = this.getEntityType(itemStack.getNbt());
         Entity spawnedEntity = spawningEntityType.spawnFromItemStack(
             (ServerWorld) world,
             itemStack,
@@ -68,7 +68,7 @@ public class OwnedSkeletonSpawnEggItem extends SpawnEggItem {
         );
         if (spawnedEntity != null) {
             if (spawnedEntity instanceof OwnedSkeletonEntity) {
-                NbtCompound savedSkeletonData = itemStack.getSubTag(SKELETON_DATA_TAG);
+                NbtCompound savedSkeletonData = itemStack.getSubNbt(SKELETON_DATA_TAG);
                 if (savedSkeletonData != null) {
                     ((OwnedSkeletonEntity) spawnedEntity).readCustomDataFromNbt(savedSkeletonData);
                 }
@@ -101,7 +101,7 @@ public class OwnedSkeletonSpawnEggItem extends SpawnEggItem {
         if (!(world.getBlockState(blockPos).getBlock() instanceof FluidBlock)) {
             return TypedActionResult.pass(itemStack);
         } else if (world.canPlayerModifyAt(user, blockPos) && user.canPlaceOn(blockPos, hitResult.getSide(), itemStack)) {
-            EntityType<?> entityType = this.getEntityType(itemStack.getTag());
+            EntityType<?> entityType = this.getEntityType(itemStack.getNbt());
             Entity spawnedEntity = entityType.spawnFromItemStack((ServerWorld) world, itemStack, user, blockPos, SpawnReason.SPAWN_EGG, false, false);
             if (spawnedEntity == null) {
                 return TypedActionResult.pass(itemStack);
@@ -122,7 +122,7 @@ public class OwnedSkeletonSpawnEggItem extends SpawnEggItem {
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
         if (user.isSneaking() && entity instanceof OwnedSkeletonEntity && !user.world.isClient()) {
-            entity.writeCustomDataToNbt(stack.getOrCreateSubTag(SKELETON_DATA_TAG));
+            entity.writeCustomDataToNbt(stack.getOrCreateSubNbt(SKELETON_DATA_TAG));
             if (entity.getCustomName() != null) {
                 stack.setCustomName(entity.getCustomName());
             }

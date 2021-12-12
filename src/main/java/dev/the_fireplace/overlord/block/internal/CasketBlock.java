@@ -83,7 +83,7 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+            world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
         if (facing == getDirectionTowardsOtherPart(state.get(PART), state.get(FACING))) {
             return neighborState.getBlock() == this && neighborState.get(PART) != state.get(PART) ? state : Blocks.AIR.getDefaultState();

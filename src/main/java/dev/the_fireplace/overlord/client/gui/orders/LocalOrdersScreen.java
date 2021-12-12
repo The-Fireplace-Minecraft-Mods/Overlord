@@ -55,10 +55,10 @@ public class LocalOrdersScreen extends Screen
             if (!wandStack.isEmpty()) {
                 AISettings settings = new AISettings();
                 //noinspection ConstantConditions
-                if (wandStack.hasTag() && wandStack.getTag().contains("ai")) {
-                    settings.readTag(wandStack.getTag().getCompound("ai"));
+                if (wandStack.hasNbt() && wandStack.getNbt().contains("ai")) {
+                    settings.readTag(wandStack.getNbt().getCompound("ai"));
                 }
-                client.openScreen(ordersGuiFactory.build(this, settings));
+                client.setScreen(ordersGuiFactory.build(this, settings));
             }
         };
         //x, y, width, height
@@ -69,7 +69,7 @@ public class LocalOrdersScreen extends Screen
     }
 
     private void closeScreen() {
-        MinecraftClient.getInstance().openScreen(null);
+        MinecraftClient.getInstance().setScreen(null);
     }
 
     private void issueOrders(ButtonWidget unused) {
@@ -91,8 +91,8 @@ public class LocalOrdersScreen extends Screen
 
         ItemStack wandStack = OrdersWandItem.getActiveWand(this.client.player);
         //noinspection ConstantConditions
-        if (!wandStack.isEmpty() && wandStack.hasTag() && wandStack.getTag().contains("squad")) {
-            UUID squadId = wandStack.getTag().getUuid("squad");
+        if (!wandStack.isEmpty() && wandStack.hasNbt() && wandStack.getNbt().contains("squad")) {
+            UUID squadId = wandStack.getNbt().getUuid("squad");
             Squad squad = squads.getSquad(this.client.player.getUuid(), squadId);
             if (squad != null) {
                 currentlyOrderingText = new TranslatableText("gui.overlord.local_orders.currently_ordering.squad", squad.getName(), orderDistance);
@@ -113,7 +113,7 @@ public class LocalOrdersScreen extends Screen
         }
 
         //noinspection ConstantConditions
-        UUID squadId = wandStack.hasTag() && wandStack.getTag().contains("squad") ? wandStack.getTag().getUuid("squad") : null;
+        UUID squadId = wandStack.hasNbt() && wandStack.getNbt().contains("squad") ? wandStack.getNbt().getUuid("squad") : null;
 
         Collection<ArmyEntity> nearbyArmyMembers = client.player.world.getEntitiesByClass(
             ArmyEntity.class,

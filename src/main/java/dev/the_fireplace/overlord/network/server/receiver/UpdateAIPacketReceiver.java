@@ -40,7 +40,7 @@ public final class UpdateAIPacketReceiver implements ServerPacketReceiver
     private void updateWandAISettings(ServerPlayerEntity player, NbtCompound aiTag) {
         ItemStack wandStack = OrdersWandItem.getActiveWand(player);
         if (!wandStack.isEmpty()) {
-            wandStack.getOrCreateTag().put("ai", aiTag);
+            wandStack.getOrCreateNbt().put("ai", aiTag);
         }
     }
 

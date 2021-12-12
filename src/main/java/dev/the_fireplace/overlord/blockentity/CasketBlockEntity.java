@@ -120,13 +120,11 @@ public class CasketBlockEntity extends LockableContainerBlockEntity
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound compoundTag) {
+    public void writeNbt(NbtCompound compoundTag) {
         super.writeNbt(compoundTag);
         if (!isCasketFoot()) {
             Inventories.writeNbt(compoundTag, this.inventory);
         }
-
-        return compoundTag;
     }
 
     private boolean isCasketFoot() {

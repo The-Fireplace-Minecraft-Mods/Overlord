@@ -41,11 +41,11 @@ public final class IssueLocalOrdersPacketReceiver implements ServerPacketReceive
         }
 
         //noinspection ConstantConditions
-        UUID squadId = wandStack.hasTag() && wandStack.getTag().contains("squad") ? wandStack.getTag().getUuid("squad") : null;
+        UUID squadId = wandStack.hasNbt() && wandStack.getNbt().contains("squad") ? wandStack.getNbt().getUuid("squad") : null;
         NbtCompound aiSettings;
         //noinspection ConstantConditions
-        if (wandStack.hasTag() && wandStack.getTag().contains("ai")) {
-            aiSettings = wandStack.getTag().getCompound("ai");
+        if (wandStack.hasNbt() && wandStack.getNbt().contains("ai")) {
+            aiSettings = wandStack.getNbt().getCompound("ai");
         } else {
             aiSettings = new AISettings().toTag();
         }

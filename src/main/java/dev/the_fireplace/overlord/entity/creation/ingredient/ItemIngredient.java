@@ -21,10 +21,10 @@ public class ItemIngredient extends AbstractIngredient
         if (!stack.getItem().equals(item)) {
             return false;
         }
-        if (nbtCompound != null && !stack.hasTag()) {
+        if (nbtCompound != null && !stack.hasNbt()) {
             return false;
         }
-        if (nbtCompound != null && !nbtCompound.equals(stack.getTag())) {
+        if (nbtCompound != null && !nbtCompound.equals(stack.getNbt())) {
             return false;
         }
 

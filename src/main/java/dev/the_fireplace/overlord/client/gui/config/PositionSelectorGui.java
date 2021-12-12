@@ -87,7 +87,7 @@ public class PositionSelectorGui extends Screen implements CustomButtonScreen<St
 
     private void closeScreen() {
         onClose();
-        MinecraftClient.getInstance().openScreen(parent);
+        MinecraftClient.getInstance().setScreen(parent);
     }
 
     @Override

@@ -65,7 +65,7 @@ public class SelectorScreen extends Screen
                 ClientPlayNetworking.send(ClientToServerPacketIDs.SET_SQUAD, SetSquadBufferBuilder.buildForWand(selectedSquad));
                 Objects.requireNonNull(client);
                 Objects.requireNonNull(client.player);
-                OrdersWandItem.getActiveWand(client.player).getOrCreateTag().putUuid("squad", selectedSquad);
+                OrdersWandItem.getActiveWand(client.player).getOrCreateNbt().putUuid("squad", selectedSquad);
             }
             closeScreen();
         }));
@@ -75,7 +75,7 @@ public class SelectorScreen extends Screen
         this.addDrawableChild(editButton = new OverlayButtonWidget(0, this.height - 54, this.width / 3, 20, Text.of(""), (button) -> {
             Collection<ItemStack> squadItems = getSquadItems();
             Squad currentSquad = ownedSquads.stream().filter(squad -> squad.getSquadId().equals(selectedSquad)).findFirst().orElse(null);
-            this.client.openScreen(new EditScreen(this, squadItems, currentSquad));
+            this.client.setScreen(new EditScreen(this, squadItems, currentSquad));
         }));
         this.addDrawableChild(deleteButton = new ButtonWidget(this.width - 102, 2, 100, 20, new TranslatableText("gui.overlord.squad_manager.delete_squad"), (button) -> {
             ClientPlayNetworking.send(ClientToServerPacketIDs.DELETE_SQUAD, DeleteSquadBufferBuilder.build(selectedSquad));
@@ -142,7 +142,7 @@ public class SelectorScreen extends Screen
     }
 
     private void closeScreen() {
-        MinecraftClient.getInstance().openScreen(parent);
+        MinecraftClient.getInstance().setScreen(parent);
     }
 
     @Override

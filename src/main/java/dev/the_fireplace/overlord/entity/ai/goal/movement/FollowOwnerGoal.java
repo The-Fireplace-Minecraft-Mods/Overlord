@@ -80,7 +80,7 @@ public class FollowOwnerGoal extends Goal
 
     @Override
     public void tick() {
-        this.armyEntity.getLookControl().lookAt(this.owner, 10.0F, (float) this.armyEntity.getLookPitchSpeed());
+        this.armyEntity.getLookControl().lookAt(this.owner, 10.0F, (float) this.armyEntity.getMaxLookPitchChange());
         if (--this.updateCountdownTicks <= 0) {
             this.updateCountdownTicks = 10;
             if (!this.armyEntity.isLeashed() && !this.armyEntity.hasVehicle()) {
@@ -132,7 +132,7 @@ public class FollowOwnerGoal extends Goal
                 return false;
             } else {
                 BlockPos blockPos = pos.subtract(new BlockPos(this.armyEntity.getPos()));
-                return this.world.getBlockCollisions(this.armyEntity, this.armyEntity.getBoundingBox().offset(blockPos)).toArray().length == 0;
+                return this.world.isSpaceEmpty(this.armyEntity, this.armyEntity.getBoundingBox().offset(blockPos));
             }
         }
     }

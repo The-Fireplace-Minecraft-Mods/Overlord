@@ -224,7 +224,7 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
                 this.targetSelector.add(targetGoalWeight++, new ArmyAttackWithOwnerGoal(this));
                 this.targetSelector.add(targetGoalWeight++, new RevengeGoal(this).setGroupRevenge());
                 //TODO Looks like we'll eventually need a custom Target goal that chooses targets based on equipped weapon type
-                this.targetSelector.add(targetGoalWeight, new FollowTargetGoal<>(this, MobEntity.class, 10, true, false, mob -> mob instanceof Monster));
+                this.targetSelector.add(targetGoalWeight, new ActiveTargetGoal<>(this, MobEntity.class, 10, true, false, mob -> mob instanceof Monster));
             }
         }
     }

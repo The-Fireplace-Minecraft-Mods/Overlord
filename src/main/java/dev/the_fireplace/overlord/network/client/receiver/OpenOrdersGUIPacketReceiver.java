@@ -55,6 +55,6 @@ public final class OpenOrdersGUIPacketReceiver implements ClientPacketReceiver
         if (parentScreen == null) {
             Overlord.getLogger().warn("Parent screen is null, attempting to open orders GUI anyways!");
         }
-        client.submit(() -> client.openScreen(ordersGuiFactory.build(parentScreen, (OrderableEntity) entity)));
+        client.submit(() -> client.setScreen(ordersGuiFactory.build(parentScreen, (OrderableEntity) entity)));
     }
 }

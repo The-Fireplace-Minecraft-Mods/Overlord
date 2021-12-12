@@ -554,12 +554,11 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     @Override
-    protected SoundEvent getFallSound(int distance) {
+    public LivingEntity.FallSounds getFallSounds() {
         if (hasPaddedFeet()) {
-            return distance > 4 ? SoundEvents.ENTITY_PLAYER_BIG_FALL : SoundEvents.ENTITY_PLAYER_SMALL_FALL;
+            return new LivingEntity.FallSounds(SoundEvents.ENTITY_PLAYER_SMALL_FALL, SoundEvents.ENTITY_PLAYER_BIG_FALL);
         }
-
-        return super.getFallSound(distance);
+        return new LivingEntity.FallSounds(SoundEvents.ENTITY_GENERIC_SMALL_FALL, SoundEvents.ENTITY_GENERIC_BIG_FALL);
     }
 
     @Environment(EnvType.CLIENT)

@@ -109,7 +109,7 @@ public class SkeletonBuildingPackLoader implements SimpleSynchronousResourceRelo
             ItemStack byproductStack = new ItemStack(byproductItem.get(), byproductCount);
             if (byproduct.has("nbt")) {
                 NbtCompound byproductNbt = JsonIngredient.parseNbt(byproduct);
-                byproductStack.setTag(byproductNbt);
+                byproductStack.setNbt(byproductNbt);
             }
             byproductStacks.add(byproductStack);
         }

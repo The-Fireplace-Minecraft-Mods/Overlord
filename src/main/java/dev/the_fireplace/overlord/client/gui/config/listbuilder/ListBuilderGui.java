@@ -55,7 +55,7 @@ public class ListBuilderGui extends Screen implements CustomButtonScreen<String>
 
     private void closeScreen() {
         onClose();
-        MinecraftClient.getInstance().openScreen(parent);
+        MinecraftClient.getInstance().setScreen(parent);
     }
 
     @Override

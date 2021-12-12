@@ -38,10 +38,9 @@ public class GraveMarkerBlockEntity extends AbstractTombstoneBlockEntity
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
-        tag = super.writeNbt(tag);
+    public void writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         tag.putUuid("owner", owner);
-        return tag;
     }
 
     @Override

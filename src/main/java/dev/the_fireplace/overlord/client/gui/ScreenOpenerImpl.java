@@ -62,8 +62,8 @@ public final class ScreenOpenerImpl implements ScreenOpener
             Objects.requireNonNull(client.player);
             ItemStack activeWand = OrdersWandItem.getActiveWand(client.player);
             //noinspection ConstantConditions
-            UUID currentSquad = activeWand.hasTag() && activeWand.getTag().contains("squad")
-                ? activeWand.getTag().getUuid("squad")
+            UUID currentSquad = activeWand.hasNbt() && activeWand.getNbt().contains("squad")
+                ? activeWand.getNbt().getUuid("squad")
                 : emptyUUID.get();
             selectorScreen = new SelectorScreen(
                 new TranslatableText("gui.overlord.squad_manager.name"),
@@ -73,6 +73,6 @@ public final class ScreenOpenerImpl implements ScreenOpener
                 currentSquad
             );
         }
-        client.openScreen(selectorScreen);
+        client.setScreen(selectorScreen);
     }
 }

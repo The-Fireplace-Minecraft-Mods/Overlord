@@ -55,8 +55,8 @@ public class AugmentHeadFeatureRenderer<T extends OwnedSkeletonEntity, M extends
                 matrixStack.scale(1.1875F, -1.1875F, -1.1875F);
 
                 GameProfile gameProfile = null;
-                if (itemStack.hasTag()) {
-                    NbtCompound nbtCompound = itemStack.getTag();
+                if (itemStack.hasNbt()) {
+                    NbtCompound nbtCompound = itemStack.getNbt();
                     //noinspection ConstantConditions
                     if (nbtCompound.contains("SkullOwner", 10)) {
                         gameProfile = NbtHelper.toGameProfile(nbtCompound.getCompound("SkullOwner"));

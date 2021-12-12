@@ -74,7 +74,7 @@ public class TombstoneGui extends Screen
 
     private void finishEditing() {
         this.tombstone.markDirty();
-        this.client.openScreen(null);
+        this.client.setScreen(null);
     }
 
     @Override
@@ -137,7 +137,7 @@ public class TombstoneGui extends Screen
 
         String string = this.tombstone.getNameText();
 
-        Matrix4f matrix4f = matrixStack.peek().getModel();
+        Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
         int selectionStart = this.selectionManager.getSelectionStart();
         int selectionEnd = this.selectionManager.getSelectionEnd();
         int directionMultiplier = this.client.textRenderer.isRightToLeft() ? -1 : 1;

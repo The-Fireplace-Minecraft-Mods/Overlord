@@ -41,13 +41,12 @@ public class TombstoneBlockEntity extends AbstractTombstoneBlockEntity
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
-        tag = super.writeNbt(tag);
+    public void writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         if (owner != null) {
             tag.putUuid("owner", owner);
         }
         tag.putString("text", name);
-        return tag;
     }
 
     @Override
@@ -61,6 +60,8 @@ public class TombstoneBlockEntity extends AbstractTombstoneBlockEntity
 
     @Override
     public NbtCompound toInitialChunkDataNbt() {
-        return writeNbt(new NbtCompound());
+        NbtCompound tag = new NbtCompound();
+        writeNbt(tag);
+        return tag;
     }
 }

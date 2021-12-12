@@ -46,7 +46,7 @@ public final class OverlordBlocks
     public static final Block BLOOD_SOAKED_SOIL = new BloodSoakedSoil(FabricBlockSettings.of(Material.SOIL)
         .strength(0.5F, 0.1F)
         .sounds(BlockSoundGroup.WET_GRASS)
-        .materialColor(MapColor.RED)
+        .mapColor(MapColor.RED)
         .breakByTool(FabricToolTags.SHOVELS));
 
     private static final List<Block> registeredBlocks = new ArrayList<>();

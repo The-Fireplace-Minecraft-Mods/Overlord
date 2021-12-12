@@ -11,8 +11,8 @@ plugins {
     id 'io.codearte.nexus-staging' version '0.30.0'
 }
 
-sourceCompatibility = JavaVersion.VERSION_16
-targetCompatibility = JavaVersion.VERSION_16
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
 version = "${project.mod_version}+${project.minecraft_version}"
@@ -50,7 +50,7 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = 'UTF-8'
-    it.options.release.set(16)
+    it.options.release.set(17)
 }
 
 java {
@@ -74,7 +74,8 @@ if (hasProperty('curseForgeApiKey')) {
             changelog = file('changelog.txt')
             releaseType = project.release_type
             addGameVersion project.minecraft_version
-            addGameVersion 'Java 16'
+            addGameVersion '1.18'
+            addGameVersion 'Java 17'
             addGameVersion 'Fabric'
             mainArtifact(new File(new File(buildDir, 'libs'), "$archivesBaseName-${version}.jar")) {
                 displayName = "$archivesBaseName-$version"
@@ -103,6 +104,7 @@ if (hasProperty('modrinthApiKey')) {
         changelog = file('changelog.txt').getText()
         releaseType = project.release_type
         addGameVersion(project.minecraft_version as String)
+        addGameVersion('1.18')
         addLoader('fabric')
     }
 }

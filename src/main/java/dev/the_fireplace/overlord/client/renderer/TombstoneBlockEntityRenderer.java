@@ -39,13 +39,13 @@ public class TombstoneBlockEntityRenderer implements BlockEntityRenderer<Tombsto
         int red = (int) ((double) NativeImage.getRed(baseTextColor) * colorScale);
         int green = (int) ((double) NativeImage.getGreen(baseTextColor) * colorScale);
         int blue = (int) ((double) NativeImage.getBlue(baseTextColor) * colorScale);
-        int finalTextColor = NativeImage.getAbgrColor(0, blue, green, red);
+        int finalTextColor = NativeImage.packColor(0, blue, green, red);
 
         String string = blockEntity.getNameText();
         if (!string.isEmpty()) {
             float x = (float) (-textRenderer.getWidth(string) / 2);
             float y = 5;
-            textRenderer.draw(string, x, y, finalTextColor, false, matrices.peek().getModel(), vertexConsumers, false, 0, light);
+            textRenderer.draw(string, x, y, finalTextColor, false, matrices.peek().getPositionMatrix(), vertexConsumers, false, 0, light);
         }
 
         matrices.pop();
