@@ -153,7 +153,7 @@ public class SelectorScreen extends Screen
     public void render(int mouseX, int mouseY, float delta) {
         this.renderBackground();
         //TODO draw selected squad's data
-        DrawEntity.drawEntityFacingAway(width / 2, height / 2 + 50, 100, this.openTime, System.currentTimeMillis(), renderedSkeleton);
+        DrawEntity.drawEntityFacingAway(width / 2, height / 2 + 50, 75, this.openTime, System.currentTimeMillis(), renderedSkeleton);
         for (Element child : children) {
             //noinspection SuspiciousMethodCalls
             if (!buttons.contains(child) && child instanceof Drawable) {
