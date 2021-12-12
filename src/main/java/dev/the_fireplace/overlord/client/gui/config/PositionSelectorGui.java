@@ -65,7 +65,7 @@ public class PositionSelectorGui extends Screen implements CustomButtonScreen<St
         ButtonWidget currentPositionButton = new ButtonWidget(this.width / 2 - 100, this.height / 2 - 30, 200, 20, new TranslatableText("gui.overlord.select_position.use_current"), (button) -> {
             setCoordinates(currentPosition.getX(), currentPosition.getY(), currentPosition.getZ());
         });
-        this.addDrawableChild(currentPositionButton);
+        this.addButton(currentPositionButton);
         this.addButton(confirmButton = new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, new TranslatableText("gui.overlord.confirm_exit"), (button) -> {
             PositionSetting newPosition = new PositionSetting(Integer.parseInt(xWidget.getText()), Integer.parseInt(yWidget.getText()), Integer.parseInt(zWidget.getText()));
             resultPromise.setSuccess(Optional.of(newPosition.toString()));

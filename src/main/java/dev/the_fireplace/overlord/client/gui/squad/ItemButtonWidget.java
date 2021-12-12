@@ -29,7 +29,7 @@ public class ItemButtonWidget extends ButtonWidget
         this.drawCustomButton(matrices, mouseX, mouseY);
 
         if (this.isHovered()) {
-            this.renderTooltip(matrices, mouseX, mouseY);
+            this.renderToolTip(matrices, mouseX, mouseY);
         }
     }
 

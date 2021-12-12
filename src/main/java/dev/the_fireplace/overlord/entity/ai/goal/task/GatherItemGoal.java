@@ -108,7 +108,7 @@ public class GatherItemGoal extends TaskGoal
             Random random = this.armyEntity.getRandom();
             this.armyEntity.world.playSound(null, this.armyEntity.getBlockPos(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.NEUTRAL, 0.2F, ((random.nextFloat() - random.nextFloat()) * 0.7F + 1.0F) * 2.0F);
             this.armyEntity.setStackInHand(Hand.OFF_HAND, item.getStack());
-            item.discard();
+            item.remove();
             this.postSwapCooldownTicks = this.armyEntity.getEquipmentSwapTicks();
         }
     }

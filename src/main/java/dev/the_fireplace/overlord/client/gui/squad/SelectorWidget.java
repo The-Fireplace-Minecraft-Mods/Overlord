@@ -34,7 +34,8 @@ public class SelectorWidget extends AlwaysSelectedEntryListWidget<SelectorEntry>
     public SelectorWidget(MinecraftClient minecraftClient, int width, int height, int top, int bottom, int itemHeight, Consumer<UUID> onSquadUpdated) {
         super(minecraftClient, width, height, top, bottom, itemHeight);
         this.onSquadUpdated = onSquadUpdated;
-        this.setRenderBackground(false);
+        //setRenderBackground
+        this.method_31322(false);
 
         TranslatorFactory translatorFactory = DIContainer.get().getInstance(TranslatorFactory.class);
         Translator translator = translatorFactory.getTranslator(Overlord.MODID);

@@ -32,8 +32,8 @@ public final class SquadUpdateFailedPacketReceiver implements ClientPacketReceiv
         }
         client.submit(() -> {
             Screen currentScreen = client.currentScreen;
-            if (currentScreen instanceof EditScreen editScreen) {
-                editScreen.onFailedCreation(failureMessages);
+            if (currentScreen instanceof EditScreen) {
+                ((EditScreen) currentScreen).onFailedCreation(failureMessages);
             }
         });
     }

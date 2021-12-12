@@ -35,11 +35,11 @@ public class OrdersWandItem extends Item
     }
 
     public static ItemStack getActiveWand(PlayerEntity player) {
-        if (player.getMainHandStack().isOf(OverlordItems.ORDERS_WAND)) {
+        if (player.getMainHandStack().getItem().equals(OverlordItems.ORDERS_WAND)) {
             return player.getMainHandStack();
         }
 
-        if (player.getOffHandStack().isOf(OverlordItems.ORDERS_WAND)) {
+        if (player.getOffHandStack().getItem().equals(OverlordItems.ORDERS_WAND)) {
             return player.getOffHandStack();
         }
 

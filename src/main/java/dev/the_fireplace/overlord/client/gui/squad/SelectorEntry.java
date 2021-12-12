@@ -12,7 +12,6 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.UUID;
@@ -38,10 +37,10 @@ public class SelectorEntry extends AlwaysSelectedEntryListWidget.Entry<SelectorE
     }
 
     private void drawIcon(MatrixStack matrixStack, int entryTop, int entryLeft, int iconHeight, int iconWidth) {
-        if (squad.getPattern().isBlank() || squad.getItem().isEmpty()) {
+        if (squad.getPattern().isEmpty() || squad.getItem().isEmpty()) {
             return;
         }
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.enableBlend();
         PatternRenderer.drawPattern(matrixStack, new Identifier(Overlord.MODID, squad.getPattern()), entryLeft, entryTop, iconWidth, iconHeight, 1.0f);
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
@@ -70,11 +69,6 @@ public class SelectorEntry extends AlwaysSelectedEntryListWidget.Entry<SelectorE
         if (selected) {
             BoxRenderer.drawBox(matrixStack, entryLeft, entryTop, width, height, 1, color);
         }
-    }
-
-    @Override
-    public Text getNarration() {
-        return Text.of(this.squad.getName());
     }
 
     public boolean hasId(UUID squadId) {

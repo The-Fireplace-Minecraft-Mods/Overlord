@@ -2,7 +2,6 @@ package dev.the_fireplace.overlord.client.gui.rendertools;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
@@ -21,11 +20,9 @@ public class DrawEntity
         double entityZ = flutterCape ? entity.getZ() + (random.nextFloat() * 2 - 1) / 16f : entity.getZ();
         entity.setPos(entityX, (currentMillisecond - startMillisecond) * 1.2, entityZ);
 
-        MatrixStack matrixStack = RenderSystem.getModelViewStack();
-        matrixStack.push();
-        matrixStack.translate((double) x, (double) y, 1050.0D);
-        matrixStack.scale(1.0F, 1.0F, -1.0F);
-        RenderSystem.applyModelViewMatrix();
+        RenderSystem.pushMatrix();
+        RenderSystem.translatef((float) x, (float) y, 1050.0F);
+        RenderSystem.scalef(1.0F, 1.0F, -1.0F);
         MatrixStack matrixStack2 = new MatrixStack();
         matrixStack2.translate(0.0D, 0.0D, 1000.0D);
         matrixStack2.scale((float) size, (float) size, (float) size);
@@ -34,16 +31,15 @@ public class DrawEntity
         quaternion.hamiltonProduct(quaternion2);
         matrixStack2.multiply(quaternion);
         float h = entity.bodyYaw;
-        float i = entity.getYaw();
-        float j = entity.getPitch();
+        float i = entity.yaw;
+        float j = entity.pitch;
         float k = entity.prevHeadYaw;
         float l = entity.headYaw;
         entity.bodyYaw = 0;
-        entity.setYaw(entity.bodyYaw);
-        entity.setPitch(0);
-        entity.headYaw = entity.getYaw();
-        entity.prevHeadYaw = entity.getYaw();
-        DiffuseLighting.method_34742();
+        entity.yaw = entity.bodyYaw;
+        entity.pitch = 0;
+        entity.headYaw = entity.yaw;
+        entity.prevHeadYaw = entity.yaw;
         EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderDispatcher();
         quaternion2.conjugate();
         entityRenderDispatcher.setRotation(quaternion2);
@@ -55,12 +51,10 @@ public class DrawEntity
         immediate.draw();
         entityRenderDispatcher.setRenderShadows(true);
         entity.bodyYaw = h;
-        entity.setYaw(i);
-        entity.setPitch(j);
+        entity.yaw = i;
+        entity.pitch = j;
         entity.prevHeadYaw = k;
         entity.headYaw = l;
-        matrixStack.pop();
-        RenderSystem.applyModelViewMatrix();
-        DiffuseLighting.enableGuiDepthLighting();
+        RenderSystem.popMatrix();
     }
 }

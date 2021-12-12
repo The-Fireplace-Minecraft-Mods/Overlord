@@ -7,7 +7,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -42,7 +41,7 @@ public class PatternSelectionScreenPart implements PartialScreen
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends Element & Drawable & Selectable> List<T> getChildren() {
+    public <T extends Element & Drawable> List<T> getChildren() {
         List<T> children = new ArrayList<>(patternWidgets.size() + 2);
         children.addAll((Collection<? extends T>) patternWidgets);
         children.add((T) nextButton);

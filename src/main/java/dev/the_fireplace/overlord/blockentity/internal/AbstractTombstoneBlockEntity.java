@@ -49,10 +49,10 @@ public abstract class AbstractTombstoneBlockEntity extends BlockEntity implement
         if (!world.isSkyVisible(soilPos1.up()) || !world.isSkyVisible(soilPos2.up()) || !world.isSkyVisible(pos.up())) {
             return;
         }
-        if (!be.skeletonBuilder.canBuildWithIngredients(casketEntity)) {
+        if (!skeletonBuilder.canBuildWithIngredients(casketEntity)) {
             return;
         }
-        OwnedSkeletonEntity skeleton = be.skeletonBuilder.build(casketEntity, casketEntity.getWorld(), this);
+        OwnedSkeletonEntity skeleton = skeletonBuilder.build(casketEntity, casketEntity.getWorld(), this);
         skeleton.updatePosition(soilPos1.getX(), soilPos1.getY() + 1, soilPos1.getZ());
         skeleton.getAISettings().getMovement().setHome(new PositionSetting(soilPos1.getX(), soilPos1.getY() + 1, soilPos1.getZ()));
         world.spawnEntity(skeleton);

@@ -36,7 +36,7 @@ public final class SquadEligibleItemsImpl implements SquadEligibleItems
             squadItems.addAll(getStacksFromInventory(entityInventory));
         }
         if (player != null) {
-            Inventory playerInventory = player.getInventory();
+            Inventory playerInventory = player.inventory;
             squadItems.addAll(getStacksFromInventory(playerInventory));
         }
         for (Squad squad : squads) {

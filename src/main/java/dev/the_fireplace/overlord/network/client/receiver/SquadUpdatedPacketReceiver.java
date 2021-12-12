@@ -34,8 +34,8 @@ public final class SquadUpdatedPacketReceiver implements ClientPacketReceiver
         client.submit(() -> {
             Squad updatedSquad = SquadDeserialization.fromNbt(squadCompound);
             Screen currentScreen = client.currentScreen;
-            if (currentScreen instanceof EditScreen editScreen) {
-                editScreen.onSuccessfulCreation(updatedSquad);
+            if (currentScreen instanceof EditScreen) {
+                ((EditScreen) currentScreen).onSuccessfulCreation(updatedSquad);
             }
         });
     }

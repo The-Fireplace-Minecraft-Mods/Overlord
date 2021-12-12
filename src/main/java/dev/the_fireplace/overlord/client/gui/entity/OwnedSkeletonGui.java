@@ -42,7 +42,7 @@ public class OwnedSkeletonGui extends HandledScreen<OwnedSkeletonContainer>
         super.init();
         //x, y, width, height
         addButton(new ButtonWidget(x + 96, y + 58, 74, 20, new TranslatableText("gui.overlord.orders"), (b) -> screenOpener.openOrdersGUI(entity)));
-        addDrawableChild(new ButtonWidget(x + 96, y + 38, 74, 20, new TranslatableText("gui.overlord.select_squad"), (b) -> screenOpener.openSquadSelectorGUI(entity)));
+        addButton(new ButtonWidget(x + 96, y + 38, 74, 20, new TranslatableText("gui.overlord.select_squad"), (b) -> screenOpener.openSquadSelectorGUI(entity)));
     }
 
     @Override

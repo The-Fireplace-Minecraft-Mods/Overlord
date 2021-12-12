@@ -44,7 +44,7 @@ public class SquadCapeFeatureRenderer<T extends ArmyEntity, M extends PlayerEnti
             return;
         }
         ItemStack chestStack = entity.getEquippedStack(EquipmentSlot.CHEST);
-        if (chestStack.isOf(Items.ELYTRA)) {
+        if (chestStack.getItem().equals(Items.ELYTRA)) {
             return;
         }
         Squad squad = squads.getSquad(entity.getOwnerUuid(), entity.getSquad());
@@ -98,8 +98,7 @@ public class SquadCapeFeatureRenderer<T extends ArmyEntity, M extends PlayerEnti
             vertexConsumers,
             entity.world,
             light,
-            OverlayTexture.DEFAULT_UV,
-            0
+            OverlayTexture.DEFAULT_UV
         );
         matrices.pop();
         matrices.pop();
