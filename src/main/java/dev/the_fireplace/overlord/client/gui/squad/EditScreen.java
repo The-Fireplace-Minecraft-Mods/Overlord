@@ -4,6 +4,7 @@ import com.google.inject.Key;
 import com.google.inject.name.Names;
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.lib.api.chat.injectables.TextStyles;
+import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.client.gui.PartialScreen;
 import dev.the_fireplace.overlord.domain.data.SquadPatterns;
@@ -35,11 +36,11 @@ public class EditScreen extends Screen
 {
     private static final TranslatableText SQUAD_NAME_FIELD_TITLE = new TranslatableText("gui.overlord.create_squad.squad_name");
 
+    private final EmptyUUID emptyUUID;
     private final SquadPatterns squadPatterns;
     private final TextStyles textStyles;
     private final SelectorScreen parent;
     private final Collection<ItemStack> stacks;
-    @Nullable
     private final UUID squadId;
     private final PatternSelectionScreenPart.State patternState;
     private final ItemSelectionScreenPart.State itemState;
@@ -51,6 +52,7 @@ public class EditScreen extends Screen
 
     protected EditScreen(SelectorScreen parent, Collection<ItemStack> squadItems, @Nullable Squad currentSquad) {
         super(new TranslatableText("gui.overlord.create_squad.name"));
+        this.emptyUUID = DIContainer.get().getInstance(EmptyUUID.class);
         this.squadPatterns = DIContainer.get().getInstance(Key.get(SquadPatterns.class, Names.named("client")));
         this.textStyles = DIContainer.get().getInstance(TextStyles.class);
         this.parent = parent;
@@ -63,7 +65,7 @@ public class EditScreen extends Screen
             stack = currentSquad.getItem();
             squadId = currentSquad.getSquadId();
         } else {
-            squadId = null;
+            squadId = emptyUUID.get();
         }
         this.patternState = new PatternSelectionScreenPart.State(new Identifier(Overlord.MODID, pattern), identifier -> updateConfirmButtonEnabled());
         this.itemState = new ItemSelectionScreenPart.State(stack, updatedStack -> updateConfirmButtonEnabled());
@@ -171,7 +173,7 @@ public class EditScreen extends Screen
             errors.add(createStyledError("gui.overlord.create_squad.locked_pattern"));
         }
 
-        if (squadId != null) {
+        if (!emptyUUID.is(squadId)) {
             if (!squadPatterns.isPatternUnusedByOtherSquads(pattern, stack, player.getUuid(), squadId)) {
                 errors.add(createStyledError("gui.overlord.create_squad.pattern_taken"));
             }
