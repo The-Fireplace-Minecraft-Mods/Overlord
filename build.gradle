@@ -35,7 +35,7 @@ dependencies {
     annotationProcessor "dev.the-fireplace:Annotated-DI:${project.annotateddi_version}:processor"
 
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-api:${project.rei_version}"
-    modRuntime "me.shedaniel:RoughlyEnoughItems:${project.rei_version}"
+    modRuntimeOnly "me.shedaniel:RoughlyEnoughItems:${project.rei_version}"
 
     compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
 }
