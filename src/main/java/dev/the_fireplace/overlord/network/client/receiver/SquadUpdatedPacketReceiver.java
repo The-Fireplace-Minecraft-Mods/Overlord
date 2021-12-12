@@ -28,7 +28,7 @@ public final class SquadUpdatedPacketReceiver implements ClientPacketReceiver
     public void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
         NbtCompound squadCompound = buf.readNbt();
         if (squadCompound == null) {
-            Overlord.getLogger().error("Received sync squads packet with null squads!");
+            Overlord.getLogger().error("Received squad updated packet with null squads!");
             return;
         }
         client.submit(() -> {
