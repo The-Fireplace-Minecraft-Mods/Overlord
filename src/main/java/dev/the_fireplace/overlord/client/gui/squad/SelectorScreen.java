@@ -149,7 +149,7 @@ public class SelectorScreen extends Screen
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrixStack);
         //TODO draw selected squad's data
-        DrawEntity.drawEntityFacingAway(width / 2, height / 2 + 50, 100, this.openTime, System.currentTimeMillis(), renderedSkeleton);
+        DrawEntity.drawEntityFacingAway(width / 2, height / 2 + 50, 75, this.openTime, System.currentTimeMillis(), renderedSkeleton);
         super.render(matrixStack, mouseX, mouseY, delta);
     }
 
