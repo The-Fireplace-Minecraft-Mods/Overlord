@@ -1,5 +1,6 @@
 package dev.the_fireplace.overlord.client.gui.squad;
 
+import com.google.common.collect.Lists;
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.lib.api.chat.injectables.TranslatorFactory;
 import dev.the_fireplace.lib.api.chat.interfaces.Translator;
@@ -16,10 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
@@ -58,9 +56,13 @@ public class SelectorWidget extends AlwaysSelectedEntryListWidget<SelectorEntry>
     }
 
     public void removeSquad(Squad squad) {
+        Collection<SelectorEntry> removeEntries = new HashSet<>();
         this.children().stream()
             .filter(selectorEntry -> selectorEntry.squad.getSquadId().equals(squad.getSquadId()))
-            .forEach(selectorEntry -> this.children().remove(selectorEntry));
+            .forEach(removeEntries::add);
+        List<SelectorEntry> childrenToKeep = Lists.newArrayList(this.children());
+        childrenToKeep.removeAll(removeEntries);
+        this.replaceEntries(childrenToKeep);
     }
 
     public void selectSquad(UUID squadId) {
