@@ -133,7 +133,7 @@ public class CasketBlockEntity extends LockableContainerBlockEntity
         if (!isCasketFoot()) {
             Inventories.toTag(compoundTag, this.inventory);
         } else {
-            Inventories.writeNbt(compoundTag, DefaultedList.ofSize(this.size(), ItemStack.EMPTY));
+            Inventories.toTag(compoundTag, DefaultedList.ofSize(this.getInvSize(), ItemStack.EMPTY));
         }
 
         return compoundTag;
