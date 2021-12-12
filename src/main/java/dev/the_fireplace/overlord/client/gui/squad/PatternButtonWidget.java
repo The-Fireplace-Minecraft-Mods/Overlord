@@ -7,7 +7,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -19,41 +18,37 @@ public class PatternButtonWidget extends ButtonWidget
     protected boolean isUsed = false;
 
     public PatternButtonWidget(int x, int y, int width, int height, Text text, Identifier pattern, PressAction pressAction) {
-        this(x, y, width, height, text, pattern, pressAction, EMPTY);
-    }
-
-    public PatternButtonWidget(int x, int y, int width, int height, Text text, Identifier pattern, PressAction pressAction, TooltipSupplier tooltipSupplier) {
-        super(x, y, width, height, text, pressAction, tooltipSupplier);
+        super(x, y, width, height, text.asFormattedString(), pressAction);
         this.pattern = pattern;
     }
 
     @Override
-    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.drawCustomButton(matrices, mouseX, mouseY);
+    public void renderButton(int mouseX, int mouseY, float delta) {
+        this.drawCustomButton(mouseX, mouseY);
 
         if (this.isHovered()) {
-            this.renderToolTip(matrices, mouseX, mouseY);
+            this.renderToolTip(mouseX, mouseY);
         }
     }
 
-    private void drawCustomButton(MatrixStack matrices, int mouseX, int mouseY) {
+    private void drawCustomButton(int mouseX, int mouseY) {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
         TextRenderer textRenderer = minecraftClient.textRenderer;
 
-        PatternRenderer.drawPattern(matrices, this.pattern, this.x + 2 + (this.width - 4) / 5, this.y + 2, (this.width - 4) * 3 / 5, this.height - 4, this.alpha);
-        drawBox(matrices);
+        PatternRenderer.drawPattern(this.pattern, this.x + 2 + (this.width - 4) / 5, this.y + 2, (this.width - 4) * 3 / 5, this.height - 4, this.alpha);
+        drawBox();
 
-        this.renderBackground(matrices, minecraftClient, mouseX, mouseY);
+        this.renderBg(minecraftClient, mouseX, mouseY);
         int j = this.active ? 16777215 : 10526880;
-        drawCenteredText(matrices, textRenderer, this.getMessage(), this.x + this.width / 2, this.y + this.height - 4 - 9, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
+        drawCenteredString(textRenderer, this.getMessage(), this.x + this.width / 2, this.y + this.height - 4 - 9, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
     }
 
-    private void drawBox(MatrixStack matrices) {
+    private void drawBox() {
         //TODO color and/or dotted/dashed change if unlocked or not
-        int color = this.hovered ? 0xEED489BF : 0xFFFFFFBF;
-        BoxRenderer.drawBox(matrices, x, y, width, height, 1, color);
+        int color = this.isHovered ? 0xEED489BF : 0xFFFFFFBF;
+        BoxRenderer.drawBox(x, y, width, height, 1, color);
         if (isUsed) {
-            BoxRenderer.drawBox(matrices, x, y, width, height, 2, color);
+            BoxRenderer.drawBox(x, y, width, height, 2, color);
         }
     }
 

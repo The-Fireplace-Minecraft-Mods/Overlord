@@ -13,7 +13,7 @@ import dev.the_fireplace.overlord.entity.creation.ingredient.JsonIngredient;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -39,7 +39,7 @@ public class SkeletonBuildingPackLoader implements SimpleSynchronousResourceRelo
     }
 
     @Override
-    public void reload(ResourceManager manager) {
+    public void apply(ResourceManager manager) {
         Map<String, JsonObject> recipeJsons = new HashMap<>();
         for (Identifier id : manager.findResources("skeleton_recipes", path -> path.endsWith(".json"))) {
             JsonObject jsonObject = null;
@@ -108,7 +108,7 @@ public class SkeletonBuildingPackLoader implements SimpleSynchronousResourceRelo
             int byproductCount = byproduct.get("count").getAsInt();
             ItemStack byproductStack = new ItemStack(byproductItem.get(), byproductCount);
             if (byproduct.has("nbt")) {
-                NbtCompound byproductNbt = JsonIngredient.parseNbt(byproduct);
+                CompoundTag byproductNbt = JsonIngredient.parseNbt(byproduct);
                 byproductStack.setTag(byproductNbt);
             }
             byproductStacks.add(byproductStack);

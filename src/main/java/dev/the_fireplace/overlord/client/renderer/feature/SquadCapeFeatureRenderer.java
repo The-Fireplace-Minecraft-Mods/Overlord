@@ -21,12 +21,12 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3f;
 
 @Environment(EnvType.CLIENT)
 public class SquadCapeFeatureRenderer<T extends ArmyEntity, M extends PlayerEntityModel<T>> extends FeatureRenderer<T, M>
@@ -75,9 +75,9 @@ public class SquadCapeFeatureRenderer<T extends ArmyEntity, M extends PlayerEnti
             q += 25.0F;
         }
 
-        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(6.0F + r / 2.0F + q));
-        matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(s / 2.0F));
-        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F - s / 2.0F));
+        matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(6.0F + r / 2.0F + q));
+        matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(s / 2.0F));
+        matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(180.0F - s / 2.0F));
 
         Identifier squadCapeTexture = new Identifier(Overlord.MODID, "textures/entity/cape/" + squad.getPattern() + ".png");
 
@@ -85,7 +85,7 @@ public class SquadCapeFeatureRenderer<T extends ArmyEntity, M extends PlayerEnti
         this.getContextModel().renderCape(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
 
         matrices.push();
-        matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0F));
+        matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180.0F));
         double zTranslate = entity.getEquippedStack(EquipmentSlot.CHEST).isEmpty() ? -0.03 : -0.1;
         matrices.translate(0, -0.5, zTranslate);
         ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();

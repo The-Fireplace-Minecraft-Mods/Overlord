@@ -5,7 +5,6 @@ import com.google.common.collect.Sets;
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.client.gui.rendertools.DrawEntity;
-import dev.the_fireplace.overlord.client.gui.rendertools.OverlayButtonWidget;
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
 import dev.the_fireplace.overlord.domain.rule.SquadEligibleItems;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
@@ -22,11 +21,10 @@ import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -64,26 +62,26 @@ public class SelectorScreen extends Screen
     protected void init() {
         selectorWidget = createSquadSelector();
         this.children.add(selectorWidget);
-        this.addButton(new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, new TranslatableText("gui.overlord.confirm_exit"), (button) -> {
+        this.addButton(new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, I18n.translate("gui.overlord.confirm_exit"), (button) -> {
             if (entityId != null) {
                 ClientPlayNetworking.send(ClientToServerPacketIDs.SET_SQUAD, SetSquadBufferBuilder.buildForEntity(selectedSquad, entityId));
             } else {
                 ClientPlayNetworking.send(ClientToServerPacketIDs.SET_SQUAD, SetSquadBufferBuilder.buildForWand(selectedSquad));
-                Objects.requireNonNull(client);
-                Objects.requireNonNull(client.player);
-                OrdersWandItem.getActiveWand(client.player).getOrCreateTag().putUuid("squad", selectedSquad);
+                Objects.requireNonNull(minecraft);
+                Objects.requireNonNull(minecraft.player);
+                OrdersWandItem.getActiveWand(minecraft.player).getOrCreateTag().putUuid("squad", selectedSquad);
             }
             closeScreen();
         }));
-        this.addButton(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, new TranslatableText("gui.cancel"), (button) -> {
+        this.addButton(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, I18n.translate("gui.cancel"), (button) -> {
             closeScreen();
         }));
-        this.addButton(editButton = new OverlayButtonWidget(0, this.height - 54, this.width / 3, 20, Text.of(""), (button) -> {
+        this.addButton(editButton = new ButtonWidget(0, this.height - 54, this.width / 3, 20, "", (button) -> {
             Collection<ItemStack> squadItems = getSquadItems();
             Squad currentSquad = ownedSquads.stream().filter(squad -> squad.getSquadId().equals(selectedSquad)).findFirst().orElse(null);
-            this.client.openScreen(new EditScreen(this, squadItems, currentSquad));
+            this.minecraft.openScreen(new EditScreen(this, squadItems, currentSquad));
         }));
-        this.addButton(deleteButton = new ButtonWidget(this.width - 102, 2, 100, 20, new TranslatableText("gui.overlord.squad_manager.delete_squad"), (button) -> {
+        this.addButton(deleteButton = new ButtonWidget(this.width - 102, 2, 100, 20, I18n.translate("gui.overlord.squad_manager.delete_squad"), (button) -> {
             ClientPlayNetworking.send(ClientToServerPacketIDs.DELETE_SQUAD, DeleteSquadBufferBuilder.build(selectedSquad));
             Optional<Squad> selectedSquad = findSquadById(this.selectedSquad);
             if (selectedSquad.isPresent()) {
@@ -96,10 +94,10 @@ public class SelectorScreen extends Screen
         updateButtons();
 
         openTime = System.currentTimeMillis();
-        if (client != null && client.world != null) {
-            renderedSkeleton = OwnedSkeletonEntity.create(client.world, null);
+        if (minecraft != null && minecraft.world != null) {
+            renderedSkeleton = OwnedSkeletonEntity.create(minecraft.world, null);
             if (entityId != null) {
-                Entity entity = client.world.getEntityById(entityId);
+                Entity entity = minecraft.world.getEntityById(entityId);
                 if (entity != null) {
                     renderedSkeleton.copyFrom(entity);
                 }
@@ -111,8 +109,8 @@ public class SelectorScreen extends Screen
     private void updateButtons() {
         if (editButton != null) {
             editButton.setMessage(!emptyUUID.is(selectedSquad)
-                ? new TranslatableText("gui.overlord.squad_manager.edit_squad")
-                : new TranslatableText("gui.overlord.squad_manager.create_squad")
+                ? I18n.translate("gui.overlord.squad_manager.edit_squad")
+                : I18n.translate("gui.overlord.squad_manager.create_squad")
             );
         }
         if (deleteButton != null) {
@@ -121,15 +119,15 @@ public class SelectorScreen extends Screen
     }
 
     private Collection<ItemStack> getSquadItems() {
-        Objects.requireNonNull(this.client);
-        Entity entity = this.entityId != null && this.client.world != null ? this.client.world.getEntityById(entityId) : null;
-        ClientPlayerEntity player = this.client.player;
+        Objects.requireNonNull(this.minecraft);
+        Entity entity = this.entityId != null && this.minecraft.world != null ? this.minecraft.world.getEntityById(entityId) : null;
+        ClientPlayerEntity player = this.minecraft.player;
         return this.squadEligibleItems.getEligibleItems(ownedSquads, player, entity);
     }
 
     private SelectorWidget createSquadSelector() {
         SelectorWidget selectorWidget = new SelectorWidget(
-            this.client,
+            this.minecraft,
             this.width / 3,
             this.height - 52,
             0,
@@ -152,17 +150,17 @@ public class SelectorScreen extends Screen
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrixStack);
+    public void render(int mouseX, int mouseY, float delta) {
+        this.renderBackground();
         //TODO draw selected squad's data
         DrawEntity.drawEntityFacingAway(width / 2, height / 2 + 50, 100, this.openTime, System.currentTimeMillis(), renderedSkeleton);
         for (Element child : children) {
             //noinspection SuspiciousMethodCalls
             if (!buttons.contains(child) && child instanceof Drawable) {
-                ((Drawable) child).render(matrixStack, mouseX, mouseY, delta);
+                ((Drawable) child).render(mouseX, mouseY, delta);
             }
         }
-        super.render(matrixStack, mouseX, mouseY, delta);
+        super.render(mouseX, mouseY, delta);
     }
 
     public void displaySquad(Squad squad) {

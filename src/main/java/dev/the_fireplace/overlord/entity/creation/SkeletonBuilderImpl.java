@@ -19,7 +19,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.*;
-import net.minecraft.text.Text;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.UserCache;
 import net.minecraft.world.World;
 
@@ -64,7 +64,7 @@ public class SkeletonBuilderImpl implements SkeletonBuilder
             }
         }
         if (!tombstoneName.isEmpty()) {
-            entity.setCustomName(Text.of(tombstoneName));
+            entity.setCustomName(new LiteralText(tombstoneName));
         }
         for (ItemStack byproduct : byproducts) {
             entity.getInventory().insertStack(byproduct);

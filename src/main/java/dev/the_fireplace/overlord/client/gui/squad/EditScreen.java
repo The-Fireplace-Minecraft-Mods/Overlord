@@ -22,7 +22,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -34,7 +34,7 @@ import java.util.*;
 @Environment(EnvType.CLIENT)
 public class EditScreen extends Screen
 {
-    private static final TranslatableText SQUAD_NAME_FIELD_TITLE = new TranslatableText("gui.overlord.create_squad.squad_name");
+    private final String SQUAD_NAME_FIELD_TITLE = I18n.translate("gui.overlord.create_squad.squad_name");
 
     private final EmptyUUID emptyUUID;
     private final SquadPatterns squadPatterns;
@@ -77,7 +77,7 @@ public class EditScreen extends Screen
         ItemSelectionScreenPart itemSelectionScreenPart = new ItemSelectionScreenPart(this.width / 2, 44, this.width / 2 - 4, this.height - 30 - 4 - 44, this.stacks, itemState);
         this.addPartialScreenChildren(patternSelectionScreenPart);
         this.addPartialScreenChildren(itemSelectionScreenPart);
-        TextFieldWidget squadNameField = new TextFieldWidget(this.textRenderer, this.width * 3 / 4 - 100, 20, 200, 20, SQUAD_NAME_FIELD_TITLE);
+        TextFieldWidget squadNameField = new TextFieldWidget(this.font, this.width * 3 / 4 - 100, 20, 200, 20, SQUAD_NAME_FIELD_TITLE);
         squadNameField.setText(this.squadName);
         squadNameField.setChangedListener(newSquadName -> {
             this.squadName = newSquadName;
@@ -98,11 +98,10 @@ public class EditScreen extends Screen
             this.saving = true;
             updateConfirmButtonEnabled();
         };
-        ButtonWidget.TooltipSupplier confirmTooltipSupplier = (buttonWidget, matrixStack, i, j) -> EditScreen.this.renderTooltip(matrixStack, errors, i, j);
-        confirmButton = new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, new TranslatableText("gui.overlord.confirm_exit"), confirmAction, confirmTooltipSupplier);
+        confirmButton = new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, I18n.translate("gui.overlord.confirm_exit"), confirmAction);
         this.addButton(confirmButton);
         updateConfirmButtonEnabled();
-        this.addButton(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, new TranslatableText("gui.cancel"), (button) -> {
+        this.addButton(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, I18n.translate("gui.cancel"), (button) -> {
             closeScreen();
         }));
     }
@@ -110,7 +109,7 @@ public class EditScreen extends Screen
     private <T extends Element & Drawable> void addPartialScreenChildren(PartialScreen widget) {
         for (Element child : widget.getChildren()) {
             //noinspection unchecked
-            this.addChild((T) child);
+            this.children.add((T) child);
         }
     }
 
@@ -119,16 +118,16 @@ public class EditScreen extends Screen
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
+    public void render(int mouseX, int mouseY, float delta) {
+        this.renderBackground();
         for (Element child : children) {
             //noinspection SuspiciousMethodCalls
             if (!buttons.contains(child) && child instanceof Drawable) {
-                ((Drawable) child).render(matrices, mouseX, mouseY, delta);
+                ((Drawable) child).render(mouseX, mouseY, delta);
             }
         }
-        super.render(matrices, mouseX, mouseY, delta);
-        this.textRenderer.draw(matrices, SQUAD_NAME_FIELD_TITLE, this.width * 3f / 4f - textRenderer.getWidth(SQUAD_NAME_FIELD_TITLE) / 2f, 4, 0xFFFFFF);
+        super.render(mouseX, mouseY, delta);
+        this.font.draw(SQUAD_NAME_FIELD_TITLE, this.width * 3f / 4f - font.getStringWidth(SQUAD_NAME_FIELD_TITLE) / 2f, 4, 0xFFFFFF);
     }
 
     public void onSuccessfulCreation(Squad createdSquad) {

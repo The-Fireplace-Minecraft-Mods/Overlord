@@ -1,8 +1,8 @@
 package dev.the_fireplace.overlord.network.server.builder;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
+import net.minecraft.util.PacketByteBuf;
 
 import java.util.Collection;
 

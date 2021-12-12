@@ -2,7 +2,7 @@ package dev.the_fireplace.overlord.entity.creation.ingredient;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 
 import javax.annotation.Nullable;
 
@@ -10,7 +10,7 @@ public class ItemIngredient extends AbstractIngredient
 {
     private final Item item;
     @Nullable
-    private NbtCompound nbtCompound = null;
+    private CompoundTag compoundTag = null;
 
     public ItemIngredient(Item item) {
         this.item = item;
@@ -21,17 +21,17 @@ public class ItemIngredient extends AbstractIngredient
         if (!stack.getItem().equals(item)) {
             return false;
         }
-        if (nbtCompound != null && !stack.hasTag()) {
+        if (compoundTag != null && !stack.hasTag()) {
             return false;
         }
-        if (nbtCompound != null && !nbtCompound.equals(stack.getTag())) {
+        if (compoundTag != null && !compoundTag.equals(stack.getTag())) {
             return false;
         }
 
         return true;
     }
 
-    public void setNbtCompound(@Nullable NbtCompound nbtCompound) {
-        this.nbtCompound = nbtCompound;
+    public void setCompoundTag(@Nullable CompoundTag CompoundTag) {
+        this.compoundTag = CompoundTag;
     }
 }

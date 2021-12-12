@@ -54,13 +54,13 @@ public class PositionSelectorGui extends Screen implements CustomButtonScreen<St
 
     @Override
     protected void init() {
-        if (client == null) {
+        if (minecraft == null) {
             throw new IllegalStateException("Cannot initialize with null client!");
         }
         this.addButton(xWidget = new TextFieldWidget(minecraft.textRenderer, this.width / 2 - 75 - 2, this.height / 2, 50, 20, "X"));
         this.addButton(yWidget = new TextFieldWidget(minecraft.textRenderer, this.width / 2 - 25, this.height / 2, 50, 20, "Y"));
         this.addButton(zWidget = new TextFieldWidget(minecraft.textRenderer, this.width / 2 + 25 + 2, this.height / 2, 50, 20, "Z"));
-        ButtonWidget currentPositionButton = new ButtonWidget(this.width / 2 - 100, this.height / 2 - 30, 200, 20, Text.of("Use Current Position"), (button) -> {
+        ButtonWidget currentPositionButton = new ButtonWidget(this.width / 2 - 100, this.height / 2 - 30, 200, 20, "Use Current Position", (button) -> {
             setCoordinates(currentPosition.getX(), currentPosition.getY(), currentPosition.getZ());
         });
         this.addButton(currentPositionButton);

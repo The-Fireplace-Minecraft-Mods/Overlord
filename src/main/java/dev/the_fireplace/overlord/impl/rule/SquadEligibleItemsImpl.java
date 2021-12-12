@@ -53,9 +53,9 @@ public final class SquadEligibleItemsImpl implements SquadEligibleItems
     }
 
     private Collection<ItemStack> getStacksFromInventory(Inventory inventory) {
-        Collection<ItemStack> inventoryItems = new ArrayList<>(inventory.size() / 2);
-        for (int slotIndex = 0; slotIndex < inventory.size(); slotIndex++) {
-            ItemStack stack = inventory.getStack(slotIndex);
+        Collection<ItemStack> inventoryItems = new ArrayList<>(inventory.getInvSize() / 2);
+        for (int slotIndex = 0; slotIndex < inventory.getInvSize(); slotIndex++) {
+            ItemStack stack = inventory.getInvStack(slotIndex);
             if (!stack.isEmpty()) {
                 inventoryItems.add(stack.copy());
             }
@@ -72,7 +72,7 @@ public final class SquadEligibleItemsImpl implements SquadEligibleItems
             stack = convertToSquadItem(stack);
 
             ItemStack finalStack = stack;
-            if (reducedStacks.stream().noneMatch(reducedStack -> ItemStack.areEqual(reducedStack, finalStack))) {
+            if (reducedStacks.stream().noneMatch(reducedStack -> ItemStack.areItemsEqual(reducedStack, finalStack) && ItemStack.areTagsEqual(reducedStack, finalStack))) {
                 reducedStacks.add(stack);
             }
         }

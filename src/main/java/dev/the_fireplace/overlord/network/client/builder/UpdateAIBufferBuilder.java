@@ -21,7 +21,7 @@ public final class UpdateAIBufferBuilder
     public static PacketByteBuf buildForWand(AISettings settings) {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeInt(-1);
-        buffer.writeNbt(settings.toTag());
+        buffer.writeCompoundTag(settings.toTag());
 
         return buffer;
     }

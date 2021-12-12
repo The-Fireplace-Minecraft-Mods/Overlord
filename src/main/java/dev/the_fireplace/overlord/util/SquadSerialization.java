@@ -1,31 +1,31 @@
 package dev.the_fireplace.overlord.util;
 
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 
 import java.util.Collection;
 
 public class SquadSerialization
 {
-    public static NbtCompound collectionToNbt(Collection<? extends Squad> squads) {
-        NbtList nbtList = new NbtList();
+    public static CompoundTag collectionToNbt(Collection<? extends Squad> squads) {
+        ListTag nbtList = new ListTag();
         for (Squad squad : squads) {
             nbtList.add(toNbt(squad));
         }
 
-        NbtCompound compound = new NbtCompound();
+        CompoundTag compound = new CompoundTag();
         compound.put("squads", nbtList);
         return compound;
     }
 
-    public static NbtCompound toNbt(Squad squad) {
-        NbtCompound compound = new NbtCompound();
+    public static CompoundTag toNbt(Squad squad) {
+        CompoundTag compound = new CompoundTag();
         compound.putUuid("owner", squad.getOwner());
         compound.putUuid("squadId", squad.getSquadId());
         compound.putString("name", squad.getName());
         compound.putString("capeBase", squad.getPattern());
-        compound.put("capeItem", squad.getItem().writeNbt(new NbtCompound()));
+        compound.put("capeItem", squad.getItem().toTag(new CompoundTag()));
 
         return compound;
     }

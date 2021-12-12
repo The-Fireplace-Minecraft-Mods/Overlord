@@ -5,7 +5,7 @@ import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.PacketByteBuf;
 
 import javax.annotation.Nullable;
 import java.util.UUID;

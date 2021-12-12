@@ -6,8 +6,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.TranslatableText;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -133,7 +133,7 @@ public class ItemSelectionScreenPart implements PartialScreen
         }
         int widgetIndex = 0;
         for (ItemButtonWidget itemWidget : this.itemWidgets) {
-            if (ItemStack.areEqual(itemWidget.stack, this.state.selectedStack)) {
+            if (ItemStack.areItemsEqual(itemWidget.stack, this.state.selectedStack) && ItemStack.areTagsEqual(itemWidget.stack, this.state.selectedStack)) {
                 this.state.currentPage = (byte) (widgetIndex / getItemsPerPage());
                 return;
             }
@@ -143,12 +143,12 @@ public class ItemSelectionScreenPart implements PartialScreen
     }
 
     private void createPageChangeButtons() {
-        previousButton = new ButtonWidget(x, y, this.width / 2 - 2, 20, new TranslatableText("gui.overlord.create_squad.previous"), buttonWidget -> {
+        previousButton = new ButtonWidget(x, y, this.width / 2 - 2, 20, I18n.translate("gui.overlord.create_squad.previous"), buttonWidget -> {
             this.state.currentPage--;
             updatePageChangeButtonUsability();
             updateItemVisibility();
         });
-        nextButton = new ButtonWidget(x + width / 2 + 4, y, this.width / 2 - 6, 20, new TranslatableText("gui.overlord.create_squad.next"), buttonWidget -> {
+        nextButton = new ButtonWidget(x + width / 2 + 4, y, this.width / 2 - 6, 20, I18n.translate("gui.overlord.create_squad.next"), buttonWidget -> {
             this.state.currentPage++;
             updatePageChangeButtonUsability();
             updateItemVisibility();

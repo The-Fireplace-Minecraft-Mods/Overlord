@@ -115,7 +115,7 @@ public class ArmyInPlaceMeleeAttackGoal extends Goal
         double d = this.getSquaredMaxAttackDistance(target);
         if (squaredDistance <= d && this.isCooledDown()) {
             if (!this.armyEntity.getEntityWorld().isClient()) {
-                double attackSpeed = this.armyEntity.getAttributeValue(EntityAttributes.GENERIC_ATTACK_SPEED);
+                double attackSpeed = this.armyEntity.getAttributeInstance(EntityAttributes.ATTACK_SPEED).getValue();
                 this.cooldown = Math.max(1, (int) Math.ceil(20D / attackSpeed - 0.5));
             }
             this.armyEntity.swingHand(Hand.MAIN_HAND);

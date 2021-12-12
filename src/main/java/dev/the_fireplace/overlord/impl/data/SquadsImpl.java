@@ -13,7 +13,7 @@ import dev.the_fireplace.overlord.domain.data.Squads;
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringNbtReader;
 import org.jetbrains.annotations.Nullable;
 
@@ -204,7 +204,7 @@ public final class SquadsImpl implements Squads
         public void readFrom(StorageReadBuffer buffer) {
             this.pattern = buffer.readString("pattern", this.pattern);
             try {
-                this.item = ItemStack.fromNbt(StringNbtReader.parse(buffer.readString("item", "")));
+                this.item = ItemStack.fromTag(StringNbtReader.parse(buffer.readString("item", "")));
             } catch (CommandSyntaxException ignored) {
             }
             this.name = buffer.readString("name", this.name);
@@ -213,7 +213,7 @@ public final class SquadsImpl implements Squads
         @Override
         public void writeTo(StorageWriteBuffer buffer) {
             buffer.writeString("pattern", pattern);
-            buffer.writeString("item", item.writeNbt(new NbtCompound()).toString());
+            buffer.writeString("item", item.toTag(new CompoundTag()).toString());
             buffer.writeString("name", name);
         }
 

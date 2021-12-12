@@ -4,13 +4,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.serialization.JsonOps;
+import com.mojang.datafixers.Dynamic;
+import com.mojang.datafixers.types.JsonOps;
 import dev.the_fireplace.overlord.domain.entity.creation.SkeletonIngredient;
 import net.fabricmc.fabric.api.tag.TagRegistry;
+import net.minecraft.datafixer.NbtOps;
 import net.minecraft.item.Item;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
@@ -37,8 +37,8 @@ public class JsonIngredient
             }
             ingredient = new ItemIngredient(item.get());
             if (jsonObject.has("nbt")) {
-                NbtCompound nbt = parseNbt(jsonObject);
-                ((ItemIngredient) ingredient).setNbtCompound(nbt);
+                CompoundTag nbt = parseNbt(jsonObject);
+                ((ItemIngredient) ingredient).setCompoundTag(nbt);
             }
         }
 
@@ -50,14 +50,14 @@ public class JsonIngredient
         return ingredient;
     }
 
-    public static NbtCompound parseNbt(JsonObject jsonObject) {
+    public static CompoundTag parseNbt(JsonObject jsonObject) {
         JsonElement jsonNbtData = jsonObject.get("nbt");
         if (jsonNbtData.isJsonObject()) {
-            NbtElement element = JsonOps.INSTANCE.convertTo(NbtOps.INSTANCE, jsonNbtData);
-            return (NbtCompound) element;
+            net.minecraft.nbt.Tag tag = Dynamic.convert(JsonOps.INSTANCE, NbtOps.INSTANCE, jsonNbtData);
+            return (CompoundTag) tag;
         } else {
             String nbtString = jsonNbtData.getAsString();
-            NbtCompound nbt;
+            CompoundTag nbt;
             try {
                 nbt = StringNbtReader.parse(nbtString);
             } catch (CommandSyntaxException exception) {

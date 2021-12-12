@@ -9,6 +9,8 @@ import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -37,8 +39,8 @@ public class OwnedSkeletonGui extends ContainerScreen<OwnedSkeletonContainer> {
     protected void init() {
         super.init();
         //x, y, width, height
-        addButton(new ButtonWidget(x + 96, y + 58, 74, 20, new TranslatableText("gui.overlord.orders"), (b) -> screenOpener.openOrdersGUI(entity)));
-        addButton(new ButtonWidget(x + 96, y + 38, 74, 20, new TranslatableText("gui.overlord.select_squad"), (b) -> screenOpener.openSquadSelectorGUI(entity)));
+        addButton(new ButtonWidget(x + 96, y + 58, 74, 20, I18n.translate("gui.overlord.orders"), (b) -> screenOpener.openOrdersGUI(entity)));
+        addButton(new ButtonWidget(x + 96, y + 38, 74, 20, I18n.translate("gui.overlord.select_squad"), (b) -> screenOpener.openSquadSelectorGUI(entity)));
     }
 
     @Override

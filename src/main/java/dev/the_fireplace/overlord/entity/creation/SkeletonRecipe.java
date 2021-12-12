@@ -66,8 +66,8 @@ public class SkeletonRecipe
 
     private boolean hasIngredients(Inventory inventory, Collection<SkeletonIngredient> ingredients) {
         Map<SkeletonIngredient, Integer> ingredientCounts = Maps.newHashMap();
-        for (int slot = 0; slot < inventory.size(); slot++) {
-            ItemStack stack = inventory.getStack(slot);
+        for (int slot = 0; slot < inventory.getInvSize(); slot++) {
+            ItemStack stack = inventory.getInvStack(slot);
             if (!stack.isEmpty()) {
                 for (SkeletonIngredient ingredient : ingredients) {
                     if (ingredient.matches(stack)) {
@@ -88,8 +88,8 @@ public class SkeletonRecipe
 
     private void processIngredients(Inventory inventory, Collection<SkeletonIngredient> ingredients) {
         Map<SkeletonIngredient, Integer> ingredientCountsRemaining = ingredients.stream().collect(Collectors.toConcurrentMap(ingredient -> ingredient, SkeletonIngredient::getRequiredCount));
-        for (int slot = 0; slot < inventory.size(); slot++) {
-            ItemStack stack = inventory.getStack(slot);
+        for (int slot = 0; slot < inventory.getInvSize(); slot++) {
+            ItemStack stack = inventory.getInvStack(slot);
             if (!stack.isEmpty()) {
                 for (Map.Entry<SkeletonIngredient, Integer> ingredientEntry : ingredientCountsRemaining.entrySet()) {
                     SkeletonIngredient ingredient = ingredientEntry.getKey();
@@ -99,7 +99,7 @@ public class SkeletonRecipe
                         if (stack.getCount() > remainingCount) {
                             takenStack = stack.split(remainingCount);
                         } else {
-                            takenStack = inventory.removeStack(slot);
+                            takenStack = inventory.removeInvStack(slot);
                         }
                         int newRemainingCount = remainingCount - takenStack.getCount();
                         ingredientCountsRemaining.put(ingredient, newRemainingCount);

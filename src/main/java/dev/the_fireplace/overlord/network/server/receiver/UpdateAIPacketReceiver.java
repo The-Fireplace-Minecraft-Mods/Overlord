@@ -28,7 +28,7 @@ public final class UpdateAIPacketReceiver implements ServerPacketReceiver
     @Override
     public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
         int entityId = buf.readInt();
-        NbtCompound aiTag = buf.readNbt();
+        CompoundTag aiTag = buf.readCompoundTag();
         boolean isWandUpdate = entityId == -1;
         if (isWandUpdate) {
             updateWandAISettings(player, aiTag);
@@ -37,14 +37,14 @@ public final class UpdateAIPacketReceiver implements ServerPacketReceiver
         }
     }
 
-    private void updateWandAISettings(ServerPlayerEntity player, NbtCompound aiTag) {
+    private void updateWandAISettings(ServerPlayerEntity player, CompoundTag aiTag) {
         ItemStack wandStack = OrdersWandItem.getActiveWand(player);
         if (!wandStack.isEmpty()) {
             wandStack.getOrCreateTag().put("ai", aiTag);
         }
     }
 
-    private void updateEntityAISettings(ServerPlayerEntity player, int entityId, NbtCompound aiTag) {
+    private void updateEntityAISettings(ServerPlayerEntity player, int entityId, CompoundTag aiTag) {
         Entity entity = player.getEntityWorld().getEntityById(entityId);
         if (!(entity instanceof OrderableEntity)) {
             Overlord.getLogger().info("Entity is not orderable: {}", Objects.toString(entity));
@@ -56,7 +56,6 @@ public final class UpdateAIPacketReceiver implements ServerPacketReceiver
             return;
         }
 
-        CompoundTag aiTag = buf.readCompoundTag();
         if (aiTag != null) {
             ((OrderableEntity) entity).updateAISettings(aiTag);
         } else {

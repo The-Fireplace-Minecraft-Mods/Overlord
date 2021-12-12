@@ -3,7 +3,6 @@
   "package": "dev.the_fireplace.overlord.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "AbstractSkeletonEntityMixin",
     "GoalSelectorAccessor",
     "PlayerManagerMixin",
     "WolfEntityMixin"

@@ -12,9 +12,9 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.PacketByteBuf;
 
 @Environment(EnvType.CLIENT)
 public final class SquadUpdatedPacketReceiver implements ClientPacketReceiver
@@ -26,7 +26,7 @@ public final class SquadUpdatedPacketReceiver implements ClientPacketReceiver
 
     @Override
     public void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
-        NbtCompound squadCompound = buf.readNbt();
+        CompoundTag squadCompound = buf.readCompoundTag();
         if (squadCompound == null) {
             Overlord.getLogger().error("Received squad updated packet with null squads!");
             return;

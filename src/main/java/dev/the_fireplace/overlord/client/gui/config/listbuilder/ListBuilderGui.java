@@ -47,7 +47,7 @@ public class ListBuilderGui extends Screen implements CustomButtonScreen<String>
     }
 
     private ListSelectorWidget createListSelector() {
-        ListSelectorWidget listSelectorWidget = new ListSelectorWidget(this.client, this.width / 3, this.height - 34, 0, this.height - 34, 40);
+        ListSelectorWidget listSelectorWidget = new ListSelectorWidget(this.minecraft, this.width / 3, this.height - 34, 0, this.height - 34, 40);
         //TODO add entries
         return listSelectorWidget;
     }

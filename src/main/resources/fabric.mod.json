@@ -28,9 +28,6 @@
     ],
     "modmenu": [
       "dev.the_fireplace.overlord.entrypoints.ModMenu"
-    ],
-    "rei": [
-      "dev.the_fireplace.overlord.entrypoints.ReiClient"
     ]
   },
   "mixins": [

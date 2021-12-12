@@ -26,7 +26,7 @@ public abstract class AbstractSquadPatterns implements SquadPatterns
             if (squad.getOwner().equals(owner) && squad.getSquadId().equals(squadId)) {
                 continue;
             }
-            if (ItemStack.areEqual(squad.getItem(), stack) && squad.getPattern().equals(pattern)) {
+            if (ItemStack.areItemsEqual(squad.getItem(), stack) && ItemStack.areTagsEqual(squad.getItem(), stack) && squad.getPattern().equals(pattern)) {
                 return false;
             }
         }

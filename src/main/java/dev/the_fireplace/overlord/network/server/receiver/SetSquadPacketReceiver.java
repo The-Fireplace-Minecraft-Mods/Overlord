@@ -10,11 +10,11 @@ import dev.the_fireplace.overlord.network.ClientToServerPacketIDs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.PacketByteBuf;
 
 import javax.inject.Inject;
 import java.util.Objects;

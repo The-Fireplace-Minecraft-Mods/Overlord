@@ -250,16 +250,16 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void writeCustomDataToTag(CompoundTag nbt) {
+        super.writeCustomDataToTag(nbt);
         if (this.hasExistingSquad(null)) {
             nbt.putUuid("Squad", this.getSquad());
         }
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    public void readCustomDataFromTag(CompoundTag nbt) {
+        super.readCustomDataFromTag(nbt);
         this.dataTracker.set(
             SQUAD,
             nbt.containsUuid("Squad")
@@ -441,7 +441,7 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
         this.prevStrideDistance = this.strideDistance;
         super.tickMovement();
         float g;
-        if (this.onGround && !this.isDead() && !this.isSwimming()) {
+        if (this.onGround && !this.dead && !this.isSwimming()) {
             g = Math.min(0.1F, MathHelper.sqrt(squaredHorizontalLength(this.getVelocity())));
         } else {
             g = 0.0F;

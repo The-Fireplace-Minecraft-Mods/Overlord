@@ -50,14 +50,14 @@ public class GatherItemGoal extends TaskGoal
 
     @Nullable
     private ItemEntity findOldestNearbyItem() {
-        return armyEntity.getEntityWorld().getEntitiesByClass(
+        return armyEntity.getEntityWorld().getEntities(
             ItemEntity.class,
             armyEntity.getBoundingBox().expand(searchDistance),
             itemEntity -> !itemEntity.isInvisible()
                 && !itemEntity.cannotPickup()
                 && this.armyEntity.getNavigation().findPathTo(itemEntity, 0) != null
                 && this.armyEntity.isInWalkTargetRange(itemEntity.getBlockPos())
-        ).stream().max(Comparator.comparing(ItemEntity::getItemAge)).orElse(null);
+        ).stream().max(Comparator.comparing(ItemEntity::getAge)).orElse(null);
     }
 
     @Override
@@ -145,9 +145,9 @@ public class GatherItemGoal extends TaskGoal
             Inventory inventory = armyEntity.getInventory();
             int emptySlot = inventorySearcher.getFirstSlotMatching(inventory, ItemStack::isEmpty);
             int offHandSlot = armyEntity.getOffHandSlot();
-            ItemStack oldOffHandStack = inventory.removeStack(offHandSlot);
-            inventory.setStack(offHandSlot, ItemStack.EMPTY);
-            inventory.setStack(emptySlot, oldOffHandStack);
+            ItemStack oldOffHandStack = inventory.removeInvStack(offHandSlot);
+            inventory.setInvStack(offHandSlot, ItemStack.EMPTY);
+            inventory.setInvStack(emptySlot, oldOffHandStack);
             this.postSwapCooldownTicks = this.armyEntity.getEquipmentSwapTicks();
             return true;
         }

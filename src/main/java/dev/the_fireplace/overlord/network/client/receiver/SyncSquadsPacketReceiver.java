@@ -11,9 +11,9 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.PacketByteBuf;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -36,7 +36,7 @@ public final class SyncSquadsPacketReceiver implements ClientPacketReceiver
 
     @Override
     public void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
-        NbtCompound squadCompound = buf.readNbt();
+        CompoundTag squadCompound = buf.readCompoundTag();
         if (squadCompound == null) {
             Overlord.getLogger().error("Received sync squads packet with null squads!");
             return;

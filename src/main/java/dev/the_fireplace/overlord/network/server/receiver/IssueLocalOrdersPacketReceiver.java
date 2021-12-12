@@ -8,12 +8,12 @@ import dev.the_fireplace.overlord.item.OrdersWandItem;
 import dev.the_fireplace.overlord.network.ClientToServerPacketIDs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.PacketByteBuf;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -42,7 +42,7 @@ public final class IssueLocalOrdersPacketReceiver implements ServerPacketReceive
 
         //noinspection ConstantConditions
         UUID squadId = wandStack.hasTag() && wandStack.getTag().contains("squad") ? wandStack.getTag().getUuid("squad") : null;
-        NbtCompound aiSettings;
+        CompoundTag aiSettings;
         //noinspection ConstantConditions
         if (wandStack.hasTag() && wandStack.getTag().contains("ai")) {
             aiSettings = wandStack.getTag().getCompound("ai");
@@ -50,7 +50,7 @@ public final class IssueLocalOrdersPacketReceiver implements ServerPacketReceive
             aiSettings = new AISettings().toTag();
         }
 
-        Collection<ArmyEntity> nearbyArmyMembers = player.world.getEntitiesByClass(
+        Collection<ArmyEntity> nearbyArmyMembers = player.world.getEntities(
             ArmyEntity.class,
             player.getBoundingBox().expand(configValues.getLocalOrdersDistance()),
             entity -> player.getUuid().equals(entity.getOwnerUuid()) && (squadId == null || entity.getSquad().equals(squadId))

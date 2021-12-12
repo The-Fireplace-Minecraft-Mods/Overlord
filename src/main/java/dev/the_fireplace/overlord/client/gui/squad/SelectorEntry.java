@@ -11,7 +11,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 import java.util.UUID;
@@ -29,45 +28,42 @@ public class SelectorEntry extends AlwaysSelectedEntryListWidget.Entry<SelectorE
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int index, int entryTop, int entryLeft, int width, int height, int mouseX, int mouseY, boolean hovering, float delta) {
+    public void render(int index, int entryTop, int entryLeft, int width, int height, int mouseX, int mouseY, boolean hovering, float delta) {
         int iconWidth = (int) (height * 3f / 5f);
-        drawIcon(matrixStack, entryTop, entryLeft, height, iconWidth);
-        drawName(matrixStack, entryTop, entryLeft, width, height, iconWidth);
-        drawBorder(matrixStack, entryTop, entryLeft, width, height, hovering);
+        drawIcon(entryTop, entryLeft, height, iconWidth);
+        drawName(entryTop, entryLeft, width, height, iconWidth);
+        drawBorder(entryTop, entryLeft, width, height, hovering);
     }
 
-    private void drawIcon(MatrixStack matrixStack, int entryTop, int entryLeft, int iconHeight, int iconWidth) {
+    private void drawIcon(int entryTop, int entryLeft, int iconHeight, int iconWidth) {
         if (squad.getPattern().isEmpty() || squad.getItem().isEmpty()) {
             return;
         }
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.enableBlend();
-        PatternRenderer.drawPattern(matrixStack, new Identifier(Overlord.MODID, squad.getPattern()), entryLeft, entryTop, iconWidth, iconHeight, 1.0f);
+        PatternRenderer.drawPattern(new Identifier(Overlord.MODID, squad.getPattern()), entryLeft, entryTop, iconWidth, iconHeight, 1.0f);
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
         ItemRenderer itemRenderer = minecraftClient.getItemRenderer();
-        matrixStack.push();
-        matrixStack.scale(0.5f, 0.5f, 0.5f);
-        itemRenderer.renderInGui(squad.getItem(), entryLeft, (int) (entryTop + iconHeight / 5f));
-        matrixStack.pop();
+        itemRenderer.renderGuiItem(squad.getItem(), entryLeft, (int) (entryTop + iconHeight / 5f));
         RenderSystem.disableBlend();
     }
 
-    private void drawName(MatrixStack matrixStack, int entryTop, int entryLeft, int width, int height, int iconWidth) {
+    private void drawName(int entryTop, int entryLeft, int width, int height, int iconWidth) {
         String name = this.squad.getName();
         String trimmedName = name.trim();
         int maxNameWidth = width - iconWidth - 3;
         TextRenderer font = this.client.textRenderer;
-        if (font.getWidth(trimmedName) > maxNameWidth) {
-            trimmedName = font.trimToWidth(trimmedName, maxNameWidth - font.getWidth("...")) + "...";
+        if (font.getStringWidth(trimmedName) > maxNameWidth) {
+            trimmedName = font.trimToWidth(trimmedName, maxNameWidth - font.getStringWidth("...")) + "...";
         }
-        font.draw(matrixStack, trimmedName, entryLeft + iconWidth + 3, entryTop + height / 2f - 4.5f, 0xFFFFFF);
+        font.draw(trimmedName, entryLeft + iconWidth + 3, entryTop + height / 2f - 4.5f, 0xFFFFFF);
     }
 
-    private void drawBorder(MatrixStack matrixStack, int entryTop, int entryLeft, int width, int height, boolean hovering) {
+    private void drawBorder(int entryTop, int entryLeft, int width, int height, boolean hovering) {
         int color = hovering ? 0xEED489BF : 0xFFFFFFBF;
-        BoxRenderer.drawBox(matrixStack, entryLeft, entryTop, width, height, 0, color);
+        BoxRenderer.drawBox(entryLeft, entryTop, width, height, 0, color);
         if (selected) {
-            BoxRenderer.drawBox(matrixStack, entryLeft, entryTop, width, height, 1, color);
+            BoxRenderer.drawBox(entryLeft, entryTop, width, height, 1, color);
         }
     }
 

@@ -157,10 +157,10 @@ public class GatherMilkGoal extends TaskGoal
             Inventory inventory = armyEntity.getInventory();
             int emptyBucketSlot = inventorySearcher.getFirstSlotMatching(inventory, EMPTY_BUCKET_MATCHER);
             int offHandSlot = armyEntity.getOffHandSlot();
-            ItemStack oldOffHandStack = inventory.removeStack(offHandSlot);
-            ItemStack emptyBucketStack = inventory.removeStack(emptyBucketSlot);
-            inventory.setStack(offHandSlot, emptyBucketStack);
-            inventory.setStack(emptyBucketSlot, oldOffHandStack);
+            ItemStack oldOffHandStack = inventory.removeInvStack(offHandSlot);
+            ItemStack emptyBucketStack = inventory.removeInvStack(emptyBucketSlot);
+            inventory.setInvStack(offHandSlot, emptyBucketStack);
+            inventory.setInvStack(emptyBucketSlot, oldOffHandStack);
             this.postSwapCooldownTicks = this.armyEntity.getEquipmentSwapTicks();
             return true;
         }

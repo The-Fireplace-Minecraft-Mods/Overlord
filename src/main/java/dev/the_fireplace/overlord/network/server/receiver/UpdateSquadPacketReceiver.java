@@ -18,13 +18,13 @@ import dev.the_fireplace.overlord.network.server.builder.SyncSquadsBufferBuilder
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.PacketByteBuf;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -130,7 +130,7 @@ public final class UpdateSquadPacketReceiver implements ServerPacketReceiver
             armyEntity
         );
         for (ItemStack eligibleStack : eligibleItems) {
-            if (ItemStack.areEqual(eligibleStack, item)) {
+            if (ItemStack.areItemsEqual(eligibleStack, item) && ItemStack.areTagsEqual(eligibleStack, item)) {
                 isEligibleToUseItem = true;
                 break;
             }

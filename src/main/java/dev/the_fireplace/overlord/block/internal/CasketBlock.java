@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.block.internal;
 
 import dev.the_fireplace.overlord.blockentity.CasketBlockEntity;
-import dev.the_fireplace.overlord.init.OverlordBlockEntities;
+import dev.the_fireplace.overlord.blockentity.OverlordBlockEntities;
 import dev.the_fireplace.overlord.util.BlockUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

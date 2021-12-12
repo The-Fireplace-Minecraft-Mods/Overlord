@@ -12,7 +12,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
@@ -32,8 +31,6 @@ public class SelectorWidget extends AlwaysSelectedEntryListWidget<SelectorEntry>
     public SelectorWidget(MinecraftClient minecraftClient, int width, int height, int top, int bottom, int itemHeight, Consumer<UUID> onSquadUpdated) {
         super(minecraftClient, width, height, top, bottom, itemHeight);
         this.onSquadUpdated = onSquadUpdated;
-        //setRenderBackground
-        this.method_31322(false);
 
         TranslatorFactory translatorFactory = DIContainer.get().getInstance(TranslatorFactory.class);
         Translator translator = translatorFactory.getTranslator(Overlord.MODID);
@@ -73,8 +70,8 @@ public class SelectorWidget extends AlwaysSelectedEntryListWidget<SelectorEntry>
 
 
     @Override
-    protected void renderList(MatrixStack matrices, int x, int y, int mouseX, int mouseY, float delta) {
-        int itemCount = this.getEntryCount();
+    protected void renderList(int x, int y, int mouseX, int mouseY, float delta) {
+        int itemCount = this.getItemCount();
 
         for (int index = 0; index < itemCount; ++index) {
             int entryTop = this.getRowTop(index) + 2;
@@ -85,7 +82,7 @@ public class SelectorWidget extends AlwaysSelectedEntryListWidget<SelectorEntry>
                 int rowWidth = this.getRowWidth();
                 int entryLeft = this.getRowLeft();
                 boolean hovering = this.isMouseOver(mouseX, mouseY) && Objects.equals(this.getEntryAtPos(mouseX, mouseY), entry);
-                entry.render(matrices, index, entryTop, entryLeft, rowWidth, entryHeight, mouseX, mouseY, hovering, delta);
+                entry.render(index, entryTop, entryLeft, rowWidth, entryHeight, mouseX, mouseY, hovering, delta);
             }
         }
     }
@@ -129,12 +126,11 @@ public class SelectorWidget extends AlwaysSelectedEntryListWidget<SelectorEntry>
             && x <= (double) (getRowLeft() + getRowWidth())
             && index >= 0
             && int_5 >= 0
-            && index < this.getEntryCount()
+            && index < this.getItemCount()
             ? this.children().get(index)
             : null;
     }
 
-    @Override
     protected int getScrollbarPositionX() {
         return this.width - 6;
     }
