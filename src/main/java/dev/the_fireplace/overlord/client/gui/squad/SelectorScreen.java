@@ -96,7 +96,7 @@ public class SelectorScreen extends Screen
         updateButtons();
 
         openTime = System.currentTimeMillis();
-        if (client != null && client.world != null) {
+        if (client != null && client.world != null && renderedSkeleton == null) {
             renderedSkeleton = OwnedSkeletonEntity.create(client.world, null);
             if (entityId != null) {
                 Entity entity = client.world.getEntityById(entityId);
@@ -173,6 +173,7 @@ public class SelectorScreen extends Screen
         }
         ownedSquads.add(squad);
         selectorWidget.addSquads(Sets.newHashSet(squad));
+        this.selectedSquad = squad.getSquadId();
         selectorWidget.selectSquad(squad.getSquadId());
         if (this.renderedSkeleton != null) {
             renderedSkeleton.setSquad(squad.getSquadId());
