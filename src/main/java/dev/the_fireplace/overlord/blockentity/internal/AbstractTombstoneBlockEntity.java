@@ -64,6 +64,11 @@ public abstract class AbstractTombstoneBlockEntity extends BlockEntity implement
     }
 
     private boolean isNearMidnight() {
-        return world != null && world.getTimeOfDay() >= 17500 && world.getTimeOfDay() <= 18500 && (world.getTimeOfDay() + 100) % 200 == 0;
+        if (world == null) {
+            return false;
+        }
+        int dayLength = 24000;
+        long timeOfDay = world.getTimeOfDay() % dayLength;
+        return timeOfDay >= 17500 && timeOfDay <= 18500 && (timeOfDay + 100) % 200 == 0;
     }
 }

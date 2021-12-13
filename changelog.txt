@@ -1,2 +1,1 @@
-Fix Orders Wand max stack size
-Fix missing translation for Local Orders Distance config option
+Fix skeletons only spawning on day 0 for some setups
