@@ -1,38 +1,36 @@
 {
-  "schemaVersion": 1,
-  "id": "overlord",
-  "version": "${version}",
-
-  "name": "Overlord",
-  "description": "Raise and command an army of skeletons.",
-  "authors": [
-    "The_Fireplace"
-  ],
-  "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/overlord",
-    "sources": "https://github.com/The-Fireplace-Minecraft-Mods/Overlord",
-    "issues": "https://github.com/The-Fireplace-Minecraft-Mods/Overlord/issues",
-    "modrinth": "https://modrinth.com/mod/overlord"
-  },
-
-  "license": "MPL-2.0",
-  "icon": "assets/overlord/logo.png",
-
-  "environment": "*",
-  "entrypoints": {
-    "di-main": [
-      "dev.the_fireplace.overlord.entrypoints.Main"
+    "schemaVersion": 1,
+    "id": "overlord",
+    "version": "${version}",
+    "name": "${name}",
+    "description": "${description}",
+    "authors": [
+        "The_Fireplace"
     ],
-    "di-client": [
-      "dev.the_fireplace.overlord.entrypoints.Client"
-    ],
-    "modmenu": [
-      "dev.the_fireplace.overlord.entrypoints.ModMenu"
-    ],
-    "rei": [
-      "dev.the_fireplace.overlord.entrypoints.ReiClient"
-    ]
-  },
+    "contact": {
+        "homepage": "${curseforge_url}",
+        "sources": "${github_url}",
+        "issues": "${github_url}/issues",
+        "modrinth": "${modrinth_url}"
+    },
+    "license": "MPL-2.0",
+    "icon": "assets/overlord/logo.png",
+    "environment": "*",
+    "entrypoints": {
+        "di-main": [
+            "dev.the_fireplace.overlord.entrypoints.Main"
+        ],
+        "di-client": [
+            "dev.the_fireplace.overlord.entrypoints.Client"
+        ],
+        "fireplacelib": [
+            "dev.the_fireplace.overlord.entrypoints.ConfigGui"
+        ],
+        "rei": [
+            "dev.the_fireplace.overlord.entrypoints.ReiClient",
+            "dev.the_fireplace.overlord.entrypoints.ReiServer"
+        ]
+    },
   "mixins": [
     "overlord.mixins.json"
   ],
@@ -41,7 +39,7 @@
     "fabricloader": ">=0.12.0",
     "fabric": "*",
     "minecraft": "1.16.X",
-    "fireplacelib": ">=6.2 <7"
+      "fireplacelib": ">=6.3 <7"
   },
 
   "custom": {
@@ -51,7 +49,8 @@
       }
     },
     "lithium:options": {
-      "mixin.ai.nearby_entity_tracking.goals": false
+        "mixin.ai.nearby_entity_tracking.goals": false,
+        "mixin.entity.skip_equipment_change_check": false
     }
   }
 }

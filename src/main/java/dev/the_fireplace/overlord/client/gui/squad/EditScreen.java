@@ -1,5 +1,6 @@
 package dev.the_fireplace.overlord.client.gui.squad;
 
+import com.google.inject.Injector;
 import com.google.common.collect.Lists;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
@@ -10,6 +11,7 @@ import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.client.gui.PartialScreen;
 import dev.the_fireplace.overlord.domain.data.SquadPatterns;
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
+import dev.the_fireplace.overlord.domain.registry.PatternRegistry;
 import dev.the_fireplace.overlord.network.ClientToServerPacketIDs;
 import dev.the_fireplace.overlord.network.client.builder.UpdateSquadBufferBuilder;
 import net.fabricmc.api.EnvType;
@@ -39,6 +41,7 @@ public class EditScreen extends Screen
     private final EmptyUUID emptyUUID;
     private final SquadPatterns squadPatterns;
     private final TextStyles textStyles;
+    private final PatternRegistry patternRegistry;
     private final SelectorScreen parent;
     private final Collection<ItemStack> stacks;
     private final UUID squadId;
@@ -52,22 +55,24 @@ public class EditScreen extends Screen
 
     protected EditScreen(SelectorScreen parent, Collection<ItemStack> squadItems, @Nullable Squad currentSquad) {
         super(new TranslatableText("gui.overlord.create_squad.name"));
-        this.emptyUUID = DIContainer.get().getInstance(EmptyUUID.class);
-        this.squadPatterns = DIContainer.get().getInstance(Key.get(SquadPatterns.class, Names.named("client")));
-        this.textStyles = DIContainer.get().getInstance(TextStyles.class);
+        Injector injector = DIContainer.get();
+        this.emptyUUID = injector.getInstance(EmptyUUID.class);
+        this.squadPatterns = injector.getInstance(Key.get(SquadPatterns.class, Names.named("client")));
+        this.textStyles = injector.getInstance(TextStyles.class);
+        this.patternRegistry = injector.getInstance(PatternRegistry.class);
         this.parent = parent;
         this.stacks = squadItems;
-        String pattern = "";
+        Identifier patternId = new Identifier("");
         ItemStack stack = ItemStack.EMPTY;
         if (currentSquad != null) {
             squadName = currentSquad.getName();
-            pattern = currentSquad.getPattern();
+            patternId = currentSquad.getPatternId();
             stack = currentSquad.getItem();
             squadId = currentSquad.getSquadId();
         } else {
             squadId = emptyUUID.get();
         }
-        this.patternState = new PatternSelectionScreenPart.State(new Identifier(Overlord.MODID, pattern), identifier -> updateConfirmButtonEnabled());
+        this.patternState = new PatternSelectionScreenPart.State(patternId, identifier -> updateConfirmButtonEnabled());
         this.itemState = new ItemSelectionScreenPart.State(stack, updatedStack -> updateConfirmButtonEnabled());
     }
 
@@ -90,7 +95,7 @@ public class EditScreen extends Screen
                 UpdateSquadBufferBuilder.build(
                     squadId,
                     squadName,
-                    patternState.getPatternId().getPath(),
+                    patternState.getPatternId(),
                     itemState.getStack(),
                     parent.getEntityId()
                 )
@@ -158,8 +163,8 @@ public class EditScreen extends Screen
         if (squadName.isEmpty()) {
             errors.add(createStyledError("gui.overlord.create_squad.name_required"));
         }
-        String pattern = patternState.getPatternId().getPath();
-        if (pattern.isEmpty()) {
+        Identifier patternId = patternState.getPatternId();
+        if (!patternRegistry.hasPattern(patternId)) {
             hasLookupPreventingErrors = true;
             errors.add(createStyledError("gui.overlord.create_squad.pattern_required"));
         }
@@ -174,16 +179,16 @@ public class EditScreen extends Screen
         }
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         Objects.requireNonNull(player, "Client player cannot be null when creating squads!");
-        if (!squadPatterns.canUsePattern(player.getUuid(), pattern)) {
+        if (!patternRegistry.getById(patternId).canBeUsedBy(player)) {
             Overlord.getLogger().error("Locked pattern warning produced on client, this should not be allowed!");
             errors.add(createStyledError("gui.overlord.create_squad.locked_pattern"));
         }
 
         if (!emptyUUID.is(squadId)) {
-            if (!squadPatterns.isPatternUnusedByOtherSquads(pattern, stack, player.getUuid(), squadId)) {
+            if (!squadPatterns.isPatternUnusedByOtherSquads(patternId, stack, player.getUuid(), squadId)) {
                 errors.add(createStyledError("gui.overlord.create_squad.pattern_taken"));
             }
-        } else if (!squadPatterns.isPatternUnused(pattern, stack)) {
+        } else if (!squadPatterns.isPatternUnused(patternId, stack)) {
             errors.add(createStyledError("gui.overlord.create_squad.pattern_taken"));
         }
 

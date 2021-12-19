@@ -2,6 +2,7 @@ package dev.the_fireplace.overlord.entity;
 
 import com.google.common.collect.ImmutableList;
 import dev.the_fireplace.annotateddi.api.DIContainer;
+import dev.the_fireplace.overlord.advancement.OverlordCriterions;
 import dev.the_fireplace.overlord.domain.world.ItemDropper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EquipmentSlot;
@@ -13,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.tag.Tag;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -24,6 +26,7 @@ import net.minecraft.util.crash.CrashReportSection;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
@@ -36,6 +39,11 @@ public class SkeletonInventory implements Inventory, Nameable
     public final DefaultedList<ItemStack> offHand;
     public final OwnedSkeletonEntity skeleton;
     private final List<DefaultedList<ItemStack>> combinedInventory;
+
+    public static final int HELMET_SLOT = 39;
+    public static final int ARMOR_SLOT = 38;
+    public static final int LEGGINGS_SLOT = 37;
+    public static final int BOOTS_SLOT = 36;
     public static final int MAIN_HAND_SLOT = 40;
     public static final int OFF_HAND_SLOT = 41;
     private int changeCount;
@@ -118,7 +126,7 @@ public class SkeletonInventory implements Inventory, Nameable
 
     private int addStack(int slot, ItemStack stack) {
         Item item = stack.getItem();
-        int i = stack.getCount();
+        int stackSize = stack.getCount();
         ItemStack itemStack = this.getStack(slot);
         if (itemStack.isEmpty()) {
             itemStack = new ItemStack(item, 0);
@@ -130,21 +138,19 @@ public class SkeletonInventory implements Inventory, Nameable
             this.setStack(slot, itemStack);
         }
 
-        int j = i;
-        if (i > itemStack.getMaxCount() - itemStack.getCount()) {
-            j = itemStack.getMaxCount() - itemStack.getCount();
+        int maxInsertableAmount = Math.min(stackSize, itemStack.getMaxCount() - itemStack.getCount());
+
+        if (maxInsertableAmount > this.getMaxCountPerStack() - itemStack.getCount()) {
+            maxInsertableAmount = this.getMaxCountPerStack() - itemStack.getCount();
         }
 
-        if (j > this.getMaxCountPerStack() - itemStack.getCount()) {
-            j = this.getMaxCountPerStack() - itemStack.getCount();
-        }
-
-        if (j != 0) {
-            i -= j;
-            itemStack.increment(j);
+        if (maxInsertableAmount != 0) {
+            stackSize -= maxInsertableAmount;
+            itemStack.increment(maxInsertableAmount);
+            triggerAdvancementCheck(itemStack, getEquipmentTypeByIndex(slot));
             itemStack.setCooldown(5);
         }
-        return i;
+        return stackSize;
     }
 
     public int getOccupiedSlotWithRoomForStack(ItemStack stack) {
@@ -188,7 +194,9 @@ public class SkeletonInventory implements Inventory, Nameable
                 }
 
                 if (slot >= 0) {
-                    this.main.set(slot, stack.copy());
+                    ItemStack copy = stack.copy();
+                    this.main.set(slot, copy);
+                    triggerAdvancementCheck(copy, getEquipmentTypeByIndex(slot));
                     this.main.get(slot).setCooldown(5);
                     stack.setCount(0);
                     return true;
@@ -240,7 +248,7 @@ public class SkeletonInventory implements Inventory, Nameable
 
     @Override
     public ItemStack removeStack(int slot, int amount) {
-        Pair<DefaultedList<ItemStack>, Integer> listSlot = getInvAndSlot(slot);
+        Pair<DefaultedList<ItemStack>, Integer> listSlot = getInternalInventoryAndSlot(slot);
         DefaultedList<ItemStack> list = listSlot.getKey();
         slot = listSlot.getValue();
 
@@ -260,7 +268,7 @@ public class SkeletonInventory implements Inventory, Nameable
 
     @Override
     public ItemStack removeStack(int slot) {
-        Pair<DefaultedList<ItemStack>, Integer> listSlot = getInvAndSlot(slot);
+        Pair<DefaultedList<ItemStack>, Integer> listSlot = getInternalInventoryAndSlot(slot);
         DefaultedList<ItemStack> defaultedList = listSlot.getKey();
         slot = listSlot.getValue();
 
@@ -274,17 +282,18 @@ public class SkeletonInventory implements Inventory, Nameable
     }
 
     @Override
-    public void setStack(int slot, ItemStack stack) {
-        Pair<DefaultedList<ItemStack>, Integer> listSlot = getInvAndSlot(slot);
-        DefaultedList<ItemStack> defaultedList = listSlot.getKey();
-        slot = listSlot.getValue();
+    public void setStack(int slotIndex, ItemStack stack) {
+        Pair<DefaultedList<ItemStack>, Integer> listSlot = getInternalInventoryAndSlot(slotIndex);
+        DefaultedList<ItemStack> internalInventory = listSlot.getKey();
+        int slotWithinInternalInventory = listSlot.getValue();
 
-        if (defaultedList != null) {
-            defaultedList.set(slot, stack);
+        if (internalInventory != null) {
+            internalInventory.set(slotWithinInternalInventory, stack);
+            triggerAdvancementCheck(stack, getEquipmentTypeByIndex(slotIndex));
         }
     }
 
-    private Pair<DefaultedList<ItemStack>, Integer> getInvAndSlot(int slotIndex) {
+    private Pair<DefaultedList<ItemStack>, Integer> getInternalInventoryAndSlot(int slotIndex) {
         DefaultedList<ItemStack> defaultedList = null;
 
         DefaultedList<ItemStack> defaultedList2;
@@ -412,7 +421,7 @@ public class SkeletonInventory implements Inventory, Nameable
 
     @Override
     public ItemStack getStack(int slot) {
-        Pair<DefaultedList<ItemStack>, Integer> listSlot = getInvAndSlot(slot);
+        Pair<DefaultedList<ItemStack>, Integer> listSlot = getInternalInventoryAndSlot(slot);
         DefaultedList<ItemStack> list = listSlot.getKey();
         slot = listSlot.getValue();
 
@@ -447,7 +456,6 @@ public class SkeletonInventory implements Inventory, Nameable
                     });
                 }
             }
-
         }
     }
 
@@ -515,6 +523,25 @@ public class SkeletonInventory implements Inventory, Nameable
     public void clear() {
         for (DefaultedList<ItemStack> itemStacks : this.combinedInventory) {
             itemStacks.clear();
+        }
+    }
+
+    @Nullable
+    public EquipmentSlot getEquipmentTypeByIndex(int slotIndex) {
+        return switch (slotIndex) {
+            case MAIN_HAND_SLOT -> EquipmentSlot.MAINHAND;
+            case OFF_HAND_SLOT -> EquipmentSlot.OFFHAND;
+            case HELMET_SLOT -> EquipmentSlot.HEAD;
+            case ARMOR_SLOT -> EquipmentSlot.CHEST;
+            case LEGGINGS_SLOT -> EquipmentSlot.LEGS;
+            case BOOTS_SLOT -> EquipmentSlot.FEET;
+            default -> null;
+        };
+    }
+
+    protected void triggerAdvancementCheck(ItemStack addedStack, @Nullable EquipmentSlot equipmentSlot) {
+        if (this.skeleton.getOwner() instanceof ServerPlayerEntity player) {
+            OverlordCriterions.SKELETON_INVENTORY_CHANGED.trigger(player, this, addedStack, equipmentSlot);
         }
     }
 }

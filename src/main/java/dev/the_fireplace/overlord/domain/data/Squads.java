@@ -2,6 +2,7 @@ package dev.the_fireplace.overlord.domain.data;
 
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -12,7 +13,7 @@ public interface Squads
     @Nullable
     Squad getSquad(UUID owner, UUID squadId);
 
-    Squad createNewSquad(UUID owner, String pattern, ItemStack stack, String name);
+    Squad createNewSquad(UUID owner, Identifier patternId, ItemStack stack, String name);
 
     boolean removeSquad(UUID owner, UUID squadId);
 

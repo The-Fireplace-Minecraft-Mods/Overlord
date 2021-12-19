@@ -1,7 +1,7 @@
 //file:noinspection GroovyAssignabilityCheck
 plugins {
     // Dependencies
-    id 'fabric-loom' version '0.10-SNAPSHOT'
+    id 'fabric-loom' version '0.12-SNAPSHOT'
     // Mod Hosting Publish
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id 'com.modrinth.minotaur' version '1.1.0'
@@ -9,6 +9,9 @@ plugins {
     id 'maven-publish'
     id 'signing'
     id 'io.codearte.nexus-staging' version '0.30.0'
+}
+if (project.hasProperty('SNAPSHOT')) {
+    version = "${version}-SNAPSHOT"
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -21,6 +24,7 @@ group = project.maven_group
 repositories {
     maven { url 'https://maven.shedaniel.me/' }
     maven { url 'https://maven.terraformersmc.com/releases/' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     flatDir { dirs 'lib' }
 }
 
@@ -43,8 +47,15 @@ dependencies {
 processResources {
     inputs.property 'version', project.version
 
-    filesMatching('fabric.mod.json') {
-        expand 'version': project.version
+    filesMatching('**/*.json') { fileCopyDetails ->
+        fileCopyDetails.expand(
+                'version': project.version,
+                'name': project.readable_name,
+                'description': project.mod_description,
+                'github_url': project.github_url,
+                'curseforge_url': project.curseforge_url,
+                'modrinth_url': project.modrinth_url,
+        )
     }
 }
 
@@ -80,7 +91,7 @@ if (hasProperty('curseForgeApiKey')) {
                 displayName = "$archivesBaseName-$version"
                 relations {
                     requiredDependency 'fireplace-lib'
-                    optionalDependency 'cloth-config'
+                    requiredDependency 'fabric-api'
                     optionalDependency 'modmenu'
                 }
             }
@@ -107,20 +118,20 @@ if (hasProperty('modrinthApiKey')) {
     }
 }
 
-if (hasProperty('nexusUsername')) {
+if (hasProperty('nexusUsername') || System.getenv("NEXUS_USERNAME") != null) {
     publishing {
         publications {
             mavenJava(MavenPublication) {
                 from components.java
                 pom {
-                    name = 'Overlord'
+                    name = project.readable_name
                     packaging = 'jar'
-                    description = 'A Minecraft mod allowing you to raise and command an army of skeletons.'
-                    url = 'https://www.curseforge.com/minecraft/mc-mods/overlord'
+                    description = project.maven_description
+                    url = project.curseforge_url
                     scm {
-                        connection = "scm:svn:https://github.com/The-Fireplace-Minecraft-Mods/${project.github_slug}.git"
-                        developerConnection = "scm:svn:https://github.com/The-Fireplace-Minecraft-Mods/${project.github_slug}.git"
-                        url = "https://github.com/The-Fireplace-Minecraft-Mods/${project.github_slug}"
+                        connection = "scm:svn:${project.github_url}.git"
+                        developerConnection = "scm:svn:${project.github_url}.git"
+                        url = project.github_url
                     }
 
                     licenses {
@@ -134,7 +145,7 @@ if (hasProperty('nexusUsername')) {
                         developer {
                             id = 'the_fireplace'
                             name = 'The_Fireplace'
-                            email = 'the.f1repl4ce@gmail.com'
+                            email = 'git@the-fireplace.dev'
                         }
                     }
                 }
@@ -146,8 +157,8 @@ if (hasProperty('nexusUsername')) {
                 def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
                 url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
                 credentials {
-                    username = nexusUsername
-                    password = nexusPassword
+                    username = findProperty('nexusUsername') ?: System.getenv("NEXUS_USERNAME")
+                    password = findProperty('nexusPassword') ?: System.getenv("NEXUS_PASSWORD")
                 }
             }
         }

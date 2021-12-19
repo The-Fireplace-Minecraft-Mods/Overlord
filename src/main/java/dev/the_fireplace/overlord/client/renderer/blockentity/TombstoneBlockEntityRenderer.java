@@ -1,4 +1,4 @@
-package dev.the_fireplace.overlord.client.renderer;
+package dev.the_fireplace.overlord.client.renderer.blockentity;
 
 import dev.the_fireplace.overlord.block.OverlordBlocks;
 import dev.the_fireplace.overlord.blockentity.TombstoneBlockEntity;

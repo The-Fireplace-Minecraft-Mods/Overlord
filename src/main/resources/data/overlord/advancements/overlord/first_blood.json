@@ -1,0 +1,29 @@
+{
+    "parent": "overlord:overlord/root",
+    "display": {
+        "icon": {
+            "item": "minecraft:iron_axe",
+            "nbt": "{Damage:0}"
+        },
+        "title": {
+            "translate": "advancements.overlord.first_blood.title"
+        },
+        "description": {
+            "translate": "advancements.overlord.first_blood.description"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "custom": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "requirements": [
+        [
+            "custom"
+        ]
+    ]
+}

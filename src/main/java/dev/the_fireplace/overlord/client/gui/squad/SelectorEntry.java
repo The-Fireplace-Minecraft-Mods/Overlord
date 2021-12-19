@@ -1,7 +1,7 @@
 package dev.the_fireplace.overlord.client.gui.squad;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.the_fireplace.overlord.Overlord;
+import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.overlord.client.gui.rendertools.BoxRenderer;
 import dev.the_fireplace.overlord.client.gui.rendertools.PatternRenderer;
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
@@ -12,7 +12,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
+import net.minecraft.text.Text;
 
 import java.util.UUID;
 
@@ -21,9 +21,11 @@ public class SelectorEntry extends AlwaysSelectedEntryListWidget.Entry<SelectorE
 {
     protected final MinecraftClient client;
     protected final Squad squad;
+    protected final PatternRenderer patternRenderer;
     protected boolean selected = false;
 
     SelectorEntry(Squad squad) {
+        this.patternRenderer = DIContainer.get().getInstance(PatternRenderer.class);
         this.client = MinecraftClient.getInstance();
         this.squad = squad;
     }
@@ -37,12 +39,12 @@ public class SelectorEntry extends AlwaysSelectedEntryListWidget.Entry<SelectorE
     }
 
     private void drawIcon(MatrixStack matrixStack, int entryTop, int entryLeft, int iconHeight, int iconWidth) {
-        if (squad.getPattern().isEmpty() || squad.getItem().isEmpty()) {
+        if (!patternRenderer.canDrawPattern(squad.getPatternId()) || squad.getItem().isEmpty()) {
             return;
         }
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.enableBlend();
-        PatternRenderer.drawPattern(matrixStack, new Identifier(Overlord.MODID, squad.getPattern()), entryLeft, entryTop, iconWidth, iconHeight, 1.0f);
+        patternRenderer.drawPattern(matrixStack, squad.getPatternId(), entryLeft, entryTop, iconWidth, iconHeight, 1.0f);
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
         ItemRenderer itemRenderer = minecraftClient.getItemRenderer();
         matrixStack.push();
