@@ -5,6 +5,7 @@ import com.google.inject.Key;
 import com.google.inject.name.Names;
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
+import dev.the_fireplace.overlord.advancement.OverlordCriterions;
 import dev.the_fireplace.overlord.domain.data.Squads;
 import dev.the_fireplace.overlord.domain.entity.OrderableEntity;
 import dev.the_fireplace.overlord.domain.entity.Ownable;
@@ -45,6 +46,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -57,7 +59,7 @@ import java.util.UUID;
 
 public abstract class ArmyEntity extends TameableEntity implements Ownable, OrderableEntity
 {
-    protected static final TrackedData<Optional<UUID>> SQUAD = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+    protected static final TrackedData<Optional<UUID>> SQUAD = DataTracker.registerData(ArmyEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     protected final EntityAlliances entityAlliances;
     protected final EmptyUUID emptyUUID;
     protected final Injector injector;
@@ -72,6 +74,8 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
     public double capeZ;
     public float prevStrideDistance;
     public float strideDistance;
+
+    protected boolean hasTriggeredObtainedCriterion = false;
 
     protected ArmyEntity(EntityType<? extends ArmyEntity> type, World world) {
         super(type, world);
@@ -264,6 +268,7 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
         if (this.hasExistingSquad()) {
             nbt.putUuid("Squad", this.getSquad());
         }
+        nbt.putBoolean("HasTriggeredObtainedCriterion", this.hasTriggeredObtainedCriterion);
     }
 
     @Override
@@ -275,6 +280,9 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
                 ? Optional.of(nbt.getUuid("Squad"))
                 : Optional.empty()
         );
+        if (nbt.contains("HasTriggeredObtainedCriterion")) {
+            this.hasTriggeredObtainedCriterion = nbt.getBoolean("HasTriggeredObtainedCriterion");
+        }
     }
 
     public byte getEquipmentSwapTicks() {
@@ -395,6 +403,11 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
     @Override
     public void tick() {
         super.tick();
+
+        if (!this.hasTriggeredObtainedCriterion && getOwner() instanceof ServerPlayerEntity ownerPlayer) {
+            OverlordCriterions.OBTAINED_ARMY_MEMBER.trigger(ownerPlayer, this.getType());
+            this.hasTriggeredObtainedCriterion = true;
+        }
 
         this.updateCapeAngles();
     }

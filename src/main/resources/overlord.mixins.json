@@ -1,17 +1,18 @@
 {
-  "required": true,
-  "package": "dev.the_fireplace.overlord.mixin",
-  "compatibilityLevel": "JAVA_8",
-  "mixins": [
-    "GoalSelectorAccessor",
-    "PlayerManagerMixin",
-    "WolfEntityMixin"
-  ],
-  "client": [
-    "client.PlayerEntityModelAccessor",
-    "client.SkullBlockEntityRendererAccessor"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+    "required": true,
+    "package": "dev.the_fireplace.overlord.mixin",
+    "compatibilityLevel": "JAVA_8",
+    "mixins": [
+        "GoalSelectorAccessor",
+        "PlayerManagerMixin",
+        "WolfEntityMixin"
+    ],
+    "client": [
+        "client.ClientAdvancementManagerAccessor",
+        "client.PlayerEntityModelAccessor",
+        "client.SkullBlockEntityRendererAccessor"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
 }

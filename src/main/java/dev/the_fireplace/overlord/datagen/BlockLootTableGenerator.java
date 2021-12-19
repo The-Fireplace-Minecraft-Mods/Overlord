@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.block.OverlordBlocks;
+import dev.the_fireplace.overlord.item.OverlordItems;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.block.enums.SlabType;
@@ -64,6 +65,12 @@ public class BlockLootTableGenerator implements Consumer<BiConsumer<Identifier, 
         registerForSelfDrop(OverlordBlocks.DIORITE_TOMBSTONE);
         registerForSelfDrop(OverlordBlocks.ANDESITE_TOMBSTONE);
         registerForSelfDrop(OverlordBlocks.GRANITE_TOMBSTONE);
+        register(OverlordBlocks.FLESH_SKELETON_SKULL, OverlordItems.FLESH_SKELETON_SKULL);
+        register(OverlordBlocks.MUSCLE_SKELETON_SKULL, OverlordItems.MUSCLE_SKELETON_SKULL);
+        register(OverlordBlocks.FLESH_MUSCLE_SKELETON_SKULL, OverlordItems.FLESH_MUSCLE_SKELETON_SKULL);
+        register(OverlordBlocks.FLESH_SKELETON_WALL_SKULL, OverlordItems.FLESH_SKELETON_SKULL);
+        register(OverlordBlocks.MUSCLE_SKELETON_WALL_SKULL, OverlordItems.MUSCLE_SKELETON_SKULL);
+        register(OverlordBlocks.FLESH_MUSCLE_SKELETON_WALL_SKULL, OverlordItems.FLESH_MUSCLE_SKELETON_SKULL);
 
 
         Set<Identifier> set = Sets.newHashSet();

@@ -1,8 +1,9 @@
 package dev.the_fireplace.overlord.client.gui.squad;
 
-import dev.the_fireplace.overlord.Overlord;
+import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.overlord.client.gui.PartialScreen;
-import dev.the_fireplace.overlord.util.SquadPatterns;
+import dev.the_fireplace.overlord.domain.data.objects.Pattern;
+import dev.the_fireplace.overlord.domain.registry.PatternRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Drawable;
@@ -27,6 +28,7 @@ public class PatternSelectionScreenPart implements PartialScreen
     private final int height;
     private final State state;
 
+    private final PatternRegistry patternRegistry;
     private final List<PatternButtonWidget> patternWidgets = new ArrayList<>();
     private ButtonWidget previousButton;
     private ButtonWidget nextButton;
@@ -37,6 +39,7 @@ public class PatternSelectionScreenPart implements PartialScreen
         this.width = width;
         this.height = height;
         this.state = state;
+        this.patternRegistry = DIContainer.get().getInstance(PatternRegistry.class);
         createWidgets();
     }
 
@@ -66,13 +69,13 @@ public class PatternSelectionScreenPart implements PartialScreen
         int widgetHeight = getPatternWidgetHeight();
         int displayedColumnCount = getColumnCount();
         int displayedRowCount = getRowCount();
-        for (String pattern : SquadPatterns.getPatterns()) {
+        for (Pattern pattern : patternRegistry.getPatterns()) {
             int column = columnIndex % displayedColumnCount;
             int row = rowIndex % displayedRowCount;
             int widgetX = x + (column * (widgetWidth + 4));
             int widgetY = y + 24 + (row * (widgetHeight + 4));
-            Text widgetName = new TranslatableText("squad.overlord.pattern." + pattern + ".name");
-            Identifier patternId = new Identifier(Overlord.MODID, pattern);
+            Identifier patternId = pattern.getId();
+            Text widgetName = new TranslatableText("squad." + patternId.getNamespace() + ".pattern." + patternId.getPath() + ".name");
             PatternButtonWidget patternButtonWidget = new PatternButtonWidget(
                 widgetX,
                 widgetY,
@@ -144,7 +147,7 @@ public class PatternSelectionScreenPart implements PartialScreen
         }
         int widgetIndex = 0;
         for (PatternButtonWidget patternWidget : this.patternWidgets) {
-            if (patternWidget.pattern.equals(this.state.patternId)) {
+            if (patternWidget.patternId.equals(this.state.patternId)) {
                 this.state.currentPage = (byte) (widgetIndex / getPatternsPerPage());
                 return;
             }

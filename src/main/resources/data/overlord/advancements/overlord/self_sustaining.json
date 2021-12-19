@@ -1,0 +1,31 @@
+{
+    "parent": "overlord:overlord/root",
+    "display": {
+        "icon": {
+            "item": "minecraft:bucket"
+        },
+        "title": {
+            "translate": "advancements.overlord.self_sustaining.title"
+        },
+        "description": {
+            "translate": "advancements.overlord.self_sustaining.description"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "skeleton_milked_cow": {
+            "trigger": "overlord:army_member_gathered_milk",
+            "conditions": {
+                "entityType": "overlord:owned_skeleton"
+            }
+        }
+    },
+    "requirements": [
+        [
+            "skeleton_milked_cow"
+        ]
+    ]
+}

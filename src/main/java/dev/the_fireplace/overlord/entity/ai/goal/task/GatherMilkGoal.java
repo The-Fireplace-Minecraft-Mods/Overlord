@@ -1,5 +1,6 @@
 package dev.the_fireplace.overlord.entity.ai.goal.task;
 
+import dev.the_fireplace.overlord.advancement.OverlordCriterions;
 import dev.the_fireplace.overlord.entity.ArmyEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
@@ -9,6 +10,7 @@ import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import org.jetbrains.annotations.Nullable;
 
@@ -121,6 +123,9 @@ public class GatherMilkGoal extends TaskGoal
             this.armyEntity.giveItemStack(new ItemStack(Items.MILK_BUCKET));
             this.postSwapCooldownTicks = this.armyEntity.getEquipmentSwapTicks();
 
+            if (this.armyEntity.getOwner() instanceof ServerPlayerEntity serverPlayer) {
+                OverlordCriterions.ARMY_MEMBER_MILKED_COW.trigger(serverPlayer, this.armyEntity.getType());
+            }
             //TODO maybe spook the cow if the skeleton isn't playerlike?
         }
     }

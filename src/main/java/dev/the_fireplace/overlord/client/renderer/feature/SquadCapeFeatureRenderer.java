@@ -1,11 +1,12 @@
 package dev.the_fireplace.overlord.client.renderer.feature;
 
+import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 import dev.the_fireplace.annotateddi.api.DIContainer;
-import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.domain.data.Squads;
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
+import dev.the_fireplace.overlord.domain.registry.PatternRegistry;
 import dev.the_fireplace.overlord.entity.ArmyEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -32,10 +33,13 @@ import net.minecraft.util.math.MathHelper;
 public class SquadCapeFeatureRenderer<T extends ArmyEntity, M extends PlayerEntityModel<T>> extends FeatureRenderer<T, M>
 {
     private final Squads squads;
+    private final PatternRegistry patternRegistry;
 
     public SquadCapeFeatureRenderer(FeatureRendererContext<T, M> context) {
         super(context);
-        this.squads = DIContainer.get().getInstance(Key.get(Squads.class, Names.named("client")));
+        Injector injector = DIContainer.get();
+        this.squads = injector.getInstance(Key.get(Squads.class, Names.named("client")));
+        this.patternRegistry = injector.getInstance(PatternRegistry.class);
     }
 
     @Override
@@ -79,7 +83,7 @@ public class SquadCapeFeatureRenderer<T extends ArmyEntity, M extends PlayerEnti
         matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(s / 2.0F));
         matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(180.0F - s / 2.0F));
 
-        Identifier squadCapeTexture = new Identifier(Overlord.MODID, "textures/entity/cape/" + squad.getPattern() + ".png");
+        Identifier squadCapeTexture = patternRegistry.getById(squad.getPatternId()).getTextureLocation();
 
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(squadCapeTexture));
         this.getContextModel().renderCape(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);

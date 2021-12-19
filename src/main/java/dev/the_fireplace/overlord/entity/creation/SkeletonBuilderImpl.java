@@ -8,13 +8,13 @@ import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.domain.blockentity.Tombstone;
 import dev.the_fireplace.overlord.domain.entity.creation.SkeletonBuilder;
+import dev.the_fireplace.overlord.domain.entity.creation.SkeletonRecipeRegistry;
 import dev.the_fireplace.overlord.domain.inventory.CommonPriorityMappers;
 import dev.the_fireplace.overlord.domain.inventory.InventorySearcher;
 import dev.the_fireplace.overlord.domain.registry.HeadBlockAugmentRegistry;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import dev.the_fireplace.overlord.util.EquipmentUtils;
 import dev.the_fireplace.overlord.util.PlayerNameHelper;
-import io.netty.util.internal.ConcurrentSet;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.inventory.Inventory;
@@ -23,43 +23,55 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.util.UserCache;
 import net.minecraft.world.World;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 
 @Implementation
 @Singleton
-public class SkeletonBuilderImpl implements SkeletonBuilder
+public final class SkeletonBuilderImpl implements SkeletonBuilder
 {
-    private final Collection<SkeletonRecipe> skeletonRecipes = new ConcurrentSet<>();
+    private final SkeletonRecipeRegistry skeletonRecipeRegistry;
+
+    @Inject
+    public SkeletonBuilderImpl(SkeletonRecipeRegistry skeletonRecipeRegistry) {
+        this.skeletonRecipeRegistry = skeletonRecipeRegistry;
+    }
 
     @Override
     public boolean canBuildWithIngredients(Inventory inventory) {
-        return skeletonRecipes.stream().anyMatch(recipe -> recipe.hasEssentialContents(inventory));
+        return skeletonRecipeRegistry.getRecipes().stream().anyMatch(recipe -> recipe.hasEssentialContents(inventory));
     }
 
     @Override
     public OwnedSkeletonEntity build(Inventory inventory, World world, Tombstone tombstone) {
-        Optional<SkeletonRecipe> recipeOrEmpty = skeletonRecipes.stream().filter(filterRecipe -> filterRecipe.hasEssentialContents(inventory)).findFirst();
+        Optional<SkeletonRecipe> recipeOrEmpty = skeletonRecipeRegistry.getRecipes().stream().filter(filterRecipe -> filterRecipe.hasEssentialContents(inventory)).findFirst();
         if (!recipeOrEmpty.isPresent()) {
             return null;
         }
+        boolean hasMuscles = false;
+        boolean hasSkin = false;
+        boolean hasPlayerSkin = false;
         SkeletonRecipe recipe = recipeOrEmpty.get();
         Collection<ItemStack> byproducts = new HashSet<>(recipe.processEssentialIngredients(inventory));
         OwnedSkeletonEntity entity = OwnedSkeletonEntity.create(world, tombstone.getOwner());
         if (recipe.hasMuscleContents(inventory)) {
             byproducts.addAll(recipe.processMuscleIngredients(inventory));
             entity.setHasMuscles(true);
+            hasMuscles = true;
         }
         String tombstoneName = tombstone.getNameText().trim();
         if (recipe.hasSkinContents(inventory)) {
             byproducts.addAll(recipe.processSkinIngredients(inventory));
             entity.setHasSkin(true);
+            hasSkin = true;
             if (!tombstoneName.isEmpty() && PlayerNameHelper.VALID_NAME_REGEX.matcher(tombstoneName).matches() && recipe.hasPlayerColorContents(inventory)) {
                 UserCache.setUseRemote(true);
                 GameProfile profile = world.getServer().getUserCache().findByName(tombstoneName);
                 if (profile != null) {
                     byproducts.addAll(recipe.processPlayerColorIngredients(inventory));
                     entity.setSkinsuit(profile.getId());
+                    hasPlayerSkin = true;
                 }
             }
         }
@@ -69,18 +81,16 @@ public class SkeletonBuilderImpl implements SkeletonBuilder
         for (ItemStack byproduct : byproducts) {
             entity.getInventory().insertStack(byproduct);
         }
+        int totalMaxHealth = recipe.getTotalMaxHealth(hasSkin, hasMuscles, hasPlayerSkin);
+        entity.setMaxHealth(totalMaxHealth);
         findAndEquipArmor(entity, inventory);
         gatherWeapons(entity, inventory);
         // gather augment before armor - no deception from wearing the skeleton skulls instead of using them as augments
         gatherAugment(entity, inventory);
         gatherExtraArmor(entity, inventory);
+        entity.setHealth(entity.getMaxHealth());
 
         return entity;
-    }
-
-    public void setSkeletonRecipes(Collection<SkeletonRecipe> skeletonRecipes) {
-        this.skeletonRecipes.clear();
-        this.skeletonRecipes.addAll(skeletonRecipes);
     }
 
     private void findAndEquipArmor(OwnedSkeletonEntity entity, Inventory casket) {

@@ -42,6 +42,12 @@ public final class OverlordBlocks
         .sounds(BlockSoundGroup.WET_GRASS)
         .materialColor(MaterialColor.RED)
         .breakByTool(FabricToolTags.SHOVELS));
+    public static final Block FLESH_SKELETON_SKULL = new ArmySkullBlock(AbstractArmySkullBlock.SkullType.SKIN_SKELETON, FabricBlockSettings.copyOf(Blocks.SKELETON_SKULL));
+    public static final Block FLESH_SKELETON_WALL_SKULL = new WallArmySkullBlock(AbstractArmySkullBlock.SkullType.SKIN_SKELETON, FabricBlockSettings.copyOf(Blocks.SKELETON_WALL_SKULL));
+    public static final Block MUSCLE_SKELETON_SKULL = new ArmySkullBlock(AbstractArmySkullBlock.SkullType.MUSCLE_SKELETON, FabricBlockSettings.copyOf(Blocks.SKELETON_SKULL));
+    public static final Block MUSCLE_SKELETON_WALL_SKULL = new WallArmySkullBlock(AbstractArmySkullBlock.SkullType.MUSCLE_SKELETON, FabricBlockSettings.copyOf(Blocks.SKELETON_WALL_SKULL));
+    public static final Block FLESH_MUSCLE_SKELETON_SKULL = new ArmySkullBlock(AbstractArmySkullBlock.SkullType.MUSCLE_SKIN_SKELETON, FabricBlockSettings.copyOf(Blocks.PLAYER_HEAD));
+    public static final Block FLESH_MUSCLE_SKELETON_WALL_SKULL = new WallArmySkullBlock(AbstractArmySkullBlock.SkullType.MUSCLE_SKIN_SKELETON, FabricBlockSettings.copyOf(Blocks.PLAYER_WALL_HEAD));
 
     private static final List<Block> registeredBlocks = new ArrayList<>();
 
@@ -63,6 +69,12 @@ public final class OverlordBlocks
         registerBlockWithItem("granite_tombstone", GRANITE_TOMBSTONE, ItemGroup.DECORATIONS);
         registerBlockWithItem("andesite_tombstone", ANDESITE_TOMBSTONE, ItemGroup.DECORATIONS);
         registerBlockWithItem("blood_soaked_soil", BLOOD_SOAKED_SOIL, ItemGroup.BUILDING_BLOCKS);
+        registerBlock("flesh_skeleton_skull", FLESH_SKELETON_SKULL);
+        registerBlock("flesh_skeleton_wall_skull", FLESH_SKELETON_WALL_SKULL);
+        registerBlock("muscle_skeleton_skull", MUSCLE_SKELETON_SKULL);
+        registerBlock("muscle_skeleton_wall_skull", MUSCLE_SKELETON_WALL_SKULL);
+        registerBlock("flesh_muscle_skeleton_skull", FLESH_MUSCLE_SKELETON_SKULL);
+        registerBlock("flesh_muscle_skeleton_wall_skull", FLESH_MUSCLE_SKELETON_WALL_SKULL);
     }
 
     private static void registerBlock(String path, Block block) {

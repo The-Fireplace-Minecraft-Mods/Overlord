@@ -15,6 +15,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringNbtReader;
+import net.minecraft.nbt.visitor.StringNbtWriter;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
@@ -65,7 +67,7 @@ public final class SquadsImpl implements Squads
     }
 
     @Override
-    public Squad createNewSquad(UUID owner, String pattern, ItemStack stack, String name) {
+    public Squad createNewSquad(UUID owner, Identifier patternId, ItemStack stack, String name) {
         ensureCachePopulated();
         UUID newSquadId;
         do {
@@ -74,7 +76,7 @@ public final class SquadsImpl implements Squads
 
         SavedSquad squad = new SavedSquad(newSquadId, owner);
         squad.init();
-        squad.updatePattern(pattern, stack);
+        squad.updatePattern(patternId, stack);
         squad.setName(name);
         squadCache.computeIfAbsent(owner, NEW_CONCURRENT_MAP).put(newSquadId, squad);
         return squad;
@@ -143,14 +145,14 @@ public final class SquadsImpl implements Squads
     {
         private final UUID id;
         private final UUID owner;
-        private String pattern;
+        private Identifier patternId;
         private ItemStack item;
         private String name;
 
         private SavedSquad(UUID id, UUID owner) {
             this.id = id;
             this.owner = owner;
-            this.pattern = "missing_texture";
+            this.patternId = new Identifier("");
             this.item = new ItemStack(Blocks.BARRIER);
             this.name = "Missingno";
         }
@@ -170,8 +172,8 @@ public final class SquadsImpl implements Squads
         }
 
         @Override
-        public String getPattern() {
-            return pattern;
+        public Identifier getPatternId() {
+            return patternId;
         }
 
         @Override
@@ -180,11 +182,11 @@ public final class SquadsImpl implements Squads
         }
 
         @Override
-        public void updatePattern(String capeBase, ItemStack capeItem) {
-            if (this.pattern.equals(capeBase) && this.item.equals(capeItem)) {
+        public void updatePattern(Identifier patternId, ItemStack capeItem) {
+            if (this.patternId.equals(patternId) && this.item.equals(capeItem)) {
                 return;
             }
-            this.pattern = capeBase;
+            this.patternId = patternId;
             this.item = capeItem;
             saveDataStateManager.markChanged(this);
         }
@@ -202,7 +204,13 @@ public final class SquadsImpl implements Squads
 
         @Override
         public void readFrom(StorageReadBuffer buffer) {
-            this.pattern = buffer.readString("pattern", this.pattern);
+            String legacyPattern = buffer.readString("pattern", "");
+            if (!legacyPattern.isBlank()) {
+                //TODO 4.0.0 eliminate legacy checking
+                this.patternId = new Identifier(Overlord.MODID, legacyPattern);
+            } else {
+                this.patternId = new Identifier(buffer.readString("patternId", ""));
+            }
             try {
                 this.item = ItemStack.fromTag(StringNbtReader.parse(buffer.readString("item", "")));
             } catch (CommandSyntaxException ignored) {
@@ -212,7 +220,7 @@ public final class SquadsImpl implements Squads
 
         @Override
         public void writeTo(StorageWriteBuffer buffer) {
-            buffer.writeString("pattern", pattern);
+            buffer.writeString("patternId", patternId.toString());
             buffer.writeString("item", item.toTag(new CompoundTag()).toString());
             buffer.writeString("name", name);
         }

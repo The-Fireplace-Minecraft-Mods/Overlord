@@ -1,6 +1,7 @@
 package dev.the_fireplace.overlord.domain.data.objects;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
 
 import java.util.UUID;
 
@@ -10,11 +11,11 @@ public interface Squad
 
     UUID getOwner();
 
-    String getPattern();
+    Identifier getPatternId();
 
     ItemStack getItem();
 
-    void updatePattern(String capeBase, ItemStack capeItem);
+    void updatePattern(Identifier patternId, ItemStack capeItem);
 
     String getName();
 

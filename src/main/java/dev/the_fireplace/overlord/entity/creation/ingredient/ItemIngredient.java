@@ -31,6 +31,10 @@ public class ItemIngredient extends AbstractIngredient
         return true;
     }
 
+    public Item getItem() {
+        return item;
+    }
+
     public void setCompoundTag(@Nullable CompoundTag CompoundTag) {
         this.compoundTag = CompoundTag;
     }

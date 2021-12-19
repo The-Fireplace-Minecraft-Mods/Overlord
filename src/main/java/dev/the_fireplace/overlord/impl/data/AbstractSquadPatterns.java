@@ -4,6 +4,7 @@ import dev.the_fireplace.overlord.domain.data.SquadPatterns;
 import dev.the_fireplace.overlord.domain.data.Squads;
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
 
 import java.util.UUID;
 
@@ -16,27 +17,21 @@ public abstract class AbstractSquadPatterns implements SquadPatterns
     }
 
     @Override
-    public boolean isPatternUnused(String pattern, ItemStack stack) {
-        return isPatternUnusedByOtherSquads(pattern, stack, null, null);
+    public boolean isPatternUnused(Identifier patternId, ItemStack stack) {
+        return isPatternUnusedByOtherSquads(patternId, stack, null, null);
     }
 
     @Override
-    public boolean isPatternUnusedByOtherSquads(String pattern, ItemStack stack, UUID owner, UUID squadId) {
+    public boolean isPatternUnusedByOtherSquads(Identifier patternId, ItemStack stack, UUID owner, UUID squadId) {
         for (Squad squad : squads.getSquads()) {
             if (squad.getOwner().equals(owner) && squad.getSquadId().equals(squadId)) {
                 continue;
             }
-            if (ItemStack.areItemsEqual(squad.getItem(), stack) && ItemStack.areTagsEqual(squad.getItem(), stack) && squad.getPattern().equals(pattern)) {
+            if (ItemStack.areItemsEqual(squad.getItem(), stack) && ItemStack.areTagsEqual(squad.getItem(), stack) && squad.getPatternId().equals(patternId)) {
                 return false;
             }
         }
 
-        return true;
-    }
-
-    @Override
-    public boolean canUsePattern(UUID player, String pattern) {
-        //TODO adjust when more capes are added
         return true;
     }
 }

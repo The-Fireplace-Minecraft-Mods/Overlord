@@ -9,6 +9,7 @@ import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.domain.data.SquadPatterns;
 import dev.the_fireplace.overlord.domain.data.Squads;
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
+import dev.the_fireplace.overlord.domain.registry.PatternRegistry;
 import dev.the_fireplace.overlord.domain.rule.SquadEligibleItems;
 import dev.the_fireplace.overlord.network.ClientToServerPacketIDs;
 import dev.the_fireplace.overlord.network.ServerToClientPacketIDs;
@@ -41,6 +42,7 @@ public final class UpdateSquadPacketReceiver implements ServerPacketReceiver
     private final EmptyUUID emptyUUID;
     private final TextStyles textStyles;
     private final SquadEligibleItems squadEligibleItems;
+    private final PatternRegistry patternRegistry;
 
     @Inject
     public UpdateSquadPacketReceiver(
@@ -48,13 +50,15 @@ public final class UpdateSquadPacketReceiver implements ServerPacketReceiver
         SquadPatterns squadPatterns,
         EmptyUUID emptyUUID,
         TextStyles textStyles,
-        SquadEligibleItems squadEligibleItems
+        SquadEligibleItems squadEligibleItems,
+        PatternRegistry patternRegistry
     ) {
         this.squads = squads;
         this.squadPatterns = squadPatterns;
         this.emptyUUID = emptyUUID;
         this.textStyles = textStyles;
         this.squadEligibleItems = squadEligibleItems;
+        this.patternRegistry = patternRegistry;
     }
 
     @Override
@@ -67,32 +71,32 @@ public final class UpdateSquadPacketReceiver implements ServerPacketReceiver
         UUID squadId = buf.readUuid();
         boolean isNewSquad = emptyUUID.is(squadId);
         String squadName = buf.readString();
-        String pattern = buf.readString();
+        Identifier patternId = buf.readIdentifier();
         ItemStack item = squadEligibleItems.convertToSquadItem(buf.readItemStack());
         Integer skeletonId = null;
         if (buf.isReadable()) {
             skeletonId = buf.readInt();
         }
-        if (squadName.isEmpty() || pattern.isEmpty() || item.isEmpty()) {
+        if (squadName.isBlank() || item.isEmpty()) {
             logInvalidPacketWarning(player);
             return;
         }
         UUID owner = player.getUuid();
         Squad existingSquad = squads.getSquad(owner, squadId);
-        List<Text> errors = getErrors(squadId, isNewSquad, pattern, item, player, existingSquad != null, skeletonId != null ? player.world.getEntityById(skeletonId) : null);
+        List<Text> errors = getErrors(squadId, isNewSquad, patternId, item, player, existingSquad != null, skeletonId != null ? player.world.getEntityById(skeletonId) : null);
         if (!errors.isEmpty()) {
             responseSender.sendPacket(ServerToClientPacketIDs.SQUAD_UPDATE_FAILED, SquadUpdateFailedBufferBuilder.build(errors));
             return;
         }
         Squad updatedSquad;
         if (isNewSquad) {
-            updatedSquad = squads.createNewSquad(owner, pattern, item, squadName);
+            updatedSquad = squads.createNewSquad(owner, patternId, item, squadName);
         } else {
             updatedSquad = existingSquad;
             if (updatedSquad == null) {
                 throw new IllegalStateException("Existing squad is missing with no error.");
             }
-            updatedSquad.updatePattern(pattern, item);
+            updatedSquad.updatePattern(patternId, item);
             updatedSquad.setName(squadName);
         }
         responseSender.sendPacket(ServerToClientPacketIDs.SQUAD_UPDATED, SquadUpdatedBufferBuilder.build(updatedSquad));
@@ -104,10 +108,10 @@ public final class UpdateSquadPacketReceiver implements ServerPacketReceiver
         );
     }
 
-    private List<Text> getErrors(UUID squadId, boolean isNewSquad, String pattern, ItemStack item, ServerPlayerEntity owner, boolean squadExists, @Nullable Entity armyEntity) {
+    private List<Text> getErrors(UUID squadId, boolean isNewSquad, Identifier patternId, ItemStack item, ServerPlayerEntity owner, boolean squadExists, @Nullable Entity armyEntity) {
         List<Text> errors = new ArrayList<>();
         if (isNewSquad) {
-            boolean isPatternTaken = !squadPatterns.isPatternUnused(pattern, item);
+            boolean isPatternTaken = !squadPatterns.isPatternUnused(patternId, item);
             if (isPatternTaken) {
                 errors.add(getStyledError("gui.overlord.create_squad.pattern_taken"));
             }
@@ -115,12 +119,12 @@ public final class UpdateSquadPacketReceiver implements ServerPacketReceiver
             if (!squadExists) {
                 errors.add(getStyledError("gui.overlord.create_squad.missing_squad"));
             }
-            boolean isPatternTaken = !squadPatterns.isPatternUnusedByOtherSquads(pattern, item, owner.getUuid(), squadId);
+            boolean isPatternTaken = !squadPatterns.isPatternUnusedByOtherSquads(patternId, item, owner.getUuid(), squadId);
             if (isPatternTaken) {
                 errors.add(getStyledError("gui.overlord.create_squad.pattern_taken"));
             }
         }
-        if (!squadPatterns.canUsePattern(owner.getUuid(), pattern)) {
+        if (!patternRegistry.getById(patternId).canBeUsedBy(owner)) {
             errors.add(getStyledError("gui.overlord.create_squad.locked_pattern"));
         }
         boolean isEligibleToUseItem = false;

@@ -1,6 +1,8 @@
 package dev.the_fireplace.overlord.client.renderer.feature;
 
 import com.mojang.authlib.GameProfile;
+import dev.the_fireplace.overlord.block.AbstractArmySkullBlock;
+import dev.the_fireplace.overlord.client.renderer.blockentity.ArmySkullBlockEntityRenderer;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import dev.the_fireplace.overlord.mixin.client.SkullBlockEntityRendererAccessor;
 import net.fabricmc.api.EnvType;
@@ -36,8 +38,13 @@ import javax.annotation.Nullable;
 @Environment(EnvType.CLIENT)
 public class AugmentHeadFeatureRenderer<T extends OwnedSkeletonEntity, M extends EntityModel<T> & ModelWithHead> extends FeatureRenderer<T, M>
 {
-    public AugmentHeadFeatureRenderer(FeatureRendererContext<T, M> context) {
+    private final Map<SkullBlock.SkullType, SkullBlockEntityModel> headModels;
+    private final Map<AbstractArmySkullBlock.SkullType, SkullBlockEntityModel> armyHeadModels;
+
+    public AugmentHeadFeatureRenderer(FeatureRendererContext<T, M> context, EntityModelLoader loader) {
         super(context);
+        this.headModels = SkullBlockEntityRenderer.getModels(loader);
+        this.armyHeadModels = ArmySkullBlockEntityRenderer.getModels(loader);
     }
 
     public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light, T livingEntity, float f, float g, float h, float j, float k, float l) {
@@ -69,7 +76,18 @@ public class AugmentHeadFeatureRenderer<T extends OwnedSkeletonEntity, M extends
                 }
 
                 matrixStack.translate(-0.5D, 0.0D, -0.5D);
-                renderSkull(overlay, 180.0F, ((AbstractSkullBlock) ((BlockItem) item).getBlock()).getSkullType(), gameProfile, f, matrixStack, vertexConsumerProvider, light);
+                SkullBlock.SkullType skullType = ((AbstractSkullBlock) ((BlockItem) item).getBlock()).getSkullType();
+                SkullBlockEntityModel skullBlockEntityModel = this.headModels.get(skullType);
+                RenderLayer renderLayer = SkullBlockEntityRenderer.getRenderLayer(skullType, gameProfile);
+                renderVanillaSkull(overlay, 180.0F, f, matrixStack, vertexConsumerProvider, light, skullBlockEntityModel, renderLayer);
+            } else if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof AbstractArmySkullBlock) {
+                matrixStack.scale(1.1875F, -1.1875F, -1.1875F);
+
+                matrixStack.translate(-0.5D, 0.0D, -0.5D);
+                AbstractArmySkullBlock.SkullType skullType = ((AbstractArmySkullBlock) ((BlockItem) item).getBlock()).getSkullType();
+                SkullBlockEntityModel skullBlockEntityModel = this.armyHeadModels.get(skullType);
+                RenderLayer renderLayer = ArmySkullBlockEntityRenderer.getRenderLayer(skullType);
+                ArmySkullBlockEntityRenderer.renderSkull(null, overlay, 180.0F, f, matrixStack, vertexConsumerProvider, light, skullBlockEntityModel, renderLayer);
             } else if (!(item instanceof ArmorItem) || ((ArmorItem) item).getSlotType() != EquipmentSlot.HEAD) {
                 matrixStack.translate(0.0D, -0.25D, 0.0D);
                 matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(180.0F));
@@ -96,7 +114,7 @@ public class AugmentHeadFeatureRenderer<T extends OwnedSkeletonEntity, M extends
      * Modified version to take a custom overlay
      * {@link SkullBlockEntityRenderer#render(Direction, float, SkullBlock.SkullType, GameProfile, float, MatrixStack, VertexConsumerProvider, int)}
      */
-    public static void renderSkull(int overlay, float yaw, SkullBlock.SkullType skullType, @Nullable GameProfile gameProfile, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
+    public static void renderVanillaSkull(int overlay, float yaw, SkullBlock.SkullType skullType, @Nullable GameProfile gameProfile, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         SkullEntityModel skullEntityModel = SkullBlockEntityRendererAccessor.getMODELS().get(skullType);
         matrixStack.push();
         matrixStack.translate(0.5D, 0.0D, 0.5D);

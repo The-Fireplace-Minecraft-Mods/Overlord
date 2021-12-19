@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,7 +31,7 @@ public class SquadDeserialization
         return new ClientSquad(
             compound.getUuid("squadId"),
             compound.getUuid("owner"),
-            compound.getString("capeBase"),
+            new Identifier(compound.getString("capeBase")),
             ItemStack.fromTag(compound.getCompound("capeItem")),
             compound.getString("name")
         );

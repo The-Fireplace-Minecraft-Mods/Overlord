@@ -1,2 +1,11 @@
-Fix lag/errors from clients connecting to a server
-Add Russian translation (CoringPlay on GitHub)
+Add advancements
+Add skeleton recipes to REI
+Skeleton health is now shown in the skeleton GUI
+Skeleton health is now data driven - pack makers can add or change recipes to provide more or less health than the default.
+- Each component (skin, muscles, player colors) can add on to health
+- Muscles now add 4 health, and skin now adds 2, by default.
+Added augments:
+- Sturdy: Reduces damage from sources other than Fire or Magic, and takes more damage from Magic.
+- Fireproof: Skeleton is immune to Fire damage but takes a little more damage from other sources.
+The description in Mod Menu can now be translated.
+Fix an issue with armor values not updating correctly when Lithium is present

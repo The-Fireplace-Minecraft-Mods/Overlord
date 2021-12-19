@@ -1,5 +1,6 @@
 package dev.the_fireplace.overlord.client.gui.squad;
 
+import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.overlord.client.gui.rendertools.BoxRenderer;
 import dev.the_fireplace.overlord.client.gui.rendertools.PatternRenderer;
 import net.fabricmc.api.EnvType;
@@ -14,12 +15,18 @@ import net.minecraft.util.math.MathHelper;
 @Environment(EnvType.CLIENT)
 public class PatternButtonWidget extends ButtonWidget
 {
-    protected final Identifier pattern;
+    protected final PatternRenderer patternRenderer;
+    protected final Identifier patternId;
     protected boolean isUsed = false;
 
-    public PatternButtonWidget(int x, int y, int width, int height, Text text, Identifier pattern, PressAction pressAction) {
-        super(x, y, width, height, text.asFormattedString(), pressAction);
-        this.pattern = pattern;
+    public PatternButtonWidget(int x, int y, int width, int height, Text text, Identifier patternId, PressAction pressAction) {
+        this(x, y, width, height, text, patternId, pressAction, EMPTY);
+    }
+
+    public PatternButtonWidget(int x, int y, int width, int height, Text text, Identifier patternId, PressAction pressAction, TooltipSupplier tooltipSupplier) {
+        super(x, y, width, height, text, pressAction, tooltipSupplier);
+        this.patternId = patternId;
+        this.patternRenderer = DIContainer.get().getInstance(PatternRenderer.class);
     }
 
     @Override
@@ -35,7 +42,7 @@ public class PatternButtonWidget extends ButtonWidget
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
         TextRenderer textRenderer = minecraftClient.textRenderer;
 
-        PatternRenderer.drawPattern(this.pattern, this.x + 2 + (this.width - 4) / 5, this.y + 2, (this.width - 4) * 3 / 5, this.height - 4, this.alpha);
+        patternRenderer.drawPattern(this.patternId, this.x + 2 + (this.width - 4) / 5, this.y + 2, (this.width - 4) * 3 / 5, this.height - 4, this.alpha);
         drawBox();
 
         this.renderBg(minecraftClient, mouseX, mouseY);
@@ -53,6 +60,6 @@ public class PatternButtonWidget extends ButtonWidget
     }
 
     public void notifyOfActivePattern(Identifier pattern) {
-        this.isUsed = this.pattern.equals(pattern);
+        this.isUsed = this.patternId.equals(pattern);
     }
 }

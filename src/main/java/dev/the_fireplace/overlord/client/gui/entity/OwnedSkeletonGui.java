@@ -12,6 +12,7 @@ import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
@@ -19,7 +20,8 @@ import static net.minecraft.client.gui.screen.ingame.InventoryScreen.drawEntity;
 
 @Environment(EnvType.CLIENT)
 public class OwnedSkeletonGui extends ContainerScreen<OwnedSkeletonContainer> {
-    public static final Identifier BACKGROUND_TEXTURE = new Identifier(Overlord.MODID, "textures/gui/skeleton_inventory.png");
+    private static final Identifier BACKGROUND_TEXTURE = new Identifier(Overlord.MODID, "textures/gui/skeleton_inventory.png");
+    private static final Identifier ICONS_TEXTURE = new Identifier("minecraft", "textures/gui/icons.png");
     private int mouseX;
     private int mouseY;
     private final OwnedSkeletonEntity entity;
@@ -55,10 +57,21 @@ public class OwnedSkeletonGui extends ContainerScreen<OwnedSkeletonContainer> {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float delta) {
-        this.renderBackground();
-        super.render(mouseX, mouseY, delta);
-        this.drawMouseoverTooltip(mouseX, mouseY);
+    protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, ICONS_TEXTURE);
+        this.drawTexture(matrices, this.backgroundWidth / 2 - 10, 4, 16, 0, 9, 9);
+        this.drawTexture(matrices, this.backgroundWidth / 2 - 10, 4, 52, 0, 9, 9);
+        String currentHealthMessage = (int) Math.ceil(entity.getHealth()) + "/" + (int) Math.ceil(entity.getMaxHealth());
+        this.textRenderer.draw(matrices, Text.of(currentHealthMessage), this.backgroundWidth / 2f, 5, 0xFF0000);
+    }
+
+    @Override
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
+        this.renderBackground(matrixStack);
+        super.render(matrixStack, mouseX, mouseY, delta);
+        this.drawMouseoverTooltip(matrixStack, mouseX, mouseY);
         this.mouseX = mouseX;
         this.mouseY = mouseY;
     }

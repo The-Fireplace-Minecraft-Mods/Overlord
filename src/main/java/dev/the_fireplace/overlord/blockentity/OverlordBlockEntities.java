@@ -22,6 +22,9 @@ public final class OverlordBlockEntities
     public static BlockEntityType<TombstoneBlockEntity> TOMBSTONE_BLOCK_ENTITY;
     public static final Identifier TOMBSTONE_BLOCK_ENTITY_ID = new Identifier(Overlord.MODID, "tombstone");
 
+    public static BlockEntityType<ArmySkullBlockEntity> ARMY_SKULL_BLOCK_ENTITY;
+    public static final Identifier ARMY_SKULL_BLOCK_ENTITY_ID = new Identifier(Overlord.MODID, "army_skull");
+
     public static void register() {
         CASKET_BLOCK_ENTITY = Registry.register(
             Registry.BLOCK_ENTITY_TYPE,
@@ -66,5 +69,17 @@ public final class OverlordBlockEntities
                 OverlordBlocks.ANDESITE_TOMBSTONE
             ).build(null)
         );
+        ARMY_SKULL_BLOCK_ENTITY = Registry.register(
+            Registry.BLOCK_ENTITY_TYPE,
+            ARMY_SKULL_BLOCK_ENTITY_ID,
+            FabricBlockEntityTypeBuilder.create(
+                ArmySkullBlockEntity::new,
+                OverlordBlocks.FLESH_MUSCLE_SKELETON_SKULL,
+                OverlordBlocks.FLESH_MUSCLE_SKELETON_WALL_SKULL,
+                OverlordBlocks.FLESH_SKELETON_SKULL,
+                OverlordBlocks.FLESH_SKELETON_WALL_SKULL,
+                OverlordBlocks.MUSCLE_SKELETON_SKULL,
+                OverlordBlocks.MUSCLE_SKELETON_WALL_SKULL
+            ).build(null));
     }
 }

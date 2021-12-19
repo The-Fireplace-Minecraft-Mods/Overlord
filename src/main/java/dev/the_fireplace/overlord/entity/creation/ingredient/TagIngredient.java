@@ -16,4 +16,8 @@ public class TagIngredient extends AbstractIngredient
     public boolean matches(ItemStack stack) {
         return tag.contains(stack.getItem());
     }
+
+    public TagKey<Item> getTag() {
+        return tag;
+    }
 }

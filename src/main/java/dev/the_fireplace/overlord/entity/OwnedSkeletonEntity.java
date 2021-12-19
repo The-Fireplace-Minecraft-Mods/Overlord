@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.Overlord;
+import dev.the_fireplace.overlord.advancement.OverlordCriterions;
 import dev.the_fireplace.overlord.augment.Augments;
 import dev.the_fireplace.overlord.domain.config.ConfigValues;
 import dev.the_fireplace.overlord.domain.entity.AnimatedMilkDrinker;
@@ -74,9 +75,13 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     private static final UUID MUSCLE_ATTACK_BONUS_ID = MathHelper.randomUuid(new Random("Muscle Attack Bonus".hashCode()));
     private static final UUID MUSCLE_TOUGHNESS_BONUS_ID = MathHelper.randomUuid(new Random("Muscle Toughness Bonus".hashCode()));
     private static final UUID MUSCLE_SPEED_BONUS_ID = MathHelper.randomUuid(new Random("Muscle Speed Bonus".hashCode()));
+
+    private static final UUID MAX_HEALTH_MODIFIER_ID = MathHelper.randomUuid(new Random("Max Health Modifier".hashCode()));
     private static final EntityAttributeModifier MUSCLE_ATTACK_BONUS = new EntityAttributeModifier(MUSCLE_ATTACK_BONUS_ID, "Muscle Attack Bonus", 2.0D, EntityAttributeModifier.Operation.ADDITION);
     private static final EntityAttributeModifier MUSCLE_TOUGHNESS_BONUS = new EntityAttributeModifier(MUSCLE_TOUGHNESS_BONUS_ID, "Muscle Toughness Bonus", 0.25D, EntityAttributeModifier.Operation.ADDITION);
     private static final EntityAttributeModifier MUSCLE_SPEED_BONUS = new EntityAttributeModifier(MUSCLE_SPEED_BONUS_ID, "Muscle Speed Bonus", 0.05D, EntityAttributeModifier.Operation.ADDITION);
+
+    private static final TrackedData<Float> MAX_HEALTH = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
     private int milkBucketsDrank = 0;
 
@@ -90,6 +95,9 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     private final AIEquipmentHelper equipmentHelper;
     private final HeadBlockAugmentRegistry headBlockAugmentRegistry;
     private final ConfigValues configValues;
+
+    @Nullable
+    private SkeletonGrowthPhase lastGrantedAdvancementGrowthPhase = null;
 
     /**
      * @deprecated Only public because Minecraft requires it to be.
@@ -126,6 +134,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         this.dataTracker.startTracking(HAS_MUSCLES, false);
         this.dataTracker.startTracking(SKINSUIT, Optional.empty());
         this.dataTracker.startTracking(AUGMENT_BLOCK, ItemStack.EMPTY);
+        this.dataTracker.startTracking(MAX_HEALTH, 20f);
     }
 
     @Override
@@ -147,6 +156,23 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         this.getInventory().tickItems();
         tickDaylight();
         tickMilkDrinkSound();
+        updateGrowthPhaseAdvancement();
+    }
+
+    private void updateGrowthPhaseAdvancement() {
+        boolean hasGrownSinceLastAdvancementGranted = this.lastGrantedAdvancementGrowthPhase == null
+            || !this.lastGrantedAdvancementGrowthPhase.isAtLeast(this.getGrowthPhase());
+        if (hasGrownSinceLastAdvancementGranted && this.getOwner() instanceof ServerPlayerEntity player) {
+            OverlordCriterions.SKELETON_ACHIEVED_GROWTH_PHASE.trigger(
+                player,
+                this.getGrowthPhase(),
+                this.hasSkin(),
+                this.hasMuscles(),
+                this.hasSkinsuit(),
+                this.getAugment()
+            );
+            this.lastGrantedAdvancementGrowthPhase = this.getGrowthPhase();
+        }
     }
 
     private void tickMilkDrinkSound() {
@@ -361,6 +387,26 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         this.updateAISettings(tag.getCompound("aiSettings"));
         this.milkBucketsDrank = tag.getInt("milkBucketsDrank");
         this.setAugmentBlock(ItemStack.fromTag(tag.getCompound("augment")));
+        if (tag.contains("MaxHealth")) {
+            this.setMaxHealth(tag.getFloat("MaxHealth"));
+        } else {
+            this.setMaxHealth(calculateDefaultMaxHealth());
+        }
+
+        if (tag.contains("lastGrantedAdvancementGrowthPhase")) {
+            this.lastGrantedAdvancementGrowthPhase = SkeletonGrowthPhase.values()[tag.getInt("lastGrantedAdvancementGrowthPhase")];
+        }
+    }
+
+    private float calculateDefaultMaxHealth() {
+        int defaultMaxHealth = 20;
+        if (hasMuscles()) {
+            defaultMaxHealth += 4;
+        }
+        if (hasSkin()) {
+            defaultMaxHealth += 2;
+        }
+        return defaultMaxHealth;
     }
 
     @Override
@@ -377,6 +423,10 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         tag.putInt("GrowthPhase", dataTracker.get(GROWTH_PHASE));
         tag.putInt("milkBucketsDrank", milkBucketsDrank);
         tag.put("augment", dataTracker.get(AUGMENT_BLOCK).toTag(new CompoundTag()));
+        if (lastGrantedAdvancementGrowthPhase != null) {
+            tag.putInt("lastGrantedAdvancementGrowthPhase", lastGrantedAdvancementGrowthPhase.ordinal());
+        }
+        tag.putFloat("MaxHealth", dataTracker.get(MAX_HEALTH));
     }
 
     @Override
@@ -420,6 +470,9 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     private float applyAugmentDamageModifiers(DamageSource source, float amount) {
+        if (source.isUnblockable()) {
+            return amount;
+        }
         if (hasAugment(Augments.FRAGILE)) {
             if (source.getMagic()) {
                 amount /= 4.0F;
@@ -435,6 +488,18 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         } else if (hasAugment(Augments.SLOW_BURN)) {
             if (source.isFire()) {
                 amount *= 0.05F;
+            }
+        } else if (hasAugment(Augments.STURDY)) {
+            if (!source.isFire() && !source.isMagic()) {
+                amount *= 0.75F;
+            } else if (source.isMagic()) {
+                amount *= 1.5F;
+            }
+        } else if (hasAugment(Augments.FIREPROOF)) {
+            if (source.isFire()) {
+                amount = 0;
+            } else {
+                amount *= 1.05F;
             }
         }
         return amount;
@@ -712,6 +777,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         return dataTracker.get(HAS_MUSCLES);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void setHasMuscles(boolean hasMuscles) {
         this.dataTracker.set(HAS_MUSCLES, hasMuscles);
 
@@ -723,6 +789,13 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
             this.getAttributeInstance(EntityAttributes.ARMOR_TOUGHNESS).addModifier(MUSCLE_TOUGHNESS_BONUS);
             this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).addModifier(MUSCLE_SPEED_BONUS);
         }
+    }
+
+    public void setMaxHealth(float maxHealth) {
+        this.dataTracker.set(MAX_HEALTH, maxHealth);
+
+        //noinspection ConstantConditions
+        this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(maxHealth);
     }
 
     public OwnedSkeletonContainer getContainer(PlayerInventory playerInv, int syncId) {

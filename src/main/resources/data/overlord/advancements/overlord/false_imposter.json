@@ -1,0 +1,38 @@
+{
+    "parent": "overlord:overlord/root",
+    "display": {
+        "icon": {
+            "item": "minecraft:skeleton_skull"
+        },
+        "title": {
+            "translate": "advancements.overlord.false_imposter.title"
+        },
+        "description": {
+            "translate": "advancements.overlord.false_imposter.description"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "skeleton_skull": {
+            "trigger": "overlord:skeleton_inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items": [
+                            "minecraft:skeleton_skull"
+                        ],
+                        "equipmentSlot": "head"
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "skeleton_skull"
+        ]
+    ]
+}
