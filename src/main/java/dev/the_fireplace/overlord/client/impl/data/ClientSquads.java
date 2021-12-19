@@ -7,6 +7,7 @@ import dev.the_fireplace.overlord.domain.data.objects.Squad;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Singleton;
@@ -32,7 +33,7 @@ public final class ClientSquads implements Squads
     }
 
     @Override
-    public Squad createNewSquad(UUID owner, String pattern, ItemStack stack, String name) {
+    public Squad createNewSquad(UUID owner, Identifier patternId, ItemStack stack, String name) {
         throw new UnsupportedOperationException("Do not call this from the client!");
     }
 

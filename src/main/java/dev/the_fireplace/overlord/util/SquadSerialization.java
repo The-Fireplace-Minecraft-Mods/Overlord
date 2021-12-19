@@ -24,7 +24,7 @@ public class SquadSerialization
         compound.putUuid("owner", squad.getOwner());
         compound.putUuid("squadId", squad.getSquadId());
         compound.putString("name", squad.getName());
-        compound.putString("capeBase", squad.getPattern());
+        compound.putString("capeBase", squad.getPatternId().toString());
         compound.put("capeItem", squad.getItem().writeNbt(new NbtCompound()));
 
         return compound;

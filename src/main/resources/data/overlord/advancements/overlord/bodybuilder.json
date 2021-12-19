@@ -1,0 +1,32 @@
+{
+    "parent": "overlord:overlord/root",
+    "display": {
+        "icon": {
+            "item": "minecraft:beef"
+        },
+        "title": {
+            "translate": "advancements.overlord.bodybuilder.title"
+        },
+        "description": {
+            "translate": "advancements.overlord.bodybuilder.description"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "has_muscle_skeleton": {
+            "trigger": "overlord:skeleton_grown",
+            "conditions": {
+                "phase": "BABY",
+                "hasMuscles": true
+            }
+        }
+    },
+    "requirements": [
+        [
+            "has_muscle_skeleton"
+        ]
+    ]
+}

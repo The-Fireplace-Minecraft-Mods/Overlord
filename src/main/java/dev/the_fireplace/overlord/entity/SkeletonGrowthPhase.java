@@ -6,5 +6,9 @@ public enum SkeletonGrowthPhase
     QUARTER,
     HALF,
     THREE_QUARTERS,
-    ADULT
+    ADULT;
+
+    public boolean isAtLeast(SkeletonGrowthPhase phase) {
+        return this.ordinal() >= phase.ordinal();
+    }
 }

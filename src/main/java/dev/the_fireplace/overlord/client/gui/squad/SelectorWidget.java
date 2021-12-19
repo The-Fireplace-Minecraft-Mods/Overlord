@@ -1,6 +1,7 @@
 package dev.the_fireplace.overlord.client.gui.squad;
 
 import com.google.common.collect.Lists;
+import com.google.inject.Injector;
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.lib.api.chat.injectables.TranslatorFactory;
 import dev.the_fireplace.lib.api.chat.interfaces.Translator;
@@ -14,6 +15,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,14 +36,15 @@ public class SelectorWidget extends AlwaysSelectedEntryListWidget<SelectorEntry>
         this.onSquadUpdated = onSquadUpdated;
         this.setRenderBackground(false);
 
-        TranslatorFactory translatorFactory = DIContainer.get().getInstance(TranslatorFactory.class);
+        Injector injector = DIContainer.get();
+        TranslatorFactory translatorFactory = injector.getInstance(TranslatorFactory.class);
         Translator translator = translatorFactory.getTranslator(Overlord.MODID);
 
-        this.emptyUUID = DIContainer.get().getInstance(EmptyUUID.class);
+        this.emptyUUID = injector.getInstance(EmptyUUID.class);
         this.noneSquad = new ClientSquad(
             emptyUUID.get(),
             emptyUUID.get(),
-            "",
+            new Identifier(""),
             ItemStack.EMPTY,
             translator.getTranslatedString("gui.overlord.squad_manager.none")
         );

@@ -31,6 +31,10 @@ public class ItemIngredient extends AbstractIngredient
         return true;
     }
 
+    public Item getItem() {
+        return item;
+    }
+
     public void setNbtCompound(@Nullable NbtCompound nbtCompound) {
         this.nbtCompound = nbtCompound;
     }

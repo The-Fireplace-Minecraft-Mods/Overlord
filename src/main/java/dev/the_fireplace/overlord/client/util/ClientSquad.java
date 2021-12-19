@@ -4,6 +4,7 @@ import dev.the_fireplace.overlord.domain.data.objects.Squad;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
 
 import java.util.UUID;
 
@@ -12,14 +13,14 @@ public class ClientSquad implements Squad
 {
     private final UUID id;
     private final UUID owner;
-    private final String capeBase;
+    private final Identifier patternId;
     private final ItemStack capeItem;
     private final String name;
 
-    public ClientSquad(UUID id, UUID owner, String capeBase, ItemStack capeItem, String name) {
+    public ClientSquad(UUID id, UUID owner, Identifier patternId, ItemStack capeItem, String name) {
         this.id = id;
         this.owner = owner;
-        this.capeBase = capeBase;
+        this.patternId = patternId;
         this.capeItem = capeItem;
         this.name = name;
     }
@@ -35,8 +36,8 @@ public class ClientSquad implements Squad
     }
 
     @Override
-    public String getPattern() {
-        return capeBase;
+    public Identifier getPatternId() {
+        return patternId;
     }
 
     @Override
@@ -50,7 +51,7 @@ public class ClientSquad implements Squad
     }
 
     @Override
-    public void updatePattern(String capeBase, ItemStack capeItem) {
+    public void updatePattern(Identifier patternId, ItemStack capeItem) {
         throw new UnsupportedOperationException("Cannot save squad data on the client!");
     }
 

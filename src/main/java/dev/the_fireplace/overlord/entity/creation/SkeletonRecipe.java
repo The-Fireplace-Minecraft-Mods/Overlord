@@ -64,6 +64,13 @@ public class SkeletonRecipe
         return playerColorComponent.getByproducts();
     }
 
+    public int getTotalMaxHealth(boolean hasSkin, boolean hasMuscles, boolean hasPlayerColor) {
+        return essentialsComponent.getMaxHealth()
+            + (hasSkin ? skinComponent.getMaxHealth() : 0)
+            + (hasMuscles ? musclesComponent.getMaxHealth() : 0)
+            + (hasPlayerColor ? playerColorComponent.getMaxHealth() : 0);
+    }
+
     private boolean hasIngredients(Inventory inventory, Collection<SkeletonIngredient> ingredients) {
         Map<SkeletonIngredient, Integer> ingredientCounts = Maps.newHashMap();
         for (int slot = 0; slot < inventory.size(); slot++) {
@@ -107,5 +114,33 @@ public class SkeletonRecipe
                 }
             }
         }
+    }
+
+    public SkeletonComponent getEssentialsComponent() {
+        return essentialsComponent.copy();
+    }
+
+    public SkeletonComponent getMusclesComponent() {
+        return musclesComponent.copy();
+    }
+
+    public SkeletonComponent getSkinComponent() {
+        return skinComponent.copy();
+    }
+
+    public SkeletonComponent getPlayerColorComponent() {
+        return playerColorComponent.copy();
+    }
+
+    public boolean hasMuscles() {
+        return !musclesComponent.getIngredients().isEmpty();
+    }
+
+    public boolean hasSkin() {
+        return !skinComponent.getIngredients().isEmpty();
+    }
+
+    public boolean hasPlayerColor() {
+        return !playerColorComponent.getIngredients().isEmpty();
     }
 }
