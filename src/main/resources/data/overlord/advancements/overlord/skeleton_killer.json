@@ -1,0 +1,40 @@
+{
+    "parent": "overlord:overlord/root",
+    "display": {
+        "icon": {
+            "item": "minecraft:iron_sword",
+            "nbt": "{Damage:0}"
+        },
+        "title": {
+            "translate": "advancements.overlord.skeleton_killer.title"
+        },
+        "description": {
+            "translate": "advancements.overlord.skeleton_killer.description"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "killed_army_skeleton": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "predicate": {
+                            "type": "overlord:owned_skeleton"
+                        },
+                        "entity": "this"
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "killed_army_skeleton"
+        ]
+    ]
+}

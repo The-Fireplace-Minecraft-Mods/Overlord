@@ -8,43 +8,47 @@
         "count": 64
       },
       {
-        "type": "item",
-        "id": "minecraft:milk_bucket",
-        "count": 2
+          "type": "item",
+          "id": "minecraft:milk_bucket",
+          "count": 2
       }
     ],
-    "byproducts": [
-      {
-        "id": "minecraft:bucket",
-        "count": 2
-      }
-    ]
+      "byproducts": [
+          {
+              "id": "minecraft:bucket",
+              "count": 2
+          }
+      ],
+      "health": 20
   },
   "muscles": {
-    "ingredients": [
-      {
-        "type": "tag",
-        "id": "overlord:muscle_meat",
-        "count": 32
-      }
-    ]
+      "ingredients": [
+          {
+              "type": "tag",
+              "id": "overlord:muscle_meat",
+              "count": 32
+          }
+      ],
+      "health": 4
   },
   "skin": {
-    "ingredients": [
-      {
-        "type": "tag",
-        "id": "overlord:flesh",
-        "count": 32
-      }
-    ]
+      "ingredients": [
+          {
+              "type": "tag",
+              "id": "overlord:flesh",
+              "count": 32
+          }
+      ],
+      "health": 2
   },
   "player_colors": {
-    "ingredients": [
-      {
-        "type": "tag",
-        "id": "c:dyes",
-        "count": 8
-      }
-    ]
+      "ingredients": [
+          {
+              "type": "tag",
+              "id": "c:dyes",
+              "count": 8
+          }
+      ],
+      "health": 0
   }
 }

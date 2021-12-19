@@ -1,6 +1,8 @@
 package dev.the_fireplace.overlord.client.renderer.feature;
 
 import com.mojang.authlib.GameProfile;
+import dev.the_fireplace.overlord.block.AbstractArmySkullBlock;
+import dev.the_fireplace.overlord.client.renderer.blockentity.ArmySkullBlockEntityRenderer;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,10 +37,12 @@ import java.util.Map;
 public class AugmentHeadFeatureRenderer<T extends OwnedSkeletonEntity, M extends EntityModel<T> & ModelWithHead> extends FeatureRenderer<T, M>
 {
     private final Map<SkullBlock.SkullType, SkullBlockEntityModel> headModels;
+    private final Map<AbstractArmySkullBlock.SkullType, SkullBlockEntityModel> armyHeadModels;
 
     public AugmentHeadFeatureRenderer(FeatureRendererContext<T, M> context, EntityModelLoader loader) {
         super(context);
         this.headModels = SkullBlockEntityRenderer.getModels(loader);
+        this.armyHeadModels = ArmySkullBlockEntityRenderer.getModels(loader);
     }
 
     public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light, T livingEntity, float f, float g, float h, float j, float k, float l) {
@@ -67,7 +71,15 @@ public class AugmentHeadFeatureRenderer<T extends OwnedSkeletonEntity, M extends
                 SkullBlock.SkullType skullType = ((AbstractSkullBlock) ((BlockItem) item).getBlock()).getSkullType();
                 SkullBlockEntityModel skullBlockEntityModel = this.headModels.get(skullType);
                 RenderLayer renderLayer = SkullBlockEntityRenderer.getRenderLayer(skullType, gameProfile);
-                renderSkull(overlay, 180.0F, f, matrixStack, vertexConsumerProvider, light, skullBlockEntityModel, renderLayer);
+                renderVanillaSkull(overlay, 180.0F, f, matrixStack, vertexConsumerProvider, light, skullBlockEntityModel, renderLayer);
+            } else if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof AbstractArmySkullBlock) {
+                matrixStack.scale(1.1875F, -1.1875F, -1.1875F);
+
+                matrixStack.translate(-0.5D, 0.0D, -0.5D);
+                AbstractArmySkullBlock.SkullType skullType = ((AbstractArmySkullBlock) ((BlockItem) item).getBlock()).getSkullType();
+                SkullBlockEntityModel skullBlockEntityModel = this.armyHeadModels.get(skullType);
+                RenderLayer renderLayer = ArmySkullBlockEntityRenderer.getRenderLayer(skullType);
+                ArmySkullBlockEntityRenderer.renderSkull(null, overlay, 180.0F, f, matrixStack, vertexConsumerProvider, light, skullBlockEntityModel, renderLayer);
             } else if (!(item instanceof ArmorItem) || ((ArmorItem) item).getSlotType() != EquipmentSlot.HEAD) {
                 matrixStack.translate(0.0D, -0.25D, 0.0D);
                 matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F));
@@ -95,7 +107,7 @@ public class AugmentHeadFeatureRenderer<T extends OwnedSkeletonEntity, M extends
      * Modified version to take a custom overlay
      * {@link SkullBlockEntityRenderer#renderSkull}
      */
-    public static void renderSkull(int overlay, float yaw, float animationProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, SkullBlockEntityModel model, RenderLayer renderLayer) {
+    public static void renderVanillaSkull(int overlay, float yaw, float animationProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, SkullBlockEntityModel model, RenderLayer renderLayer) {
         matrices.push();
         matrices.translate(0.5D, 0.0D, 0.5D);
 

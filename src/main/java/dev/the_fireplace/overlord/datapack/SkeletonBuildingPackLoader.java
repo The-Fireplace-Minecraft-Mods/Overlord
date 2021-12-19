@@ -6,9 +6,9 @@ import com.google.gson.JsonObject;
 import dev.the_fireplace.lib.api.io.injectables.JsonFileReader;
 import dev.the_fireplace.overlord.Overlord;
 import dev.the_fireplace.overlord.domain.entity.creation.SkeletonIngredient;
-import dev.the_fireplace.overlord.entity.creation.SkeletonBuilderImpl;
 import dev.the_fireplace.overlord.entity.creation.SkeletonComponent;
 import dev.the_fireplace.overlord.entity.creation.SkeletonRecipe;
+import dev.the_fireplace.overlord.entity.creation.SkeletonRecipeRegistryImpl;
 import dev.the_fireplace.overlord.entity.creation.ingredient.JsonIngredient;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.item.Item;
@@ -24,12 +24,12 @@ import java.util.*;
 
 public final class SkeletonBuildingPackLoader implements SimpleSynchronousResourceReloadListener
 {
-    private final SkeletonBuilderImpl skeletonBuilder;
+    private final SkeletonRecipeRegistryImpl skeletonRecipeRegistry;
     private final JsonFileReader jsonFileReader;
 
     @Inject
-    public SkeletonBuildingPackLoader(SkeletonBuilderImpl skeletonBuilder, JsonFileReader jsonFileReader) {
-        this.skeletonBuilder = skeletonBuilder;
+    public SkeletonBuildingPackLoader(SkeletonRecipeRegistryImpl skeletonRecipeRegistry, JsonFileReader jsonFileReader) {
+        this.skeletonRecipeRegistry = skeletonRecipeRegistry;
         this.jsonFileReader = jsonFileReader;
     }
 
@@ -89,17 +89,23 @@ public final class SkeletonBuildingPackLoader implements SimpleSynchronousResour
                 Overlord.getLogger().error("Data pack skeleton recipe is missing the essential section, skipping.");
                 continue;
             }
-            SkeletonComponent essentialComponent = getComponent(recipeJson.getAsJsonObject("essential"));
-            SkeletonComponent musclesComponent = recipeJson.has("muscles") ? getComponent(recipeJson.getAsJsonObject("muscles")) : new SkeletonComponent();
-            SkeletonComponent skinComponent = recipeJson.has("skin") ? getComponent(recipeJson.getAsJsonObject("skin")) : new SkeletonComponent();
-            SkeletonComponent playerColorsComponent = recipeJson.has("player_colors") ? getComponent(recipeJson.getAsJsonObject("player_colors")) : new SkeletonComponent();
+            SkeletonComponent essentialComponent = getComponent(recipeJson.getAsJsonObject("essential"), 20);
+            SkeletonComponent musclesComponent = recipeJson.has("muscles")
+                ? getComponent(recipeJson.getAsJsonObject("muscles"), 4)
+                : new SkeletonComponent();
+            SkeletonComponent skinComponent = recipeJson.has("skin")
+                ? getComponent(recipeJson.getAsJsonObject("skin"), 2)
+                : new SkeletonComponent();
+            SkeletonComponent playerColorsComponent = recipeJson.has("player_colors")
+                ? getComponent(recipeJson.getAsJsonObject("player_colors"), 0)
+                : new SkeletonComponent();
             SkeletonRecipe recipe = new SkeletonRecipe(essentialComponent, musclesComponent, skinComponent, playerColorsComponent);
             recipes.add(recipe);
         }
-        skeletonBuilder.setSkeletonRecipes(recipes);
+        skeletonRecipeRegistry.setSkeletonRecipes(recipes);
     }
 
-    private SkeletonComponent getComponent(JsonObject jsonObject) {
+    private SkeletonComponent getComponent(JsonObject jsonObject, int defaultHealth) {
         SkeletonComponent component = new SkeletonComponent();
         JsonArray ingredientsJson = jsonObject.has("ingredients") ? jsonObject.getAsJsonArray("ingredients") : new JsonArray();
         Collection<SkeletonIngredient> ingredients = new HashSet<>();
@@ -109,6 +115,8 @@ public final class SkeletonBuildingPackLoader implements SimpleSynchronousResour
         component.setIngredients(ingredients);
         JsonArray byproductsJson = jsonObject.has("byproducts") ? jsonObject.getAsJsonArray("byproducts") : new JsonArray();
         component.setByproducts(readByproducts(byproductsJson));
+        int health = jsonObject.has("health") ? jsonObject.get("health").getAsInt() : defaultHealth;
+        component.setMaxHealth(health);
         return component;
     }
 

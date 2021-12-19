@@ -1,0 +1,28 @@
+{
+    "parent": "overlord:overlord/true_imposter",
+    "display": {
+        "icon": {
+            "item": "minecraft:skeleton_skull"
+        },
+        "title": {
+            "translate": "advancements.overlord.suspicious.title"
+        },
+        "description": {
+            "translate": "advancements.overlord.suspicious.description"
+        },
+        "frame": "challenge",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": true
+    },
+    "criteria": {
+        "custom": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "requirements": [
+        [
+            "custom"
+        ]
+    ]
+}

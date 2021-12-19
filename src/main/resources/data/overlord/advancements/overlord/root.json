@@ -1,0 +1,29 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:skeleton_skull"
+        },
+        "title": {
+            "translate": "advancements.overlord.root.title"
+        },
+        "description": {
+            "translate": "advancements.overlord.root.description"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": false,
+        "hidden": false,
+        "background": "minecraft:textures/block/bone_block_side.png"
+    },
+    "criteria": {
+        "obtained_army_member": {
+            "trigger": "overlord:obtained_army_member",
+            "conditions": {}
+        }
+    },
+    "requirements": [
+        [
+            "obtained_army_member"
+        ]
+    ]
+}

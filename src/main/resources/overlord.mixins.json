@@ -1,15 +1,19 @@
 {
   "required": true,
-  "package": "dev.the_fireplace.overlord.mixin",
-  "compatibilityLevel": "JAVA_17",
-  "mixins": [
-    "AbstractSkeletonEntityMixin",
-    "GoalSelectorAccessor",
-    "MeleeAttackGoalAccessor",
-    "PlayerManagerMixin",
-    "WolfEntityMixin"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+    "package": "dev.the_fireplace.overlord.mixin",
+    "compatibilityLevel": "JAVA_17",
+    "mixins": [
+        "AbstractSkeletonEntityMixin",
+        "CriteriaAccessor",
+        "GoalSelectorAccessor",
+        "MeleeAttackGoalAccessor",
+        "PlayerManagerMixin",
+        "WolfEntityMixin"
+    ],
+    "client": [
+        "client.ClientAdvancementManagerAccessor"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
 }

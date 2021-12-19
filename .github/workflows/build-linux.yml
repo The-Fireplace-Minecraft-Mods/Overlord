@@ -1,0 +1,53 @@
+name: build against linux and create snapshot
+on: [ pull_request, push ]
+
+jobs:
+    build:
+        strategy:
+            matrix:
+                java: [
+                    17,
+                ]
+                os: [ ubuntu-20.04 ]
+        runs-on: ${{ matrix.os }}
+        steps:
+            -   name: checkout repository
+                uses: actions/checkout@v2
+
+            -   name: validate gradle wrapper
+                uses: gradle/wrapper-validation-action@v1
+
+            -   name: setup jdk ${{ matrix.java }}
+                uses: actions/setup-java@v1
+                with:
+                    java-version: ${{ matrix.java }}
+
+            -   name: Cache Gradle packages
+                uses: actions/cache@v2
+                with:
+                    path: ~/.gradle/caches
+                    key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+                    restore-keys: ${{ runner.os }}-gradle
+
+            -   name: make gradle wrapper executable
+                run: chmod +x ./gradlew
+
+            -   name: build
+                run: ./gradlew build -PSNAPSHOT=true
+
+            -   name: capture build artifacts
+                uses: actions/upload-artifact@v2
+                with:
+                    name: Artifacts
+                    path: build/libs/
+
+            -   name: Install gpg secret key
+                id: install-secret-key
+                run: |
+                    echo "${{secrets.NEXUS_GPG_SECRET_KEY_RING_FILE}}" > ~/.gradle/secring.gpg.b64
+                    base64 -d ~/.gradle/secring.gpg.b64 > ~/.gradle/secring.gpg
+            -   name: maven snapshot publish
+                run: ./gradlew build publish -PSNAPSHOT=true -Psigning.keyId=${{secrets.NEXUS_GPG_SIGNING_KEY_ID}} -Psigning.password=${{ secrets.NEXUS_GPG_SECRET_KEY_PASSWORD }} -Psigning.secretKeyRingFile=$(echo ~/.gradle/secring.gpg)
+                env:
+                    NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+                    NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
