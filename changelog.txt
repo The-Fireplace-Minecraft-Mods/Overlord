@@ -1,1 +1,1 @@
-Fix skeletons only spawning on day 0 for some setups
+Fix crash when crossbow AI stops
