@@ -55,7 +55,7 @@ public abstract class AbstractArmyCrossbowAttackGoal<T extends ArmyEntity & Rang
 
     @Override
     public void stop() {
-        this.stop();
+        super.stop();
         this.armyEntity.setAttacking(false);
         this.armyEntity.setTarget(null);
         this.seeingTargetTicker = 0;
