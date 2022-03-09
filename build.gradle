@@ -27,8 +27,6 @@ repositories {
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     modCompileOnly "dev.the-fireplace:Fireplace-Lib:${project.fireplacelib_version}:api"
     modRuntimeOnly "dev.the-fireplace:Fireplace-Lib:${project.fireplacelib_version}"
@@ -74,7 +72,6 @@ if (hasProperty('curseForgeApiKey')) {
             changelog = file('changelog.txt')
             releaseType = project.release_type
             addGameVersion project.minecraft_version
-            addGameVersion '1.18'
             addGameVersion 'Java 17'
             addGameVersion 'Fabric'
             mainArtifact(new File(new File(buildDir, 'libs'), "$archivesBaseName-${version}.jar")) {
@@ -104,7 +101,6 @@ if (hasProperty('modrinthApiKey')) {
         changelog = file('changelog.txt').getText()
         releaseType = project.release_type
         addGameVersion(project.minecraft_version as String)
-        addGameVersion('1.18')
         addLoader('fabric')
     }
 }

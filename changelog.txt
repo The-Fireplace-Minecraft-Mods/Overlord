@@ -1,1 +1,1 @@
-Fix crash when crossbow AI stops
+Port to 1.18.2

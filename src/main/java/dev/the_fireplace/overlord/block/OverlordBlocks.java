@@ -2,7 +2,6 @@ package dev.the_fireplace.overlord.block;
 
 import dev.the_fireplace.overlord.block.internal.CasketBlock;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
@@ -46,8 +45,7 @@ public final class OverlordBlocks
     public static final Block BLOOD_SOAKED_SOIL = new BloodSoakedSoil(FabricBlockSettings.of(Material.SOIL)
         .strength(0.5F, 0.1F)
         .sounds(BlockSoundGroup.WET_GRASS)
-        .mapColor(MapColor.RED)
-        .breakByTool(FabricToolTags.SHOVELS));
+        .mapColor(MapColor.RED));
 
     private static final List<Block> registeredBlocks = new ArrayList<>();
 

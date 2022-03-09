@@ -8,6 +8,7 @@ import net.minecraft.data.server.AbstractTagProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -17,7 +18,7 @@ import java.util.function.Function;
 
 public class ItemTagsProvider extends AbstractTagProvider<Item>
 {
-    private final Function<Tag.Identified<Block>, Tag.Builder> blockTagBuilder;
+    private final Function<TagKey<Block>, Tag.Builder> blockTagBuilder;
 
     public ItemTagsProvider(DataGenerator root, BlockTagsProvider blockTagsProvider) {
         super(root, Registry.ITEM);
@@ -62,7 +63,7 @@ public class ItemTagsProvider extends AbstractTagProvider<Item>
         );
     }
 
-    protected void copy(Tag.Identified<Block> blockTag, Tag.Identified<Item> itemTag) {
+    protected void copy(TagKey<Block> blockTag, TagKey<Item> itemTag) {
         Tag.Builder itemTagBuilder = this.getTagBuilder(itemTag);
         Tag.Builder blockTagBuilder = this.blockTagBuilder.apply(blockTag);
         Objects.requireNonNull(itemTagBuilder);

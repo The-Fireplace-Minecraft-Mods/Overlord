@@ -13,7 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Nameable;
@@ -493,10 +493,10 @@ public class SkeletonInventory implements Inventory, Nameable
         return false;
     }
 
-    public boolean contains(Tag<Item> tag) {
+    public boolean contains(TagKey<Item> tag) {
         for (DefaultedList<ItemStack> itemStacks : this.combinedInventory) {
             for (ItemStack itemStack : itemStacks) {
-                if (!itemStack.isEmpty() && tag.contains(itemStack.getItem())) {
+                if (!itemStack.isEmpty() && itemStack.isIn(tag)) {
                     return true;
                 }
             }

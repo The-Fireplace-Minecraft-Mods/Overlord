@@ -69,11 +69,11 @@ public class PositionSelectorGui extends Screen implements CustomButtonScreen<St
         this.addDrawableChild(confirmButton = new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, new TranslatableText("gui.overlord.confirm_exit"), (button) -> {
             PositionSetting newPosition = new PositionSetting(Integer.parseInt(xWidget.getText()), Integer.parseInt(yWidget.getText()), Integer.parseInt(zWidget.getText()));
             resultPromise.setSuccess(Optional.of(newPosition.toString()));
-            closeScreen();
+            close();
         }));
         this.addDrawableChild(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, new TranslatableText("gui.cancel"), (button) -> {
             resultPromise.setSuccess(Optional.empty());
-            closeScreen();
+            close();
         }));
         currentPositionButton.visible = currentPosition != null;
         setCoordinates(previousSelection.getX(), previousSelection.getY(), previousSelection.getZ());
@@ -85,8 +85,8 @@ public class PositionSelectorGui extends Screen implements CustomButtonScreen<St
         zWidget.setText(String.valueOf(z));
     }
 
-    private void closeScreen() {
-        onClose();
+    @Override
+    public void close() {
         MinecraftClient.getInstance().setScreen(parent);
     }
 

@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "overlord:stone_tombstone",
+    "overlord:diorite_tombstone",
+    "overlord:granite_tombstone",
+    "overlord:andesite_tombstone",
+    "overlord:blackstone_tombstone",
+    "overlord:deepslate_tombstone"
+  ]
+}

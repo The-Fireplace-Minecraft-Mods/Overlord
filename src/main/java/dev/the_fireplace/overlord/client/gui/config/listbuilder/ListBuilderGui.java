@@ -39,11 +39,11 @@ public class ListBuilderGui extends Screen implements CustomButtonScreen<String>
         ListSelectorWidget listSelectorWidget = createListSelector();
         this.addDrawableChild(listSelectorWidget);
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 202, this.height - 30, 200, 20, Text.of("Confirm and exit"), (button) -> {
-            closeScreen();
+            close();
         }));
         this.addDrawableChild(new ButtonWidget(this.width / 2 + 2, this.height - 30, 200, 20, Text.of("Cancel"), (button) -> {
             resultPromise.setSuccess(Optional.empty());
-            closeScreen();
+            close();
         }));
     }
 
@@ -53,16 +53,12 @@ public class ListBuilderGui extends Screen implements CustomButtonScreen<String>
         return listSelectorWidget;
     }
 
-    private void closeScreen() {
-        onClose();
-        MinecraftClient.getInstance().setScreen(parent);
-    }
-
     @Override
-    public void onClose() {
+    public void close() {
         if (!resultPromise.isDone()) {
             resultPromise.setSuccess(Optional.of(selected.toString()));
         }
+        MinecraftClient.getInstance().setScreen(parent);
     }
 
     @Override
