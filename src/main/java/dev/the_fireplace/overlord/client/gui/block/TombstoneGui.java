@@ -44,7 +44,7 @@ public class TombstoneGui extends Screen
             this.tombstone::setNameText,
             SelectionManager.makeClipboardGetter(this.client),
             SelectionManager.makeClipboardSetter(this.client),
-            (string) -> this.client.textRenderer.getWidth(string) <= 90
+            (string) -> this.client.textRenderer.getWidth(string) <= 90 || string.length() <= 16
         );
     }
 
