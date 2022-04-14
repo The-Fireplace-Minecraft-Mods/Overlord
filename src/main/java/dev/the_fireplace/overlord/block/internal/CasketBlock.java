@@ -107,21 +107,34 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         BedPart bedPart = state.get(PART);
-        BlockPos blockPos = pos.offset(getDirectionTowardsOtherPart(bedPart, state.get(FACING)));
-        BlockState blockState = world.getBlockState(blockPos);
-        if (blockState.getBlock() == this && blockState.get(PART) != bedPart) {
-            world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 35);
-            world.playLevelEvent(player, 2001, blockPos, Block.getRawIdFromState(blockState));
-            if (!world.isClient && !player.isCreative()) {
+        BlockPos otherHalfPos = pos.offset(getDirectionTowardsOtherPart(bedPart, state.get(FACING)));
+        BlockState otherHalfState = world.getBlockState(otherHalfPos);
+        boolean isCompleteCasket = isCompleteCasket(pos, bedPart, otherHalfPos, otherHalfState);
+
+        if (isCompleteCasket) {
+            world.setBlockState(otherHalfPos, Blocks.AIR.getDefaultState(), 35);
+            world.playLevelEvent(player, 2001, otherHalfPos, Block.getRawIdFromState(otherHalfState));
+            if (!world.isClient && !player.isCreative() && bedPart == BedPart.FOOT) {
                 ItemStack itemStack = player.getMainHandStack();
                 dropStacks(state, world, pos, null, player, itemStack);
-                dropStacks(blockState, world, blockPos, null, player, itemStack);
+                dropStacks(otherHalfState, world, otherHalfPos, null, player, itemStack);
             }
 
             player.incrementStat(Stats.MINED.getOrCreateStat(this));
         }
 
         super.onBreak(world, pos, state, player);
+    }
+
+    private boolean isCompleteCasket(BlockPos pos, BedPart bedPart, BlockPos otherHalfPos, BlockState otherHalf) {
+        boolean otherHalfExists = otherHalf.isOf(this);
+        if (otherHalfExists) {
+            BedPart otherHalfPart = otherHalf.get(PART);
+            BlockPos otherHalfCounterpartPos = otherHalfPos.offset(getDirectionTowardsOtherPart(otherHalfPart, otherHalf.get(FACING)));
+            return otherHalfPart != bedPart && otherHalfCounterpartPos.equals(pos);
+        }
+
+        return false;
     }
 
     @SuppressWarnings("DuplicatedCode")
