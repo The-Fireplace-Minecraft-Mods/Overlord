@@ -1,1 +1,1 @@
-Fix crash when crossbow AI stops
+Log if a custom data pack is overriding the skeleton recipe for easier debugging
