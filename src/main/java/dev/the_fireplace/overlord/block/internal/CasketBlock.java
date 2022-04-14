@@ -127,7 +127,7 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
     }
 
     private boolean isCompleteCasket(BlockPos pos, BedPart bedPart, BlockPos otherHalfPos, BlockState otherHalf) {
-        boolean otherHalfExists = otherHalf.isOf(this);
+        boolean otherHalfExists = otherHalf.getBlock() == this;
         if (otherHalfExists) {
             BedPart otherHalfPart = otherHalf.get(PART);
             BlockPos otherHalfCounterpartPos = otherHalfPos.offset(getDirectionTowardsOtherPart(otherHalfPart, otherHalf.get(FACING)));
