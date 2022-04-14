@@ -39,7 +39,11 @@ public class TombstoneGui extends Screen
         this.addButton(new ButtonWidget(this.width / 2 - 100, this.height / 4 + 120, 200, 20, I18n.translate("gui.done"), (buttonWidget) -> {
             this.finishEditing();
         }));
-        this.selectionManager = new SelectionManager(this.minecraft, this.tombstone::getNameText, this.tombstone::setNameText, 90|| string.length() <= 16
+        this.selectionManager = new SelectionManager(
+            this.minecraft,
+            this.tombstone::getNameText,
+            this.tombstone::setNameText,
+            Math.max(90, this.minecraft.textRenderer.getStringWidth("wWwWwWwWwWwWwWwW"))
         );
     }
 
