@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import java.io.InputStream;
 import java.util.*;
 
-public class SkeletonBuildingPackLoader implements SimpleSynchronousResourceReloadListener
+public final class SkeletonBuildingPackLoader implements SimpleSynchronousResourceReloadListener
 {
     private final SkeletonBuilderImpl skeletonBuilder;
     private final JsonFileReader jsonFileReader;
@@ -41,6 +41,7 @@ public class SkeletonBuildingPackLoader implements SimpleSynchronousResourceRelo
     @Override
     public void apply(ResourceManager manager) {
         Map<String, JsonObject> recipeJsons = new HashMap<>();
+        String lastStandardRecipeDomain = "";
         for (Identifier id : manager.findResources("skeleton_recipes", path -> path.endsWith(".json"))) {
             JsonObject jsonObject = null;
             try (InputStream stream = manager.getResource(id).getInputStream()) {
@@ -51,16 +52,32 @@ public class SkeletonBuildingPackLoader implements SimpleSynchronousResourceRelo
             if (jsonObject == null) {
                 continue;
             }
+            String resourceDomain = id.getNamespace();
             String resourcePath = id.getPath();
+            boolean isStandardRecipe = resourcePath.equals("skeleton_recipes/standard.json");
             if (!recipeJsons.containsKey(resourcePath)) {
                 recipeJsons.put(resourcePath, jsonObject);
+                if (isStandardRecipe) {
+                    lastStandardRecipeDomain = resourceDomain;
+                }
             } else {
                 JsonObject existing = recipeJsons.get(resourcePath);
                 int newPriority = jsonObject.has("priority") ? jsonObject.get("priority").getAsInt() : 0;
                 if (!existing.has("priority") || existing.get("priority").getAsInt() <= newPriority) {
                     recipeJsons.put(resourcePath, jsonObject);
+                    if (isStandardRecipe) {
+                        lastStandardRecipeDomain = resourceDomain;
+                    }
                 }
             }
+        }
+        boolean hasDefaultRecipe = lastStandardRecipeDomain.equals(Overlord.MODID);
+        if (lastStandardRecipeDomain.isEmpty()) {
+            Overlord.getLogger().error("No standard recipe found.");
+        } else if (!hasDefaultRecipe) {
+            Overlord.getLogger().info("The default skeleton recipe is overridden by " + lastStandardRecipeDomain);
+        } else {
+            Overlord.getLogger().info("The default skeleton recipe is loaded.");
         }
         addRecipes(recipeJsons.values());
     }
