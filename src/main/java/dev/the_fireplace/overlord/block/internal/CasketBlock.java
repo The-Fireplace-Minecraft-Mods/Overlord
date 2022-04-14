@@ -114,7 +114,7 @@ public class CasketBlock extends HorizontalFacingBlock implements BlockEntityPro
         if (isCompleteCasket) {
             world.setBlockState(otherHalfPos, Blocks.AIR.getDefaultState(), 35);
             world.playLevelEvent(player, 2001, otherHalfPos, Block.getRawIdFromState(otherHalfState));
-            if (!world.isClient && !player.isCreative() && bedPart == BedPart.FOOT) {
+            if (!world.isClient && !player.isCreative()) {
                 ItemStack itemStack = player.getMainHandStack();
                 dropStacks(state, world, pos, null, player, itemStack);
                 dropStacks(otherHalfState, world, otherHalfPos, null, player, itemStack);
