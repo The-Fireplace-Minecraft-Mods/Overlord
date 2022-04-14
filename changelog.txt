@@ -1,2 +1,3 @@
 Log if a custom data pack is overriding the skeleton recipe for easier debugging
 Fix a crash with skeletons using crossbows with certain mods loaded.
+Fix casket drop bug
