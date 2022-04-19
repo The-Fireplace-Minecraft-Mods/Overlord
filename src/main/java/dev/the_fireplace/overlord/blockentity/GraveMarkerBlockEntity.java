@@ -38,7 +38,9 @@ public class GraveMarkerBlockEntity extends AbstractTombstoneBlockEntity
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         tag = super.toTag(tag);
-        tag.putUuid("owner", owner);
+        if (owner != null) {
+            tag.putUuid("owner", owner);
+        }
         return tag;
     }
 

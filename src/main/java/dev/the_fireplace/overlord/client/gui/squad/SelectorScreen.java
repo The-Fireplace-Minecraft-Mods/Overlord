@@ -96,10 +96,14 @@ public class SelectorScreen extends Screen
         openTime = System.currentTimeMillis();
         if (minecraft != null && minecraft.world != null && renderedSkeleton == null) {
             renderedSkeleton = OwnedSkeletonEntity.create(minecraft.world, null);
+            renderedSkeleton.setUseClientSquads(true);
             if (entityId != null) {
                 Entity entity = minecraft.world.getEntityById(entityId);
-                if (entity != null) {
+                if (entity instanceof OwnedSkeletonEntity) {
+                    OwnedSkeletonEntity realOwnedSkeleton = (OwnedSkeletonEntity) entity;
+                    realOwnedSkeleton.setUseClientSquads(true);
                     renderedSkeleton.copyFrom(entity);
+                    realOwnedSkeleton.setUseClientSquads(false);
                 }
             }
             renderedSkeleton.setPos(0, 0, 0);
