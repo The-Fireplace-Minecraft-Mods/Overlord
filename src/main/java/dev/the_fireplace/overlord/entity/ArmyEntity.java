@@ -1,5 +1,8 @@
 package dev.the_fireplace.overlord.entity;
 
+import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.name.Names;
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.domain.data.Squads;
@@ -58,7 +61,8 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
     protected static final TrackedData<Optional<UUID>> SQUAD = DataTracker.registerData(OwnedSkeletonEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     protected final EntityAlliances entityAlliances;
     protected final EmptyUUID emptyUUID;
-    protected final Squads squads;
+    protected final Injector injector;
+    protected Squads squads;
     protected final AISettings aiSettings;
     protected boolean isSwappingEquipment;
     public double prevCapeX;
@@ -72,9 +76,10 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
 
     protected ArmyEntity(EntityType<? extends ArmyEntity> type, World world) {
         super(type, world);
-        this.entityAlliances = DIContainer.get().getInstance(EntityAlliances.class);
-        this.emptyUUID = DIContainer.get().getInstance(EmptyUUID.class);
-        this.squads = DIContainer.get().getInstance(Squads.class);
+        this.injector = DIContainer.get();
+        this.entityAlliances = injector.getInstance(EntityAlliances.class);
+        this.emptyUUID = injector.getInstance(EmptyUUID.class);
+        this.squads = injector.getInstance(Squads.class);
         this.aiSettings = createBaseAISettings();
         reloadGoals();
     }
@@ -446,5 +451,13 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
         }
 
         this.strideDistance += (g - this.strideDistance) * 0.4F;
+    }
+
+    public void setUseClientSquads(boolean useClientSquads) {
+        if (useClientSquads) {
+            this.squads = injector.getInstance(Key.get(Squads.class, Names.named("client")));
+        } else {
+            this.squads = injector.getInstance(Squads.class);
+        }
     }
 }
