@@ -1,7 +1,6 @@
 package dev.the_fireplace.overlord.entity;
 
 import com.google.common.collect.Lists;
-import com.google.inject.Injector;
 import dev.the_fireplace.annotateddi.api.DIContainer;
 import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.Overlord;
@@ -99,7 +98,6 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     public OwnedSkeletonEntity(EntityType<? extends OwnedSkeletonEntity> type, World world) {
         super(type, world);
         this.setLeftHanded(this.random.nextFloat() < 0.05F);
-        Injector injector = DIContainer.get();
         daylightDetector = injector.getInstance(DaylightDetector.class);
         undeadDaylightDamager = injector.getInstance(UndeadDaylightDamager.class);
         meleeAttackExecutor = injector.getInstance(MeleeAttackExecutor.class);
