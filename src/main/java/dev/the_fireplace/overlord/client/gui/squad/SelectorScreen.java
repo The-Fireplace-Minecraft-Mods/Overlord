@@ -98,14 +98,10 @@ public class SelectorScreen extends Screen
         openTime = System.currentTimeMillis();
         if (client != null && client.world != null && renderedSkeleton == null) {
             renderedSkeleton = OwnedSkeletonEntity.create(client.world, null);
-            renderedSkeleton.setUseClientSquads(true);
             if (entityId != null) {
                 Entity entity = client.world.getEntityById(entityId);
                 if (entity instanceof OwnedSkeletonEntity) {
-                    OwnedSkeletonEntity realOwnedSkeleton = (OwnedSkeletonEntity) entity;
-                    realOwnedSkeleton.setUseClientSquads(true);
                     renderedSkeleton.copyFrom(entity);
-                    realOwnedSkeleton.setUseClientSquads(false);
                 }
             }
             renderedSkeleton.setPos(0, 0, 0);
