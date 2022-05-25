@@ -1,1 +1,2 @@
 Fix lag/errors from clients connecting to a server
+Add Russian translation (CoringPlay on GitHub)
