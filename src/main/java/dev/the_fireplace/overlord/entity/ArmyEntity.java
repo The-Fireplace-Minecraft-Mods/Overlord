@@ -62,7 +62,7 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
     protected final EntityAlliances entityAlliances;
     protected final EmptyUUID emptyUUID;
     protected final Injector injector;
-    protected Squads squads;
+    protected final Squads squads;
     protected final AISettings aiSettings;
     protected boolean isSwappingEquipment;
     public double prevCapeX;
@@ -454,11 +454,14 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
         this.strideDistance += (g - this.strideDistance) * 0.4F;
     }
 
-    public void setUseClientSquads(boolean useClientSquads) {
-        if (useClientSquads) {
-            this.squads = injector.getInstance(Key.get(Squads.class, Names.named("client")));
-        } else {
-            this.squads = injector.getInstance(Squads.class);
-        }
+    @Nullable
+    @Override
+    public final UUID getOwnerUniqueId() {
+        return getOwnerUuid();
+    }
+
+    @Override
+    public final void setOwnerUniqueId(@Nullable UUID uuid) {
+        setOwnerUuid(uuid);
     }
 }
