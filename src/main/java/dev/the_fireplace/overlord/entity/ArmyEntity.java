@@ -78,7 +78,11 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
         this.injector = DIContainer.get();
         this.entityAlliances = injector.getInstance(EntityAlliances.class);
         this.emptyUUID = injector.getInstance(EmptyUUID.class);
-        this.squads = injector.getInstance(Squads.class);
+        if (!world.isClient()) {
+            this.squads = injector.getInstance(Squads.class);
+        } else {
+            this.squads = injector.getInstance(Key.get(Squads.class, Names.named("client")));
+        }
         this.aiSettings = createBaseAISettings();
         reloadGoals();
     }
@@ -257,7 +261,7 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
     @Override
     public void writeCustomDataToTag(CompoundTag nbt) {
         super.writeCustomDataToTag(nbt);
-        if (this.hasExistingSquad(null)) {
+        if (this.hasExistingSquad()) {
             nbt.putUuid("Squad", this.getSquad());
         }
     }
@@ -384,10 +388,7 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
         dataTracker.set(SQUAD, emptyUUID.is(squadId) ? Optional.empty() : Optional.of(squadId));
     }
 
-    public boolean hasExistingSquad(@Nullable Squads squads) {
-        if (squads == null) {
-            squads = this.squads;
-        }
+    public boolean hasExistingSquad() {
         return !emptyUUID.is(getSquad()) && squads.getSquad(getOwnerUuid(), getSquad()) != null;
     }
 

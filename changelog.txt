@@ -1,2 +1,1 @@
-Fix a client crash when opening the edit squad GUI while playing on a server
-Fix an error in the console when loading an ownerless gravestone
+Fix lag/errors from clients connecting to a server
