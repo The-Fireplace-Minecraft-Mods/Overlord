@@ -453,15 +453,4 @@ public abstract class ArmyEntity extends TameableEntity implements Ownable, Orde
 
         this.strideDistance += (g - this.strideDistance) * 0.4F;
     }
-
-    @Nullable
-    @Override
-    public final UUID getOwnerUniqueId() {
-        return getOwnerUuid();
-    }
-
-    @Override
-    public final void setOwnerUniqueId(@Nullable UUID uuid) {
-        setOwnerUuid(uuid);
-    }
 }
