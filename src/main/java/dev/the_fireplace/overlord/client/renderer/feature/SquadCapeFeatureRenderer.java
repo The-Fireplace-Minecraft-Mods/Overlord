@@ -40,7 +40,7 @@ public class SquadCapeFeatureRenderer<T extends ArmyEntity, M extends PlayerEnti
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        if (!entity.hasExistingSquad(squads) || entity.isInvisible()) {
+        if (!entity.hasExistingSquad() || entity.isInvisible()) {
             return;
         }
         ItemStack chestStack = entity.getEquippedStack(EquipmentSlot.CHEST);
