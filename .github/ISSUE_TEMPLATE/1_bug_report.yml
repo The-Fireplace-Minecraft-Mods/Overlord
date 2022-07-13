@@ -1,0 +1,67 @@
+name: 🐞 Bug
+description: File a bug/issue
+labels: [ bug ]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Mod Version
+      description: What version of this mod are you having issues with?
+      placeholder: ex. 3.0.1
+    validations:
+      required: true
+  - type: dropdown
+    id: loaders
+    attributes:
+      label: What mod loader(s) are you seeing the problem on?
+      multiple: true
+      options:
+        - Forge
+        - Fabric
+        - Quilt
+    validations:
+      required: true
+  - type: input
+    id: loader_version
+    attributes:
+      label: Mod Loader Version
+      description: |
+        What version of the mod loader are you using?
+        If you've seen this problem on multiple loaders, this field can be left blank.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Problem Description
+      description: A description of the problem you're experiencing.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Steps To Reproduce
+      description: Step by step description of how to cause this bug.
+      placeholder: |
+        1. In this environment... 
+        2. With this config... 
+        3. Do '...' 
+        4. See error...
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: Crash Report or Error Logs
+      description: |
+        If your game crashed, you must provide a crash report. If it didn't crash but you're getting errors in the logs related to the problem, please paste those here.
+      render: shell
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Additional Information
+      description: |
+        If you have any additional information about your setup or the problem, feel free to include it here.
+        
+        Tip: You can attach images by clicking this area to highlight it and then dragging files in.
+    validations:
+      required: false
