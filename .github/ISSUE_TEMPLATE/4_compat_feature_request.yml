@@ -1,0 +1,36 @@
+name: 🥳 Mod Support Feature Request
+description: Suggest an improvement for this mod related to another mod
+labels: [ enhancement, mod compat ]
+body:
+  - type: input
+    attributes:
+      label: Other Mod Name
+      description: What other mod would you like extra features or improvements with?
+    validations:
+      required: true
+  - type: dropdown
+    id: loaders
+    attributes:
+      label: What mod loader(s) is the other mod available for?
+      multiple: true
+      options:
+        - Forge
+        - Fabric
+        - Quilt
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Description
+      description: A description of the new feature or improvement you want.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional Information
+      description: |
+        If you have any additional information, feel free to include it here.
+        
+        Tip: You can attach images by clicking this area to highlight it and then dragging files in.
+    validations:
+      required: false
