@@ -1,3 +1,4 @@
+./gradlew :fabric:runDatagenClient
 ./gradlew build
-./gradlew curseforge publishModrinth publish
+./gradlew curseforge modrinth publish
 ./gradlew closeAndReleaseRepository

@@ -1,0 +1,59 @@
+{
+    "schemaVersion": 1,
+    "id": "overlord",
+    "version": "${version}",
+    "name": "${readable_name}",
+    "description": "${mod_description}",
+    "authors": [
+        "The_Fireplace"
+    ],
+    "contact": {
+        "homepage": "${curseforge_url}",
+        "sources": "${github_url}",
+        "issues": "${github_url}/issues",
+        "modrinth": "${modrinth_url}"
+    },
+    "license": "${license_id}",
+    "icon": "${logo_filename}",
+    "environment": "*",
+    "entrypoints": {
+        "di-main": [
+            "dev.the_fireplace.overlord.entrypoints.Main"
+        ],
+        "di-client": [
+            "dev.the_fireplace.overlord.entrypoints.Client"
+        ],
+        "fabric-datagen": [
+            "dev.the_fireplace.overlord.entrypoints.DataGenerator"
+        ],
+        "fireplacelib": [
+            "dev.the_fireplace.overlord.entrypoints.ConfigGui"
+        ],
+        "rei_client": [
+            "dev.the_fireplace.overlord.entrypoints.ReiClient"
+        ]
+    },
+    "mixins": [
+        "overlord.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=0.12.0",
+        "fabric": ">=0.47.8",
+        "minecraft": "1.18.X",
+        "annotateddi": ">=4 <5",
+        "fireplacelib": ">=7 <8"
+    },
+    "custom": {
+        "modmenu": {
+            "links": {
+                "modmenu.discord": "${discord_url}",
+                "annotateddi.twitter": "${twitter_url}",
+                "annotateddi.kofi": "${kofi_url}"
+            }
+        },
+        "lithium:options": {
+            "mixin.ai.nearby_entity_tracking.goals": false,
+            "mixin.entity.skip_equipment_change_check": false
+        }
+    }
+}

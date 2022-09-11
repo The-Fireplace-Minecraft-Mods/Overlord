@@ -1,0 +1,274 @@
+//file:noinspection GroovyAssignabilityCheck
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath 'org.spongepowered:mixingradle:0.7.+'
+    }
+}
+plugins {
+    id 'java'
+    id 'java-library'
+    // Mod Hosting Publish
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id 'com.modrinth.minotaur' version '2.2.0'
+}
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
+
+archivesBaseName = "${archives_base_name}-Forge"
+def mainArtifactFile = new File(new File(buildDir, 'libs'), "$archivesBaseName-${version}.jar")
+def changelogFile = file('../changelog.txt')
+
+sourceSets {
+    main {
+    }
+    test {
+        compileClasspath += sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.runtimeClasspath
+    }
+}
+
+repositories {
+    maven { url 'https://maven.shedaniel.me/' }
+    maven { url "https://maven.architectury.dev/" }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
+    implementation(fg.deobf("dev.the-fireplace:Annotated-DI-Forge:${project.annotateddi_version}"))
+    compileOnly(fg.deobf("dev.the-fireplace:Fireplace-Lib-Forge:${project.fireplacelib_version}:api"))
+    runtimeOnly(fg.deobf("dev.the-fireplace:Fireplace-Lib-Forge:${project.fireplacelib_version}"))
+    annotationProcessor "dev.the-fireplace:Annotated-DI-Forge-Processor:${project.annotateddi_version}"
+    annotationProcessor "org.spongepowered:mixin:${project.forge_mixin_version}:processor"
+
+    implementation(fg.deobf("me.shedaniel.cloth:cloth-config-forge:${project.clothconfig_version}"))
+
+    compileOnly(fg.deobf("me.shedaniel:RoughlyEnoughItems-forge:${project.rei_version}"))
+    compileOnly(fg.deobf("me.shedaniel:RoughlyEnoughItems-default-plugin-forge:${project.rei_version}"))
+    implementation fg.deobf("dev.architectury:architectury-forge:${project.architectury_version}")
+    runtimeOnly(fg.deobf("me.shedaniel:RoughlyEnoughItems-forge:${project.rei_version}"))
+
+    compileOnly project(":common")
+}
+
+mixin {
+    add sourceSets.main, "${mod_id}.refmap.json"
+
+    config "${mod_id}.mixins.json"
+}
+
+minecraft {
+    mappings channel: 'official', version: minecraft_version
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+            ideaModule "${rootProject.name}.${project.name}.main"
+            taskName 'Client'
+            args "-mixin.config=${mod_id}.mixins.json"
+            mods {
+                modClientRun {
+                    source sourceSets.main
+                    source project(":common").sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+            ideaModule "${rootProject.name}.${project.name}.main"
+            taskName 'Server'
+            args "-mixin.config=${mod_id}.mixins.json"
+            mods {
+                modServerRun {
+                    source sourceSets.main
+                    source project(":common").sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+            ideaModule "${rootProject.name}.${project.name}.main"
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            taskName 'Data'
+            args "-mixin.config=${mod_id}.mixins.json"
+            mods {
+                modDataRun {
+                    source sourceSets.main
+                    source project(":common").sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+sourceSets.main.resources.srcDir 'src/generated/resources'
+
+processResources {
+    from project(":common").sourceSets.main.resources
+    def buildProps = project.properties.clone()
+
+    filesMatching('*.mixins.json') {
+        expand "refmap_target": "${mod_id}."
+    }
+
+    filesMatching(['**/*.json', 'pack.mcmeta', '**/mods.toml']) {
+        expand buildProps
+    }
+}
+
+jar.finalizedBy('reobfJar')
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier.set('sources')
+    from project(':common').sourceSets.main.allSource
+    from sourceSets.main.allSource
+}
+
+javadoc {
+    source project(':common').sourceSets.main.allJava
+    source sourceSets.main.allJava
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+compileJava {
+    source project(':common').sourceSets.main.allSource
+}
+
+if (hasProperty('curseForgeApiKey')) {
+    curseforge {
+        apiKey = curseForgeApiKey
+        project {
+            id = '251732'
+            changelog = changelogFile
+            releaseType = project.release_type
+            addGameVersion project.minecraft_version
+            addGameVersion 'Java 17'
+            addGameVersion 'Forge'
+            mainArtifact(mainArtifactFile) {
+                displayName = "$archivesBaseName-$version"
+                relations {
+                    requiredDependency 'annotated-di-forge'
+                    requiredDependency 'fireplace-lib-forge'
+                    optionalDependency 'roughly-enough-items'
+                }
+            }
+        }
+        options {
+            javaIntegration = false
+            forgeGradleIntegration = false
+        }
+    }
+}
+
+if (hasProperty('modrinthApiKey')) {
+    modrinth {
+        token = modrinthApiKey
+        projectId = 'HPV4V5CV'
+        versionNumber = version
+        versionName = project.mod_version
+        uploadFile = mainArtifactFile
+        changelog = changelogFile.getText()
+        versionType = project.release_type
+        gameVersions = [project.minecraft_version as String]
+        loaders = ['forge']
+        dependencies {
+            required.project 'RAXqYPH1'// Annotated DI
+            required.project 'ING0LAPF'// Fireplace Lib
+            optional.project 'nfn13YXA'// REI
+        }
+    }
+}
+
+if (hasProperty('nexusUsername') || System.getenv("NEXUS_USERNAME") != null) {
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                groupId project.maven_group
+                artifactId project.archivesBaseName
+                version project.version
+                pom {
+                    name = project.readable_name
+                    packaging = 'jar'
+                    description = project.maven_description
+                    url = project.modrinth_url
+                    scm {
+                        connection = "scm:svn:${project.github_url}.git"
+                        developerConnection = "scm:svn:${project.github_url}.git"
+                        url = project.github_url
+                    }
+
+                    licenses {
+                        license {
+                            name = project.license_name
+                            url = project.license_url
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = 'the_fireplace'
+                            name = 'The_Fireplace'
+                            email = 'git@the-fireplace.dev'
+                        }
+                    }
+                }
+                //Replace all deobf dependencies with normal jar references.
+                pom.withXml { xmlProvider ->
+                    def dependencies = asNode().dependencies
+                    def allDeps = dependencies.'*';
+
+                    allDeps.findAll {
+                        println it
+                    }
+
+                    // Remove forge deps
+                    allDeps.findAll() { el ->
+                        el.artifactId.text() == 'forge' && el.groupId.text() == 'net.minecraftforge'
+                    }.forEach() { el ->
+                        el.parent().remove(el)
+                    }
+                    //remove forgegradle's mapped suffix from versions & set as optional so anyone else doesn't inherit them
+                    allDeps.findAll() { el ->
+                        el.version.text().contains('_mapped_')
+                    }.each { el ->
+                        def version = el.version
+                        version.each {
+                            it.setValue(it.text().substring(0, it.text().indexOf('_mapped_')))
+                        }
+                    }
+                }
+            }
+        }
+        repositories {
+            maven {
+                def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+                def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                credentials {
+                    username = findProperty('nexusUsername') ?: System.getenv("NEXUS_USERNAME")
+                    password = findProperty('nexusPassword') ?: System.getenv("NEXUS_PASSWORD")
+                }
+            }
+        }
+    }
+
+    signing {
+        sign publishing.publications.mavenJava
+    }
+}
