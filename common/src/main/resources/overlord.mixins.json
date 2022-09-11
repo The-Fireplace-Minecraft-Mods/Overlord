@@ -1,0 +1,21 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "dev.the_fireplace.overlord.mixin",
+    "compatibilityLevel": "JAVA_16",
+    "mixins": [
+        "AbstractSkeletonEntityMixin",
+        "CriteriaAccessor",
+        "GoalSelectorAccessor",
+        "MeleeAttackGoalAccessor",
+        "PlayerManagerMixin",
+        "WolfEntityMixin"
+    ],
+    "client": [
+        "client.ClientAdvancementManagerAccessor"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "refmap": "${refmap_target}refmap.json"
+}

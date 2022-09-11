@@ -1,0 +1,215 @@
+//file:noinspection GroovyAssignabilityCheck
+plugins {
+    id 'fabric-loom' version '0.12-SNAPSHOT'
+    // Mod Hosting Publish
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id 'com.modrinth.minotaur' version '2.2.0'
+}
+
+archivesBaseName = "${archives_base_name}-Fabric"
+def mainArtifactFile = new File(new File(buildDir, 'libs'), "$archivesBaseName-${version}.jar")
+def changelogFile = file('../changelog.txt')
+
+repositories {
+    maven { url 'https://maven.shedaniel.me/' }
+    maven { url 'https://maven.terraformersmc.com/releases/' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven {
+        name = 'Modrinth'
+        url = 'https://api.modrinth.com/maven'
+        content {
+            includeGroup 'maven.modrinth'
+        }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.officialMojangMappings()
+
+    def fabricLoaderDependency = "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    modImplementation fabricLoaderDependency
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
+    def fabricApiDependency = "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    modImplementation fabricApiDependency
+
+    modCompileOnly "dev.the-fireplace:Fireplace-Lib-Fabric:${project.fireplacelib_version}:api"
+    modRuntimeOnly "dev.the-fireplace:Fireplace-Lib-Fabric:${project.fireplacelib_version}"
+    annotationProcessor "dev.the-fireplace:Annotated-DI-Fabric-Processor:${project.annotateddi_version}"
+
+    /*modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+    modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.fabric_clothconfig_version}") {
+        exclude(group: 'net.fabricmc.fabric-api')
+    }*/
+
+    modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
+    modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
+
+    compileOnly project(":common")
+}
+
+loom {
+    runs {
+        client {
+            client()
+            setConfigName("Fabric Client")
+            ideConfigGenerated(true)
+            runDir("run")
+        }
+        server {
+            server()
+            setConfigName("Fabric Server")
+            ideConfigGenerated(true)
+            runDir("run")
+        }
+        datagenClient {
+            inherit client
+            name 'Data Generation'
+            vmArg '-Dfabric-api.datagen'
+            vmArg "-Dfabric-api.datagen.output-dir=${file('../common/src/main/generated')}"
+            vmArg '-Dfabric-api.datagen.strict-validation'
+
+            runDir "build/datagen"
+        }
+    }
+}
+
+processResources {
+    from project(':common').sourceSets.main.resources
+    inputs.property 'version', project.version
+
+    def buildProps = project.properties.clone()
+
+    filesMatching('*.mixins.json') {
+        expand "refmap_target": "${archivesBaseName}-"
+    }
+
+    filesMatching(['**/*.json', 'pack.mcmeta']) {
+        expand buildProps
+    }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier.set('sources')
+    from project(':common').sourceSets.main.allSource
+    from sourceSets.main.allSource
+}
+
+javadoc {
+    source project(':common').sourceSets.main.allJava
+    source sourceSets.main.allJava
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+compileJava {
+    source project(':common').sourceSets.main.allSource
+}
+
+if (hasProperty('curseForgeApiKey')) {
+    curseforge {
+        apiKey = curseForgeApiKey
+        project {
+            id = '251732'
+            changelog = changelogFile
+            releaseType = project.release_type
+            addGameVersion project.minecraft_version
+            addGameVersion 'Java 16'
+            addGameVersion 'Fabric'
+            addGameVersion 'Quilt'
+            mainArtifact(mainArtifactFile) {
+                displayName = "$archivesBaseName-$version"
+                relations {
+                    requiredDependency 'fabric-api'
+                    requiredDependency 'annotated-di'
+                    requiredDependency 'fireplace-lib'
+                    optionalDependency 'modmenu'
+                    optionalDependency 'roughly-enough-items'
+                }
+            }
+        }
+        options {
+            javaIntegration = false
+            forgeGradleIntegration = false
+        }
+    }
+}
+
+if (hasProperty('modrinthApiKey')) {
+    modrinth {
+        token = modrinthApiKey
+        projectId = 'HPV4V5CV'
+        versionNumber = "$version+fabric"
+        versionName = project.mod_version
+        uploadFile = mainArtifactFile
+        changelog = changelogFile.getText()
+        versionType = project.release_type
+        gameVersions = [project.minecraft_version as String]
+        loaders = ['fabric', 'quilt']
+        dependencies {
+            required.project 'P7dR8mSH'// Fabric API
+            required.project 'RAXqYPH1'// Annotated DI
+            required.project 'ING0LAPF'// Fireplace Lib
+            optional.project 'mOgUt4GM'// Mod Menu
+            optional.project 'nfn13YXA'// REI
+        }
+    }
+}
+
+if (hasProperty('nexusUsername') || System.getenv("NEXUS_USERNAME") != null) {
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                groupId project.maven_group
+                artifactId project.archivesBaseName
+                version project.version
+                pom {
+                    name = project.readable_name
+                    packaging = 'jar'
+                    description = project.maven_description
+                    url = project.modrinth_url
+                    scm {
+                        connection = "scm:svn:${project.github_url}.git"
+                        developerConnection = "scm:svn:${project.github_url}.git"
+                        url = project.github_url
+                    }
+
+                    licenses {
+                        license {
+                            name = project.license_name
+                            url = project.license_url
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = 'the_fireplace'
+                            name = 'The_Fireplace'
+                            email = 'git@the-fireplace.dev'
+                        }
+                    }
+                }
+            }
+        }
+        repositories {
+            maven {
+                def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+                def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                credentials {
+                    username = findProperty('nexusUsername') ?: System.getenv("NEXUS_USERNAME")
+                    password = findProperty('nexusPassword') ?: System.getenv("NEXUS_PASSWORD")
+                }
+            }
+        }
+    }
+
+    signing {
+        sign publishing.publications.mavenJava
+    }
+}
