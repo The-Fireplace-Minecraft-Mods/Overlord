@@ -23,6 +23,6 @@ bin/
 .project
 
 # fabric
-/run/
-/lib/
-/src/main/resources/.cache/
+*/run/
+*/lib/
+/common/src/main/generated/.cache/
