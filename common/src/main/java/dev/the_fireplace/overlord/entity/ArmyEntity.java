@@ -82,7 +82,7 @@ public abstract class ArmyEntity extends TamableAnimal implements Ownable, Order
         this.entityAlliances = injector.getInstance(EntityAlliances.class);
         this.emptyUUID = injector.getInstance(EmptyUUID.class);
         this.loaderHelper = injector.getInstance(LoaderHelper.class);
-        if (!world.isClient()) {
+        if (!world.isClientSide()) {
             this.squads = injector.getInstance(Squads.class);
         } else {
             this.squads = injector.getInstance(Key.get(Squads.class, Names.named("client")));
@@ -265,7 +265,7 @@ public abstract class ArmyEntity extends TamableAnimal implements Ownable, Order
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        if (this.hasExistingSquad()) {
+        if (this.hasExistingSquad(squads)) {
             nbt.putUUID("Squad", this.getSquad());
         }
         nbt.putBoolean("HasTriggeredObtainedCriterion", this.hasTriggeredObtainedCriterion);
@@ -393,7 +393,7 @@ public abstract class ArmyEntity extends TamableAnimal implements Ownable, Order
         entityData.set(SQUAD, emptyUUID.is(squadId) ? Optional.empty() : Optional.of(squadId));
     }
 
-    public boolean hasExistingSquad() {
+    public boolean hasExistingSquad(Squads squads) {
         return !emptyUUID.is(getSquad()) && squads.getSquad(getOwnerUUID(), getSquad()) != null;
     }
 
