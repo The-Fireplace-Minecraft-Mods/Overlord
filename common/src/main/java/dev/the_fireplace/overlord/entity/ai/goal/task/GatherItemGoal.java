@@ -1,6 +1,8 @@
 package dev.the_fireplace.overlord.entity.ai.goal.task;
 
 import dev.the_fireplace.overlord.entity.ArmyEntity;
+import dev.the_fireplace.overlord.mixin.ItemEntityAccessor;
+import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
@@ -57,7 +59,7 @@ public class GatherItemGoal extends TaskGoal
                 && !itemEntity.hasPickUpDelay()
                 && this.armyEntity.getNavigation().createPath(itemEntity, 0) != null
                 && this.armyEntity.isWithinRestriction(itemEntity.blockPosition())
-        ).stream().max(Comparator.comparing(ItemEntity::getAge)).orElse(null);
+        ).stream().max(Comparator.comparing(entity -> ((ItemEntityAccessor) entity).getAge())).orElse(null);
     }
 
     @Override
