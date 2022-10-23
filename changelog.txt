@@ -9,3 +9,5 @@ Added augments:
 - Fireproof: Skeleton is immune to Fire damage but takes a little more damage from other sources.
 The description in Mod Menu can now be translated.
 Fix an issue with armor values not updating correctly when Lithium is present
+Updated with support for Fireplace Lib 7 / Annotated DI 4
+Added some new squad patterns
