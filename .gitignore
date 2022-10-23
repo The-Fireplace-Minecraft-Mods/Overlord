@@ -25,4 +25,4 @@ bin/
 # fabric
 */run/
 */lib/
-/common/src/main/resources/.cache/
+/common/src/main/generated/.cache/
