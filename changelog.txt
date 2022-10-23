@@ -1,1 +1,2 @@
 Fixed server crash
+[1.15.X] Fixed base skeleton movement speed
