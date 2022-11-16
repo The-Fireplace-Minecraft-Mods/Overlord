@@ -1,1 +1,1 @@
-[1.15.X/1.16.X] Fixed server crash
+Added Spanish translation (OMG67)
