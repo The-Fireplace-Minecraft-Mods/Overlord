@@ -7,7 +7,7 @@
         "CriteriaAccessor",
         "GoalSelectorAccessor",
         "ItemEntityAccessor",
-        "PlayerManagerMixin",
+        "PlayerListMixin",
         "WolfEntityMixin"
     ],
     "client": [

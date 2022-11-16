@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerList.class)
-public class PlayerManagerMixin
+public class PlayerListMixin
 {
     @Inject(method = "placeNewPlayer", at = @At("RETURN"))
     private void sendSquadsOnJoinServer(Connection connection, ServerPlayer player, CallbackInfo ci) {
