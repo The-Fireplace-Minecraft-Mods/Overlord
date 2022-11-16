@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-@Implementation
+@Implementation(environment = "CLIENT")
 @Singleton
 public final class ForgeModelLayerRegistry implements ModelLayerRegistry
 {
