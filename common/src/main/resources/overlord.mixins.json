@@ -9,7 +9,7 @@
         "GoalSelectorAccessor",
         "ItemEntityAccessor",
         "MeleeAttackGoalAccessor",
-        "PlayerManagerMixin",
+        "PlayerListMixin",
         "WolfEntityMixin"
     ],
     "client": [
