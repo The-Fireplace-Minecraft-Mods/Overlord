@@ -40,6 +40,8 @@ public final class OverlordBlocks
     private final SingletonFactory<Block> crimsonGraveMarker;
     private final SingletonFactory<Block> warpedCasket;
     private final SingletonFactory<Block> warpedGraveMarker;
+    private final SingletonFactory<Block> mangroveCasket;
+    private final SingletonFactory<Block> mangroveGraveMarker;
 
     private final SingletonFactory<Block> stoneTombstone;
     private final SingletonFactory<Block> dioriteTombstone;
@@ -81,6 +83,8 @@ public final class OverlordBlocks
         crimsonGraveMarker = new SingletonFactory<>(() -> new GraveMarkerBlock(blockHelper.copyProperties(Blocks.CRIMSON_PLANKS)));
         warpedCasket = new SingletonFactory<>(() -> new CasketBlock(blockHelper.copyProperties(Blocks.WARPED_PLANKS)));
         warpedGraveMarker = new SingletonFactory<>(() -> new GraveMarkerBlock(blockHelper.copyProperties(Blocks.WARPED_PLANKS)));
+        mangroveCasket = new SingletonFactory<>(() -> new CasketBlock(blockHelper.copyProperties(Blocks.MANGROVE_PLANKS)));
+        mangroveGraveMarker = new SingletonFactory<>(() -> new GraveMarkerBlock(blockHelper.copyProperties(Blocks.MANGROVE_PLANKS)));
         stoneTombstone = new SingletonFactory<>(() -> new TombstoneBlock(blockHelper.copyProperties(Blocks.STONE)));
         dioriteTombstone = new SingletonFactory<>(() -> new TombstoneBlock(blockHelper.copyProperties(Blocks.DIORITE)));
         graniteTombstone = new SingletonFactory<>(() -> new TombstoneBlock(blockHelper.copyProperties(Blocks.GRANITE)));
@@ -115,6 +119,8 @@ public final class OverlordBlocks
         registerBlockWithItem("dark_oak_grave_marker", darkOakGraveMarker.get(), CreativeModeTab.TAB_DECORATIONS);
         registerBlockWithItem("warped_casket", warpedCasket.get(), CreativeModeTab.TAB_DECORATIONS);
         registerBlockWithItem("warped_grave_marker", warpedGraveMarker.get(), CreativeModeTab.TAB_DECORATIONS);
+        registerBlockWithItem("mangrove_casket", mangroveCasket.get(), CreativeModeTab.TAB_DECORATIONS);
+        registerBlockWithItem("mangrove_grave_marker", mangroveGraveMarker.get(), CreativeModeTab.TAB_DECORATIONS);
         registerBlockWithItem("crimson_casket", crimsonCasket.get(), CreativeModeTab.TAB_DECORATIONS);
         registerBlockWithItem("crimson_grave_marker", crimsonGraveMarker.get(), CreativeModeTab.TAB_DECORATIONS);
         registerBlockWithItem("stone_tombstone", stoneTombstone.get(), CreativeModeTab.TAB_DECORATIONS);
@@ -220,6 +226,14 @@ public final class OverlordBlocks
 
     public Block getWarpedGraveMarker() {
         return warpedGraveMarker.get();
+    }
+
+    public Block getMangroveCasket() {
+        return mangroveCasket.get();
+    }
+
+    public Block getMangroveGraveMarker() {
+        return mangroveGraveMarker.get();
     }
 
     public Block getStoneTombstone() {

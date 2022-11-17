@@ -9,6 +9,7 @@
     "overlord:dark_oak_casket",
     "overlord:warped_casket",
     "overlord:crimson_casket",
+    "overlord:mangrove_casket",
     "overlord:oak_grave_marker",
     "overlord:birch_grave_marker",
     "overlord:jungle_grave_marker",
@@ -16,6 +17,7 @@
     "overlord:acacia_grave_marker",
     "overlord:dark_oak_grave_marker",
     "overlord:warped_grave_marker",
-    "overlord:crimson_grave_marker"
+    "overlord:crimson_grave_marker",
+    "overlord:mangrove_grave_marker"
   ]
 }

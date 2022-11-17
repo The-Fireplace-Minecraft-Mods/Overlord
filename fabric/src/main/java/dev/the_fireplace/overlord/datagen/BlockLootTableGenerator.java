@@ -49,6 +49,7 @@ public class BlockLootTableGenerator extends FabricBlockLootTableProvider
         registerForSelfDrop(overlordBlocks.getAcaciaGraveMarker());
         registerForSelfDrop(overlordBlocks.getDarkOakGraveMarker());
         registerForSelfDrop(overlordBlocks.getWarpedGraveMarker());
+        registerForSelfDrop(overlordBlocks.getMangroveGraveMarker());
         registerForSelfDrop(overlordBlocks.getCrimsonGraveMarker());
         registerMultiblock(overlordBlocks.getOakCasket(), BlockStateProperties.BED_PART, BedPart.HEAD);
         registerMultiblock(overlordBlocks.getBirchCasket(), BlockStateProperties.BED_PART, BedPart.HEAD);
@@ -58,6 +59,7 @@ public class BlockLootTableGenerator extends FabricBlockLootTableProvider
         registerMultiblock(overlordBlocks.getDarkOakCasket(), BlockStateProperties.BED_PART, BedPart.HEAD);
         registerMultiblock(overlordBlocks.getWarpedCasket(), BlockStateProperties.BED_PART, BedPart.HEAD);
         registerMultiblock(overlordBlocks.getCrimsonCasket(), BlockStateProperties.BED_PART, BedPart.HEAD);
+        registerMultiblock(overlordBlocks.getMangroveCasket(), BlockStateProperties.BED_PART, BedPart.HEAD);
         registerForSelfDrop(overlordBlocks.getStoneTombstone());
         registerForSelfDrop(overlordBlocks.getDioriteTombstone());
         registerForSelfDrop(overlordBlocks.getAndesiteTombstone());

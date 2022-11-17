@@ -29,6 +29,7 @@ public class BlockTagsProvider extends FabricTagProvider.BlockTagProvider
             overlordBlocks.getDarkOakCasket(),
             overlordBlocks.getWarpedCasket(),
             overlordBlocks.getCrimsonCasket(),
+            overlordBlocks.getMangroveCasket(),
         };
         Block[] woodGraveMarkers = {
             overlordBlocks.getOakGraveMarker(),
@@ -39,6 +40,7 @@ public class BlockTagsProvider extends FabricTagProvider.BlockTagProvider
             overlordBlocks.getDarkOakGraveMarker(),
             overlordBlocks.getWarpedGraveMarker(),
             overlordBlocks.getCrimsonGraveMarker(),
+            overlordBlocks.getMangroveGraveMarker(),
         };
         Block[] stoneTombstones = {
             overlordBlocks.getStoneTombstone(),

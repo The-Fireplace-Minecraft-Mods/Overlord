@@ -1,0 +1,7 @@
+{
+    "parent": "overlord:block/wood_casket_lower",
+    "textures": {
+        "sides": "block/mangrove_planks",
+        "topbottom": "block/stripped_mangrove_log"
+    }
+}

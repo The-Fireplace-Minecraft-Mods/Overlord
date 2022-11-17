@@ -1,0 +1,7 @@
+{
+    "parent": "overlord:block/grave_marker",
+    "textures": {
+        "sign": "block/mangrove_planks",
+        "pole": "block/stripped_mangrove_log"
+    }
+}

@@ -49,6 +49,7 @@ public final class OverlordBlockEntities
             overlordBlocks.getAcaciaCasket(),
             overlordBlocks.getDarkOakCasket(),
             overlordBlocks.getWarpedCasket(),
+            overlordBlocks.getMangroveCasket(),
             overlordBlocks.getCrimsonCasket()
         );
         blockEntityRegistry.register(CASKET_BLOCK_ENTITY_ID, casketBlockEntityType);
@@ -62,6 +63,7 @@ public final class OverlordBlockEntities
             overlordBlocks.getAcaciaGraveMarker(),
             overlordBlocks.getDarkOakGraveMarker(),
             overlordBlocks.getWarpedGraveMarker(),
+            overlordBlocks.getMangroveGraveMarker(),
             overlordBlocks.getCrimsonGraveMarker()
         );
         blockEntityRegistry.register(GRAVE_MARKER_BLOCK_ENTITY_ID, graveMarkerBlockEntityType);
