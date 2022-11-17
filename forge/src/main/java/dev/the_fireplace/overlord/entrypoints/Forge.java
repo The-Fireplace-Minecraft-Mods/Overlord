@@ -24,7 +24,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.RegisterEvent;
 
-@Mod("overlord")
+@Mod(OverlordConstants.MODID)
 public final class Forge
 {
     public Forge() {
@@ -44,7 +44,7 @@ public final class Forge
         });
     }
 
-    @Mod.EventBusSubscriber(modid = "overlord", bus = Mod.EventBusSubscriber.Bus.MOD)
+    @Mod.EventBusSubscriber(modid = OverlordConstants.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     private static class RegistryHandler
     {
         @SubscribeEvent
