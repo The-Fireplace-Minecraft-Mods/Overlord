@@ -2,9 +2,9 @@ package dev.the_fireplace.overlord.entity.ai.goal.task;
 
 import dev.the_fireplace.overlord.entity.ArmyEntity;
 import dev.the_fireplace.overlord.mixin.ItemEntityAccessor;
-import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -14,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.EnumSet;
-import java.util.Random;
 
 public class GatherItemGoal extends TaskGoal
 {
@@ -107,7 +106,7 @@ public class GatherItemGoal extends TaskGoal
 
     private void gatherItem(double squaredDistanceToItem) {
         if (squaredDistanceToItem <= getSquaredMaxPickupDistance(item) && this.armyEntity.getOffhandItem().isEmpty()) {
-            Random random = this.armyEntity.getRandom();
+            RandomSource random = this.armyEntity.getRandom();
             this.armyEntity.level.playSound(null, this.armyEntity.blockPosition(), SoundEvents.ITEM_PICKUP, SoundSource.NEUTRAL, 0.2F, ((random.nextFloat() - random.nextFloat()) * 0.7F + 1.0F) * 2.0F);
             this.armyEntity.setItemInHand(InteractionHand.OFF_HAND, item.getItem());
             item.discard();

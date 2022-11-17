@@ -13,7 +13,6 @@ import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Items;
 
 import java.util.List;
@@ -29,7 +28,7 @@ public final class SkeletonBuildingCategory implements DisplayCategory<SkeletonB
 
     @Override
     public Component getTitle() {
-        return new TranslatableComponent("gui.overlord.rei.skeleton_building");
+        return Component.translatable("gui.overlord.rei.skeleton_building");
     }
 
     @Override

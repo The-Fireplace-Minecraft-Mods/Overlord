@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ChestMenu;
@@ -14,7 +14,7 @@ public class CasketGui extends AbstractContainerScreen<ChestMenu>
     private static final ResourceLocation TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
 
     public CasketGui(ChestMenu container, Inventory playerInventory) {
-        super(container, playerInventory, new TranslatableComponent("container.casket"));
+        super(container, playerInventory, Component.translatable("container.casket"));
         this.imageHeight = 114 + 6 * 18;
     }
 

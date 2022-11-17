@@ -19,7 +19,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Collection;
@@ -39,7 +38,7 @@ public class LocalOrdersScreen extends Screen
     private int matchingArmyMemberCount = 0;
 
     public LocalOrdersScreen(int orderDistance) {
-        super(new TranslatableComponent("gui.overlord.local_orders.name"));
+        super(Component.translatable("gui.overlord.local_orders.name"));
         this.orderDistance = orderDistance;
         Injector injector = OverlordConstants.getInjector();
         this.screenOpener = injector.getInstance(ScreenOpener.class);
@@ -67,10 +66,10 @@ public class LocalOrdersScreen extends Screen
             }
         };
         //x, y, width, height
-        addRenderableWidget(new Button(width / 2 - 50, height / 2, 100, 20, new TranslatableComponent("gui.overlord.orders"), openOrdersScreen));
-        addRenderableWidget(new Button(width / 2 - 50, height / 2 + 22, 100, 20, new TranslatableComponent("gui.overlord.select_squad"), (b) -> screenOpener.openSquadSelectorGUI(null)));
-        addRenderableWidget(new Button(width / 2 - 102, height / 2 + 44, 100, 20, new TranslatableComponent("gui.overlord.local_orders.issue_orders"), this::issueOrders));
-        addRenderableWidget(new Button(width / 2 + 2, height / 2 + 44, 100, 20, new TranslatableComponent("gui.done"), (b) -> this.closeScreen()));
+        addRenderableWidget(new Button(width / 2 - 50, height / 2, 100, 20, Component.translatable("gui.overlord.orders"), openOrdersScreen));
+        addRenderableWidget(new Button(width / 2 - 50, height / 2 + 22, 100, 20, Component.translatable("gui.overlord.select_squad"), (b) -> screenOpener.openSquadSelectorGUI(null)));
+        addRenderableWidget(new Button(width / 2 - 102, height / 2 + 44, 100, 20, Component.translatable("gui.overlord.local_orders.issue_orders"), this::issueOrders));
+        addRenderableWidget(new Button(width / 2 + 2, height / 2 + 44, 100, 20, Component.translatable("gui.done"), (b) -> this.closeScreen()));
     }
 
     private void closeScreen() {
@@ -92,7 +91,7 @@ public class LocalOrdersScreen extends Screen
         Objects.requireNonNull(this.minecraft.player);
         this.renderBackground(matrices);
         super.render(matrices, mouseX, mouseY, delta);
-        Component currentlyOrderingText = new TranslatableComponent("gui.overlord.local_orders.currently_ordering.any", orderDistance);
+        Component currentlyOrderingText = Component.translatable("gui.overlord.local_orders.currently_ordering.any", orderDistance);
 
         ItemStack wandStack = OrdersWandItem.getActiveWand(this.minecraft.player);
         //noinspection ConstantConditions
@@ -100,11 +99,11 @@ public class LocalOrdersScreen extends Screen
             UUID squadId = wandStack.getTag().getUUID("squad");
             Squad squad = squads.getSquad(this.minecraft.player.getUUID(), squadId);
             if (squad != null) {
-                currentlyOrderingText = new TranslatableComponent("gui.overlord.local_orders.currently_ordering.squad", squad.getName(), orderDistance);
+                currentlyOrderingText = Component.translatable("gui.overlord.local_orders.currently_ordering.squad", squad.getName(), orderDistance);
             }
         }
         this.font.draw(matrices, currentlyOrderingText, width / 2f - font.width(currentlyOrderingText) / 2f, height / 2f - 20, 0xFFFFFF);
-        Component matchingCountText = new TranslatableComponent("gui.overlord.local_orders.matching_count", matchingArmyMemberCount);
+        Component matchingCountText = Component.translatable("gui.overlord.local_orders.matching_count", matchingArmyMemberCount);
         this.font.draw(matrices, matchingCountText, width / 2f - font.width(matchingCountText) / 2f, height / 2f - 10, 0xFFFFFF);
     }
 

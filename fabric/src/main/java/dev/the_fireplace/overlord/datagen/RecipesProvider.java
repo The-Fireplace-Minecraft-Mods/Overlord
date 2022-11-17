@@ -1,44 +1,27 @@
 package dev.the_fireplace.overlord.datagen;
 
-import com.google.common.collect.Sets;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.google.inject.Injector;
 import dev.the_fireplace.overlord.OverlordConstants;
 import dev.the_fireplace.overlord.block.OverlordBlocks;
 import dev.the_fireplace.overlord.item.OverlordItems;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.SingleItemRecipeBuilder;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Objects;
-import java.util.Set;
 import java.util.function.Consumer;
 
-public class RecipesProvider implements DataProvider
+public class RecipesProvider extends FabricRecipeProvider
 {
-    private static final Logger LOGGER = LogManager.getLogger("Overlord Recipe Generator");
-    private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
-    private final DataGenerator root;
 
     //Workaround because the tag is empty for some reason. TODO convert to use the tag. Maybe using a command when the world is running will let it work?
     private final Ingredient bedIngredient = Ingredient.of(
@@ -60,11 +43,12 @@ public class RecipesProvider implements DataProvider
         Items.WHITE_BED
     );
 
-    public RecipesProvider(DataGenerator dataGenerator) {
-        this.root = dataGenerator;
+    public RecipesProvider(FabricDataGenerator dataGenerator) {
+        super(dataGenerator);
     }
 
-    private void generate(Consumer<FinishedRecipe> consumer) {
+    @Override
+    protected void generateRecipes(Consumer<FinishedRecipe> consumer) {
         Injector injector = OverlordConstants.getInjector();
         OverlordItems overlordItems = injector.getInstance(OverlordItems.class);
         OverlordBlocks overlordBlocks = injector.getInstance(OverlordBlocks.class);
@@ -93,75 +77,11 @@ public class RecipesProvider implements DataProvider
         ShapedRecipeBuilder.shaped(overlordItems.getOrdersWand(), 1).define('#', Items.AMETHYST_SHARD).define('/', Items.STICK).pattern("  #").pattern(" / ").pattern("/  ").unlockedBy("has_amethyst_shard", this.conditionsFromItem(Items.AMETHYST_SHARD)).save(consumer);
     }
 
+    @Override
     public String getName() {
         return "Overlord Recipes";
     }
 
-    public void run(HashCache dataCache) {
-        Path path = this.root.getOutputFolder();
-        Set<ResourceLocation> set = Sets.newHashSet();
-        this.generate((recipeJsonProvider) -> {
-            if (!set.add(recipeJsonProvider.getId())) {
-                throw new IllegalStateException("Duplicate recipe " + recipeJsonProvider.getId());
-            } else {
-                this.saveRecipe(dataCache, recipeJsonProvider.serializeRecipe(), path.resolve("data/" + recipeJsonProvider.getId().getNamespace() + "/recipes/" + recipeJsonProvider.getId().getPath() + ".json"));
-                JsonObject jsonObject = recipeJsonProvider.serializeAdvancement();
-                if (jsonObject != null) {
-                    this.saveRecipeAdvancement(dataCache, jsonObject, path.resolve("data/" + recipeJsonProvider.getId().getNamespace() + "/advancements/" + recipeJsonProvider.getAdvancementId().getPath() + ".json"));
-                }
-
-            }
-        });
-    }
-
-    private void saveRecipe(HashCache dataCache, JsonObject jsonObject, Path path) {
-        try {
-            save(dataCache, jsonObject, path);
-        } catch (IOException var19) {
-            LOGGER.error("Couldn't save recipe {}", path, var19);
-        }
-    }
-
-    private void saveRecipeAdvancement(HashCache dataCache, JsonObject jsonObject, Path path) {
-        try {
-            save(dataCache, jsonObject, path);
-        } catch (IOException var19) {
-            LOGGER.error("Couldn't save recipe advancement {}", path, var19);
-        }
-    }
-
-    private void save(HashCache dataCache, JsonObject jsonObject, Path path) throws IOException {
-        String string = GSON.toJson(jsonObject);
-        String string2 = SHA1.hashUnencodedChars(string).toString();
-        if (!Objects.equals(dataCache.getHash(path), string2) || !Files.exists(path)) {
-            Files.createDirectories(path.getParent());
-            BufferedWriter bufferedWriter = Files.newBufferedWriter(path);
-            Throwable var7 = null;
-
-            try {
-                bufferedWriter.write(string);
-            } catch (Throwable var17) {
-                var7 = var17;
-                throw var17;
-            } finally {
-                //noinspection ConstantConditions
-                if (bufferedWriter != null) {
-                    if (var7 != null) {
-                        try {
-                            bufferedWriter.close();
-                        } catch (Throwable var16) {
-                            var7.addSuppressed(var16);
-                        }
-                    } else {
-                        bufferedWriter.close();
-                    }
-                }
-
-            }
-        }
-
-        dataCache.putNew(path, string2);
-    }
 
     private InventoryChangeTrigger.TriggerInstance conditionsFromItem(ItemLike itemConvertible) {
         return this.conditionsFromItemPredicates(ItemPredicate.Builder.item().of(itemConvertible).build());

@@ -13,7 +13,7 @@ import dev.the_fireplace.overlord.network.ServerboundPackets;
 import dev.the_fireplace.overlord.network.client.builder.GetOrdersBufferBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
@@ -58,7 +58,7 @@ public final class ScreenOpenerImpl implements ScreenOpener
         Screen selectorScreen;
         if (entity != null) {
             selectorScreen = new SelectorScreen(
-                new TranslatableComponent("gui.overlord.squad_manager.name"),
+                Component.translatable("gui.overlord.squad_manager.name"),
                 client.screen,
                 squads.getSquadsWithOwner(entity.getOwnerUUID()),
                 entity.getEntityIdNumber(),
@@ -72,7 +72,7 @@ public final class ScreenOpenerImpl implements ScreenOpener
                 ? activeWand.getTag().getUUID("squad")
                 : emptyUUID.get();
             selectorScreen = new SelectorScreen(
-                new TranslatableComponent("gui.overlord.squad_manager.name"),
+                Component.translatable("gui.overlord.squad_manager.name"),
                 client.screen,
                 squads.getSquadsWithOwner(client.player.getUUID()),
                 null,

@@ -1,27 +1,27 @@
 {
     "parent": "overlord:overlord/root",
+    "criteria": {
+        "has_flesh_skeleton": {
+            "conditions": {
+                "hasSkin": true,
+                "phase": "BABY"
+            },
+            "trigger": "overlord:skeleton_grown"
+        }
+    },
     "display": {
-        "icon": {
-            "item": "minecraft:leather"
-        },
-        "title": {
-            "translate": "advancements.overlord.fleshed_out.title"
-        },
+        "announce_to_chat": true,
         "description": {
             "translate": "advancements.overlord.fleshed_out.description"
         },
         "frame": "task",
+        "hidden": false,
+        "icon": {
+            "item": "minecraft:leather"
+        },
         "show_toast": true,
-        "announce_to_chat": true,
-        "hidden": false
-    },
-    "criteria": {
-        "has_flesh_skeleton": {
-            "trigger": "overlord:skeleton_grown",
-            "conditions": {
-                "phase": "BABY",
-                "hasSkin": true
-            }
+        "title": {
+            "translate": "advancements.overlord.fleshed_out.title"
         }
     },
     "requirements": [

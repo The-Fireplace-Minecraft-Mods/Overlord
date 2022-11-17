@@ -1,34 +1,34 @@
 {
   "parent": "minecraft:recipes/root",
-  "rewards": {
-    "recipes": [
-      "overlord:birch_casket"
-    ]
-  },
   "criteria": {
     "has_stripped_wood": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
+        "conditions": {
             "items": [
-              "minecraft:stripped_birch_wood"
+                {
+                    "items": [
+                        "minecraft:stripped_birch_wood"
+                    ]
+                }
             ]
-          }
-        ]
-      }
+        },
+        "trigger": "minecraft:inventory_changed"
     },
     "has_the_recipe": {
-      "trigger": "minecraft:recipe_unlocked",
-      "conditions": {
-        "recipe": "overlord:birch_casket"
-      }
+        "conditions": {
+            "recipe": "overlord:birch_casket"
+        },
+        "trigger": "minecraft:recipe_unlocked"
     }
   },
-  "requirements": [
-    [
-      "has_stripped_wood",
-      "has_the_recipe"
-    ]
-  ]
+    "requirements": [
+        [
+            "has_stripped_wood",
+            "has_the_recipe"
+        ]
+    ],
+    "rewards": {
+        "recipes": [
+            "overlord:birch_casket"
+        ]
+    }
 }

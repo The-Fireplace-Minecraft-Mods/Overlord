@@ -2,31 +2,18 @@ package dev.the_fireplace.overlord.datagen;
 
 import dev.the_fireplace.overlord.block.OverlordBlockTags;
 import dev.the_fireplace.overlord.item.OverlordItemTags;
-import net.minecraft.core.Registry;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.tags.TagsProvider;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
 
-import java.nio.file.Path;
-import java.util.Objects;
-import java.util.function.Function;
-
-public class ItemTagsProvider extends TagsProvider<Item>
+public class ItemTagsProvider extends FabricTagProvider.ItemTagProvider
 {
-    private final Function<TagKey<Block>, Tag.Builder> blockTagBuilder;
-
-    public ItemTagsProvider(DataGenerator root, BlockTagsProvider blockTagsProvider) {
-        super(root, Registry.ITEM);
-        this.blockTagBuilder = blockTagsProvider::getOrCreateRawBuilder;
+    public ItemTagsProvider(FabricDataGenerator root, BlockTagProvider blockTagProvider) {
+        super(root, blockTagProvider);
     }
 
     @Override
-    protected void addTags() {
+    protected void generateTags() {
         this.copy(OverlordBlockTags.CASKETS, OverlordItemTags.CASKETS);
         this.copy(OverlordBlockTags.GRAVE_MARKERS, OverlordItemTags.GRAVE_MARKERS);
         this.tag(OverlordItemTags.MUSCLE_MEAT).add(
@@ -61,22 +48,5 @@ public class ItemTagsProvider extends TagsProvider<Item>
             Items.RED_DYE,
             Items.BLACK_DYE
         );
-    }
-
-    protected void copy(TagKey<Block> blockTag, TagKey<Item> itemTag) {
-        Tag.Builder itemTagBuilder = this.getOrCreateRawBuilder(itemTag);
-        Tag.Builder blockTagBuilder = this.blockTagBuilder.apply(blockTag);
-        Objects.requireNonNull(itemTagBuilder);
-        blockTagBuilder.getEntries().forEach(itemTagBuilder::add);
-    }
-
-    @Override
-    protected Path getPath(ResourceLocation identifier) {
-        return this.generator.getOutputFolder().resolve("data/" + identifier.getNamespace() + "/tags/items/" + identifier.getPath() + ".json");
-    }
-
-    @Override
-    public String getName() {
-        return "Overlord Item Tags";
     }
 }

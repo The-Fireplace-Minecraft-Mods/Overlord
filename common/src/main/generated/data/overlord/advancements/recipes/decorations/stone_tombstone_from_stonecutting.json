@@ -1,34 +1,34 @@
 {
   "parent": "minecraft:recipes/root",
-  "rewards": {
-    "recipes": [
-      "overlord:stone_tombstone_from_stonecutting"
-    ]
-  },
   "criteria": {
     "has_smooth_stone": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
+        "conditions": {
             "items": [
-              "minecraft:smooth_stone"
+                {
+                    "items": [
+                        "minecraft:smooth_stone"
+                    ]
+                }
             ]
-          }
-        ]
-      }
+        },
+        "trigger": "minecraft:inventory_changed"
     },
     "has_the_recipe": {
-      "trigger": "minecraft:recipe_unlocked",
-      "conditions": {
-        "recipe": "overlord:stone_tombstone_from_stonecutting"
-      }
+        "conditions": {
+            "recipe": "overlord:stone_tombstone_from_stonecutting"
+        },
+        "trigger": "minecraft:recipe_unlocked"
     }
   },
-  "requirements": [
-    [
-      "has_smooth_stone",
-      "has_the_recipe"
-    ]
-  ]
+    "requirements": [
+        [
+            "has_smooth_stone",
+            "has_the_recipe"
+        ]
+    ],
+    "rewards": {
+        "recipes": [
+            "overlord:stone_tombstone_from_stonecutting"
+        ]
+    }
 }

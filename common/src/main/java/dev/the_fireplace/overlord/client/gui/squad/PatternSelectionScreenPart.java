@@ -9,7 +9,6 @@ import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
@@ -72,7 +71,7 @@ public class PatternSelectionScreenPart implements PartialScreen
             int widgetX = x + (column * (widgetWidth + 4));
             int widgetY = y + 24 + (row * (widgetHeight + 4));
             ResourceLocation patternId = pattern.getId();
-            Component widgetName = new TranslatableComponent("squad." + patternId.getNamespace() + ".pattern." + patternId.getPath() + ".name");
+            Component widgetName = Component.translatable("squad." + patternId.getNamespace() + ".pattern." + patternId.getPath() + ".name");
             PatternButtonWidget patternButtonWidget = new PatternButtonWidget(
                 widgetX,
                 widgetY,
@@ -154,12 +153,12 @@ public class PatternSelectionScreenPart implements PartialScreen
     }
 
     private void createPageChangeButtons() {
-        previousButton = new Button(x, y, this.width / 2 - 2, 20, new TranslatableComponent("gui.overlord.create_squad.previous"), buttonWidget -> {
+        previousButton = new Button(x, y, this.width / 2 - 2, 20, Component.translatable("gui.overlord.create_squad.previous"), buttonWidget -> {
             this.state.currentPage--;
             updatePageChangeButtonUsability();
             updatePatternVisibility();
         });
-        nextButton = new Button(x + width / 2 + 4, y, this.width / 2 - 6, 20, new TranslatableComponent("gui.overlord.create_squad.next"), buttonWidget -> {
+        nextButton = new Button(x + width / 2 + 4, y, this.width / 2 - 6, 20, Component.translatable("gui.overlord.create_squad.next"), buttonWidget -> {
             this.state.currentPage++;
             updatePageChangeButtonUsability();
             updatePatternVisibility();

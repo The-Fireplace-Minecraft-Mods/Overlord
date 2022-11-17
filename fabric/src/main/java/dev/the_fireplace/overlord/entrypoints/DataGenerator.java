@@ -8,12 +8,12 @@ public final class DataGenerator implements DataGeneratorEntrypoint
 {
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator generator) {
-        BlockTagsProvider blockTagsProvider = new BlockTagsProvider(generator);
-        generator.addProvider(blockTagsProvider);
+        BlockTagsProvider blockTagProvider = new BlockTagsProvider(generator);
+        generator.addProvider(blockTagProvider);
         generator.addProvider(new EntityTypeTagsProvider(generator));
-        generator.addProvider(new ItemTagsProvider(generator, blockTagsProvider));
+        generator.addProvider(new ItemTagsProvider(generator, blockTagProvider));
         generator.addProvider(new RecipesProvider(generator));
-        generator.addProvider(new LootTablesProvider(generator));
+        generator.addProvider(new BlockLootTableGenerator(generator));
         generator.addProvider(new AdvancementsProvider(generator));
     }
 }

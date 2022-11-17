@@ -8,15 +8,14 @@ import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
-
-import java.util.Random;
 
 public class DrawEntity
 {
     public static void drawEntityFacingAway(int x, int y, int size, long startMillisecond, long currentMillisecond, LivingEntity entity) {
         boolean flutterCape = (currentMillisecond - startMillisecond) % 60 == 0;
-        Random random = entity.getRandom();
+        RandomSource random = entity.getRandom();
         double entityX = flutterCape ? entity.getX() + (random.nextFloat() * 2 - 1) / 16f : entity.getX();
         double entityZ = flutterCape ? entity.getZ() + (random.nextFloat() * 2 - 1) / 16f : entity.getZ();
         entity.setPosRaw(entityX, (currentMillisecond - startMillisecond) * 1.2, entityZ);

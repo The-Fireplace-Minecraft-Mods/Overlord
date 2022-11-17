@@ -54,10 +54,14 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, CrossbowAttackMob, AnimatedMilkDrinker, AugmentBearer
 {
@@ -69,11 +73,11 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     private static final EntityDataAccessor<Boolean> HAS_MUSCLES = SynchedEntityData.defineId(OwnedSkeletonEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Optional<UUID>> SKINSUIT = SynchedEntityData.defineId(OwnedSkeletonEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     private static final EntityDataAccessor<ItemStack> AUGMENT_BLOCK = SynchedEntityData.defineId(OwnedSkeletonEntity.class, EntityDataSerializers.ITEM_STACK);
-    private static final UUID MUSCLE_ATTACK_BONUS_ID = Mth.createInsecureUUID(new Random("Muscle Attack Bonus".hashCode()));
-    private static final UUID MUSCLE_TOUGHNESS_BONUS_ID = Mth.createInsecureUUID(new Random("Muscle Toughness Bonus".hashCode()));
-    private static final UUID MUSCLE_SPEED_BONUS_ID = Mth.createInsecureUUID(new Random("Muscle Speed Bonus".hashCode()));
+    private static final UUID MUSCLE_ATTACK_BONUS_ID = Mth.createInsecureUUID(new SingleThreadedRandomSource("Muscle Attack Bonus".hashCode()));
+    private static final UUID MUSCLE_TOUGHNESS_BONUS_ID = Mth.createInsecureUUID(new SingleThreadedRandomSource("Muscle Toughness Bonus".hashCode()));
+    private static final UUID MUSCLE_SPEED_BONUS_ID = Mth.createInsecureUUID(new SingleThreadedRandomSource("Muscle Speed Bonus".hashCode()));
 
-    private static final UUID MAX_HEALTH_MODIFIER_ID = Mth.createInsecureUUID(new Random("Max Health Modifier".hashCode()));
+    private static final UUID MAX_HEALTH_MODIFIER_ID = Mth.createInsecureUUID(new SingleThreadedRandomSource("Max Health Modifier".hashCode()));
     private static final AttributeModifier MUSCLE_ATTACK_BONUS = new AttributeModifier(MUSCLE_ATTACK_BONUS_ID, "Muscle Attack Bonus", 2.0D, AttributeModifier.Operation.ADDITION);
     private static final AttributeModifier MUSCLE_TOUGHNESS_BONUS = new AttributeModifier(MUSCLE_TOUGHNESS_BONUS_ID, "Muscle Toughness Bonus", 0.25D, AttributeModifier.Operation.ADDITION);
     private static final AttributeModifier MUSCLE_SPEED_BONUS = new AttributeModifier(MUSCLE_SPEED_BONUS_ID, "Muscle Speed Bonus", 0.05D, AttributeModifier.Operation.ADDITION);
@@ -501,12 +505,12 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     @Override
-    protected void hurtArmor(DamageSource source, float amount) {
+    public void hurtArmor(DamageSource source, float amount) {
         this.inventory.damageArmor(amount);
     }
 
     @Override
-    protected void hurtCurrentlyUsedShield(float amount) {
+    public void hurtCurrentlyUsedShield(float amount) {
         if (amount < 3 || this.useItem.getItem() != Items.SHIELD) {
             return;
         }
@@ -626,20 +630,16 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     @Override
     public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
         if (slot == EquipmentSlot.MAINHAND) {
-            this.equipEventAndSound(stack);
-            this.inventory.mainHand.set(0, stack);
+            this.onEquipItem(slot, this.inventory.mainHand.set(0, stack), stack);
         } else if (slot == EquipmentSlot.OFFHAND) {
-            this.equipEventAndSound(stack);
-            this.inventory.offHand.set(0, stack);
+            this.onEquipItem(slot, this.inventory.offHand.set(0, stack), stack);
         } else if (slot.getType() == EquipmentSlot.Type.ARMOR) {
-            this.equipEventAndSound(stack);
-            this.inventory.armor.set(slot.getIndex(), stack);
+            this.onEquipItem(slot, this.inventory.armor.set(slot.getIndex(), stack), stack);
         }
     }
 
     @Override
     public boolean giveItemStack(ItemStack stack) {
-        this.equipEventAndSound(stack);
         return this.inventory.insertStack(stack);
     }
 

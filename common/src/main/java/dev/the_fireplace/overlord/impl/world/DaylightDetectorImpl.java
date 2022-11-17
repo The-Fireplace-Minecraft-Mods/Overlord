@@ -17,7 +17,7 @@ public final class DaylightDetectorImpl implements DaylightDetector {
     public boolean isInDaylight(Entity entity) {
         Level world = entity.getCommandSenderWorld();
         if (world.isDay() && !world.isClientSide()) {
-            float brightnessAtEyes = entity.getBrightness();
+            float brightnessAtEyes = entity.getLightLevelDependentMagicValue();
             BlockPos entityPosition = new BlockPos(entity.getX(), (double) Math.round(entity.getY()), entity.getZ());
             if (entity.getVehicle() instanceof Boat) {
                 entityPosition = entityPosition.above();

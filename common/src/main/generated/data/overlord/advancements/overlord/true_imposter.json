@@ -1,27 +1,27 @@
 {
     "parent": "overlord:overlord/augmented",
+    "criteria": {
+        "imposter_skeleton": {
+            "conditions": {
+                "augmentId": "overlord:imposter",
+                "phase": "BABY"
+            },
+            "trigger": "overlord:skeleton_grown"
+        }
+    },
     "display": {
-        "icon": {
-            "item": "minecraft:skeleton_skull"
-        },
-        "title": {
-            "translate": "advancements.overlord.true_imposter.title"
-        },
+        "announce_to_chat": true,
         "description": {
             "translate": "advancements.overlord.true_imposter.description"
         },
         "frame": "task",
+        "hidden": true,
+        "icon": {
+            "item": "minecraft:skeleton_skull"
+        },
         "show_toast": true,
-        "announce_to_chat": true,
-        "hidden": true
-    },
-    "criteria": {
-        "imposter_skeleton": {
-            "trigger": "overlord:skeleton_grown",
-            "conditions": {
-                "phase": "BABY",
-                "augmentId": "overlord:imposter"
-            }
+        "title": {
+            "translate": "advancements.overlord.true_imposter.title"
         }
     },
     "requirements": [

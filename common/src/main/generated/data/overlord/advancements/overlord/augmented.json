@@ -1,27 +1,27 @@
 {
     "parent": "overlord:overlord/root",
+    "criteria": {
+        "augmented_skeleton": {
+            "conditions": {
+                "augmentId": "overlord:any_augment",
+                "phase": "BABY"
+            },
+            "trigger": "overlord:skeleton_grown"
+        }
+    },
     "display": {
-        "icon": {
-            "item": "minecraft:magenta_stained_glass"
-        },
-        "title": {
-            "translate": "advancements.overlord.augmented.title"
-        },
+        "announce_to_chat": true,
         "description": {
             "translate": "advancements.overlord.augmented.description"
         },
         "frame": "task",
+        "hidden": false,
+        "icon": {
+            "item": "minecraft:magenta_stained_glass"
+        },
         "show_toast": true,
-        "announce_to_chat": true,
-        "hidden": false
-    },
-    "criteria": {
-        "augmented_skeleton": {
-            "trigger": "overlord:skeleton_grown",
-            "conditions": {
-                "phase": "BABY",
-                "augmentId": "overlord:any_augment"
-            }
+        "title": {
+            "translate": "advancements.overlord.augmented.title"
         }
     },
     "requirements": [

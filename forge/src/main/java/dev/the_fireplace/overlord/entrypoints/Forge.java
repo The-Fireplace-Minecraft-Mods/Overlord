@@ -15,16 +15,14 @@ import dev.the_fireplace.overlord.eventhandlers.ConfigGuiRegistrationHandler;
 import dev.the_fireplace.overlord.item.OverlordItems;
 import dev.the_fireplace.overlord.loader.RegistryHelper;
 import dev.the_fireplace.overlord.network.NetworkRegistry;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.RegisterEvent;
 
 @Mod("overlord")
 public final class Forge
@@ -50,17 +48,17 @@ public final class Forge
     private static class RegistryHandler
     {
         @SubscribeEvent
-        public static void registerBlocks(RegistryEvent.Register<Block> event) {
+        public static void registerBlocks(RegisterEvent event) {
             OverlordBlocks overlordBlocks = OverlordConstants.getInjector().getInstance(OverlordBlocks.class);
-            overlordBlocks.setBlockRegistry((id, value) -> event.getRegistry().register(value.setRegistryName(id)));
+            overlordBlocks.setBlockRegistry((id, value) -> event.register(Registry.BLOCK_REGISTRY, id, () -> value));
             overlordBlocks.registerBlocks(OverlordBlocks.RegistryType.BLOCK);
         }
 
         @SubscribeEvent
-        public static void registerItems(RegistryEvent.Register<Item> event) {
+        public static void registerItems(RegisterEvent event) {
             OverlordBlocks overlordBlocks = OverlordConstants.getInjector().getInstance(OverlordBlocks.class);
             OverlordItems overlordItems = OverlordConstants.getInjector().getInstance(OverlordItems.class);
-            RegistryHelper<Item> itemRegistryHelper = (id, value) -> event.getRegistry().register(value.setRegistryName(id));
+            RegistryHelper<Item> itemRegistryHelper = (id, value) -> event.register(Registry.ITEM_REGISTRY, id, () -> value);
             overlordBlocks.setItemRegistry(itemRegistryHelper);
             overlordBlocks.registerBlocks(OverlordBlocks.RegistryType.ITEM);
             overlordItems.setItemRegistry(itemRegistryHelper);
@@ -68,16 +66,16 @@ public final class Forge
         }
 
         @SubscribeEvent
-        public static void registerBlockEntities(RegistryEvent.Register<BlockEntityType<?>> event) {
+        public static void registerBlockEntities(RegisterEvent event) {
             OverlordBlockEntities overlordBlockEntities = OverlordConstants.getInjector().getInstance(OverlordBlockEntities.class);
-            overlordBlockEntities.setBlockEntityRegistry((id, value) -> event.getRegistry().register(value.setRegistryName(id)));
+            overlordBlockEntities.setBlockEntityRegistry((id, value) -> event.register(Registry.BLOCK_ENTITY_TYPE_REGISTRY, id, () -> value));
             overlordBlockEntities.register();
         }
 
         @SubscribeEvent
-        public static void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
+        public static void registerEntities(RegisterEvent event) {
             OverlordEntities overlordEntities = OverlordConstants.getInjector().getInstance(OverlordEntities.class);
-            overlordEntities.setEntityRegistry((id, value) -> event.getRegistry().register(value.setRegistryName(id)));
+            overlordEntities.setEntityRegistry((id, value) -> event.register(Registry.ENTITY_TYPE_REGISTRY, id, () -> value));
             overlordEntities.register();
         }
     }

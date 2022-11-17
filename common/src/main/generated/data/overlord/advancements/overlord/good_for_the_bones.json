@@ -1,26 +1,26 @@
 {
     "parent": "overlord:overlord/root",
+    "criteria": {
+        "one_bucket_drank": {
+            "conditions": {
+                "totalBucketsDrank": 0
+            },
+            "trigger": "overlord:skeleton_drank_milk"
+        }
+    },
     "display": {
-        "icon": {
-            "item": "minecraft:milk_bucket"
-        },
-        "title": {
-            "translate": "advancements.overlord.good_for_the_bones.title"
-        },
+        "announce_to_chat": true,
         "description": {
             "translate": "advancements.overlord.good_for_the_bones.description"
         },
         "frame": "task",
+        "hidden": false,
+        "icon": {
+            "item": "minecraft:milk_bucket"
+        },
         "show_toast": true,
-        "announce_to_chat": true,
-        "hidden": false
-    },
-    "criteria": {
-        "one_bucket_drank": {
-            "trigger": "overlord:skeleton_drank_milk",
-            "conditions": {
-                "totalBucketsDrank": 0
-            }
+        "title": {
+            "translate": "advancements.overlord.good_for_the_bones.title"
         }
     },
     "requirements": [

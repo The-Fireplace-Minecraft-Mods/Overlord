@@ -2,28 +2,28 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1.0,
-      "bonus_rolls": 0.0,
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "conditions": [
+        "bonus_rolls": 0.0,
+        "conditions": [
             {
-              "condition": "minecraft:block_state_property",
-              "block": "overlord:birch_casket",
-              "properties": {
-                "part": "head"
-              }
+                "condition": "minecraft:survives_explosion"
             }
+        ],
+        "entries": [
+            {
+                "type": "minecraft:item",
+                "conditions": [
+                    {
+                        "block": "overlord:birch_casket",
+                        "condition": "minecraft:block_state_property",
+                        "properties": {
+                            "part": "head"
+                        }
+                    }
           ],
           "name": "overlord:birch_casket"
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ]
+        "rolls": 1.0
     }
   ]
 }

@@ -1,19 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "  #",
-    " / ",
-    "/  "
-  ],
-  "key": {
-    "#": {
-      "item": "minecraft:amethyst_shard"
+    "type": "minecraft:crafting_shaped",
+    "key": {
+        "#": {
+            "item": "minecraft:amethyst_shard"
+        },
+        "/": {
+            "item": "minecraft:stick"
+        }
     },
-    "/": {
-      "item": "minecraft:stick"
+    "pattern": [
+        "  #",
+        " / ",
+        "/  "
+    ],
+    "result": {
+        "item": "overlord:orders_wand"
     }
-  },
-  "result": {
-    "item": "overlord:orders_wand"
-  }
 }

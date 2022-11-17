@@ -15,18 +15,17 @@ import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryStacks;
-import me.shedaniel.rei.forge.REIPlugin;
+import me.shedaniel.rei.forge.REIPluginClient;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.api.distmarker.Dist;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@REIPlugin(Dist.CLIENT)
+@REIPluginClient
 public final class ReiClient implements REIClientPlugin
 {
     @Override

@@ -16,7 +16,6 @@ import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -125,19 +124,19 @@ public class SkeletonBuildingDisplay implements Display
             skullStack = new ItemStack(Items.SKELETON_SKULL);
         }
 
-        skullStack.setHoverName(new TranslatableComponent("entity.overlord.owned_skeleton"));
+        skullStack.setHoverName(Component.translatable("entity.overlord.owned_skeleton"));
 
         return skullStack;
     }
 
     private List<Component> getSkullTooltip() {
-        Component yes = new TranslatableComponent("gui.overlord.rei.tooltip.yes");
-        Component no = new TranslatableComponent("gui.overlord.rei.tooltip.no");
+        Component yes = Component.translatable("gui.overlord.rei.tooltip.yes");
+        Component no = Component.translatable("gui.overlord.rei.tooltip.no");
         return List.of(
-            new TranslatableComponent("gui.overlord.rei.tooltip.health", this.totalMaxHealth).setStyle(textStyles.red()),
-            new TranslatableComponent("gui.overlord.rei.tooltip.muscles", this.includeMuscle ? yes : no).setStyle(getStyleByBoolean(this.includeMuscle)),
-            new TranslatableComponent("gui.overlord.rei.tooltip.skin", this.includeSkin ? yes : no).setStyle(getStyleByBoolean(this.includeSkin)),
-            new TranslatableComponent("gui.overlord.rei.tooltip.player_appearance", this.includePlayerColor ? yes : no).setStyle(getStyleByBoolean(this.includePlayerColor))
+            Component.translatable("gui.overlord.rei.tooltip.health", this.totalMaxHealth).setStyle(textStyles.red()),
+            Component.translatable("gui.overlord.rei.tooltip.muscles", this.includeMuscle ? yes : no).setStyle(getStyleByBoolean(this.includeMuscle)),
+            Component.translatable("gui.overlord.rei.tooltip.skin", this.includeSkin ? yes : no).setStyle(getStyleByBoolean(this.includeSkin)),
+            Component.translatable("gui.overlord.rei.tooltip.player_appearance", this.includePlayerColor ? yes : no).setStyle(getStyleByBoolean(this.includePlayerColor))
         );
     }
 

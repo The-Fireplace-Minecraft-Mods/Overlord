@@ -1,29 +1,29 @@
 {
     "parent": "overlord:overlord/fleshed_out",
+    "criteria": {
+        "adult_flesh_muscle_skeleton": {
+            "conditions": {
+                "hasMuscles": true,
+                "hasPlayerSkin": true,
+                "hasSkin": true,
+                "phase": "ADULT"
+            },
+            "trigger": "overlord:skeleton_grown"
+        }
+    },
     "display": {
-        "icon": {
-            "item": "minecraft:player_head"
-        },
-        "title": {
-            "translate": "advancements.overlord.skinwalker.title"
-        },
+        "announce_to_chat": true,
         "description": {
             "translate": "advancements.overlord.skinwalker.description"
         },
         "frame": "task",
+        "hidden": false,
+        "icon": {
+            "item": "minecraft:player_head"
+        },
         "show_toast": true,
-        "announce_to_chat": true,
-        "hidden": false
-    },
-    "criteria": {
-        "adult_flesh_muscle_skeleton": {
-            "trigger": "overlord:skeleton_grown",
-            "conditions": {
-                "phase": "ADULT",
-                "hasSkin": true,
-                "hasMuscles": true,
-                "hasPlayerSkin": true
-            }
+        "title": {
+            "translate": "advancements.overlord.skinwalker.title"
         }
     },
     "requirements": [

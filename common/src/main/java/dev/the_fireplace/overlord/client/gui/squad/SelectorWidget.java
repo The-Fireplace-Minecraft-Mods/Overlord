@@ -71,7 +71,7 @@ public class SelectorWidget extends ObjectSelectionList<SelectorEntry>
 
 
     @Override
-    protected void renderList(PoseStack matrices, int x, int y, int mouseX, int mouseY, float delta) {
+    protected void renderList(PoseStack matrices, int mouseX, int mouseY, float delta) {
         int itemCount = this.getItemCount();
 
         for (int index = 0; index < itemCount; ++index) {

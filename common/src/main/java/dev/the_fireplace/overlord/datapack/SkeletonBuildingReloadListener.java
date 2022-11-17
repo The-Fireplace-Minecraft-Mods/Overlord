@@ -13,6 +13,7 @@ import dev.the_fireplace.overlord.entity.creation.ingredient.JsonIngredient;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.item.Item;
@@ -37,18 +38,18 @@ public class SkeletonBuildingReloadListener implements ResourceManagerReloadList
     public void onResourceManagerReload(ResourceManager manager) {
         Map<String, JsonObject> recipeJsons = new HashMap<>();
         String lastStandardRecipeDomain = "";
-        for (ResourceLocation id : manager.listResources("skeleton_recipes", path -> path.endsWith(".json"))) {
+        for (Map.Entry<ResourceLocation, Resource> entry : manager.listResources("skeleton_recipes", path -> path.getPath().endsWith(".json")).entrySet()) {
             JsonObject jsonObject = null;
-            try (InputStream stream = manager.getResource(id).getInputStream()) {
+            try (InputStream stream = entry.getValue().open()) {
                 jsonObject = jsonFileReader.readJsonFromStream(stream);
             } catch (Exception e) {
-                OverlordConstants.getLogger().error("Error occurred while loading resource json " + id.toString(), e);
+                OverlordConstants.getLogger().error("Error occurred while loading resource json " + entry.toString(), e);
             }
             if (jsonObject == null) {
                 continue;
             }
-            String resourceDomain = id.getNamespace();
-            String resourcePath = id.getPath();
+            String resourceDomain = entry.getKey().getNamespace();
+            String resourcePath = entry.getKey().getPath();
             boolean isStandardRecipe = resourcePath.equals("skeleton_recipes/standard.json");
             if (!recipeJsons.containsKey(resourcePath)) {
                 recipeJsons.put(resourcePath, jsonObject);

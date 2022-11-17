@@ -1,33 +1,33 @@
 {
     "parent": "overlord:overlord/root",
+    "criteria": {
+        "carved_pumpkin": {
+            "conditions": {
+                "items": [
+                    {
+                        "equipmentSlot": "head",
+                        "items": [
+                            "minecraft:carved_pumpkin"
+                        ]
+                    }
+                ]
+            },
+            "trigger": "overlord:skeleton_inventory_changed"
+        }
+    },
     "display": {
-        "icon": {
-            "item": "minecraft:carved_pumpkin"
-        },
-        "title": {
-            "translate": "advancements.overlord.scarecrow.title"
-        },
+        "announce_to_chat": true,
         "description": {
             "translate": "advancements.overlord.scarecrow.description"
         },
         "frame": "task",
+        "hidden": false,
+        "icon": {
+            "item": "minecraft:carved_pumpkin"
+        },
         "show_toast": true,
-        "announce_to_chat": true,
-        "hidden": false
-    },
-    "criteria": {
-        "carved_pumpkin": {
-            "trigger": "overlord:skeleton_inventory_changed",
-            "conditions": {
-                "items": [
-                    {
-                        "items": [
-                            "minecraft:carved_pumpkin"
-                        ],
-                        "equipmentSlot": "head"
-                    }
-                ]
-            }
+        "title": {
+            "translate": "advancements.overlord.scarecrow.title"
         }
     },
     "requirements": [

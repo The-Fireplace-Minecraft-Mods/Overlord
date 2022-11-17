@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[38,)"
+loaderVersion = "[41,)"
 license = "${license_name}"
 issueTrackerURL = "${github_url}/issues"
 showAsResourcePack = false
@@ -9,7 +9,7 @@ modId = "overlord"
 version = "${version}"
 displayName = "${readable_name}"
 updateJSONURL = "${forge_update_json_url}"
-displayURL = "${curseforge_url}"
+displayURL = "${modrinth_url}"
 logoFile = "${logo_filename}"
 credits = ""
 authors = "The_Fireplace"
@@ -18,14 +18,14 @@ description = "${mod_description}"
 [[dependencies.overlord]]
 modId = "forge"
 mandatory = true
-versionRange = "[38,)"
+versionRange = "[41,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.overlord]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.18,1.19)"
+versionRange = "[1.19,1.20)"
 ordering = "NONE"
 side = "BOTH"
 

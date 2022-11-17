@@ -4,26 +4,21 @@ import com.google.common.collect.Streams;
 import dev.the_fireplace.overlord.OverlordConstants;
 import dev.the_fireplace.overlord.block.OverlordBlockTags;
 import dev.the_fireplace.overlord.block.OverlordBlocks;
-import net.minecraft.core.Registry;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.tags.TagsProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
-import java.nio.file.Path;
 import java.util.Arrays;
 
-public class BlockTagsProvider extends TagsProvider<Block>
+public class BlockTagsProvider extends FabricTagProvider.BlockTagProvider
 {
-    public BlockTagsProvider(DataGenerator root) {
-        super(root, Registry.BLOCK);
+    public BlockTagsProvider(FabricDataGenerator root) {
+        super(root);
     }
 
     @Override
-    protected void addTags() {
+    protected void generateTags() {
         OverlordBlocks overlordBlocks = OverlordConstants.getInjector().getInstance(OverlordBlocks.class);
         Block[] woodCaskets = {
             overlordBlocks.getOakCasket(),
@@ -71,20 +66,5 @@ public class BlockTagsProvider extends TagsProvider<Block>
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
             stoneTombstones
         );
-    }
-
-    @Override
-    protected Path getPath(ResourceLocation identifier) {
-        return this.generator.getOutputFolder().resolve("data/" + identifier.getNamespace() + "/tags/blocks/" + identifier.getPath() + ".json");
-    }
-
-    @Override
-    public String getName() {
-        return "Overlord Block Tags";
-    }
-
-    @Override
-    public Tag.Builder getOrCreateRawBuilder(TagKey<Block> tag) {
-        return super.getOrCreateRawBuilder(tag);
     }
 }

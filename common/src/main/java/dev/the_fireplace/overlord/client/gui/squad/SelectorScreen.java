@@ -20,7 +20,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 
@@ -65,7 +64,7 @@ public class SelectorScreen extends Screen
     protected void init() {
         selectorWidget = createSquadSelector();
         this.addRenderableWidget(selectorWidget);
-        this.addRenderableWidget(new Button(this.width / 2 - 202, this.height - 30, 200, 20, new TranslatableComponent("gui.overlord.confirm_exit"), (button) -> {
+        this.addRenderableWidget(new Button(this.width / 2 - 202, this.height - 30, 200, 20, Component.translatable("gui.overlord.confirm_exit"), (button) -> {
             if (entityId != null) {
                 packetSender.sendToServer(serverboundPackets.setSquad(), setSquadBufferBuilder.buildForEntity(selectedSquad, entityId));
             } else {
@@ -76,7 +75,7 @@ public class SelectorScreen extends Screen
             }
             closeScreen();
         }));
-        this.addRenderableWidget(new Button(this.width / 2 + 2, this.height - 30, 200, 20, new TranslatableComponent("gui.cancel"), (button) -> {
+        this.addRenderableWidget(new Button(this.width / 2 + 2, this.height - 30, 200, 20, Component.translatable("gui.cancel"), (button) -> {
             closeScreen();
         }));
         this.addRenderableWidget(editButton = new OverlayButtonWidget(0, this.height - 54, this.width / 3, 20, Component.nullToEmpty(""), (button) -> {
@@ -84,7 +83,7 @@ public class SelectorScreen extends Screen
             Squad currentSquad = ownedSquads.stream().filter(squad -> squad.getSquadId().equals(selectedSquad)).findFirst().orElse(null);
             this.minecraft.setScreen(new EditScreen(this, squadItems, currentSquad));
         }));
-        this.addRenderableWidget(deleteButton = new Button(this.width - 102, 2, 100, 20, new TranslatableComponent("gui.overlord.squad_manager.delete_squad"), (button) -> {
+        this.addRenderableWidget(deleteButton = new Button(this.width - 102, 2, 100, 20, Component.translatable("gui.overlord.squad_manager.delete_squad"), (button) -> {
             packetSender.sendToServer(serverboundPackets.deleteSquad(), deleteSquadBufferBuilder.build(selectedSquad));
             Optional<Squad> selectedSquad = findSquadById(this.selectedSquad);
             if (selectedSquad.isPresent()) {
@@ -112,8 +111,8 @@ public class SelectorScreen extends Screen
     private void updateButtons() {
         if (editButton != null) {
             editButton.setMessage(!emptyUUID.is(selectedSquad)
-                ? new TranslatableComponent("gui.overlord.squad_manager.edit_squad")
-                : new TranslatableComponent("gui.overlord.squad_manager.create_squad")
+                ? Component.translatable("gui.overlord.squad_manager.edit_squad")
+                : Component.translatable("gui.overlord.squad_manager.create_squad")
             );
         }
         if (deleteButton != null) {

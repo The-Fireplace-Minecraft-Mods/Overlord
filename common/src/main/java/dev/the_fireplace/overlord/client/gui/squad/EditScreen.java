@@ -23,7 +23,6 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -32,7 +31,7 @@ import java.util.*;
 
 public class EditScreen extends Screen
 {
-    private static final TranslatableComponent SQUAD_NAME_FIELD_TITLE = new TranslatableComponent("gui.overlord.create_squad.squad_name");
+    private static final Component SQUAD_NAME_FIELD_TITLE = Component.translatable("gui.overlord.create_squad.squad_name");
 
     private final EmptyUUID emptyUUID;
     private final SquadPatterns squadPatterns;
@@ -53,7 +52,7 @@ public class EditScreen extends Screen
     private List<Component> errors = Collections.emptyList();
 
     protected EditScreen(SelectorScreen parent, Collection<ItemStack> squadItems, @Nullable Squad currentSquad) {
-        super(new TranslatableComponent("gui.overlord.create_squad.name"));
+        super(Component.translatable("gui.overlord.create_squad.name"));
         Injector injector = OverlordConstants.getInjector();
         this.emptyUUID = injector.getInstance(EmptyUUID.class);
         this.squadPatterns = injector.getInstance(Key.get(SquadPatterns.class, Names.named("client")));
@@ -106,10 +105,10 @@ public class EditScreen extends Screen
             updateConfirmButtonEnabled();
         };
         Button.OnTooltip confirmTooltipSupplier = (buttonWidget, matrixStack, i, j) -> EditScreen.this.renderComponentTooltip(matrixStack, errors, i, j);
-        confirmButton = new Button(this.width / 2 - 202, this.height - 30, 200, 20, new TranslatableComponent("gui.overlord.confirm_exit"), confirmAction, confirmTooltipSupplier);
+        confirmButton = new Button(this.width / 2 - 202, this.height - 30, 200, 20, Component.translatable("gui.overlord.confirm_exit"), confirmAction, confirmTooltipSupplier);
         this.addRenderableWidget(confirmButton);
         updateConfirmButtonEnabled();
-        this.addRenderableWidget(new Button(this.width / 2 + 2, this.height - 30, 200, 20, new TranslatableComponent("gui.cancel"), (button) -> {
+        this.addRenderableWidget(new Button(this.width / 2 + 2, this.height - 30, 200, 20, Component.translatable("gui.cancel"), (button) -> {
             closeScreen();
         }));
     }
@@ -192,6 +191,6 @@ public class EditScreen extends Screen
     }
 
     private Component createStyledError(String s) {
-        return new TranslatableComponent(s).setStyle(textStyles.red());
+        return Component.translatable(s).setStyle(textStyles.red());
     }
 }

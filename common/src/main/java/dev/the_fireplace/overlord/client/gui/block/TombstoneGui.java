@@ -17,7 +17,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -31,7 +31,7 @@ public class TombstoneGui extends Screen
     private TextFieldHelper selectionManager;
 
     public TombstoneGui(TombstoneBlockEntity tombstone) {
-        super(new TranslatableComponent("gui.overlord.tombstone.edit"));
+        super(Component.translatable("gui.overlord.tombstone.edit"));
         this.tombstone = tombstone;
         Injector injector = OverlordConstants.getInjector();
         this.packetSender = injector.getInstance(PacketSender.class);
@@ -43,7 +43,7 @@ public class TombstoneGui extends Screen
     protected void init() {
         assert this.minecraft != null;
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, new TranslatableComponent("gui.done"), (buttonWidget) -> {
+        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, Component.translatable("gui.done"), (buttonWidget) -> {
             this.finishEditing();
         }));
         this.selectionManager = new TextFieldHelper(
@@ -111,7 +111,7 @@ public class TombstoneGui extends Screen
         Lighting.setupForFlatItems();
         this.renderBackground(matrixStack);
         int textColor = 0xFFFFFF;
-        drawCenteredString(matrixStack, this.font, this.title.getContents(), this.width / 2, 40, textColor);
+        drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 40, textColor);
         matrixStack.pushPose();
         matrixStack.translate(this.width / 2.0, 0.0D, 50.0D);
         float scale = 93.75F;
@@ -193,8 +193,7 @@ public class TombstoneGui extends Screen
                 bufferBuilder.vertex(matrix4f, var35, (float) (cursorY + 9), 0.0F).color(0, 0, 255, 255).endVertex();
                 bufferBuilder.vertex(matrix4f, (float) aa, (float) cursorY, 0.0F).color(0, 0, 255, 255).endVertex();
                 bufferBuilder.vertex(matrix4f, (float) z, (float) cursorY, 0.0F).color(0, 0, 255, 255).endVertex();
-                bufferBuilder.end();
-                BufferUploader.end(bufferBuilder);
+                BufferUploader.drawWithShader(bufferBuilder.end());
                 RenderSystem.disableColorLogicOp();
                 RenderSystem.enableTexture();
             }

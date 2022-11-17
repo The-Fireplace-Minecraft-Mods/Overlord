@@ -18,7 +18,6 @@ import dev.the_fireplace.overlord.network.server.builder.SquadUpdatedBufferBuild
 import dev.the_fireplace.overlord.network.server.builder.SyncSquadsBufferBuilder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -165,7 +164,7 @@ public final class UpdateSquadPacketReceiver implements ServerboundPacketReceive
     }
 
     private Component getStyledError(String translationKey) {
-        return new TranslatableComponent(translationKey).setStyle(textStyles.red());
+        return Component.translatable(translationKey).setStyle(textStyles.red());
     }
 
     private void logInvalidPacketWarning(ServerPlayer player) {

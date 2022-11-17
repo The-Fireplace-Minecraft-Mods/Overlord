@@ -10,7 +10,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -29,7 +28,7 @@ public class OwnedSkeletonGui extends AbstractContainerScreen<OwnedSkeletonConta
         super(
             skeleton.getContainer(playerInventory, syncId),
             playerInventory,
-            new TranslatableComponent("entity.overlord.owned_skeleton")
+            Component.translatable("entity.overlord.owned_skeleton")
         );
         entity = skeleton;
         imageHeight = 252;
@@ -40,8 +39,8 @@ public class OwnedSkeletonGui extends AbstractContainerScreen<OwnedSkeletonConta
     protected void init() {
         super.init();
         //x, y, width, height
-        addRenderableWidget(new Button(leftPos + 96, topPos + 58, 74, 20, new TranslatableComponent("gui.overlord.orders"), (b) -> screenOpener.openOrdersGUI(entity)));
-        addRenderableWidget(new Button(leftPos + 96, topPos + 38, 74, 20, new TranslatableComponent("gui.overlord.select_squad"), (b) -> screenOpener.openSquadSelectorGUI(entity)));
+        addRenderableWidget(new Button(leftPos + 96, topPos + 58, 74, 20, Component.translatable("gui.overlord.orders"), (b) -> screenOpener.openOrdersGUI(entity)));
+        addRenderableWidget(new Button(leftPos + 96, topPos + 38, 74, 20, Component.translatable("gui.overlord.select_squad"), (b) -> screenOpener.openSquadSelectorGUI(entity)));
     }
 
     @Override

@@ -115,8 +115,12 @@ public class OwnedSkeletonRenderer extends HumanoidMobRenderer<OwnedSkeletonEnti
                 gameProfile,
                 0,
                 GameType.SURVIVAL,
+                null,
                 null
-            )));
+            ),
+                Minecraft.getInstance().getServiceSignatureValidator(),
+                false
+            ));
         }
     }
 

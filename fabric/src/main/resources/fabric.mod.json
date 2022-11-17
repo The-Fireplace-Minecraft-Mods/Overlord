@@ -8,10 +8,10 @@
         "The_Fireplace"
     ],
     "contact": {
-        "homepage": "${curseforge_url}",
+        "homepage": "${modrinth_url}",
         "sources": "${github_url}",
         "issues": "${github_url}/issues",
-        "modrinth": "${modrinth_url}"
+        "curseforge": "${curseforge_url}"
     },
     "license": "${license_id}",
     "icon": "${logo_filename}",
@@ -39,7 +39,7 @@
     "depends": {
         "fabricloader": ">=0.12.0",
         "fabric": ">=0.47.8",
-        "minecraft": "1.18.X",
+        "minecraft": "1.19.X",
         "annotateddi": ">=4 <5",
         "fireplacelib": ">=7 <8"
     },

@@ -5,7 +5,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -141,12 +141,12 @@ public class ItemSelectionScreenPart implements PartialScreen
     }
 
     private void createPageChangeButtons() {
-        previousButton = new Button(x, y, this.width / 2 - 2, 20, new TranslatableComponent("gui.overlord.create_squad.previous"), buttonWidget -> {
+        previousButton = new Button(x, y, this.width / 2 - 2, 20, Component.translatable("gui.overlord.create_squad.previous"), buttonWidget -> {
             this.state.currentPage--;
             updatePageChangeButtonUsability();
             updateItemVisibility();
         });
-        nextButton = new Button(x + width / 2 + 4, y, this.width / 2 - 6, 20, new TranslatableComponent("gui.overlord.create_squad.next"), buttonWidget -> {
+        nextButton = new Button(x + width / 2 + 4, y, this.width / 2 - 6, 20, Component.translatable("gui.overlord.create_squad.next"), buttonWidget -> {
             this.state.currentPage++;
             updatePageChangeButtonUsability();
             updateItemVisibility();

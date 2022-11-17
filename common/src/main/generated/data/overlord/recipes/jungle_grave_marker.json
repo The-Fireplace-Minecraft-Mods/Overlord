@@ -1,21 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "group": "grave_marker",
-  "pattern": [
-    "%%%",
-    " # ",
-    " # "
-  ],
-  "key": {
-    "#": {
-      "item": "minecraft:jungle_fence"
+    "type": "minecraft:crafting_shaped",
+    "group": "grave_marker",
+    "key": {
+        "#": {
+            "item": "minecraft:jungle_fence"
+        },
+        "%": {
+            "item": "minecraft:jungle_slab"
+        }
     },
-    "%": {
-      "item": "minecraft:jungle_slab"
+    "pattern": [
+        "%%%",
+        " # ",
+        " # "
+    ],
+    "result": {
+        "count": 2,
+        "item": "overlord:jungle_grave_marker"
     }
-  },
-  "result": {
-    "item": "overlord:jungle_grave_marker",
-    "count": 2
-  }
 }

@@ -17,12 +17,11 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.world.inventory.ChestMenu;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.RegisterEvent;
 
 import javax.inject.Inject;
 
@@ -40,7 +39,7 @@ public final class ForgeClientInitializer
     }
 
     public void init() {
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(MenuType.class, EventPriority.LOW, this::registerScreens);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(EventPriority.LOW, this::registerScreens);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerBlockEntityRenderers);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerSprite);
         OverlordModelLayers.register();
@@ -54,7 +53,7 @@ public final class ForgeClientInitializer
     }
 
     @SuppressWarnings("RedundantCast")
-    public void registerScreens(RegistryEvent.Register<MenuType<?>> event) {
+    public void registerScreens(RegisterEvent event) {
         MenuScreens.register(
             overlordBlockEntities.getCasketScreenHandler(),
             (MenuScreens.ScreenConstructor<ChestMenu, CasketGui>) (container, playerInventory, title) -> new CasketGui(container, playerInventory)

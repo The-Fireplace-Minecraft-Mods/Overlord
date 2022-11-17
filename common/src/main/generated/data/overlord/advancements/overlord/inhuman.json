@@ -1,29 +1,29 @@
 {
     "parent": "overlord:overlord/fleshed_out",
+    "criteria": {
+        "adult_flesh_no_muscle_skeleton": {
+            "conditions": {
+                "hasMuscles": false,
+                "hasPlayerSkin": true,
+                "hasSkin": true,
+                "phase": "ADULT"
+            },
+            "trigger": "overlord:skeleton_grown"
+        }
+    },
     "display": {
-        "icon": {
-            "item": "minecraft:zombie_head"
-        },
-        "title": {
-            "translate": "advancements.overlord.inhuman.title"
-        },
+        "announce_to_chat": true,
         "description": {
             "translate": "advancements.overlord.inhuman.description"
         },
         "frame": "task",
+        "hidden": false,
+        "icon": {
+            "item": "minecraft:zombie_head"
+        },
         "show_toast": true,
-        "announce_to_chat": true,
-        "hidden": false
-    },
-    "criteria": {
-        "adult_flesh_no_muscle_skeleton": {
-            "trigger": "overlord:skeleton_grown",
-            "conditions": {
-                "phase": "ADULT",
-                "hasSkin": true,
-                "hasMuscles": false,
-                "hasPlayerSkin": true
-            }
+        "title": {
+            "translate": "advancements.overlord.inhuman.title"
         }
     },
     "requirements": [

@@ -40,7 +40,7 @@ public final class ForgeMenuLoaderHelper implements MenuLoaderHelper
     public void openMenu(Player player, MenuProvider menuProvider) {
         if (player instanceof ServerPlayer serverPlayer) {
             if (menuProvider instanceof NbtMenuProvider nbtMenuProvider) {
-                NetworkHooks.openGui(serverPlayer, menuProvider, friendlyByteBuf -> nbtMenuProvider.writeScreenOpeningData(serverPlayer, friendlyByteBuf));
+                NetworkHooks.openScreen(serverPlayer, menuProvider, friendlyByteBuf -> nbtMenuProvider.writeScreenOpeningData(serverPlayer, friendlyByteBuf));
             } else {
                 player.openMenu(menuProvider);
             }

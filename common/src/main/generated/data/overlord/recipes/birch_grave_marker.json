@@ -1,21 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "group": "grave_marker",
-  "pattern": [
-    "%%%",
-    " # ",
-    " # "
-  ],
-  "key": {
-    "#": {
-      "item": "minecraft:birch_fence"
+    "type": "minecraft:crafting_shaped",
+    "group": "grave_marker",
+    "key": {
+        "#": {
+            "item": "minecraft:birch_fence"
+        },
+        "%": {
+            "item": "minecraft:birch_slab"
+        }
     },
-    "%": {
-      "item": "minecraft:birch_slab"
+    "pattern": [
+        "%%%",
+        " # ",
+        " # "
+    ],
+    "result": {
+        "count": 2,
+        "item": "overlord:birch_grave_marker"
     }
-  },
-  "result": {
-    "item": "overlord:birch_grave_marker",
-    "count": 2
-  }
 }

@@ -2,6 +2,7 @@ package dev.the_fireplace.overlord.mixin;
 
 import dev.the_fireplace.overlord.OverlordConstants;
 import dev.the_fireplace.overlord.util.SkeletonSpawnUtils;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -26,7 +27,7 @@ public abstract class AbstractSkeletonEntityMixin extends Monster
     }
 
     @Inject(method = "populateDefaultEquipmentSlots", at = @At("RETURN"))
-    public void addSansMask(DifficultyInstance difficulty, CallbackInfo ci) {
+    public void addSansMask(RandomSource randomSource, DifficultyInstance $$1, CallbackInfo ci) {
         OverlordConstants.getInjector().getInstance(SkeletonSpawnUtils.class).addMask(this);
     }
 }

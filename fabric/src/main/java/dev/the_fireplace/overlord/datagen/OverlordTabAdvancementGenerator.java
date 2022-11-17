@@ -9,7 +9,7 @@ import net.minecraft.advancements.FrameType;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.ImpossibleTrigger;
 import net.minecraft.advancements.critereon.KilledTrigger;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Items;
@@ -33,8 +33,8 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
     public void accept(Consumer<Advancement> consumer) {
         root = Advancement.Builder.advancement().display(
             Blocks.SKELETON_SKULL,
-            new TranslatableComponent("advancements.overlord.root.title"),
-            new TranslatableComponent("advancements.overlord.root.description"),
+            Component.translatable("advancements.overlord.root.title"),
+            Component.translatable("advancements.overlord.root.description"),
             new ResourceLocation("textures/block/bone_block_side.png"),
             FrameType.TASK,
             true,
@@ -54,8 +54,8 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
     private void addEquipmentAdvancements(Consumer<Advancement> consumer) {
         Advancement poorCowDisguise = Advancement.Builder.advancement().parent(root).display(
             Items.LEATHER_CHESTPLATE,
-            new TranslatableComponent("advancements.overlord.poor_cow_disguise.title"),
-            new TranslatableComponent("advancements.overlord.poor_cow_disguise.description"),
+            Component.translatable("advancements.overlord.poor_cow_disguise.title"),
+            Component.translatable("advancements.overlord.poor_cow_disguise.description"),
             null,
             FrameType.TASK,
             true,
@@ -70,8 +70,8 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
 
         Advancement scarecrow = Advancement.Builder.advancement().parent(root).display(
             Items.CARVED_PUMPKIN,
-            new TranslatableComponent("advancements.overlord.scarecrow.title"),
-            new TranslatableComponent("advancements.overlord.scarecrow.description"),
+            Component.translatable("advancements.overlord.scarecrow.title"),
+            Component.translatable("advancements.overlord.scarecrow.description"),
             null,
             FrameType.TASK,
             true,
@@ -83,8 +83,8 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
 
         Advancement falseImposter = Advancement.Builder.advancement().parent(root).display(
             Items.SKELETON_SKULL,
-            new TranslatableComponent("advancements.overlord.false_imposter.title"),
-            new TranslatableComponent("advancements.overlord.false_imposter.description"),
+            Component.translatable("advancements.overlord.false_imposter.title"),
+            Component.translatable("advancements.overlord.false_imposter.description"),
             null,
             FrameType.TASK,
             true,
@@ -98,8 +98,8 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
     private void addTaskAdvancements(Consumer<Advancement> consumer) {
         Advancement selfSustaining = Advancement.Builder.advancement().parent(root).display(
                 Items.BUCKET,
-                new TranslatableComponent("advancements.overlord.self_sustaining.title"),
-                new TranslatableComponent("advancements.overlord.self_sustaining.description"),
+                Component.translatable("advancements.overlord.self_sustaining.title"),
+                Component.translatable("advancements.overlord.self_sustaining.description"),
                 null,
                 FrameType.TASK,
                 true,
@@ -112,8 +112,8 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
     private void addGrowthAdvancements(Consumer<Advancement> consumer) {
         Advancement goodForTheBones = Advancement.Builder.advancement().parent(root).display(
             Items.MILK_BUCKET,
-            new TranslatableComponent("advancements.overlord.good_for_the_bones.title"),
-            new TranslatableComponent("advancements.overlord.good_for_the_bones.description"),
+            Component.translatable("advancements.overlord.good_for_the_bones.title"),
+            Component.translatable("advancements.overlord.good_for_the_bones.description"),
             null,
             FrameType.TASK,
             true,
@@ -123,8 +123,8 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
 
         Advancement skeletonVeteran = Advancement.Builder.advancement().parent(goodForTheBones).display(
                 Items.MILK_BUCKET,
-                new TranslatableComponent("advancements.overlord.skeleton_veteran.title"),
-                new TranslatableComponent("advancements.overlord.skeleton_veteran.description"),
+                Component.translatable("advancements.overlord.skeleton_veteran.title"),
+                Component.translatable("advancements.overlord.skeleton_veteran.description"),
                 null,
                 FrameType.TASK,
                 true,
@@ -135,8 +135,8 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
 
         Advancement skeletonMaster = Advancement.Builder.advancement().parent(skeletonVeteran).display(
                 Items.MILK_BUCKET,
-                new TranslatableComponent("advancements.overlord.skeleton_master.title"),
-                new TranslatableComponent("advancements.overlord.skeleton_master.description"),
+                Component.translatable("advancements.overlord.skeleton_master.title"),
+                Component.translatable("advancements.overlord.skeleton_master.description"),
                 null,
                 FrameType.CHALLENGE,
                 true,
@@ -149,8 +149,8 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
     private void addCreationAdvancements(Consumer<Advancement> consumer) {
         Advancement bodybuilder = Advancement.Builder.advancement().parent(root).display(
             Items.BEEF,
-            new TranslatableComponent("advancements.overlord.bodybuilder.title"),
-            new TranslatableComponent("advancements.overlord.bodybuilder.description"),
+            Component.translatable("advancements.overlord.bodybuilder.title"),
+            Component.translatable("advancements.overlord.bodybuilder.description"),
             null,
             FrameType.TASK,
             true,
@@ -166,8 +166,8 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
 
         Advancement fleshedOut = Advancement.Builder.advancement().parent(root).display(
             Items.LEATHER,
-            new TranslatableComponent("advancements.overlord.fleshed_out.title"),
-            new TranslatableComponent("advancements.overlord.fleshed_out.description"),
+            Component.translatable("advancements.overlord.fleshed_out.title"),
+            Component.translatable("advancements.overlord.fleshed_out.description"),
             null,
             FrameType.TASK,
             true,
@@ -183,8 +183,8 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
 
         Advancement inhuman = Advancement.Builder.advancement().parent(fleshedOut).display(
             Items.ZOMBIE_HEAD,
-            new TranslatableComponent("advancements.overlord.inhuman.title"),
-            new TranslatableComponent("advancements.overlord.inhuman.description"),
+            Component.translatable("advancements.overlord.inhuman.title"),
+            Component.translatable("advancements.overlord.inhuman.description"),
             null,
             FrameType.TASK,
             true,
@@ -200,8 +200,8 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
 
         Advancement skinwalker = Advancement.Builder.advancement().parent(fleshedOut).display(
             Items.PLAYER_HEAD,
-            new TranslatableComponent("advancements.overlord.skinwalker.title"),
-            new TranslatableComponent("advancements.overlord.skinwalker.description"),
+            Component.translatable("advancements.overlord.skinwalker.title"),
+            Component.translatable("advancements.overlord.skinwalker.description"),
             null,
             FrameType.TASK,
             true,
@@ -217,8 +217,8 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
 
         Advancement augmented = Advancement.Builder.advancement().parent(root).display(
             Items.MAGENTA_STAINED_GLASS,
-            new TranslatableComponent("advancements.overlord.augmented.title"),
-            new TranslatableComponent("advancements.overlord.augmented.description"),
+            Component.translatable("advancements.overlord.augmented.title"),
+            Component.translatable("advancements.overlord.augmented.description"),
             null,
             FrameType.TASK,
             true,
@@ -234,8 +234,8 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
 
         Advancement trueImposter = Advancement.Builder.advancement().parent(augmented).display(
             Items.SKELETON_SKULL,
-            new TranslatableComponent("advancements.overlord.true_imposter.title"),
-            new TranslatableComponent("advancements.overlord.true_imposter.description"),
+            Component.translatable("advancements.overlord.true_imposter.title"),
+            Component.translatable("advancements.overlord.true_imposter.description"),
             null,
             FrameType.TASK,
             true,
@@ -251,8 +251,8 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
 
         Advancement suspicious = Advancement.Builder.advancement().parent(trueImposter).display(
             Items.SKELETON_SKULL,
-            new TranslatableComponent("advancements.overlord.suspicious.title"),
-            new TranslatableComponent("advancements.overlord.suspicious.description"),
+            Component.translatable("advancements.overlord.suspicious.title"),
+            Component.translatable("advancements.overlord.suspicious.description"),
             null,
             FrameType.CHALLENGE,
             true,
@@ -264,8 +264,8 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
     private void addBattleAdvancements(Consumer<Advancement> consumer) {
         Advancement firstBlood = Advancement.Builder.advancement().parent(root).display(
             Items.IRON_AXE,
-            new TranslatableComponent("advancements.overlord.first_blood.title"),
-            new TranslatableComponent("advancements.overlord.first_blood.description"),
+            Component.translatable("advancements.overlord.first_blood.title"),
+            Component.translatable("advancements.overlord.first_blood.description"),
             null,
             FrameType.TASK,
             true,
@@ -277,8 +277,8 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
         KilledTrigger.TriggerInstance onKilledSkeleton = KilledTrigger.TriggerInstance.playerKilledEntity(isSkeletonType);
         Advancement skeletonKiller = Advancement.Builder.advancement().parent(root).display(
                 Items.IRON_SWORD,
-                new TranslatableComponent("advancements.overlord.skeleton_killer.title"),
-                new TranslatableComponent("advancements.overlord.skeleton_killer.description"),
+                Component.translatable("advancements.overlord.skeleton_killer.title"),
+                Component.translatable("advancements.overlord.skeleton_killer.description"),
                 null,
                 FrameType.TASK,
                 true,
@@ -289,8 +289,8 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
 
         Advancement mirrorRoutine = Advancement.Builder.advancement().parent(firstBlood).display(
             Items.BOW,
-            new TranslatableComponent("advancements.overlord.mirror_routine.title"),
-            new TranslatableComponent("advancements.overlord.mirror_routine.description"),
+            Component.translatable("advancements.overlord.mirror_routine.title"),
+            Component.translatable("advancements.overlord.mirror_routine.description"),
             null,
             FrameType.CHALLENGE,
             true,

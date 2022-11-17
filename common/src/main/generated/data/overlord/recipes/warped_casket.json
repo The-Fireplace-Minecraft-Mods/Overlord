@@ -1,11 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
   "group": "wooden_casket",
-  "pattern": [
-    "###",
-    "%B%",
-    "###"
-  ],
   "key": {
     "#": {
       "item": "minecraft:stripped_warped_hyphae"
@@ -64,6 +59,11 @@
       }
     ]
   },
+  "pattern": [
+    "###",
+    "%B%",
+    "###"
+  ],
   "result": {
     "item": "overlord:warped_casket"
   }

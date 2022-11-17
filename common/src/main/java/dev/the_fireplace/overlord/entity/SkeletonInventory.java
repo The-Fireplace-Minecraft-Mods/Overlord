@@ -11,7 +11,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
@@ -430,7 +429,7 @@ public class SkeletonInventory implements Container, Nameable
 
     @Override
     public Component getName() {
-        return new TranslatableComponent("container.inventory");
+        return Component.translatable("container.inventory");
     }
 
     public boolean isUsingEffectiveTool(BlockState blockState) {
