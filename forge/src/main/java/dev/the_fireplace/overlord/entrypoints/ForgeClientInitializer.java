@@ -16,6 +16,7 @@ import dev.the_fireplace.overlord.item.OverlordItems;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.core.Registry;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -54,6 +55,9 @@ public final class ForgeClientInitializer
 
     @SuppressWarnings("RedundantCast")
     public void registerScreens(RegisterEvent event) {
+        if (!event.getRegistryKey().equals(Registry.MENU_REGISTRY)) {
+            return;
+        }
         MenuScreens.register(
             overlordBlockEntities.getCasketScreenHandler(),
             (MenuScreens.ScreenConstructor<ChestMenu, CasketGui>) (container, playerInventory, title) -> new CasketGui(container, playerInventory)

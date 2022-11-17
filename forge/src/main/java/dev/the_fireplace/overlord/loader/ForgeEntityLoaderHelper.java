@@ -57,6 +57,9 @@ public final class ForgeEntityLoaderHelper implements EntityLoaderHelper
     }
 
     public void registerMenus(RegisterEvent event) {
+        if (!event.getRegistryKey().equals(Registry.MENU_REGISTRY)) {
+            return;
+        }
         event.register(Registry.MENU_REGISTRY, OverlordEntities.OWNED_SKELETON_ID, () -> ownedSkeletonMenuType);
     }
 

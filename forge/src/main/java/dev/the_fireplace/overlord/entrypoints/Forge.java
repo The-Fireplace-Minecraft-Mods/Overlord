@@ -49,6 +49,9 @@ public final class Forge
     {
         @SubscribeEvent
         public static void registerBlocks(RegisterEvent event) {
+            if (!event.getRegistryKey().equals(Registry.BLOCK_REGISTRY)) {
+                return;
+            }
             OverlordBlocks overlordBlocks = OverlordConstants.getInjector().getInstance(OverlordBlocks.class);
             overlordBlocks.setBlockRegistry((id, value) -> event.register(Registry.BLOCK_REGISTRY, id, () -> value));
             overlordBlocks.registerBlocks(OverlordBlocks.RegistryType.BLOCK);
@@ -56,6 +59,9 @@ public final class Forge
 
         @SubscribeEvent
         public static void registerItems(RegisterEvent event) {
+            if (!event.getRegistryKey().equals(Registry.ITEM_REGISTRY)) {
+                return;
+            }
             OverlordBlocks overlordBlocks = OverlordConstants.getInjector().getInstance(OverlordBlocks.class);
             OverlordItems overlordItems = OverlordConstants.getInjector().getInstance(OverlordItems.class);
             RegistryHelper<Item> itemRegistryHelper = (id, value) -> event.register(Registry.ITEM_REGISTRY, id, () -> value);
@@ -67,6 +73,9 @@ public final class Forge
 
         @SubscribeEvent
         public static void registerBlockEntities(RegisterEvent event) {
+            if (!event.getRegistryKey().equals(Registry.BLOCK_ENTITY_TYPE_REGISTRY)) {
+                return;
+            }
             OverlordBlockEntities overlordBlockEntities = OverlordConstants.getInjector().getInstance(OverlordBlockEntities.class);
             overlordBlockEntities.setBlockEntityRegistry((id, value) -> event.register(Registry.BLOCK_ENTITY_TYPE_REGISTRY, id, () -> value));
             overlordBlockEntities.register();
@@ -74,6 +83,9 @@ public final class Forge
 
         @SubscribeEvent
         public static void registerEntities(RegisterEvent event) {
+            if (!event.getRegistryKey().equals(Registry.ENTITY_TYPE_REGISTRY)) {
+                return;
+            }
             OverlordEntities overlordEntities = OverlordConstants.getInjector().getInstance(OverlordEntities.class);
             overlordEntities.setEntityRegistry((id, value) -> event.register(Registry.ENTITY_TYPE_REGISTRY, id, () -> value));
             overlordEntities.register();

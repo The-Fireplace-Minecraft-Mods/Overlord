@@ -40,6 +40,9 @@ public final class ForgeBlockEntityLoaderHelper implements BlockEntityLoaderHelp
     }
 
     public void registerMenus(RegisterEvent event) {
+        if (!event.getRegistryKey().equals(Registry.MENU_REGISTRY)) {
+            return;
+        }
         event.register(Registry.MENU_REGISTRY, OverlordBlockEntities.CASKET_BLOCK_ENTITY_ID, () -> chestMenuType);
     }
 }
