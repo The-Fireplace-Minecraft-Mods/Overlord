@@ -20,7 +20,7 @@ public final class FabricEntityLoaderHelper implements EntityLoaderHelper
     @Override
     public EntityType<OwnedSkeletonEntity> buildOwnedSkeletonType() {
         return FabricEntityTypeBuilder.create(MobCategory.MISC, OwnedSkeletonEntity::new)
-            .dimensions(EntityDimensions.scalable(1, 2))
+            .dimensions(EntityDimensions.scalable(0.6F, 1.99F))
             .trackable(24, 3, true)
             .build();
     }

@@ -144,6 +144,17 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         }
     }
 
+    @Override
+    public EntityDimensions getDimensions(Pose pose) {
+        EntityDimensions parentDimensions = super.getDimensions(pose);
+        float width = 0.6f;
+        if (hasMuscles()) {
+            width += 0.2F;
+        }
+
+        return new EntityDimensions(parentDimensions.width / 0.6F * width, parentDimensions.height, parentDimensions.fixed);
+    }
+
     public ItemStack getAugmentBlockStack() {
         return entityData.get(AUGMENT_BLOCK);
     }
