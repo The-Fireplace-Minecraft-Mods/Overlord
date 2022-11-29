@@ -1,1 +1,1 @@
-Added Spanish translation (OMG67)
+Fixed skeleton hitboxes
