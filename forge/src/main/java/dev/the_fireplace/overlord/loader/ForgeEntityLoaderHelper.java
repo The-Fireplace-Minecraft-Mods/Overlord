@@ -28,7 +28,7 @@ public final class ForgeEntityLoaderHelper implements EntityLoaderHelper
     @Override
     public EntityType<OwnedSkeletonEntity> buildOwnedSkeletonType() {
         EntityType<OwnedSkeletonEntity> ownedSkeleton = EntityType.Builder.of(OwnedSkeletonEntity::new, MobCategory.MISC)
-            .sized(1, 2)
+            .sized(0.6F, 1.99F)
             .setTrackingRange(24)
             .setUpdateInterval(3)
             .setShouldReceiveVelocityUpdates(true)

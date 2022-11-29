@@ -24,7 +24,7 @@ public final class FabricEntityLoaderHelper implements EntityLoaderHelper
         return FabricEntityTypeBuilder.createLiving()
             .entityFactory(OwnedSkeletonEntity::new)
             .defaultAttributes(OwnedSkeletonEntity::createOwnedSkeletonAttributes)
-            .dimensions(EntityDimensions.scalable(1, 2))
+            .dimensions(EntityDimensions.scalable(0.6F, 1.99F))
             .trackable(24, 3, true)
             .build();
     }
