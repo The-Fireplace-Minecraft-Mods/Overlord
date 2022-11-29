@@ -1,2 +1,1 @@
-Added Spanish translation (OMG67)
-[Forge] Fix server crash
+Fixed skeleton hitboxes
