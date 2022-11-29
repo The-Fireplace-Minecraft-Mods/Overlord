@@ -1,1 +1,2 @@
 Fixed skeleton hitboxes
+[1.19] Fixed skeleton spawn crash
