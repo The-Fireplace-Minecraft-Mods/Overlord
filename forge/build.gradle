@@ -43,8 +43,8 @@ dependencies {
 
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
-    implementation(fg.deobf("dev.the-fireplace:Annotated-DI-Forge:${project.annotateddi_version}"))
-    compileOnly(fg.deobf("dev.the-fireplace:Fireplace-Lib-Forge:${project.fireplacelib_version}:api"))
+    runtimeOnly(fg.deobf("dev.the-fireplace:Annotated-DI-Forge:${project.annotateddi_version}"))
+    compileOnlyApi(fg.deobf("dev.the-fireplace:Fireplace-Lib-Forge:${project.fireplacelib_version}:api"))
     runtimeOnly(fg.deobf("dev.the-fireplace:Fireplace-Lib-Forge:${project.fireplacelib_version}"))
     annotationProcessor "dev.the-fireplace:Annotated-DI-Forge-Processor:${project.annotateddi_version}"
     annotationProcessor "org.spongepowered:mixin:${project.forge_mixin_version}:processor"

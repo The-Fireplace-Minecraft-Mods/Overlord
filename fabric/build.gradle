@@ -34,7 +34,7 @@ dependencies {
     def fabricApiDependency = "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
     modImplementation fabricApiDependency
 
-    modCompileOnly "dev.the-fireplace:Fireplace-Lib-Fabric:${project.fireplacelib_version}:api"
+    modCompileOnlyApi "dev.the-fireplace:Fireplace-Lib-Fabric:${project.fireplacelib_version}:api"
     modRuntimeOnly "dev.the-fireplace:Fireplace-Lib-Fabric:${project.fireplacelib_version}"
     annotationProcessor "dev.the-fireplace:Annotated-DI-Fabric-Processor:${project.annotateddi_version}"
 
