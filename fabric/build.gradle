@@ -3,7 +3,7 @@ plugins {
     id 'fabric-loom' version '1.7-SNAPSHOT'
     // Mod Hosting Publish
     id 'com.matthewprenger.cursegradle' version '1.4.0'
-    id 'com.modrinth.minotaur' version '2.2.0'
+    id 'com.modrinth.minotaur' version '2.+'
 }
 
 archivesBaseName = "${archives_base_name}-Fabric"
