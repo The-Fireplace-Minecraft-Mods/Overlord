@@ -128,7 +128,8 @@ processResources {
 
 jar.finalizedBy('reobfJar')
 
-task sourcesJar(type: Jar, dependsOn: classes) {
+tasks.register('sourcesJar', Jar) {
+    dependsOn classes
     archiveClassifier.set('sources')
     from project(':common').sourceSets.main.allSource
     from sourceSets.main.allSource
