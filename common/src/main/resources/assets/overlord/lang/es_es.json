@@ -36,6 +36,8 @@
     "gui.overlord.confirm_exit": "Confirmar Y Salir",
     "gui.overlord.tombstone.edit": "Nombrar Tumba",
     "gui.overlord.orders": "Órdenes",
+    "gui.overlord.missing_dependency.title": "Faltan Dependencias",
+    "gui.overlord.missing_dependency.requirements_or": "Uno de los siguientes mods es necesario para usar esta característica:",
     "gui.overlord.select_squad": "Seleccionar Escuadrón",
     "gui.overlord.select_position.use_current": "Usar Posición Actual",
     "gui.overlord.squad_manager.name": "Controlador De Escuadrones",
