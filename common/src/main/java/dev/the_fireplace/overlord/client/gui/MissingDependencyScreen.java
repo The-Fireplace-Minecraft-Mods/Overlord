@@ -7,7 +7,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
 
 public final class MissingDependencyScreen extends Screen
 {
@@ -23,9 +22,14 @@ public final class MissingDependencyScreen extends Screen
     @Override
     protected void init() {
         super.init();
-        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height - 30, 200, 20, Component.translatable("gui.cancel"), (button) -> {
-            closeScreen();
-        }));
+        this.addRenderableWidget(new Button(
+            this.width / 2 - 100,
+            this.height - 30,
+            200,
+            20,
+            Component.translatable("gui.cancel"),
+            (button) -> closeScreen()
+        ));
         this.addRenderableWidget(new Button(this.width / 2 - 100, 90, 200, 20, Component.literal("Cloth Config"), (button) -> {
             ClickEvent clothUrlClickEvent = new ClickEvent(
                 ClickEvent.Action.OPEN_URL,
