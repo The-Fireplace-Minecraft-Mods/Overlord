@@ -36,6 +36,8 @@
   "gui.overlord.confirm_exit": "Bestätigen und verlassen",
   "gui.overlord.tombstone.edit": "Name des Grabsteins festlegen",
   "gui.overlord.orders": "Bestellungen",
+  "gui.overlord.missing_dependency.title": "Fehlende Abhängigkeiten",
+  "gui.overlord.missing_dependency.requirements_or": "Eine der folgenden Mods ist erforderlich, um diese Funktion zu nutzen:",
   "gui.overlord.select_squad": "Trupp auswählen",
   "gui.overlord.select_position.use_current": "Aktuelle Position verwenden",
   "gui.overlord.squad_manager.name": "Truppenverwaltung",
