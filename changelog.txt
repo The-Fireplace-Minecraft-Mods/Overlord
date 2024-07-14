@@ -1,1 +1,2 @@
-Added spanish translations for Mangrove casket and grave marker (OMG67)
+Added Spanish translations for Mangrove casket and grave marker (OMG67)
+Added German translations (florianmichael)
