@@ -10,6 +10,7 @@ import dev.the_fireplace.lib.api.client.interfaces.CustomButtonBuilder;
 import dev.the_fireplace.lib.api.client.interfaces.OptionBuilder;
 import dev.the_fireplace.lib.api.network.injectables.PacketSender;
 import dev.the_fireplace.overlord.OverlordConstants;
+import dev.the_fireplace.overlord.client.gui.MissingDependencyScreen;
 import dev.the_fireplace.overlord.client.gui.config.PositionSelectorGui;
 import dev.the_fireplace.overlord.client.gui.config.listbuilder.ListBuilderGui;
 import dev.the_fireplace.overlord.domain.client.OrdersGuiFactory;
@@ -72,10 +73,12 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory
 
 	@Override
 	public Screen build(Screen parent, OrderableEntity aiEntity) {
-        createScreenBuilder(parent, () -> packetSender.sendToServer(
+        if (!createScreenBuilder(parent, () -> packetSender.sendToServer(
             serverboundPackets.updateOrders(),
             updateOrdersBufferBuilder.buildForEntity(aiEntity)
-        ));
+        ))) {
+            return new MissingDependencyScreen(parent);
+        }
         this.currentPosition = aiEntity instanceof Entity ? ((Entity) aiEntity).blockPosition() : null;
 
         buildCategories(aiEntity.getAISettings());
@@ -85,24 +88,28 @@ public final class SkeletonOrdersGuiFactory implements OrdersGuiFactory
 
 	@Override
 	public Screen build(Screen parent, AISettings ai) {
-        createScreenBuilder(parent, () -> packetSender.sendToServer(
+        if (!createScreenBuilder(parent, () -> packetSender.sendToServer(
             serverboundPackets.updateOrders(),
             updateOrdersBufferBuilder.buildForWand(ai)
-        ));
+        ))) {
+            return new MissingDependencyScreen(parent);
+        }
 
         buildCategories(ai);
 
         return this.screenBuilder.build();
     }
 
-	private void createScreenBuilder(Screen parent, Runnable saveAction) {
+	private boolean createScreenBuilder(Screen parent, Runnable saveAction) {
         this.screenBuilder = configScreenBuilderFactory.create(
             translator,
             TRANSLATION_BASE + "name",
             TRANSLATION_BASE + "combat",
             parent,
             saveAction
-        ).orElseThrow();
+        ).orElse(null);
+
+        return this.screenBuilder != null;
 	}
 
 	private void buildCategories(AISettings currentSettings) {

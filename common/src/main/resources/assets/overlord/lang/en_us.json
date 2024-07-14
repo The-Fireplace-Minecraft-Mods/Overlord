@@ -36,6 +36,8 @@
     "gui.overlord.confirm_exit": "Confirm and exit",
     "gui.overlord.tombstone.edit": "Set Tombstone Name",
     "gui.overlord.orders": "Orders",
+    "gui.overlord.missing_dependency.title": "Missing Dependencies",
+    "gui.overlord.missing_dependency.requirements_or": "One of the following mods are required to use this feature:",
     "gui.overlord.select_squad": "Select Squad",
     "gui.overlord.select_position.use_current": "Use Current Position",
     "gui.overlord.squad_manager.name": "Squad Manager",
