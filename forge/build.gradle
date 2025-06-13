@@ -21,8 +21,9 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 
 archivesBaseName = "${archives_base_name}-Forge"
-def mainArtifactFile = new File(new File(buildDir, 'libs'), "$archivesBaseName-${version}.jar")
+def mainArtifactFile = layout.buildDirectory.file("libs/${archivesBaseName}-${version}.jar").get().asFile
 def changelogFile = file('../changelog.txt')
+def supportedMinecraftVersions = [project.minecraft_version]
 
 sourceSets {
     main {
@@ -147,14 +148,16 @@ compileJava {
     source project(':common').sourceSets.main.allSource
 }
 
-if (hasProperty('curseForgeApiKey')) {
+if (hasProperty('curseForgeApiKey') || System.getenv("CURSEFORGE_API_KEY") != null) {
     curseforge {
-        apiKey = curseForgeApiKey
+        apiKey = findProperty('curseForgeApiKey') ?: System.getenv("CURSEFORGE_API_KEY")
         project {
             id = '251732'
             changelog = changelogFile
             releaseType = project.release_type
-            addGameVersion project.minecraft_version
+            supportedMinecraftVersions.each { value ->
+                addGameVersion value
+            }
             addGameVersion 'Java 17'
             addGameVersion 'Forge'
             mainArtifact(mainArtifactFile) {
@@ -173,16 +176,16 @@ if (hasProperty('curseForgeApiKey')) {
     }
 }
 
-if (hasProperty('modrinthApiKey')) {
+if (hasProperty('modrinthApiKey') || System.getenv("MODRINTH_API_KEY") != null) {
     modrinth {
-        token = modrinthApiKey
+        token = findProperty('modrinthApiKey') ?: System.getenv("MODRINTH_API_KEY")
         projectId = 'HPV4V5CV'
         versionNumber = version
         versionName = project.mod_version
         uploadFile = mainArtifactFile
         changelog = changelogFile.getText()
         versionType = project.release_type
-        gameVersions = [project.minecraft_version as String]
+        gameVersions = supportedMinecraftVersions
         loaders = ['forge']
         dependencies {
             required.project 'RAXqYPH1'// Annotated DI
@@ -192,81 +195,76 @@ if (hasProperty('modrinthApiKey')) {
     }
 }
 
-if (hasProperty('nexusUsername') || System.getenv("NEXUS_USERNAME") != null) {
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-                groupId project.maven_group
-                artifactId project.archivesBaseName
-                version project.version
-                pom {
-                    name = project.readable_name
-                    packaging = 'jar'
-                    description = project.maven_description
-                    url = project.modrinth_url
-                    scm {
-                        connection = "scm:svn:${project.github_url}.git"
-                        developerConnection = "scm:svn:${project.github_url}.git"
-                        url = project.github_url
-                    }
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId project.maven_group
+            artifactId project.archivesBaseName
+            version project.version
+            pom {
+                name = project.readable_name
+                packaging = 'jar'
+                description = project.maven_description
+                url = project.modrinth_url
+                scm {
+                    connection = "scm:svn:${project.github_url}.git"
+                    developerConnection = "scm:svn:${project.github_url}.git"
+                    url = project.github_url
+                }
 
-                    licenses {
-                        license {
-                            name = project.license_name
-                            url = project.license_url
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            id = 'the_fireplace'
-                            name = 'The_Fireplace'
-                            email = 'git@the-fireplace.dev'
-                        }
+                licenses {
+                    license {
+                        name = project.license_name
+                        url = project.license_url
                     }
                 }
-                //Replace all deobf dependencies with normal jar references.
-                pom.withXml { xmlProvider ->
-                    def dependencies = asNode().dependencies
-                    def allDeps = dependencies.'*';
 
-                    allDeps.findAll {
-                        println it
-                    }
-
-                    // Remove forge deps
-                    allDeps.findAll() { el ->
-                        el.artifactId.text() == 'forge' && el.groupId.text() == 'net.minecraftforge'
-                    }.forEach() { el ->
-                        el.parent().remove(el)
-                    }
-                    //remove forgegradle's mapped suffix from versions & set as optional so anyone else doesn't inherit them
-                    allDeps.findAll() { el ->
-                        el.version.text().contains('_mapped_')
-                    }.each { el ->
-                        def version = el.version
-                        version.each {
-                            it.setValue(it.text().substring(0, it.text().indexOf('_mapped_')))
-                        }
+                developers {
+                    developer {
+                        id = 'the_fireplace'
+                        name = 'The_Fireplace'
+                        email = 'git@the-fireplace.dev'
                     }
                 }
             }
-        }
-        repositories {
-            maven {
-                def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-                def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
-                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-                credentials {
-                    username = findProperty('nexusUsername') ?: System.getenv("NEXUS_USERNAME")
-                    password = findProperty('nexusPassword') ?: System.getenv("NEXUS_PASSWORD")
+            //Replace all deobf dependencies with normal jar references.
+            pom.withXml { xmlProvider ->
+                def dependencies = asNode().dependencies
+                def allDeps = dependencies.'*';
+
+                allDeps.findAll {
+                    println it
+                }
+
+                // Remove forge deps
+                allDeps.findAll() { el ->
+                    el.artifactId.text() == 'forge' && el.groupId.text() == 'net.minecraftforge'
+                }.forEach() { el ->
+                    el.parent().remove(el)
+                }
+                //remove forgegradle's mapped suffix from versions & set as optional so anyone else doesn't inherit them
+                allDeps.findAll() { el ->
+                    el.version.text().contains('_mapped_')
+                }.each { el ->
+                    def version = el.version
+                    version.each {
+                        it.setValue(it.text().substring(0, it.text().indexOf('_mapped_')))
+                    }
                 }
             }
         }
     }
+    repositories {
+        maven {
+            url = layout.buildDirectory.dir('staging-deploy')
+        }
+    }
+}
 
-    signing {
-        sign publishing.publications.mavenJava
+afterEvaluate {
+    def publishTask = tasks.find { it.name == 'publish' }
+    if (publishTask) {
+        publishTask.finalizedBy(copyArtifacts)
     }
 }

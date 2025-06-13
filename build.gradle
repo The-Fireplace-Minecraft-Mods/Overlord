@@ -4,9 +4,15 @@ plugins {
     // Standard Artifact Publish
     id 'maven-publish'
     id 'signing'
-    id 'io.codearte.nexus-staging' version '0.30.0'
+    id 'org.jreleaser' version '1.18.0'
+    id "fabric-loom" version "1.10-SNAPSHOT" apply false
 }
-subprojects {
+group = project.maven_group
+version = "${project.mod_version}+${project.minecraft_version}"
+if (project.hasProperty('SNAPSHOT')) {
+    version = "${version}-SNAPSHOT"
+}
+subprojects { Project subProject ->
     apply plugin: 'java'
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
@@ -27,10 +33,6 @@ subprojects {
     }
 
     javadoc.options.addStringOption('Xdoclint:none', '-quiet')
-
-    nexusStaging {
-        packageGroup = project.maven_group
-    }
 
     jar {
         manifest {
@@ -54,20 +56,66 @@ subprojects {
 
     repositories {
         mavenCentral()
+
         maven {
-            name = 'OSSRH Snapshots'
-            url = 'https://oss.sonatype.org/content/repositories/snapshots/'
-        }
-        maven {
-            name = 'OSSRH Snapshots Alt'
-            url = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+            name = 'Sponge / Mixin'
+            url = 'https://repo.spongepowered.org/repository/maven-public/'
         }
     }
 
     // Disables Gradle's custom module metadata from being published to maven. The
     // metadata includes mapped dependencies which are not reasonably consumable by
     // other mod developers.
-    tasks.withType(GenerateModuleMetadata) {
+    tasks.withType(GenerateModuleMetadata).configureEach {
         enabled = false
+    }
+
+    tasks.register('copyLibs', Copy) {
+        from subProject.layout.buildDirectory.dir('libs')
+        into rootProject.layout.buildDirectory.dir('libs')
+    }
+
+    tasks.register('copyArtifacts', Copy) {
+        from subProject.layout.buildDirectory.dir('staging-deploy')
+        into rootProject.layout.buildDirectory.dir('maven/staging-deploy')
+        finalizedBy(tasks.copyLibs)
+    }
+}
+
+jreleaser {
+    signing {
+        active = 'ALWAYS'
+        armored = true
+        verify = false
+    }
+    release {
+        github {
+            repoOwner = 'The-Fireplace-Minecraft-Mods'
+            name = 'Overlord'
+            username = 'The-Fireplace'
+        }
+    }
+    deploy {
+        maven {
+            mavenCentral {
+                'release-deploy' {
+                    active = 'RELEASE'
+                    url = 'https://central.sonatype.com/api/v1/publisher'
+                    stagingRepository('build/maven/staging-deploy')
+                }
+            }
+            nexus2 {
+                'snapshot-deploy' {
+                    active = 'SNAPSHOT'
+                    url = 'https://central.sonatype.com/repository/maven-snapshots'
+                    snapshotUrl = 'https://central.sonatype.com/repository/maven-snapshots'
+                    applyMavenCentralRules = true
+                    snapshotSupported = true
+                    closeRepository = true
+                    releaseRepository = true
+                    stagingRepository('build/maven/staging-deploy')
+                }
+            }
+        }
     }
 }

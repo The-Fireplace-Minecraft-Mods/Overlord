@@ -33,56 +33,44 @@ java {
     withJavadocJar()
 }
 
-if (hasProperty('nexusUsername') || System.getenv("NEXUS_USERNAME") != null) {
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-                groupId project.maven_group
-                artifactId project.archivesBaseName
-                version project.version
-                pom {
-                    name = project.readable_name
-                    packaging = 'jar'
-                    description = project.maven_description
-                    url = project.modrinth_url
-                    scm {
-                        connection = "scm:svn:${project.github_url}.git"
-                        developerConnection = "scm:svn:${project.github_url}.git"
-                        url = project.github_url
-                    }
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId project.maven_group
+            artifactId project.archivesBaseName
+            version project.version
+            pom {
+                name = project.readable_name
+                packaging = 'jar'
+                description = project.maven_description
+                url = project.modrinth_url
+                scm {
+                    connection = "scm:svn:${project.github_url}.git"
+                    developerConnection = "scm:svn:${project.github_url}.git"
+                    url = project.github_url
+                }
 
-                    licenses {
-                        license {
-                            name = project.license_name
-                            url = project.license_url
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            id = 'the_fireplace'
-                            name = 'The_Fireplace'
-                            email = 'git@the-fireplace.dev'
-                        }
+                licenses {
+                    license {
+                        name = project.license_name
+                        url = project.license_url
                     }
                 }
-            }
-        }
-        repositories {
-            maven {
-                def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-                def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
-                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-                credentials {
-                    username = findProperty('nexusUsername') ?: System.getenv("NEXUS_USERNAME")
-                    password = findProperty('nexusPassword') ?: System.getenv("NEXUS_PASSWORD")
+
+                developers {
+                    developer {
+                        id = 'the_fireplace'
+                        name = 'The_Fireplace'
+                        email = 'git@the-fireplace.dev'
+                    }
                 }
             }
         }
     }
-
-    signing {
-        sign publishing.publications.mavenJava
+    repositories {
+        maven {
+            url = layout.buildDirectory.dir('staging-deploy')
+        }
     }
 }
