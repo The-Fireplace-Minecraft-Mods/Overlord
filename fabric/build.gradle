@@ -119,7 +119,9 @@ if (hasProperty('curseForgeApiKey') || System.getenv("CURSEFORGE_API_KEY") != nu
             id = '251732'
             changelog = changelogFile
             releaseType = project.release_type
-            addGameVersion project.minecraft_version
+            supportedMinecraftVersions.each { value ->
+                addGameVersion value
+            }
             addGameVersion 'Java 17'
             addGameVersion 'Fabric'
             addGameVersion 'Quilt'

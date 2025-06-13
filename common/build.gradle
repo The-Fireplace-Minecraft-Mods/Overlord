@@ -74,3 +74,10 @@ publishing {
         }
     }
 }
+
+afterEvaluate {
+    def publishTask = tasks.find { it.name == 'publish' }
+    if (publishTask) {
+        publishTask.finalizedBy(copyArtifacts)
+    }
+}
