@@ -29,6 +29,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 
+import static dev.the_fireplace.overlord.util.UUIDSerialization.storedUUIDtoUUID;
+
 @Implementation
 @Singleton
 public final class SquadsImpl implements Squads
@@ -130,15 +132,6 @@ public final class SquadsImpl implements Squads
                 cachedOwnerSquads.put(squadId, squad);
             }
         }
-    }
-
-    private UUID storedUUIDtoUUID(String storedUUID) {
-        return UUID.fromString(
-            storedUUID
-                .replaceFirst(
-                    "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)", "$1-$2-$3-$4-$5"
-                )
-        );
     }
 
     private class SavedSquad implements Squad, SaveData
