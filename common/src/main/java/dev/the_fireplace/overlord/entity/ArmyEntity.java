@@ -215,10 +215,6 @@ public abstract class ArmyEntity extends TamableAnimal implements Ownable, Order
     }
 
     protected int addIdleGoals(int goalWeight) {
-        if (this.loaderHelper.isDevelopmentEnvironment()) {
-            this.goalSelector.addGoal(goalWeight, new LookAtPlayerGoal(this, Player.class, 16.0F));
-            return ++goalWeight;
-        }
         if (aiSettings.getCombat().isEnabled()) {
             this.goalSelector.addGoal(goalWeight++, new LookAtPlayerGoal(this, Mob.class, 12.0F));
         }
