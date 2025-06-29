@@ -1,57 +1,57 @@
 {
-    "parent": "overlord:overlord/root",
-    "criteria": {
-        "full_leather_armor": {
-            "conditions": {
-                "items": [
-                    {
-                        "equipmentSlot": "head",
-                        "items": [
-                            "minecraft:leather_helmet"
-                        ]
-                    },
-                    {
-                        "equipmentSlot": "chest",
-                        "items": [
-                            "minecraft:leather_chestplate"
-                        ]
-                    },
-                    {
-                        "equipmentSlot": "legs",
-                        "items": [
-                            "minecraft:leather_leggings"
-                        ]
-                    },
-                    {
-                        "equipmentSlot": "feet",
-                        "items": [
-                            "minecraft:leather_boots"
-                        ]
-                    }
-                ]
-            },
-            "trigger": "overlord:skeleton_inventory_changed"
-        }
-    },
-    "display": {
-        "announce_to_chat": true,
-        "description": {
-            "translate": "advancements.overlord.poor_cow_disguise.description"
-        },
-        "frame": "task",
-        "hidden": false,
-        "icon": {
-            "item": "minecraft:leather_chestplate",
-            "nbt": "{Damage:0}"
-        },
-        "show_toast": true,
-        "title": {
-            "translate": "advancements.overlord.poor_cow_disguise.title"
-        }
-    },
-    "requirements": [
-        [
-            "full_leather_armor"
+  "parent": "overlord:overlord/root",
+  "criteria": {
+    "full_leather_armor": {
+      "conditions": {
+        "items": [
+          {
+            "equipmentSlot": "head",
+            "items": [
+              "minecraft:leather_helmet"
+            ]
+          },
+          {
+            "equipmentSlot": "chest",
+            "items": [
+              "minecraft:leather_chestplate"
+            ]
+          },
+          {
+            "equipmentSlot": "legs",
+            "items": [
+              "minecraft:leather_leggings"
+            ]
+          },
+          {
+            "equipmentSlot": "feet",
+            "items": [
+              "minecraft:leather_boots"
+            ]
+          }
         ]
+      },
+      "trigger": "overlord:skeleton_inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.overlord.poor_cow_disguise.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:leather_chestplate",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.overlord.poor_cow_disguise.title"
+    }
+  },
+  "requirements": [
+    [
+      "full_leather_armor"
     ]
+  ]
 }

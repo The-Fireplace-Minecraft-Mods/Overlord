@@ -2,33 +2,33 @@
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_polished_diorite": {
-        "conditions": {
+      "conditions": {
+        "items": [
+          {
             "items": [
-                {
-                    "items": [
-                        "minecraft:polished_diorite"
-                    ]
-                }
+              "minecraft:polished_diorite"
             ]
-        },
-        "trigger": "minecraft:inventory_changed"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
     },
     "has_the_recipe": {
-        "conditions": {
-            "recipe": "overlord:diorite_tombstone_from_stonecutting"
-        },
-        "trigger": "minecraft:recipe_unlocked"
+      "conditions": {
+        "recipe": "overlord:diorite_tombstone_from_stonecutting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
-    "requirements": [
-        [
-            "has_polished_diorite",
-            "has_the_recipe"
-        ]
-    ],
-    "rewards": {
-        "recipes": [
-            "overlord:diorite_tombstone_from_stonecutting"
-        ]
-    }
+  "requirements": [
+    [
+      "has_polished_diorite",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "overlord:diorite_tombstone_from_stonecutting"
+    ]
+  }
 }

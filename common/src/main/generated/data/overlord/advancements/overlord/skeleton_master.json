@@ -1,31 +1,31 @@
 {
-    "parent": "overlord:overlord/skeleton_veteran",
-    "criteria": {
-        "nine_thousand_buckets_drank": {
-            "conditions": {
-                "totalBucketsDrank": 9000
-            },
-            "trigger": "overlord:skeleton_drank_milk"
-        }
+  "parent": "overlord:overlord/skeleton_veteran",
+  "criteria": {
+    "nine_thousand_buckets_drank": {
+      "conditions": {
+        "totalBucketsDrank": 9000
+      },
+      "trigger": "overlord:skeleton_drank_milk"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.overlord.skeleton_master.description"
     },
-    "display": {
-        "announce_to_chat": true,
-        "description": {
-            "translate": "advancements.overlord.skeleton_master.description"
-        },
-        "frame": "challenge",
-        "hidden": false,
-        "icon": {
-            "item": "minecraft:milk_bucket"
-        },
-        "show_toast": true,
-        "title": {
-            "translate": "advancements.overlord.skeleton_master.title"
-        }
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:milk_bucket"
     },
-    "requirements": [
-        [
-            "nine_thousand_buckets_drank"
-        ]
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.overlord.skeleton_master.title"
+    }
+  },
+  "requirements": [
+    [
+      "nine_thousand_buckets_drank"
     ]
+  ]
 }

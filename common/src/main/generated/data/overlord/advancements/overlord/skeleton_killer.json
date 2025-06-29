@@ -1,40 +1,40 @@
 {
-    "parent": "overlord:overlord/root",
-    "criteria": {
-        "killed_army_skeleton": {
-            "conditions": {
-                "entity": [
-                    {
-                        "condition": "minecraft:entity_properties",
-                        "entity": "this",
-                        "predicate": {
-                            "type": "overlord:owned_skeleton"
-                        }
-                    }
-                ]
-            },
-            "trigger": "minecraft:player_killed_entity"
-        }
-    },
-    "display": {
-        "announce_to_chat": true,
-        "description": {
-            "translate": "advancements.overlord.skeleton_killer.description"
-        },
-        "frame": "task",
-        "hidden": false,
-        "icon": {
-            "item": "minecraft:iron_sword",
-            "nbt": "{Damage:0}"
-        },
-        "show_toast": true,
-        "title": {
-            "translate": "advancements.overlord.skeleton_killer.title"
-        }
-    },
-    "requirements": [
-        [
-            "killed_army_skeleton"
+  "parent": "overlord:overlord/root",
+  "criteria": {
+    "killed_army_skeleton": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "overlord:owned_skeleton"
+            }
+          }
         ]
+      },
+      "trigger": "minecraft:player_killed_entity"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.overlord.skeleton_killer.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:iron_sword",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.overlord.skeleton_killer.title"
+    }
+  },
+  "requirements": [
+    [
+      "killed_army_skeleton"
     ]
+  ]
 }

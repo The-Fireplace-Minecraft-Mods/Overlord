@@ -2,33 +2,33 @@
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_polished_granite": {
-        "conditions": {
+      "conditions": {
+        "items": [
+          {
             "items": [
-                {
-                    "items": [
-                        "minecraft:polished_granite"
-                    ]
-                }
+              "minecraft:polished_granite"
             ]
-        },
-        "trigger": "minecraft:inventory_changed"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
     },
     "has_the_recipe": {
-        "conditions": {
-            "recipe": "overlord:granite_tombstone_from_stonecutting"
-        },
-        "trigger": "minecraft:recipe_unlocked"
+      "conditions": {
+        "recipe": "overlord:granite_tombstone_from_stonecutting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
-    "requirements": [
-        [
-            "has_polished_granite",
-            "has_the_recipe"
-        ]
-    ],
-    "rewards": {
-        "recipes": [
-            "overlord:granite_tombstone_from_stonecutting"
-        ]
-    }
+  "requirements": [
+    [
+      "has_polished_granite",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "overlord:granite_tombstone_from_stonecutting"
+    ]
+  }
 }

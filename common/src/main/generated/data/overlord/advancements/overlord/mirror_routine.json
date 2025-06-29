@@ -1,29 +1,29 @@
 {
-    "parent": "overlord:overlord/first_blood",
-    "criteria": {
-        "custom": {
-            "trigger": "minecraft:impossible"
-        }
+  "parent": "overlord:overlord/first_blood",
+  "criteria": {
+    "custom": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.overlord.mirror_routine.description"
     },
-    "display": {
-        "announce_to_chat": true,
-        "description": {
-            "translate": "advancements.overlord.mirror_routine.description"
-        },
-        "frame": "challenge",
-        "hidden": false,
-        "icon": {
-            "item": "minecraft:bow",
-            "nbt": "{Damage:0}"
-        },
-        "show_toast": true,
-        "title": {
-            "translate": "advancements.overlord.mirror_routine.title"
-        }
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:bow",
+      "nbt": "{Damage:0}"
     },
-    "requirements": [
-        [
-            "custom"
-        ]
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.overlord.mirror_routine.title"
+    }
+  },
+  "requirements": [
+    [
+      "custom"
     ]
+  ]
 }

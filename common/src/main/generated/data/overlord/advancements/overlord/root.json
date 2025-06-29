@@ -1,29 +1,29 @@
 {
-    "criteria": {
-        "obtained_army_member": {
-            "conditions": {},
-            "trigger": "overlord:obtained_army_member"
-        }
+  "criteria": {
+    "obtained_army_member": {
+      "conditions": {},
+      "trigger": "overlord:obtained_army_member"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "minecraft:textures/block/bone_block_side.png",
+    "description": {
+      "translate": "advancements.overlord.root.description"
     },
-    "display": {
-        "announce_to_chat": false,
-        "background": "minecraft:textures/block/bone_block_side.png",
-        "description": {
-            "translate": "advancements.overlord.root.description"
-        },
-        "frame": "task",
-        "hidden": false,
-        "icon": {
-            "item": "minecraft:skeleton_skull"
-        },
-        "show_toast": true,
-        "title": {
-            "translate": "advancements.overlord.root.title"
-        }
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:skeleton_skull"
     },
-    "requirements": [
-        [
-            "obtained_army_member"
-        ]
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.overlord.root.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtained_army_member"
     ]
+  ]
 }

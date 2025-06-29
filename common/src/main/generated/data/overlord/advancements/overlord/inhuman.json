@@ -1,34 +1,34 @@
 {
-    "parent": "overlord:overlord/fleshed_out",
-    "criteria": {
-        "adult_flesh_no_muscle_skeleton": {
-            "conditions": {
-                "hasMuscles": false,
-                "hasPlayerSkin": true,
-                "hasSkin": true,
-                "phase": "ADULT"
-            },
-            "trigger": "overlord:skeleton_grown"
-        }
+  "parent": "overlord:overlord/suited_up",
+  "criteria": {
+    "adult_flesh_no_muscle_skeleton": {
+      "conditions": {
+        "hasMuscles": false,
+        "hasPlayerSkin": true,
+        "hasSkin": true,
+        "phase": "ADULT"
+      },
+      "trigger": "overlord:skeleton_grown"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.overlord.inhuman.description"
     },
-    "display": {
-        "announce_to_chat": true,
-        "description": {
-            "translate": "advancements.overlord.inhuman.description"
-        },
-        "frame": "task",
-        "hidden": false,
-        "icon": {
-            "item": "minecraft:zombie_head"
-        },
-        "show_toast": true,
-        "title": {
-            "translate": "advancements.overlord.inhuman.title"
-        }
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:zombie_head"
     },
-    "requirements": [
-        [
-            "adult_flesh_no_muscle_skeleton"
-        ]
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.overlord.inhuman.title"
+    }
+  },
+  "requirements": [
+    [
+      "adult_flesh_no_muscle_skeleton"
     ]
+  ]
 }

@@ -49,22 +49,22 @@
         "item": "minecraft:magenta_bed"
       },
       {
-          "item": "minecraft:orange_bed"
+        "item": "minecraft:orange_bed"
       },
-        {
-            "item": "minecraft:purple_bed"
-        },
-        {
-            "item": "minecraft:white_bed"
-        }
+      {
+        "item": "minecraft:purple_bed"
+      },
+      {
+        "item": "minecraft:white_bed"
+      }
     ]
   },
-    "pattern": [
-        "###",
-        "%B%",
-        "###"
-    ],
-    "result": {
-        "item": "overlord:birch_casket"
-    }
+  "pattern": [
+    "###",
+    "%B%",
+    "###"
+  ],
+  "result": {
+    "item": "overlord:birch_casket"
+  }
 }

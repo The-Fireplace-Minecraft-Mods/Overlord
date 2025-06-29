@@ -1,21 +1,21 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "group": "grave_marker",
-    "key": {
-        "#": {
-            "item": "minecraft:dark_oak_fence"
-        },
-        "%": {
-            "item": "minecraft:dark_oak_slab"
-        }
+  "type": "minecraft:crafting_shaped",
+  "group": "grave_marker",
+  "key": {
+    "#": {
+      "item": "minecraft:dark_oak_fence"
     },
-    "pattern": [
-        "%%%",
-        " # ",
-        " # "
-    ],
-    "result": {
-        "count": 2,
-        "item": "overlord:dark_oak_grave_marker"
+    "%": {
+      "item": "minecraft:dark_oak_slab"
     }
+  },
+  "pattern": [
+    "%%%",
+    " # ",
+    " # "
+  ],
+  "result": {
+    "count": 2,
+    "item": "overlord:dark_oak_grave_marker"
+  }
 }

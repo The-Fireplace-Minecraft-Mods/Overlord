@@ -1,28 +1,28 @@
 {
-    "parent": "overlord:overlord/true_imposter",
-    "criteria": {
-        "custom": {
-            "trigger": "minecraft:impossible"
-        }
+  "parent": "overlord:overlord/true_imposter",
+  "criteria": {
+    "custom": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.overlord.suspicious.description"
     },
-    "display": {
-        "announce_to_chat": true,
-        "description": {
-            "translate": "advancements.overlord.suspicious.description"
-        },
-        "frame": "challenge",
-        "hidden": true,
-        "icon": {
-            "item": "minecraft:skeleton_skull"
-        },
-        "show_toast": true,
-        "title": {
-            "translate": "advancements.overlord.suspicious.title"
-        }
+    "frame": "challenge",
+    "hidden": true,
+    "icon": {
+      "item": "minecraft:skeleton_skull"
     },
-    "requirements": [
-        [
-            "custom"
-        ]
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.overlord.suspicious.title"
+    }
+  },
+  "requirements": [
+    [
+      "custom"
     ]
+  ]
 }

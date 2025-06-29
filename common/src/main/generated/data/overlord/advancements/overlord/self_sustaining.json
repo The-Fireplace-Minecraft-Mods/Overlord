@@ -1,31 +1,31 @@
 {
-    "parent": "overlord:overlord/root",
-    "criteria": {
-        "skeleton_milked_cow": {
-            "conditions": {
-                "entityType": "overlord:owned_skeleton"
-            },
-            "trigger": "overlord:army_member_gathered_milk"
-        }
+  "parent": "overlord:overlord/root",
+  "criteria": {
+    "skeleton_milked_cow": {
+      "conditions": {
+        "entityType": "overlord:owned_skeleton"
+      },
+      "trigger": "overlord:army_member_gathered_milk"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.overlord.self_sustaining.description"
     },
-    "display": {
-        "announce_to_chat": true,
-        "description": {
-            "translate": "advancements.overlord.self_sustaining.description"
-        },
-        "frame": "task",
-        "hidden": false,
-        "icon": {
-            "item": "minecraft:bucket"
-        },
-        "show_toast": true,
-        "title": {
-            "translate": "advancements.overlord.self_sustaining.title"
-        }
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:bucket"
     },
-    "requirements": [
-        [
-            "skeleton_milked_cow"
-        ]
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.overlord.self_sustaining.title"
+    }
+  },
+  "requirements": [
+    [
+      "skeleton_milked_cow"
     ]
+  ]
 }

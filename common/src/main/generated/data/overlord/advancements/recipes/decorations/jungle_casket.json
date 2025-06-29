@@ -2,33 +2,33 @@
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_stripped_wood": {
-        "conditions": {
+      "conditions": {
+        "items": [
+          {
             "items": [
-                {
-                    "items": [
-                        "minecraft:stripped_jungle_wood"
-                    ]
-                }
+              "minecraft:stripped_jungle_wood"
             ]
-        },
-        "trigger": "minecraft:inventory_changed"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
     },
     "has_the_recipe": {
-        "conditions": {
-            "recipe": "overlord:jungle_casket"
-        },
-        "trigger": "minecraft:recipe_unlocked"
+      "conditions": {
+        "recipe": "overlord:jungle_casket"
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
-    "requirements": [
-        [
-            "has_stripped_wood",
-            "has_the_recipe"
-        ]
-    ],
-    "rewards": {
-        "recipes": [
-            "overlord:jungle_casket"
-        ]
-    }
+  "requirements": [
+    [
+      "has_stripped_wood",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "overlord:jungle_casket"
+    ]
+  }
 }
