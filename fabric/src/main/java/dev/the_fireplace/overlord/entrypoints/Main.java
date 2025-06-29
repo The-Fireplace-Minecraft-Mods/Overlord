@@ -2,6 +2,7 @@ package dev.the_fireplace.overlord.entrypoints;
 
 import com.google.inject.Injector;
 import dev.the_fireplace.overlord.OverlordConstants;
+import dev.the_fireplace.overlord.OverlordInitializer;
 import dev.the_fireplace.overlord.advancement.OverlordCriterions;
 import dev.the_fireplace.overlord.augment.Augments;
 import dev.the_fireplace.overlord.block.OverlordBlocks;
@@ -27,5 +28,6 @@ public final class Main implements ModInitializer
         injector.getInstance(NetworkRegistry.class).register();
         OverlordDataPacks.register(injector);
         OverlordCriterions.register();
+        injector.getInstance(OverlordInitializer.class).initialize();
     }
 }

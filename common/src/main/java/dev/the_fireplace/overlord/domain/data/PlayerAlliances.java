@@ -16,6 +16,11 @@ public interface PlayerAlliances
     boolean hasRequestedAllianceWith(UUID playerId, UUID otherPlayerId);
 
     /**
+     * @return a stream of players that have requested <code>playerId</code> as an ally and have not yet been accepted or denied..
+     */
+    Stream<UUID> getPlayersWhoHaveRequestedAllianceWith(UUID playerId);
+
+    /**
      * @return true if <code>playerId</code> has declared <code>otherPlayerId</code> as an enemy, false otherwise.
      */
     boolean hasDeclaredEnemy(UUID playerId, UUID otherPlayerId);
@@ -64,6 +69,11 @@ public interface PlayerAlliances
      * @return a stream of enemies that <code>playerId</code> has declared.
      */
     Stream<UUID> getEnemiesDeclaredBy(UUID playerId);
+
+    /**
+     * @return a stream of players that have declared <code>playerId</code> as an enemy.
+     */
+    Stream<UUID> getPlayersWhoHaveDeclaredEnemy(UUID playerId);
 
     /**
      * @return a stream of allies that <code>playerId</code> has requested, which have not yet accepted or denied the alliance.

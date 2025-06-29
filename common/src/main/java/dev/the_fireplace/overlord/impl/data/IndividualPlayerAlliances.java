@@ -69,6 +69,17 @@ public final class IndividualPlayerAlliances implements PlayerAlliances
     }
 
     @Override
+    public Stream<UUID> getPlayersWhoHaveRequestedAllianceWith(UUID playerId) {
+        return getAllianceCache().entrySet().stream()
+            .filter(entry -> {
+                SavedAlliance allianceToInputPlayer = entry.getValue().get(playerId);
+                return allianceToInputPlayer != null
+                    && allianceToInputPlayer.getStatus() == AllianceStatus.ALLIED;
+            })
+            .map(Map.Entry::getKey);
+    }
+
+    @Override
     public boolean hasDeclaredEnemy(UUID playerId, UUID otherPlayerId) {
         return getAllianceStatus(playerId, otherPlayerId) == AllianceStatus.ENEMY;
     }
@@ -153,6 +164,17 @@ public final class IndividualPlayerAlliances implements PlayerAlliances
     }
 
     @Override
+    public Stream<UUID> getPlayersWhoHaveDeclaredEnemy(UUID playerId) {
+        return getAllianceCache().entrySet().stream()
+            .filter(entry -> {
+                SavedAlliance allianceToInputPlayer = entry.getValue().get(playerId);
+                return allianceToInputPlayer != null
+                    && allianceToInputPlayer.getStatus() == AllianceStatus.ENEMY;
+            })
+            .map(Map.Entry::getKey);
+    }
+
+    @Override
     public Stream<UUID> getAlliesRequestedBy(UUID playerId) {
         return getAllianceCache().computeIfAbsent(playerId, NEW_CONCURRENT_MAP).entrySet().stream()
             .filter(entry -> entry.getValue().getStatus() == AllianceStatus.ALLIED)
@@ -160,7 +182,7 @@ public final class IndividualPlayerAlliances implements PlayerAlliances
                     SavedAlliance otherAllianceToPlayer = getAllianceCache()
                         .computeIfAbsent(entry.getKey(), NEW_CONCURRENT_MAP)
                         .get(playerId);
-                    return otherAllianceToPlayer != null && otherAllianceToPlayer
+                    return otherAllianceToPlayer == null || otherAllianceToPlayer
                         .getStatus() != AllianceStatus.ALLIED;
                 }
             )

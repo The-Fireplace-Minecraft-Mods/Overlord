@@ -4,6 +4,7 @@ import com.google.inject.Injector;
 import dev.the_fireplace.lib.api.chat.injectables.TranslatorFactory;
 import dev.the_fireplace.lib.api.events.FLEventBus;
 import dev.the_fireplace.overlord.OverlordConstants;
+import dev.the_fireplace.overlord.OverlordInitializer;
 import dev.the_fireplace.overlord.advancement.OverlordCriterions;
 import dev.the_fireplace.overlord.augment.Augments;
 import dev.the_fireplace.overlord.block.OverlordBlocks;
@@ -36,6 +37,7 @@ public final class Forge
         injector.getInstance(NetworkRegistry.class).register();
         MinecraftForge.EVENT_BUS.register(injector.getInstance(OverlordDataPacks.class));
         OverlordCriterions.register();
+        injector.getInstance(OverlordInitializer.class).initialize();
 
         DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> {
             FLEventBus.BUS.register(injector.getInstance(ConfigGuiRegistrationHandler.class));
