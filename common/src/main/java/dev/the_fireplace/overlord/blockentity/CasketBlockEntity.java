@@ -3,20 +3,27 @@ package dev.the_fireplace.overlord.blockentity;
 import dev.the_fireplace.overlord.OverlordConstants;
 import dev.the_fireplace.overlord.block.internal.CasketBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
+import net.minecraft.world.level.block.state.properties.ChestType;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -172,5 +179,44 @@ public class CasketBlockEntity extends BaseContainerBlockEntity
         BlockEntity head = this.level.getBlockEntity(headPosition);
 
         return head instanceof CasketBlockEntity ? (CasketBlockEntity) head : this;
+    }
+
+    @Override
+    public void startOpen(Player player) {
+        playSound(
+            this.level,
+            this.worldPosition,
+            this.getBlockState(),
+            SoundEvents.BARREL_OPEN
+        );
+    }
+
+    @Override
+    public void stopOpen(Player player) {
+        playSound(
+            this.level,
+            this.worldPosition,
+            this.getBlockState(),
+            SoundEvents.BARREL_CLOSE
+        );
+    }
+
+    void playSound(Level level, BlockPos position, BlockState state, SoundEvent sound) {
+        if (!isCasketFoot(state)) {
+            double soundX = (double)position.getX() + 0.5;
+            double soundY = (double)position.getY() + 0.5;
+            double soundZ = (double)position.getZ() + 0.5;
+
+            level.playSound(
+                null,
+                soundX,
+                soundY,
+                soundZ,
+                sound,
+                SoundSource.BLOCKS,
+                0.5F,
+                level.random.nextFloat() * 0.1F + 0.9F
+            );
+        }
     }
 }
