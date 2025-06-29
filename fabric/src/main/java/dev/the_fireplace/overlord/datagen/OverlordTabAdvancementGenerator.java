@@ -164,10 +164,10 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
             null)
         ).save(consumer, "overlord:overlord/bodybuilder");
 
-        Advancement fleshedOut = Advancement.Builder.advancement().parent(root).display(
+        Advancement suitedUp = Advancement.Builder.advancement().parent(root).display(
             Items.LEATHER,
-            Component.translatable("advancements.overlord.fleshed_out.title"),
-            Component.translatable("advancements.overlord.fleshed_out.description"),
+            Component.translatable("advancements.overlord.suited_up.title"),
+            Component.translatable("advancements.overlord.suited_up.description"),
             null,
             FrameType.TASK,
             true,
@@ -179,9 +179,9 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
             null,
             null,
             null)
-        ).save(consumer, "overlord:overlord/fleshed_out");
+        ).save(consumer, "overlord:overlord/suited_up");
 
-        Advancement inhuman = Advancement.Builder.advancement().parent(fleshedOut).display(
+        Advancement inhuman = Advancement.Builder.advancement().parent(suitedUp).display(
             Items.ZOMBIE_HEAD,
             Component.translatable("advancements.overlord.inhuman.title"),
             Component.translatable("advancements.overlord.inhuman.description"),
@@ -198,7 +198,7 @@ public class OverlordTabAdvancementGenerator implements Consumer<Consumer<Advanc
             null
         )).save(consumer, "overlord:overlord/inhuman");
 
-        Advancement skinwalker = Advancement.Builder.advancement().parent(fleshedOut).display(
+        Advancement skinwalker = Advancement.Builder.advancement().parent(suitedUp).display(
             Items.PLAYER_HEAD,
             Component.translatable("advancements.overlord.skinwalker.title"),
             Component.translatable("advancements.overlord.skinwalker.description"),

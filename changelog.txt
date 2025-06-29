@@ -2,3 +2,4 @@ Added Spanish translations for Mangrove casket and grave marker (OMG67)
 Added German translations (florianmichael)
 Added a screen for missing config builder dependencies
 Caskets now play a sound when opened and closed
+Renamed advancement for making a skeleton with skin "Suited Up"

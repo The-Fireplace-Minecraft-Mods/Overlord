@@ -1,0 +1,32 @@
+{
+  "parent": "overlord:overlord/root",
+  "criteria": {
+    "has_flesh_skeleton": {
+      "conditions": {
+        "hasSkin": true,
+        "phase": "BABY"
+      },
+      "trigger": "overlord:skeleton_grown"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.overlord.suited_up.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:leather"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.overlord.suited_up.title"
+    }
+  },
+  "requirements": [
+    [
+      "has_flesh_skeleton"
+    ]
+  ]
+}
