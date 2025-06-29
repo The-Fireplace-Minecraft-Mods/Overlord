@@ -20,6 +20,7 @@ import dev.the_fireplace.lib.api.command.interfaces.PossiblyOfflinePlayer;
 import dev.the_fireplace.lib.api.command.interfaces.RegisterableCommand;
 import dev.the_fireplace.lib.api.player.injectables.GameProfileFinder;
 import dev.the_fireplace.overlord.OverlordConstants;
+import dev.the_fireplace.overlord.command.commands.helper.SharedAllianceHelpers;
 import dev.the_fireplace.overlord.domain.data.PlayerAlliances;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -30,9 +31,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Stream;
 
 @Singleton
@@ -47,6 +46,7 @@ public final class AllyCommand implements RegisterableCommand
     private final TextStyles textStyles;
     private final TextPaginator textPaginator;
     private final GameProfileFinder gameProfileFinder;
+    private final SharedAllianceHelpers sharedAllianceHelpers;
 
     @Inject
     public AllyCommand(
@@ -58,7 +58,8 @@ public final class AllyCommand implements RegisterableCommand
         MessageQueue messageQueue,
         TextStyles textStyles,
         TextPaginator textPaginator,
-        GameProfileFinder gameProfileFinder
+        GameProfileFinder gameProfileFinder,
+        SharedAllianceHelpers sharedAllianceHelpers
     ) {
         this.translator = translatorFactory.getTranslator(OverlordConstants.MODID);
         this.feedbackSender = feedbackSenderFactory.get(this.translator);
@@ -69,6 +70,7 @@ public final class AllyCommand implements RegisterableCommand
         this.textStyles = textStyles;
         this.textPaginator = textPaginator;
         this.gameProfileFinder = gameProfileFinder;
+        this.sharedAllianceHelpers = sharedAllianceHelpers;
     }
 
 
@@ -80,7 +82,7 @@ public final class AllyCommand implements RegisterableCommand
         allyCommand.then(
             Commands.literal("add").then(
                 Commands.argument("player", argumentTypeFactory.possiblyOfflinePlayer())
-                    .suggests(argumentTypeFactory::listOfflinePlayerSuggestions)//TODO filter out current relations
+                    .suggests(this.sharedAllianceHelpers::suggestUnalignedOnlinePlayers)
                     .executes(this::executeAddAlly)
             )
         );
@@ -88,7 +90,9 @@ public final class AllyCommand implements RegisterableCommand
         allyCommand.then(
             Commands.literal("accept").then(
                 Commands.argument("player", argumentTypeFactory.possiblyOfflinePlayer())
-                    .suggests(argumentTypeFactory::listOfflinePlayerSuggestions)//TODO filter to only requests
+                    .suggests(((context, builder) ->
+                        this.sharedAllianceHelpers.suggestPlayersFromList(context, builder, playerAlliances::getPlayersWhoHaveRequestedAllianceWith)
+                    ))
                     .executes(this::executeAcceptAlly)
             )
         );
@@ -96,7 +100,9 @@ public final class AllyCommand implements RegisterableCommand
         allyCommand.then(
             Commands.literal("deny").then(
                 Commands.argument("player", argumentTypeFactory.possiblyOfflinePlayer())
-                    .suggests(argumentTypeFactory::listOfflinePlayerSuggestions)//TODO filter to only requests
+                    .suggests(((context, builder) ->
+                        this.sharedAllianceHelpers.suggestPlayersFromList(context, builder, playerAlliances::getPlayersWhoHaveRequestedAllianceWith)
+                    ))
                     .executes(this::executeDenyAlly)
             )
         );
@@ -111,7 +117,12 @@ public final class AllyCommand implements RegisterableCommand
         allyCommand.then(
             Commands.literal("remove").then(
                 Commands.argument("player", argumentTypeFactory.possiblyOfflinePlayer())
-                    .suggests(argumentTypeFactory::listOfflinePlayerSuggestions)//TODO filter to only current allies
+                    .suggests(((context, builder) ->
+                        this.sharedAllianceHelpers.suggestPlayersFromList(context, builder, (playerId) -> Stream.concat(
+                            playerAlliances.getConfirmedAlliancesWith(playerId),
+                            playerAlliances.getAlliesRequestedBy(playerId)
+                        ))
+                    ))
                     .executes(this::executeRemoveAlly)
             )
         );
@@ -131,7 +142,7 @@ public final class AllyCommand implements RegisterableCommand
         } else if (playerAlliances.hasDeclaredEnemy(senderId, targetPlayerId)) {
             MutableComponent message = translator.getTextForTarget(senderId, "commands.overlord.ally.add.failure.enemy", targetPlayer.getName());
             message.append(Component.literal(" ")
-                .append(getRemoveEnemyButton(senderId, targetPlayer.getName()))
+                .append(sharedAllianceHelpers.getRemoveEnemyButton(senderId, targetPlayer.getName()))
             );
             messageQueue.queueMessages(sender, message);
         } else if (playerAlliances.hasRequestedAllianceWith(targetPlayerId, senderId)) {
@@ -157,13 +168,6 @@ public final class AllyCommand implements RegisterableCommand
         }
 
         return Command.SINGLE_SUCCESS;
-    }
-
-    private MutableComponent getRemoveEnemyButton(UUID targetPlayerId, String enemyName) {
-        ClickEvent removeEnemy = new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/enemy remove %s", enemyName));
-
-        return translator.getTextForTarget(targetPlayerId, "commands.overlord.enemy.list.remove_enemy")
-            .setStyle(textStyles.aqua().withClickEvent(removeEnemy));
     }
 
     private MutableComponent getAcceptAllianceButton(UUID targetPlayerId, String allyName) {
@@ -244,7 +248,7 @@ public final class AllyCommand implements RegisterableCommand
             gameProfileFinder.findProfile(confirmedAlly).ifPresent(confirmedAllyProfile -> {
                 MutableComponent confirmedAllyComponent = translator.getTextForTarget(senderId, "commands.overlord.ally.list.allied", confirmedAllyProfile.getName());
                 confirmedAllyComponent.append(Component.literal(" ")
-                    .append(getRemoveAllyButton(senderId, confirmedAllyProfile.getName()))
+                    .append(sharedAllianceHelpers.getRemoveAllyButton(senderId, confirmedAllyProfile.getName()))
                 );
                 allyListEntries.add(confirmedAllyComponent);
             });
@@ -253,7 +257,7 @@ public final class AllyCommand implements RegisterableCommand
             gameProfileFinder.findProfile(requestedAlly).ifPresent(requestedAllyProfile -> {
                 MutableComponent requestedAllyComponent = translator.getTextForTarget(senderId, "commands.overlord.ally.list.pending.outbound", requestedAllyProfile.getName());
                 requestedAllyComponent.append(Component.literal(" ")
-                    .append(getRemoveAllyButton(senderId, requestedAllyProfile.getName()))
+                    .append(sharedAllianceHelpers.getRemoveAllyButton(senderId, requestedAllyProfile.getName()))
                 );
                 allyListEntries.add(requestedAllyComponent);
             });
@@ -271,13 +275,6 @@ public final class AllyCommand implements RegisterableCommand
         }
 
         return Command.SINGLE_SUCCESS;
-    }
-
-    private MutableComponent getRemoveAllyButton(UUID targetPlayerId, String allyName) {
-        ClickEvent removeAlly = new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/ally remove %s", allyName));
-
-        return translator.getTextForTarget(targetPlayerId, "commands.overlord.ally.list.remove_ally")
-            .setStyle(textStyles.aqua().withClickEvent(removeAlly));
     }
 
     private int executeRemoveAlly(CommandContext<CommandSourceStack> command) throws CommandSyntaxException {
