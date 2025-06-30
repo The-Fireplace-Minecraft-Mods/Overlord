@@ -36,7 +36,11 @@ public final class AllianceUpdateMessageQueue
 
     public void queueNotification(UUID playerId, UUID otherPlayerId, AllianceNotificationSender.Notification operation) {
         getQueues()
-            .computeIfAbsent(playerId, unused -> new OperationNotificationQueue(playerId))
+            .computeIfAbsent(playerId, unused -> {
+                OperationNotificationQueue newQueue = new OperationNotificationQueue(playerId);
+                newQueue.init();
+                return newQueue;
+            })
             .queueNotification(otherPlayerId, operation);
     }
 
