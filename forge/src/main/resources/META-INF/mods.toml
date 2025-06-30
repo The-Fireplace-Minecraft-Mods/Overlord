@@ -39,7 +39,7 @@ side = "BOTH"
 [[dependencies.overlord]]
 modId = "fireplacelib"
 mandatory = true
-versionRange = "[7,8)"
+versionRange = "[7.1.6,8)"
 ordering = "NONE"
 side = "BOTH"
 
