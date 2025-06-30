@@ -13,6 +13,7 @@ import dev.the_fireplace.overlord.datapack.OverlordDataPacks;
 import dev.the_fireplace.overlord.domain.registry.HeadBlockAugmentRegistry;
 import dev.the_fireplace.overlord.entity.OverlordEntities;
 import dev.the_fireplace.overlord.eventhandlers.ConfigGuiRegistrationHandler;
+import dev.the_fireplace.overlord.eventhandlers.PlayerJoinedServerEventHandler;
 import dev.the_fireplace.overlord.item.OverlordItems;
 import dev.the_fireplace.overlord.loader.RegistryHelper;
 import dev.the_fireplace.overlord.network.NetworkRegistry;
@@ -36,6 +37,7 @@ public final class Forge
         Augments.register(injector.getInstance(HeadBlockAugmentRegistry.class));
         injector.getInstance(NetworkRegistry.class).register();
         MinecraftForge.EVENT_BUS.register(injector.getInstance(OverlordDataPacks.class));
+        MinecraftForge.EVENT_BUS.register(injector.getInstance(PlayerJoinedServerEventHandler.class));
         OverlordCriterions.register();
         injector.getInstance(OverlordInitializer.class).initialize();
 

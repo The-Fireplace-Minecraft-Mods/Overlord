@@ -10,7 +10,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
 import dev.the_fireplace.lib.api.chat.injectables.MessageQueue;
 import dev.the_fireplace.lib.api.chat.injectables.TextPaginator;
-import dev.the_fireplace.lib.api.chat.injectables.TextStyles;
 import dev.the_fireplace.lib.api.chat.injectables.TranslatorFactory;
 import dev.the_fireplace.lib.api.chat.interfaces.Translator;
 import dev.the_fireplace.lib.api.command.injectables.ArgumentTypeFactory;
@@ -21,13 +20,13 @@ import dev.the_fireplace.lib.api.command.interfaces.PossiblyOfflinePlayer;
 import dev.the_fireplace.lib.api.command.interfaces.RegisterableCommand;
 import dev.the_fireplace.lib.api.player.injectables.GameProfileFinder;
 import dev.the_fireplace.overlord.OverlordConstants;
+import dev.the_fireplace.overlord.command.commands.helper.AllianceNotificationSender;
 import dev.the_fireplace.overlord.command.commands.helper.SharedAllianceHelpers;
 import dev.the_fireplace.overlord.domain.data.PlayerAlliances;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
@@ -46,10 +45,10 @@ public final class EnemyCommand implements RegisterableCommand {
     private final PlayerAlliances playerAlliances;
     private final Translator translator;
     private final MessageQueue messageQueue;
-    private final TextStyles textStyles;
     private final TextPaginator textPaginator;
     private final GameProfileFinder gameProfileFinder;
     private final SharedAllianceHelpers sharedAllianceHelpers;
+    private final AllianceNotificationSender allianceNotificationSender;
 
     @Inject
     public EnemyCommand(
@@ -59,10 +58,10 @@ public final class EnemyCommand implements RegisterableCommand {
         ArgumentTypeFactory argumentTypeFactory,
         PlayerAlliances playerAlliances,
         MessageQueue messageQueue,
-        TextStyles textStyles,
         TextPaginator textPaginator,
         GameProfileFinder gameProfileFinder,
-        SharedAllianceHelpers sharedAllianceHelpers
+        SharedAllianceHelpers sharedAllianceHelpers,
+        AllianceNotificationSender allianceNotificationSender
     ) {
         this.translator = translatorFactory.getTranslator(OverlordConstants.MODID);
         this.feedbackSender = feedbackSenderFactory.get(this.translator);
@@ -70,10 +69,10 @@ public final class EnemyCommand implements RegisterableCommand {
         this.argumentTypeFactory = argumentTypeFactory;
         this.playerAlliances = playerAlliances;
         this.messageQueue = messageQueue;
-        this.textStyles = textStyles;
         this.textPaginator = textPaginator;
         this.gameProfileFinder = gameProfileFinder;
         this.sharedAllianceHelpers = sharedAllianceHelpers;
+        this.allianceNotificationSender = allianceNotificationSender;
     }
 
 
@@ -126,27 +125,16 @@ public final class EnemyCommand implements RegisterableCommand {
         } else {
             playerAlliances.declareEnemy(senderId, targetPlayerId);
             feedbackSender.basic(command, "commands.overlord.enemy.add.success", targetPlayer.getName());
-            if (targetPlayer.entity() != null) {
-                MutableComponent message = translator.getTextForTarget(targetPlayerId, "commands.overlord.enemy.add.notification", sender.getName());
-                if (!playerAlliances.hasDeclaredEnemy(targetPlayerId, senderId)) {
-                    message.append(Component.literal(" ")
-                        .append(getAddEnemyButton(targetPlayerId, sender.getGameProfile().getName()))
-                    );
-                }
-                messageQueue.queueMessages(targetPlayer.entity(), message);
-            } else {
-                //TODO queue notification for later
-            }
+            this.allianceNotificationSender.sendOrQueueNotification(
+                AllianceNotificationSender.Notification.DECLARED_ENEMY,
+                targetPlayerId,
+                targetPlayer.entity(),
+                senderId,
+                sender.getGameProfile().getName()
+            );
         }
 
         return Command.SINGLE_SUCCESS;
-    }
-
-    private MutableComponent getAddEnemyButton(UUID targetPlayerId, String enemyName) {
-        ClickEvent addEnemy = new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/enemy add %s", enemyName));
-
-        return translator.getTextForTarget(targetPlayerId, "commands.overlord.enemy.list.add_enemy")
-            .setStyle(textStyles.aqua().withClickEvent(addEnemy));
     }
 
     private int executeListEnemies(CommandContext<CommandSourceStack> command, int page) throws CommandSyntaxException {
@@ -191,7 +179,7 @@ public final class EnemyCommand implements RegisterableCommand {
             enemyProfile.ifPresent(gameProfile -> {
                 MutableComponent mutualEnemyComponent = translator.getTextForTarget(senderId, "commands.overlord.enemy.list.inbound", gameProfile.getName());
                 mutualEnemyComponent.append(Component.literal(" ")
-                    .append(getAddEnemyButton(senderId, gameProfile.getName()))
+                    .append(sharedAllianceHelpers.getAddEnemyButton(senderId, gameProfile.getName()))
                 );
                 enemyListEntries.add(mutualEnemyComponent);
             });
@@ -217,17 +205,13 @@ public final class EnemyCommand implements RegisterableCommand {
         } else {
             playerAlliances.removeEnemy(senderId, targetPlayerId);
             feedbackSender.basic(command, "commands.overlord.enemy.remove.success", targetPlayer.getName());
-            if (targetPlayer.entity() != null) {
-                MutableComponent message = translator.getTextForTarget(targetPlayerId, "commands.overlord.enemy.remove.notification", sender.getName());
-                if (playerAlliances.hasDeclaredEnemy(targetPlayerId, senderId)) {
-                    message.append(Component.literal(" ")
-                        .append(sharedAllianceHelpers.getRemoveEnemyButton(targetPlayerId, sender.getGameProfile().getName()))
-                    );
-                }
-                messageQueue.queueMessages(targetPlayer.entity(), message);
-            } else {
-                //TODO queue notification for later
-            }
+            this.allianceNotificationSender.sendOrQueueNotification(
+                AllianceNotificationSender.Notification.REMOVED_ENEMY,
+                targetPlayerId,
+                targetPlayer.entity(),
+                senderId,
+                sender.getGameProfile().getName()
+            );
         }
 
         return Command.SINGLE_SUCCESS;

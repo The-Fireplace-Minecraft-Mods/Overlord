@@ -10,6 +10,7 @@ import dev.the_fireplace.overlord.blockentity.OverlordBlockEntities;
 import dev.the_fireplace.overlord.datapack.OverlordDataPacks;
 import dev.the_fireplace.overlord.domain.registry.HeadBlockAugmentRegistry;
 import dev.the_fireplace.overlord.entity.OverlordEntities;
+import dev.the_fireplace.overlord.event.RegisterFabricEvents;
 import dev.the_fireplace.overlord.item.OverlordItems;
 import dev.the_fireplace.overlord.network.NetworkRegistry;
 import net.fabricmc.api.ModInitializer;
@@ -29,5 +30,6 @@ public final class Main implements ModInitializer
         OverlordDataPacks.register(injector);
         OverlordCriterions.register();
         injector.getInstance(OverlordInitializer.class).initialize();
+        injector.getInstance(RegisterFabricEvents.class).registerEvents();
     }
 }

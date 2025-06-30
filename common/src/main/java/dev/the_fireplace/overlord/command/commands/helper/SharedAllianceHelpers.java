@@ -116,11 +116,32 @@ public final class SharedAllianceHelpers
         }
     }
 
+    public MutableComponent getAcceptAllianceButton(UUID targetPlayerId, String allyName) {
+        ClickEvent removeEnemy = new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/ally accept %s", allyName));
+
+        return translator.getTextForTarget(targetPlayerId, "commands.overlord.ally.add.accept")
+            .setStyle(textStyles.aqua().withClickEvent(removeEnemy));
+    }
+
+    public MutableComponent getDenyAllianceButton(UUID targetPlayerId, String allyName) {
+        ClickEvent removeEnemy = new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/ally deny %s", allyName));
+
+        return translator.getTextForTarget(targetPlayerId, "commands.overlord.ally.add.deny")
+            .setStyle(textStyles.aqua().withClickEvent(removeEnemy));
+    }
+
     public MutableComponent getRemoveAllyButton(UUID targetPlayerId, String allyName) {
         ClickEvent removeAlly = new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/ally remove %s", allyName));
 
         return translator.getTextForTarget(targetPlayerId, "commands.overlord.ally.list.remove_ally")
             .setStyle(textStyles.aqua().withClickEvent(removeAlly));
+    }
+
+    public MutableComponent getAddEnemyButton(UUID targetPlayerId, String enemyName) {
+        ClickEvent addEnemy = new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/enemy add %s", enemyName));
+
+        return translator.getTextForTarget(targetPlayerId, "commands.overlord.enemy.list.add_enemy")
+            .setStyle(textStyles.aqua().withClickEvent(addEnemy));
     }
 
     public MutableComponent getRemoveEnemyButton(UUID targetPlayerId, String enemyName) {

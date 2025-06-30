@@ -9,7 +9,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
 import dev.the_fireplace.lib.api.chat.injectables.MessageQueue;
 import dev.the_fireplace.lib.api.chat.injectables.TextPaginator;
-import dev.the_fireplace.lib.api.chat.injectables.TextStyles;
 import dev.the_fireplace.lib.api.chat.injectables.TranslatorFactory;
 import dev.the_fireplace.lib.api.chat.interfaces.Translator;
 import dev.the_fireplace.lib.api.command.injectables.ArgumentTypeFactory;
@@ -20,13 +19,13 @@ import dev.the_fireplace.lib.api.command.interfaces.PossiblyOfflinePlayer;
 import dev.the_fireplace.lib.api.command.interfaces.RegisterableCommand;
 import dev.the_fireplace.lib.api.player.injectables.GameProfileFinder;
 import dev.the_fireplace.overlord.OverlordConstants;
+import dev.the_fireplace.overlord.command.commands.helper.AllianceNotificationSender;
 import dev.the_fireplace.overlord.command.commands.helper.SharedAllianceHelpers;
 import dev.the_fireplace.overlord.domain.data.PlayerAlliances;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,10 +42,10 @@ public final class AllyCommand implements RegisterableCommand
     private final PlayerAlliances playerAlliances;
     private final Translator translator;
     private final MessageQueue messageQueue;
-    private final TextStyles textStyles;
     private final TextPaginator textPaginator;
     private final GameProfileFinder gameProfileFinder;
     private final SharedAllianceHelpers sharedAllianceHelpers;
+    private final AllianceNotificationSender allianceNotificationSender;
 
     @Inject
     public AllyCommand(
@@ -56,10 +55,10 @@ public final class AllyCommand implements RegisterableCommand
         ArgumentTypeFactory argumentTypeFactory,
         PlayerAlliances playerAlliances,
         MessageQueue messageQueue,
-        TextStyles textStyles,
         TextPaginator textPaginator,
         GameProfileFinder gameProfileFinder,
-        SharedAllianceHelpers sharedAllianceHelpers
+        SharedAllianceHelpers sharedAllianceHelpers,
+        AllianceNotificationSender allianceNotificationSender
     ) {
         this.translator = translatorFactory.getTranslator(OverlordConstants.MODID);
         this.feedbackSender = feedbackSenderFactory.get(this.translator);
@@ -67,10 +66,10 @@ public final class AllyCommand implements RegisterableCommand
         this.argumentTypeFactory = argumentTypeFactory;
         this.playerAlliances = playerAlliances;
         this.messageQueue = messageQueue;
-        this.textStyles = textStyles;
         this.textPaginator = textPaginator;
         this.gameProfileFinder = gameProfileFinder;
         this.sharedAllianceHelpers = sharedAllianceHelpers;
+        this.allianceNotificationSender = allianceNotificationSender;
     }
 
 
@@ -150,38 +149,16 @@ public final class AllyCommand implements RegisterableCommand
         } else {
             playerAlliances.requestAlliance(senderId, targetPlayerId);
             feedbackSender.basic(command, "commands.overlord.ally.add.success", targetPlayer.getName());
-            if (targetPlayer.entity() != null) {
-                MutableComponent message = translator.getTextForTarget(targetPlayerId, "commands.overlord.ally.add.notification", sender.getName());
-                if (!playerAlliances.hasDeclaredEnemy(targetPlayerId, senderId)) {
-                    message.append(Component.literal(" ")
-                        .append(getAcceptAllianceButton(targetPlayerId, sender.getGameProfile().getName())
-                            .append(Component.literal(" ")
-                                .append(getDenyAllianceButton(targetPlayerId, sender.getGameProfile().getName()))
-                            )
-                        )
-                    );
-                }
-                messageQueue.queueMessages(targetPlayer.entity(), message);
-            } else {
-                //TODO queue notification for later
-            }
+            this.allianceNotificationSender.sendOrQueueNotification(
+                AllianceNotificationSender.Notification.REQUESTED_ALLIANCE,
+                targetPlayerId,
+                targetPlayer.entity(),
+                senderId,
+                sender.getGameProfile().getName()
+            );
         }
 
         return Command.SINGLE_SUCCESS;
-    }
-
-    private MutableComponent getAcceptAllianceButton(UUID targetPlayerId, String allyName) {
-        ClickEvent removeEnemy = new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/ally accept %s", allyName));
-
-        return translator.getTextForTarget(targetPlayerId, "commands.overlord.ally.add.accept")
-            .setStyle(textStyles.aqua().withClickEvent(removeEnemy));
-    }
-
-    private MutableComponent getDenyAllianceButton(UUID targetPlayerId, String allyName) {
-        ClickEvent removeEnemy = new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/ally deny %s", allyName));
-
-        return translator.getTextForTarget(targetPlayerId, "commands.overlord.ally.add.deny")
-            .setStyle(textStyles.aqua().withClickEvent(removeEnemy));
     }
 
     private int executeAcceptAlly(CommandContext<CommandSourceStack> command) throws CommandSyntaxException {
@@ -194,12 +171,13 @@ public final class AllyCommand implements RegisterableCommand
         } else {
             playerAlliances.requestAlliance(senderId, targetPlayerId);
             feedbackSender.basic(command, "commands.overlord.ally.accept.success", targetPlayer.getName());
-            if (targetPlayer.entity() != null) {
-                MutableComponent message = translator.getTextForTarget(targetPlayerId, "commands.overlord.ally.accept.notification", sender.getName());
-                messageQueue.queueMessages(targetPlayer.entity(), message);
-            } else {
-                //TODO queue notification for later
-            }
+            this.allianceNotificationSender.sendOrQueueNotification(
+                AllianceNotificationSender.Notification.ACCEPTED_ALLIANCE,
+                targetPlayerId,
+                targetPlayer.entity(),
+                senderId,
+                sender.getGameProfile().getName()
+            );
         }
         return Command.SINGLE_SUCCESS;
     }
@@ -214,12 +192,13 @@ public final class AllyCommand implements RegisterableCommand
         } else {
             playerAlliances.denyAlliance(senderId, targetPlayerId);
             feedbackSender.basic(command, "commands.overlord.ally.deny.success", targetPlayer.getName());
-            if (targetPlayer.entity() != null) {
-                MutableComponent message = translator.getTextForTarget(targetPlayerId, "commands.overlord.ally.deny.notification", sender.getName());
-                messageQueue.queueMessages(targetPlayer.entity(), message);
-            } else {
-                //TODO queue notification for later
-            }
+            this.allianceNotificationSender.sendOrQueueNotification(
+                AllianceNotificationSender.Notification.DENIED_ALLIANCE,
+                targetPlayerId,
+                targetPlayer.entity(),
+                senderId,
+                sender.getGameProfile().getName()
+            );
         }
         return Command.SINGLE_SUCCESS;
     }
@@ -235,9 +214,9 @@ public final class AllyCommand implements RegisterableCommand
             gameProfileFinder.findProfile(incomingAllianceRequest).ifPresent(requesterProfile -> {
                 MutableComponent incomingAllianceRequestComponent = translator.getTextForTarget(senderId, "commands.overlord.ally.list.pending.inbound", requesterProfile.getName());
                 incomingAllianceRequestComponent.append(Component.literal(" ")
-                    .append(getAcceptAllianceButton(senderId, requesterProfile.getName())
+                    .append(sharedAllianceHelpers.getAcceptAllianceButton(senderId, requesterProfile.getName())
                         .append(Component.literal(" ")
-                            .append(getDenyAllianceButton(senderId, requesterProfile.getName()))
+                            .append(sharedAllianceHelpers.getDenyAllianceButton(senderId, requesterProfile.getName()))
                         )
                     )
                 );
@@ -287,12 +266,13 @@ public final class AllyCommand implements RegisterableCommand
         if (hasConfirmedAlliance) {
             playerAlliances.removeAlliance(senderId, targetPlayerId);
             feedbackSender.basic(command, "commands.overlord.ally.remove.success.ally", targetPlayer.getName());
-            if (targetPlayer.entity() != null) {
-                MutableComponent message = translator.getTextForTarget(targetPlayerId, "commands.overlord.ally.remove.notification", sender.getName());
-                messageQueue.queueMessages(targetPlayer.entity(), message);
-            } else {
-                //TODO queue notification for later
-            }
+            this.allianceNotificationSender.sendOrQueueNotification(
+                AllianceNotificationSender.Notification.REMOVED_ALLIANCE,
+                targetPlayerId,
+                targetPlayer.entity(),
+                senderId,
+                sender.getGameProfile().getName()
+            );
         } else if (hasRequestedAlliance) {
             playerAlliances.removeAlliance(senderId, targetPlayerId);
             feedbackSender.basic(command, "commands.overlord.ally.remove.success.pending", targetPlayer.getName());
