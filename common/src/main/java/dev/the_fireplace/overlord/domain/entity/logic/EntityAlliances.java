@@ -6,6 +6,8 @@ import java.util.UUID;
 
 public interface EntityAlliances
 {
+    boolean isEnemyTo(Entity entity, UUID player);
+
     boolean isAlliedTo(Entity entity, UUID player);
 
     boolean isAlliedTo(Entity entity, Entity otherEntity);

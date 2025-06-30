@@ -23,6 +23,15 @@ public class EntityAlliancesImpl implements EntityAlliances
     }
 
     @Override
+    public boolean isEnemyTo(Entity entity, UUID player) {
+        Collection<UUID> owners = entityOwnership.getOwnersOrSelf(entity);
+
+        return owners.stream().anyMatch((entityOwner) ->
+            playerAlliances.enemyRelationExistsBetween(player, entityOwner)
+        );
+    }
+
+    @Override
     public boolean isAlliedTo(Entity entity, UUID player) {
         Collection<UUID> owners = entityOwnership.getOwnersOrSelf(entity);
 

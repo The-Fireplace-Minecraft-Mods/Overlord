@@ -232,7 +232,30 @@ public abstract class ArmyEntity extends TamableAnimal implements Ownable, Order
                 this.targetSelector.addGoal(targetGoalWeight++, new ArmyAttackWithOwnerGoal(this));
                 this.targetSelector.addGoal(targetGoalWeight++, new HurtByTargetGoal(this).setAlertOthers());
                 //TODO Looks like we'll eventually need a custom Target goal that chooses targets based on equipped weapon type
-                this.targetSelector.addGoal(targetGoalWeight, new NearestAttackableTargetGoal<>(this, Mob.class, 10, true, false, mob -> mob instanceof Enemy));
+                this.targetSelector.addGoal(targetGoalWeight, new NearestAttackableTargetGoal<>(
+                    this,
+                    Mob.class,
+                    10,
+                    true,
+                    false,
+                    mob -> mob instanceof Enemy
+                ));
+                this.targetSelector.addGoal(targetGoalWeight, new NearestAttackableTargetGoal<>(
+                    this,
+                    TamableAnimal.class,
+                    10,
+                    true,
+                    false,
+                    entity -> entityAlliances.isEnemyTo(entity, this.getOwnerUUID())
+                ));
+                this.targetSelector.addGoal(targetGoalWeight, new NearestAttackableTargetGoal<>(
+                    this,
+                    Player.class,
+                    10,
+                    true,
+                    false,
+                    entity -> entityAlliances.isEnemyTo(entity, this.getOwnerUUID())
+                ));
             }
         }
     }

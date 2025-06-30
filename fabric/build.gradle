@@ -41,10 +41,10 @@ dependencies {
     }
     annotationProcessor "dev.the-fireplace:Annotated-DI-Fabric-Processor:${project.annotateddi_version}"
 
-    /*modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+    modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.fabric_clothconfig_version}") {
         exclude(group: 'net.fabricmc.fabric-api')
-    }*/
+    }
 
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
     //modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
