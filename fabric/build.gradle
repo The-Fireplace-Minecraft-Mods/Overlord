@@ -14,7 +14,6 @@ def supportedMinecraftVersions = [project.minecraft_version]
 repositories {
     maven { url 'https://maven.shedaniel.me/' }
     maven { url 'https://maven.terraformersmc.com/releases/' }
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     maven {
         name = 'Modrinth'
         url = 'https://api.modrinth.com/maven'

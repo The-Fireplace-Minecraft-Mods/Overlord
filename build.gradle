@@ -55,6 +55,16 @@ subprojects { Project subProject ->
     }
 
     repositories {
+        maven {
+            name = 'Central Portal Snapshots'
+            url = 'https://central.sonatype.com/repository/maven-snapshots/'
+
+            content {
+                includeModule("dev.the-fireplace", "Fireplace-Lib-Fabric")
+                includeModule("dev.the-fireplace", "Fireplace-Lib-Common")
+                includeModule("dev.the-fireplace", "Fireplace-Lib-Forge")
+            }
+        }
         mavenCentral()
 
         maven {
