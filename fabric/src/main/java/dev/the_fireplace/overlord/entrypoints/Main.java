@@ -26,9 +26,7 @@ public final class Main implements ModInitializer
         injector.getInstance(OverlordBlockEntities.class).register();
         injector.getInstance(OverlordEntities.class).register();
         Augments.register(injector.getInstance(HeadBlockAugmentRegistry.class));
-        injector.getInstance(NetworkRegistry.class).register();
         OverlordDataPacks.register(injector);
-        OverlordCriterions.register();
         injector.getInstance(OverlordInitializer.class).initialize();
         injector.getInstance(RegisterFabricEvents.class).registerEvents();
     }

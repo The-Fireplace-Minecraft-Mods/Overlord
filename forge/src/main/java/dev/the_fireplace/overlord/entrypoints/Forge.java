@@ -35,10 +35,8 @@ public final class Forge
 
         OverlordConstants.getLogger().debug("Preparing bones...");
         Augments.register(injector.getInstance(HeadBlockAugmentRegistry.class));
-        injector.getInstance(NetworkRegistry.class).register();
         MinecraftForge.EVENT_BUS.register(injector.getInstance(OverlordDataPacks.class));
         MinecraftForge.EVENT_BUS.register(injector.getInstance(PlayerJoinedServerEventHandler.class));
-        OverlordCriterions.register();
         injector.getInstance(OverlordInitializer.class).initialize();
 
         DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> {
