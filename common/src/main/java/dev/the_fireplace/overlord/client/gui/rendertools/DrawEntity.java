@@ -3,13 +3,12 @@ package dev.the_fireplace.overlord.client.gui.rendertools;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
+import org.joml.Quaternionf;
 
 public class DrawEntity
 {
@@ -28,8 +27,8 @@ public class DrawEntity
         PoseStack matrixStack2 = new PoseStack();
         matrixStack2.translate(0.0D, 0.0D, 1000.0D);
         matrixStack2.scale((float) size, (float) size, (float) size);
-        Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
-        Quaternion quaternion2 = Vector3f.XP.rotationDegrees(0);
+        Quaternionf quaternion = new Quaternionf().rotateZ(180F);
+        Quaternionf quaternion2 = new Quaternionf().rotateX(0);
         quaternion.mul(quaternion2);
         matrixStack2.mulPose(quaternion);
         float h = entity.yBodyRot;
@@ -44,7 +43,7 @@ public class DrawEntity
         entity.yHeadRotO = entity.getYRot();
         Lighting.setupForEntityInInventory();
         EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
-        quaternion2.conj();
+        quaternion2.conjugate();
         entityRenderDispatcher.overrideCameraOrientation(quaternion2);
         entityRenderDispatcher.setRenderShadow(false);
         MultiBufferSource.BufferSource immediate = Minecraft.getInstance().renderBuffers().bufferSource();

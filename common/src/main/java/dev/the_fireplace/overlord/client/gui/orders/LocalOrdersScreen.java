@@ -65,11 +65,26 @@ public class LocalOrdersScreen extends Screen
                 minecraft.setScreen(ordersGuiFactory.build(this, settings));
             }
         };
-        //x, y, width, height
-        addRenderableWidget(new Button(width / 2 - 50, height / 2, 100, 20, Component.translatable("gui.overlord.orders"), openOrdersScreen));
-        addRenderableWidget(new Button(width / 2 - 50, height / 2 + 22, 100, 20, Component.translatable("gui.overlord.select_squad"), (b) -> screenOpener.openSquadSelectorGUI(null)));
-        addRenderableWidget(new Button(width / 2 - 102, height / 2 + 44, 100, 20, Component.translatable("gui.overlord.local_orders.issue_orders"), this::issueOrders));
-        addRenderableWidget(new Button(width / 2 + 2, height / 2 + 44, 100, 20, Component.translatable("gui.done"), (b) -> this.closeScreen()));
+        Button ordersButton = Button.builder(Component.translatable("gui.overlord.orders"), openOrdersScreen)
+            .pos(width / 2 - 50, height / 2)
+            .size(100, 20)
+            .build();
+        Button selectSquadButton = Button.builder(Component.translatable("gui.overlord.select_squad"), (b) -> screenOpener.openSquadSelectorGUI(null))
+            .pos(width / 2 - 50, height / 2 + 22)
+            .size(100, 20)
+            .build();
+        Button issueOrdersButton = Button.builder(Component.translatable("gui.overlord.local_orders.issue_orders"), this::issueOrders)
+            .pos(width / 2 - 102, height / 2 + 44)
+            .size(100, 20)
+            .build();
+        Button doneButton = Button.builder(Component.translatable("gui.done"), (b) -> this.closeScreen())
+            .pos(width / 2 + 2, height / 2 + 44)
+            .size(100, 20)
+            .build();
+        this.addRenderableWidget(ordersButton);
+        this.addRenderableWidget(selectSquadButton);
+        this.addRenderableWidget(issueOrdersButton);
+        this.addRenderableWidget(doneButton);
     }
 
     private void closeScreen() {

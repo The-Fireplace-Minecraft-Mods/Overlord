@@ -100,7 +100,7 @@ public class FollowOwnerGoal extends Goal
     }
 
     private void tryTeleport() {
-        BlockPos ownerPos = new BlockPos(this.owner.position());
+        BlockPos ownerPos = BlockPos.containing(this.owner.position());
 
         for (int i = 0; i < 10; ++i) {
             //TODO improve this, we want to put them somewhere random just outside the minimum
@@ -135,7 +135,7 @@ public class FollowOwnerGoal extends Goal
             if (!this.leavesAllowed && blockState.getBlock() instanceof LeavesBlock) {
                 return false;
             } else {
-                BlockPos blockPos = pos.subtract(new BlockPos(this.armyEntity.position()));
+                BlockPos blockPos = pos.subtract(BlockPos.containing(this.armyEntity.position()));
                 return this.world.noCollision(this.armyEntity, this.armyEntity.getBoundingBox().move(blockPos));
             }
         }

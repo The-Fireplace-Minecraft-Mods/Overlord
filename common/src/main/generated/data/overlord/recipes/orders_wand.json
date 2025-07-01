@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "equipment",
   "key": {
     "#": {
       "item": "minecraft:amethyst_shard"
@@ -15,5 +16,6 @@
   ],
   "result": {
     "item": "overlord:orders_wand"
-  }
+  },
+  "show_notification": true
 }

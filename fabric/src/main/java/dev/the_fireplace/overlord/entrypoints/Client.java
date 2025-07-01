@@ -11,7 +11,6 @@ import dev.the_fireplace.overlord.client.renderer.OwnedSkeletonRenderer;
 import dev.the_fireplace.overlord.client.renderer.blockentity.ArmySkullBlockEntityRenderer;
 import dev.the_fireplace.overlord.client.renderer.blockentity.TombstoneBlockEntityRenderer;
 import dev.the_fireplace.overlord.client.renderer.item.ArmySkullItemRenderer;
-import dev.the_fireplace.overlord.container.ContainerEquipmentSlot;
 import dev.the_fireplace.overlord.entity.OverlordEntities;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonContainer;
 import dev.the_fireplace.overlord.impl.advancement.ProgressFinderProxies;
@@ -23,9 +22,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
-import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.world.inventory.ChestMenu;
 
 @Environment(EnvType.CLIENT)
@@ -66,8 +63,5 @@ public final class Client implements ClientModInitializer
             overlordEntities.getOwnedSkeletonScreenHandler(),
             (container, playerInventory, title) -> new OwnedSkeletonGui(container.getOwner(), playerInventory, container.containerId)
         );
-        ClientSpriteRegistryCallback.event(TextureAtlas.LOCATION_BLOCKS).register((atlasTexture, registry) -> {
-            registry.register(ContainerEquipmentSlot.EMPTY_WEAPON_SLOT_TEXTURE);
-        });
     }
 }

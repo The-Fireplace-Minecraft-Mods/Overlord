@@ -4,13 +4,14 @@ import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.entity.OverlordEntities;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonContainer;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -49,7 +50,7 @@ public final class ForgeEntityLoaderHelper implements EntityLoaderHelper
             final UUID skeletonId = data.readUUID();
             List<Entity> entities = world.getEntities(player, player.getBoundingBox().inflate(6), e -> e instanceof OwnedSkeletonEntity && e.getUUID().equals(skeletonId));
             return ((OwnedSkeletonEntity) entities.get(0)).getContainer(player.getInventory(), windowId);
-        });
+        }, FeatureFlags.DEFAULT_FLAGS);
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerMenus);
 
@@ -57,10 +58,10 @@ public final class ForgeEntityLoaderHelper implements EntityLoaderHelper
     }
 
     public void registerMenus(RegisterEvent event) {
-        if (!event.getRegistryKey().equals(Registry.MENU_REGISTRY)) {
+        if (!event.getRegistryKey().equals(Registries.MENU)) {
             return;
         }
-        event.register(Registry.MENU_REGISTRY, OverlordEntities.OWNED_SKELETON_ID, () -> ownedSkeletonMenuType);
+        event.register(Registries.MENU, OverlordEntities.OWNED_SKELETON_ID, () -> ownedSkeletonMenuType);
     }
 
     private static class AttributeCreationHandler<T extends LivingEntity>

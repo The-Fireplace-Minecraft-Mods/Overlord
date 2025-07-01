@@ -4,18 +4,19 @@ import dev.the_fireplace.overlord.OverlordConstants;
 import dev.the_fireplace.overlord.block.internal.CasketBlock;
 import dev.the_fireplace.overlord.datastructure.SingletonFactory;
 import dev.the_fireplace.overlord.loader.BlockHelper;
+import dev.the_fireplace.overlord.loader.CreativeTabHelper;
 import dev.the_fireplace.overlord.loader.RegistryHelper;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
@@ -59,9 +60,9 @@ public final class OverlordBlocks
 
     private final List<Block> registeredBlocks = new ArrayList<>();
 
-    private RegistryHelper<Block> blockRegistry = (id, value) -> Registry.register(Registry.BLOCK, id, value);
+    private RegistryHelper<Block> blockRegistry = (id, value) -> Registry.register(BuiltInRegistries.BLOCK, id, value);
 
-    private RegistryHelper<Item> itemRegistry = (id, value) -> Registry.register(Registry.ITEM, id, value);
+    private RegistryHelper<Item> itemRegistry = (id, value) -> Registry.register(BuiltInRegistries.ITEM, id, value);
 
     private RegistryType registryType;
 
@@ -105,31 +106,45 @@ public final class OverlordBlocks
 
     public synchronized void registerBlocks(RegistryType registryType) {
         this.registryType = registryType;
-        registerBlockWithItem("oak_casket", oakCasket.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("oak_grave_marker", oakGraveMarker.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("birch_casket", birchCasket.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("birch_grave_marker", birchGraveMarker.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("jungle_casket", jungleCasket.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("jungle_grave_marker", jungleGraveMarker.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("spruce_casket", spruceCasket.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("spruce_grave_marker", spruceGraveMarker.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("acacia_casket", acaciaCasket.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("acacia_grave_marker", acaciaGraveMarker.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("dark_oak_casket", darkOakCasket.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("dark_oak_grave_marker", darkOakGraveMarker.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("warped_casket", warpedCasket.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("warped_grave_marker", warpedGraveMarker.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("mangrove_casket", mangroveCasket.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("mangrove_grave_marker", mangroveGraveMarker.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("crimson_casket", crimsonCasket.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("crimson_grave_marker", crimsonGraveMarker.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("stone_tombstone", stoneTombstone.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("diorite_tombstone", dioriteTombstone.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("granite_tombstone", graniteTombstone.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("andesite_tombstone", andesiteTombstone.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("blackstone_tombstone", blackstoneTombstone.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("deepslate_tombstone", deepslateTombstone.get(), CreativeModeTab.TAB_DECORATIONS);
-        registerBlockWithItem("blood_soaked_soil", bloodSoakedSoil.get(), CreativeModeTab.TAB_BUILDING_BLOCKS);
+        BlockItem[] functionalBlockItems = new BlockItem[]{
+            registerBlockWithItem("oak_casket", oakCasket.get()),
+            registerBlockWithItem("oak_grave_marker", oakGraveMarker.get()),
+            registerBlockWithItem("birch_casket", birchCasket.get()),
+            registerBlockWithItem("birch_grave_marker", birchGraveMarker.get()),
+            registerBlockWithItem("jungle_casket", jungleCasket.get()),
+            registerBlockWithItem("jungle_grave_marker", jungleGraveMarker.get()),
+            registerBlockWithItem("spruce_casket", spruceCasket.get()),
+            registerBlockWithItem("spruce_grave_marker", spruceGraveMarker.get()),
+            registerBlockWithItem("acacia_casket", acaciaCasket.get()),
+            registerBlockWithItem("acacia_grave_marker", acaciaGraveMarker.get()),
+            registerBlockWithItem("dark_oak_casket", darkOakCasket.get()),
+            registerBlockWithItem("dark_oak_grave_marker", darkOakGraveMarker.get()),
+            registerBlockWithItem("warped_casket", warpedCasket.get()),
+            registerBlockWithItem("warped_grave_marker", warpedGraveMarker.get()),
+            registerBlockWithItem("mangrove_casket", mangroveCasket.get()),
+            registerBlockWithItem("mangrove_grave_marker", mangroveGraveMarker.get()),
+            registerBlockWithItem("crimson_casket", crimsonCasket.get()),
+            registerBlockWithItem("crimson_grave_marker", crimsonGraveMarker.get()),
+            registerBlockWithItem("stone_tombstone", stoneTombstone.get()),
+            registerBlockWithItem("diorite_tombstone", dioriteTombstone.get()),
+            registerBlockWithItem("granite_tombstone", graniteTombstone.get()),
+            registerBlockWithItem("andesite_tombstone", andesiteTombstone.get()),
+            registerBlockWithItem("blackstone_tombstone", blackstoneTombstone.get()),
+            registerBlockWithItem("deepslate_tombstone", deepslateTombstone.get())
+        };
+        BlockItem[] naturalBlockItems = new BlockItem[]{
+            registerBlockWithItem("blood_soaked_soil", bloodSoakedSoil.get())
+        };
+        if (functionalBlockItems[0] != null) {
+            CreativeModeTabs.allTabs().stream().filter(tab -> tab.contains(new ItemStack(Items.PINK_BED))).findFirst().ifPresent(creativeTabGroup -> {
+                OverlordConstants.getInjector().getInstance(CreativeTabHelper.class).registerItemAfter(creativeTabGroup, Items.PINK_BED, functionalBlockItems);
+            });
+        }
+        if (naturalBlockItems[0] != null) {
+            CreativeModeTabs.allTabs().stream().filter(tab -> tab.contains(new ItemStack(Blocks.PODZOL))).findFirst().ifPresent(creativeTabGroup -> {
+                OverlordConstants.getInjector().getInstance(CreativeTabHelper.class).registerItemAfter(creativeTabGroup, Blocks.PODZOL, naturalBlockItems);
+            });
+        }
         registerBlock("flesh_skeleton_skull", fleshSkeletonSkull.get());
         registerBlock("flesh_skeleton_wall_skull", fleshSkeletonWallSkull.get());
         registerBlock("muscle_skeleton_skull", muscleSkeletonSkull.get());
@@ -145,11 +160,16 @@ public final class OverlordBlocks
         }
     }
 
-    private void registerBlockWithItem(String path, Block block, CreativeModeTab group) {
+    @Nullable
+    private BlockItem registerBlockWithItem(String path, Block block) {
         registerBlock(path, block);
         if (registryType != RegistryType.BLOCK) {
-            itemRegistry.register(new ResourceLocation(OverlordConstants.MODID, path), new BlockItem(block, new Item.Properties().tab(group)));
+            BlockItem blockItem = new BlockItem(block, new Item.Properties());
+            itemRegistry.register(new ResourceLocation(OverlordConstants.MODID, path), blockItem);
+            return blockItem;
         }
+
+        return null;
     }
 
     public void setBlockRegistry(RegistryHelper<Block> blockRegistry) {

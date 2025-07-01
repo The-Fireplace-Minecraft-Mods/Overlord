@@ -86,7 +86,7 @@ public final class MeleeAttackExecutorImpl implements MeleeAttackExecutor
         }
 
         final Vec3 preDamageTargetVelocity = target.getDeltaMovement();
-        boolean targetDamaged = target.hurt(DamageSource.mobAttack(attacker), baseAttackDamage);
+        boolean targetDamaged = target.hurt(attacker.damageSources().mobAttack(attacker), baseAttackDamage);
         if (targetDamaged) {
             int fireAspectLevel = applyFireAspectToTarget(attacker, target);
             knockbackTarget(attacker, target, knockbackAmount);
@@ -188,7 +188,7 @@ public final class MeleeAttackExecutorImpl implements MeleeAttackExecutor
 
             if (attacker.distanceToSqr(livingEntity) < 9.0D) {
                 livingEntity.knockback(0.4F, Mth.sin(attacker.getYRot() * (float) Math.PI / 180), -Mth.cos(attacker.getYRot() * (float) Math.PI / 180));
-                livingEntity.hurt(DamageSource.mobAttack(attacker), multiplier);
+                livingEntity.hurt(attacker.damageSources().mobAttack(attacker), multiplier);
             }
         }
 

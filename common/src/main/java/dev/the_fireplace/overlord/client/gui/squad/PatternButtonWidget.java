@@ -11,6 +11,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
+import java.util.function.Supplier;
+
 public class PatternButtonWidget extends Button
 {
     protected final PatternRenderer patternRenderer;
@@ -18,42 +20,38 @@ public class PatternButtonWidget extends Button
     protected boolean isUsed = false;
 
     public PatternButtonWidget(int x, int y, int width, int height, Component text, ResourceLocation patternId, OnPress pressAction) {
-        this(x, y, width, height, text, patternId, pressAction, NO_TOOLTIP);
-    }
-
-    public PatternButtonWidget(int x, int y, int width, int height, Component text, ResourceLocation patternId, OnPress pressAction, OnTooltip tooltipSupplier) {
-        super(x, y, width, height, text, pressAction, tooltipSupplier);
+        super(x, y, width, height, text, pressAction, Supplier::get);
         this.patternId = patternId;
         this.patternRenderer = OverlordConstants.getInjector().getInstance(PatternRenderer.class);
     }
 
     @Override
-    public void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta) {
+    public void renderWidget(PoseStack matrices, int mouseX, int mouseY, float delta) {
         this.drawCustomButton(matrices, mouseX, mouseY);
 
-        if (this.isHoveredOrFocused()) {
-            this.renderToolTip(matrices, mouseX, mouseY);
-        }
+//        if (this.isHoveredOrFocused()) {
+//            this.renderToolTip(matrices, mouseX, mouseY);
+//        }
     }
 
     private void drawCustomButton(PoseStack matrices, int mouseX, int mouseY) {
         Minecraft minecraftClient = Minecraft.getInstance();
         Font textRenderer = minecraftClient.font;
 
-        patternRenderer.drawPattern(matrices, this.patternId, this.x + 2 + (this.width - 4) / 5, this.y + 2, (this.width - 4) * 3 / 5, this.height - 4, this.alpha);
+        patternRenderer.drawPattern(matrices, this.patternId, this.getX() + 2 + (this.width - 4) / 5, this.getY() + 2, (this.width - 4) * 3 / 5, this.height - 4, this.alpha);
         drawBox(matrices);
 
-        this.renderBg(matrices, minecraftClient, mouseX, mouseY);
+//        this.renderBg(matrices, minecraftClient, mouseX, mouseY);
         int j = this.active ? 16777215 : 10526880;
-        drawCenteredString(matrices, textRenderer, this.getMessage(), this.x + this.width / 2, this.y + this.height - 4 - 9, j | Mth.ceil(this.alpha * 255.0F) << 24);
+        drawCenteredString(matrices, textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + this.height - 4 - 9, j | Mth.ceil(this.alpha * 255.0F) << 24);
     }
 
     private void drawBox(PoseStack matrices) {
         //TODO color and/or dotted/dashed change if unlocked or not
         int color = this.isHovered ? 0xEED489BF : 0xFFFFFFBF;
-        BoxRenderer.drawBox(matrices, x, y, width, height, 1, color);
+        BoxRenderer.drawBox(matrices, this.getX(), this.getY(), width, height, 1, color);
         if (isUsed) {
-            BoxRenderer.drawBox(matrices, x, y, width, height, 2, color);
+            BoxRenderer.drawBox(matrices, this.getX(), this.getY(), width, height, 2, color);
         }
     }
 

@@ -4,7 +4,9 @@ import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.blockentity.OverlordBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.Level;
@@ -27,7 +29,7 @@ public final class ForgeBlockEntityLoaderHelper implements BlockEntityLoaderHelp
             final Level world = player.level;
             final BlockPos pos = data.readBlockPos();
             return (ChestMenu) world.getBlockState(pos).getMenuProvider(player.level, pos).createMenu(windowId, player.getInventory(), player);
-        });
+        }, FeatureFlags.DEFAULT_FLAGS);
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerMenus);
 
@@ -40,9 +42,9 @@ public final class ForgeBlockEntityLoaderHelper implements BlockEntityLoaderHelp
     }
 
     public void registerMenus(RegisterEvent event) {
-        if (!event.getRegistryKey().equals(Registry.MENU_REGISTRY)) {
+        if (!event.getRegistryKey().equals(Registries.MENU)) {
             return;
         }
-        event.register(Registry.MENU_REGISTRY, OverlordBlockEntities.CASKET_BLOCK_ENTITY_ID, () -> chestMenuType);
+        event.register(Registries.MENU, OverlordBlockEntities.CASKET_BLOCK_ENTITY_ID, () -> chestMenuType);
     }
 }

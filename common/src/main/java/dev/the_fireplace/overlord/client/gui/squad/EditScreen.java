@@ -17,7 +17,8 @@ import dev.the_fireplace.overlord.network.client.builder.UpdateSquadBufferBuilde
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
@@ -104,16 +105,21 @@ public class EditScreen extends Screen
             this.saving = true;
             updateConfirmButtonEnabled();
         };
-        Button.OnTooltip confirmTooltipSupplier = (buttonWidget, matrixStack, i, j) -> EditScreen.this.renderComponentTooltip(matrixStack, errors, i, j);
-        confirmButton = new Button(this.width / 2 - 202, this.height - 30, 200, 20, Component.translatable("gui.overlord.confirm_exit"), confirmAction, confirmTooltipSupplier);
+        confirmButton = Button.builder(Component.translatable("gui.overlord.confirm_exit"), confirmAction)
+            .pos(this.width / 2 - 202, this.height - 30)
+            .size(200, 20)
+            .tooltip(errors.stream().findFirst().map(Tooltip::create).orElse(null))//TODO see if we can get this multi-lined again
+            .build();
         this.addRenderableWidget(confirmButton);
         updateConfirmButtonEnabled();
-        this.addRenderableWidget(new Button(this.width / 2 + 2, this.height - 30, 200, 20, Component.translatable("gui.cancel"), (button) -> {
-            closeScreen();
-        }));
+        Button cancelButton = Button.builder(Component.translatable("gui.cancel"), (button) -> closeScreen())
+            .pos(this.width / 2 + 2, this.height - 30)
+            .size(200, 20)
+            .build();
+        this.addRenderableWidget(cancelButton);
     }
 
-    private <T extends GuiEventListener & Widget & NarratableEntry> void addPartialScreenChildren(PartialScreen widget) {
+    private <T extends GuiEventListener & Renderable & NarratableEntry> void addPartialScreenChildren(PartialScreen widget) {
         for (GuiEventListener child : widget.getChildren()) {
             //noinspection unchecked
             this.addRenderableWidget((T) child);

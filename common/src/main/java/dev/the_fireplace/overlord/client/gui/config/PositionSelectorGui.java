@@ -58,19 +58,30 @@ public class PositionSelectorGui extends Screen implements CustomButtonScreen<St
         this.addRenderableWidget(xWidget = new EditBox(minecraft.font, this.width / 2 - 75 - 2, this.height / 2, 50, 20, Component.nullToEmpty("X")));
         this.addRenderableWidget(yWidget = new EditBox(minecraft.font, this.width / 2 - 25, this.height / 2, 50, 20, Component.nullToEmpty("Y")));
         this.addRenderableWidget(zWidget = new EditBox(minecraft.font, this.width / 2 + 25 + 2, this.height / 2, 50, 20, Component.nullToEmpty("Z")));
-        Button currentPositionButton = new Button(this.width / 2 - 100, this.height / 2 - 30, 200, 20, Component.translatable("gui.overlord.select_position.use_current"), (button) -> {
-            setCoordinates(currentPosition.getX(), currentPosition.getY(), currentPosition.getZ());
-        });
+        Button currentPositionButton = Button.builder(Component.translatable("gui.overlord.select_position.use_current"), (button) -> {
+                setCoordinates(currentPosition.getX(), currentPosition.getY(), currentPosition.getZ());
+            })
+            .pos(this.width / 2 - 100, this.height / 2 - 30)
+            .size(200, 20)
+            .build();
         this.addRenderableWidget(currentPositionButton);
-        this.addRenderableWidget(confirmButton = new Button(this.width / 2 - 202, this.height - 30, 200, 20, Component.translatable("gui.overlord.confirm_exit"), (button) -> {
-            PositionSetting newPosition = new PositionSetting(Integer.parseInt(xWidget.getValue()), Integer.parseInt(yWidget.getValue()), Integer.parseInt(zWidget.getValue()));
-            resultPromise.setSuccess(Optional.of(newPosition.toString()));
-            onClose();
-        }));
-        this.addRenderableWidget(new Button(this.width / 2 + 2, this.height - 30, 200, 20, Component.translatable("gui.cancel"), (button) -> {
-            resultPromise.setSuccess(Optional.empty());
-            onClose();
-        }));
+        this.confirmButton = Button.builder(Component.translatable("gui.overlord.confirm_exit"), (button) -> {
+                PositionSetting newPosition = new PositionSetting(Integer.parseInt(xWidget.getValue()), Integer.parseInt(yWidget.getValue()), Integer.parseInt(zWidget.getValue()));
+                resultPromise.setSuccess(Optional.of(newPosition.toString()));
+                onClose();
+            })
+            .pos(this.width / 2 - 202, this.height - 30)
+            .size(200, 20)
+            .build();
+        this.addRenderableWidget(confirmButton);
+        Button cancelButton = Button.builder(Component.translatable("gui.cancel"), (button) -> {
+                resultPromise.setSuccess(Optional.empty());
+                onClose();
+            })
+            .pos(this.width / 2 + 2, this.height - 30)
+            .size(200, 20)
+            .build();
+        this.addRenderableWidget(cancelButton);
         currentPositionButton.visible = currentPosition != null;
         setCoordinates(previousSelection.getX(), previousSelection.getY(), previousSelection.getZ());
     }

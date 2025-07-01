@@ -7,6 +7,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.JsonOps;
 import dev.the_fireplace.overlord.domain.entity.creation.SkeletonIngredient;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -27,10 +29,10 @@ public class JsonIngredient
         }
         ResourceLocation identifier = new ResourceLocation(jsonObject.get("id").getAsString());
         if (isTag) {
-            TagKey<Item> itemTag = TagKey.create(Registry.ITEM_REGISTRY, identifier);
+            TagKey<Item> itemTag = TagKey.create(Registries.ITEM, identifier);
             ingredient = new TagIngredient(itemTag);
         } else {
-            Optional<Item> item = Registry.ITEM.getOptional(identifier);
+            Optional<Item> item = BuiltInRegistries.ITEM.getOptional(identifier);
             if (item.isEmpty()) {
                 throw new JsonParseException(String.format("Item not found: %s", identifier));
             }

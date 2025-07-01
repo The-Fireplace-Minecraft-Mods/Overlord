@@ -35,13 +35,16 @@ public class ListBuilderGui extends Screen implements CustomButtonScreen<String>
     protected void init() {
         ListSelectorWidget listSelectorWidget = createListSelector();
         this.addRenderableWidget(listSelectorWidget);
-        this.addRenderableWidget(new Button(this.width / 2 - 202, this.height - 30, 200, 20, Component.nullToEmpty("Confirm and exit"), (button) -> {
+        Button confirmButton = Button.builder(Component.translatable("gui.overlord.confirm_exit"), (button) -> {
+            resultPromise.setSuccess(Optional.of(selected.toString()));
             onClose();
-        }));
-        this.addRenderableWidget(new Button(this.width / 2 + 2, this.height - 30, 200, 20, Component.nullToEmpty("Cancel"), (button) -> {
+        }).pos(this.width / 2 - 202, this.height - 30).size(200, 20).build();
+        this.addRenderableWidget(confirmButton);
+        Button cancelButton = Button.builder(Component.translatable("gui.cancel"), (button) -> {
             resultPromise.setSuccess(Optional.empty());
             onClose();
-        }));
+        }).pos(this.width / 2 + 2, this.height - 30).size(200, 20).build();
+        this.addRenderableWidget(cancelButton);
     }
 
     private ListSelectorWidget createListSelector() {

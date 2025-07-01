@@ -10,7 +10,7 @@ import dev.the_fireplace.overlord.entity.creation.SkeletonComponent;
 import dev.the_fireplace.overlord.entity.creation.SkeletonRecipe;
 import dev.the_fireplace.overlord.entity.creation.SkeletonRecipeRegistryImpl;
 import dev.the_fireplace.overlord.entity.creation.ingredient.JsonIngredient;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -121,7 +121,7 @@ public class SkeletonBuildingReloadListener implements ResourceManagerReloadList
         for (JsonElement byproductElement : byproducts) {
             JsonObject byproduct = byproductElement.getAsJsonObject();
             ResourceLocation byproductIdentifier = new ResourceLocation(byproduct.get("id").getAsString());
-            Optional<Item> byproductItem = Registry.ITEM.getOptional(byproductIdentifier);
+            Optional<Item> byproductItem = BuiltInRegistries.ITEM.getOptional(byproductIdentifier);
             if (byproductItem.isEmpty()) {
                 OverlordConstants.getLogger().warn("Byproduct not found, skipping: {}", byproductIdentifier.toString());
                 continue;

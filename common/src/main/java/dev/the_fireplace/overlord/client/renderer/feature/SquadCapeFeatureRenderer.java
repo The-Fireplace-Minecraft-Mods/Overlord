@@ -5,7 +5,7 @@ import com.google.inject.Key;
 import com.google.inject.name.Names;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import dev.the_fireplace.overlord.OverlordConstants;
 import dev.the_fireplace.overlord.domain.data.Squads;
 import dev.the_fireplace.overlord.domain.data.objects.Squad;
@@ -15,7 +15,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
@@ -24,6 +23,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -76,9 +76,9 @@ public class SquadCapeFeatureRenderer<T extends ArmyEntity, M extends PlayerMode
             q += 25.0F;
         }
 
-        matrices.mulPose(Vector3f.XP.rotationDegrees(6.0F + r / 2.0F + q));
-        matrices.mulPose(Vector3f.ZP.rotationDegrees(s / 2.0F));
-        matrices.mulPose(Vector3f.YP.rotationDegrees(180.0F - s / 2.0F));
+        matrices.mulPose(Axis.XP.rotationDegrees(6.0F + r / 2.0F + q));
+        matrices.mulPose(Axis.ZP.rotationDegrees(s / 2.0F));
+        matrices.mulPose(Axis.YP.rotationDegrees(180.0F - s / 2.0F));
 
         ResourceLocation squadCapeTexture = patternRegistry.getById(squad.getPatternId()).getTextureLocation();
 
@@ -86,7 +86,7 @@ public class SquadCapeFeatureRenderer<T extends ArmyEntity, M extends PlayerMode
         this.getParentModel().renderCloak(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
 
         matrices.pushPose();
-        matrices.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
+        matrices.mulPose(Axis.ZP.rotationDegrees(180.0F));
         double zTranslate = entity.getItemBySlot(EquipmentSlot.CHEST).isEmpty() ? -0.03 : -0.1;
         matrices.translate(0, -0.5, zTranslate);
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
@@ -96,7 +96,7 @@ public class SquadCapeFeatureRenderer<T extends ArmyEntity, M extends PlayerMode
         itemRenderer.renderStatic(
             entity,
             itemStack,
-            ItemTransforms.TransformType.FIXED,
+            ItemDisplayContext.FIXED,
             false,
             matrices,
             vertexConsumers,

@@ -2,16 +2,16 @@ package dev.the_fireplace.overlord.block;
 
 import dev.the_fireplace.overlord.blockentity.ArmySkullBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.Wearable;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Equipable;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 
-public abstract class AbstractArmySkullBlock extends BaseEntityBlock implements Wearable
+public abstract class AbstractArmySkullBlock extends BaseEntityBlock implements Equipable
 {
-
     protected final SkullType skullType;
 
     public AbstractArmySkullBlock(SkullType skullType, Properties settings) {
@@ -28,6 +28,12 @@ public abstract class AbstractArmySkullBlock extends BaseEntityBlock implements 
     public boolean isPathfindable(BlockState state, BlockGetter world, BlockPos pos, PathComputationType type) {
         return false;
     }
+
+    @Override
+    public EquipmentSlot getEquipmentSlot() {
+        return EquipmentSlot.HEAD;
+    }
+
 
     public SkullType getSkullType() {
         return skullType;

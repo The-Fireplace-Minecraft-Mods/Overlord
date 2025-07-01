@@ -6,6 +6,7 @@ import dev.the_fireplace.overlord.OverlordConstants;
 import dev.the_fireplace.overlord.entity.ArmyEntity;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
@@ -30,7 +31,7 @@ public class ObtainedArmyMemberCriterion extends SimpleCriterionTrigger<Obtained
         EntityType entityType = null;
         if (jsonObject.has("entityType")) {
             ResourceLocation identifier = new ResourceLocation(GsonHelper.getAsString(jsonObject, "entityType"));
-            entityType = Registry.ENTITY_TYPE.getOptional(identifier).orElseThrow(() -> new JsonSyntaxException("Unknown entity type '" + identifier + "'"));
+            entityType = BuiltInRegistries.ENTITY_TYPE.getOptional(identifier).orElseThrow(() -> new JsonSyntaxException("Unknown entity type '" + identifier + "'"));
         }
 
         //noinspection unchecked
@@ -63,7 +64,7 @@ public class ObtainedArmyMemberCriterion extends SimpleCriterionTrigger<Obtained
         public JsonObject serializeToJson(SerializationContext predicateSerializer) {
             JsonObject jsonObject = super.serializeToJson(predicateSerializer);
             if (this.entityType != null) {
-                jsonObject.addProperty("entityType", Registry.ENTITY_TYPE.getKey(this.entityType).toString());
+                jsonObject.addProperty("entityType", BuiltInRegistries.ENTITY_TYPE.getKey(this.entityType).toString());
             }
 
             return jsonObject;

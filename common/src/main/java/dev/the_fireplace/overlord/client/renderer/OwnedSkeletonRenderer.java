@@ -22,7 +22,6 @@ import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.layers.ArrowLayer;
 import net.minecraft.client.renderer.entity.layers.BeeStingerLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpdate;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
@@ -65,9 +64,9 @@ public class OwnedSkeletonRenderer extends HumanoidMobRenderer<OwnedSkeletonEnti
 
         HumanoidModel<OwnedSkeletonEntity> bodyModel = new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR));
         OwnedSkeletonModel standardLeggingsModel = new OwnedSkeletonModel(context.bakeLayer(OverlordModelLayers.OWNED_SKELETON_LEGGINGS_MODEL));
-        this.standardArmorRenderer = new HumanoidArmorLayer<>(this, standardLeggingsModel, bodyModel);
+        this.standardArmorRenderer = new HumanoidArmorLayer<>(this, standardLeggingsModel, bodyModel, context.getModelManager());
         OwnedSkeletonModel muscleLeggingsModel = new OwnedSkeletonModel(context.bakeLayer(OverlordModelLayers.MUSCLE_OWNED_SKELETON_LEGGINGS_MODEL));
-        this.muscleArmorRenderer = new HumanoidArmorLayer<>(this, muscleLeggingsModel, bodyModel);
+        this.muscleArmorRenderer = new HumanoidArmorLayer<>(this, muscleLeggingsModel, bodyModel, context.getModelManager());
 
         this.addLayer(this.standardArmorRenderer);
         this.addLayer(new AugmentHeadFeatureRenderer<>(this, context.getModelSet()));
@@ -111,14 +110,8 @@ public class OwnedSkeletonRenderer extends HumanoidMobRenderer<OwnedSkeletonEnti
                 return;
             }
             GameProfile gameProfile = new GameProfile(skinsuit, null);
-            skinCache.put(skinsuit, new PlayerInfo(new PlayerUpdate(
+            skinCache.put(skinsuit, new PlayerInfo(
                 gameProfile,
-                0,
-                GameType.SURVIVAL,
-                null,
-                null
-            ),
-                Minecraft.getInstance().getServiceSignatureValidator(),
                 false
             ));
         }

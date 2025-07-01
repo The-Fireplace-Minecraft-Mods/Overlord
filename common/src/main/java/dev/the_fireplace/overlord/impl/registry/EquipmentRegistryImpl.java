@@ -2,7 +2,7 @@ package dev.the_fireplace.overlord.impl.registry;
 
 import dev.the_fireplace.annotateddi.api.di.Implementation;
 import dev.the_fireplace.overlord.domain.registry.EquipmentRegistry;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
@@ -19,12 +19,12 @@ public final class EquipmentRegistryImpl implements EquipmentRegistry
 {
     @Inject
     public EquipmentRegistryImpl() {
-        if (Registry.ITEM.stream().toArray().length == 0) {
+        if (BuiltInRegistries.ITEM.stream().toArray().length == 0) {
             throw new IllegalStateException("Tried to access the item registry before it was initialized!");
         }
-        for (Item item : Registry.ITEM) {
+        for (Item item : BuiltInRegistries.ITEM) {
             if (item.canBeDepleted() && isEquipment(item)) {
-                equipmentIds.add(Registry.ITEM.getKey(item));
+                equipmentIds.add(BuiltInRegistries.ITEM.getKey(item));
             }
         }
     }

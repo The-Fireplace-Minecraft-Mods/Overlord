@@ -2,7 +2,7 @@ package dev.the_fireplace.overlord.datagen;
 
 import com.google.common.collect.ImmutableList;
 import dev.the_fireplace.overlord.OverlordConstants;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancements.Advancement;
 
@@ -15,8 +15,8 @@ public class AdvancementsProvider extends FabricAdvancementProvider
         OverlordConstants.getInjector().getInstance(OverlordTabAdvancementGenerator.class)
     );
 
-    public AdvancementsProvider(FabricDataGenerator root) {
-        super(root);
+    public AdvancementsProvider(FabricDataOutput output) {
+        super(output);
     }
 
     @Override

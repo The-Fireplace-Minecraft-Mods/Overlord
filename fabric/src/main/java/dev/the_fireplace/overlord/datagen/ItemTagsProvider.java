@@ -2,35 +2,39 @@ package dev.the_fireplace.overlord.datagen;
 
 import dev.the_fireplace.overlord.block.OverlordBlockTags;
 import dev.the_fireplace.overlord.item.OverlordItemTags;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.Items;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 public class ItemTagsProvider extends FabricTagProvider.ItemTagProvider
 {
-    public ItemTagsProvider(FabricDataGenerator root, BlockTagProvider blockTagProvider) {
-        super(root, blockTagProvider);
+    public ItemTagsProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture, @Nullable BlockTagProvider blockTagProvider) {
+        super(output, completableFuture, blockTagProvider);
     }
 
     @Override
-    protected void generateTags() {
+    protected void addTags(HolderLookup.Provider arg) {
         this.copy(OverlordBlockTags.CASKETS, OverlordItemTags.CASKETS);
         this.copy(OverlordBlockTags.GRAVE_MARKERS, OverlordItemTags.GRAVE_MARKERS);
-        this.tag(OverlordItemTags.MUSCLE_MEAT).add(
+        this.getOrCreateTagBuilder(OverlordItemTags.MUSCLE_MEAT).add(
             Items.BEEF,
             Items.RABBIT,
             Items.MUTTON,
             Items.PORKCHOP,
             Items.CHICKEN
         );
-        this.tag(OverlordItemTags.FLESH).add(
+        this.getOrCreateTagBuilder(OverlordItemTags.FLESH).add(
             Items.LEATHER,
             Items.PHANTOM_MEMBRANE
         );
-        this.tag(OverlordItemTags.BONES).add(
+        this.getOrCreateTagBuilder(OverlordItemTags.BONES).add(
             Items.BONE
         );
-        this.tag(OverlordItemTags.DYES).add(
+        this.getOrCreateTagBuilder(OverlordItemTags.DYES).add(
             Items.WHITE_DYE,
             Items.ORANGE_DYE,
             Items.MAGENTA_DYE,

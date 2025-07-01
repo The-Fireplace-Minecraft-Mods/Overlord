@@ -3,7 +3,7 @@ package dev.the_fireplace.overlord.client.renderer.feature;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import dev.the_fireplace.overlord.block.AbstractArmySkullBlock;
 import dev.the_fireplace.overlord.client.renderer.blockentity.ArmySkullBlockEntityRenderer;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonEntity;
@@ -22,10 +22,7 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.AbstractSkullBlock;
 import net.minecraft.world.level.block.SkullBlock;
 
@@ -77,15 +74,15 @@ public class AugmentHeadFeatureRenderer<T extends OwnedSkeletonEntity, M extends
                 SkullModelBase skullBlockEntityModel = this.armyHeadModels.get(skullType);
                 RenderType renderLayer = ArmySkullBlockEntityRenderer.getRenderLayer(skullType);
                 ArmySkullBlockEntityRenderer.renderSkull(null, overlay, 180.0F, f, matrixStack, vertexConsumerProvider, light, skullBlockEntityModel, renderLayer);
-            } else if (!(item instanceof ArmorItem) || ((ArmorItem) item).getSlot() != EquipmentSlot.HEAD) {
+            } else if (!(item instanceof ArmorItem) || ((ArmorItem) item).getEquipmentSlot() != EquipmentSlot.HEAD) {
                 matrixStack.translate(0.0D, -0.25D, 0.0D);
-                matrixStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
+                matrixStack.mulPose(Axis.YP.rotationDegrees(180.0F));
                 matrixStack.scale(0.5F, -0.5F, -0.5F);
 
                 Minecraft.getInstance().getItemRenderer().renderStatic(
                     livingEntity,
                     itemStack,
-                    ItemTransforms.TransformType.HEAD,
+                    ItemDisplayContext.HEAD,
                     false,
                     matrixStack,
                     vertexConsumerProvider,

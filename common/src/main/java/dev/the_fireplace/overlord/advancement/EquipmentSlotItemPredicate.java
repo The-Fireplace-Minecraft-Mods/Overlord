@@ -7,6 +7,8 @@ import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.NbtPredicate;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
@@ -90,7 +92,7 @@ public class EquipmentSlotItemPredicate extends ItemPredicate
 
                     for (JsonElement jsonElement : jsonArray) {
                         ResourceLocation identifier = new ResourceLocation(GsonHelper.convertToString(jsonElement, "item"));
-                        builder.add(Registry.ITEM.getOptional(identifier).orElseThrow(() -> new JsonSyntaxException("Unknown item id '" + identifier + "'")));
+                        builder.add(BuiltInRegistries.ITEM.getOptional(identifier).orElseThrow(() -> new JsonSyntaxException("Unknown item id '" + identifier + "'")));
                     }
 
                     set = builder.build();
@@ -99,13 +101,13 @@ public class EquipmentSlotItemPredicate extends ItemPredicate
                 TagKey<Item> tagKey = null;
                 if (jsonObject.has("tag")) {
                     ResourceLocation identifier2 = new ResourceLocation(GsonHelper.getAsString(jsonObject, "tag"));
-                    tagKey = TagKey.create(Registry.ITEM_REGISTRY, identifier2);
+                    tagKey = TagKey.create(Registries.ITEM, identifier2);
                 }
 
                 Potion potion = null;
                 if (jsonObject.has("potion")) {
                     ResourceLocation identifier3 = new ResourceLocation(GsonHelper.getAsString(jsonObject, "potion"));
-                    potion = Registry.POTION.getOptional(identifier3).orElseThrow(() -> new JsonSyntaxException("Unknown potion '" + identifier3 + "'"));
+                    potion = BuiltInRegistries.POTION.getOptional(identifier3).orElseThrow(() -> new JsonSyntaxException("Unknown potion '" + identifier3 + "'"));
                 }
 
                 EnchantmentPredicate[] enchantmentPredicates = EnchantmentPredicate.fromJsonArray(jsonObject.get("enchantments"));

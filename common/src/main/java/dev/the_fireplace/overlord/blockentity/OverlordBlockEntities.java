@@ -5,6 +5,7 @@ import dev.the_fireplace.overlord.block.OverlordBlocks;
 import dev.the_fireplace.overlord.loader.BlockEntityLoaderHelper;
 import dev.the_fireplace.overlord.loader.RegistryHelper;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -31,7 +32,7 @@ public final class OverlordBlockEntities
 
     private BlockEntityType<ArmySkullBlockEntity> armySkullBlockEntityType;
 
-    private RegistryHelper<BlockEntityType<?>> blockEntityRegistry = (id, value) -> Registry.register(Registry.BLOCK_ENTITY_TYPE, id, value);
+    private RegistryHelper<BlockEntityType<?>> blockEntityRegistry = (id, value) -> Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id, value);
 
     @Inject
     public OverlordBlockEntities(BlockEntityLoaderHelper blockEntityLoaderHelper, OverlordBlocks overlordBlocks) {

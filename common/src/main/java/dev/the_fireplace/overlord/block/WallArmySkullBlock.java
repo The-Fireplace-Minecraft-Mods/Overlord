@@ -29,14 +29,17 @@ public class WallArmySkullBlock extends AbstractArmySkullBlock
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
+    @Override
     public String getDescriptionId() {
         return this.asItem().getDescriptionId();
     }
 
+    @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return (VoxelShape) FACING_TO_SHAPE.get(state.getValue(FACING));
     }
 
+    @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         BlockState blockState = this.defaultBlockState();
         BlockGetter blockView = ctx.getLevel();

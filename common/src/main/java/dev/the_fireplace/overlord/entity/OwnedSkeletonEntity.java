@@ -1,8 +1,6 @@
 package dev.the_fireplace.overlord.entity;
 
 import com.google.common.collect.Lists;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 import dev.the_fireplace.lib.api.uuid.injectables.EmptyUUID;
 import dev.the_fireplace.overlord.OverlordConstants;
 import dev.the_fireplace.overlord.advancement.OverlordCriterions;
@@ -21,10 +19,10 @@ import dev.the_fireplace.overlord.entity.ai.goal.AIEquipmentHelper;
 import dev.the_fireplace.overlord.entity.ai.goal.equipment.skeleton.DrinkMilkForHealthGoal;
 import dev.the_fireplace.overlord.entity.ai.goal.equipment.skeleton.DrinkMilkGoal;
 import dev.the_fireplace.overlord.loader.MenuLoaderHelper;
-import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -32,6 +30,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
@@ -56,6 +55,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -252,9 +252,9 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
 
         if (source != null) {
             this.setDeltaMovement(
-                -Mth.cos((this.hurtDir + this.getYRot()) * (float) Math.PI / 180) * 0.1f,
+                -Mth.cos((this.getHurtDir() + this.getYRot()) * (float) Math.PI / 180) * 0.1f,
                 0.1f,
-                -Mth.sin((this.hurtDir + this.getYRot()) * (float) Math.PI / 180) * 0.1f
+                -Mth.sin((this.getHurtDir() + this.getYRot()) * (float) Math.PI / 180) * 0.1f
             );
         } else {
             this.setDeltaMovement(0.0D, 0.1D, 0.0D);
@@ -352,15 +352,8 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
         if (!hasPlayerlikeBody()) {
             return SoundEvents.SKELETON_HURT;
         }
-        if (source == DamageSource.ON_FIRE) {
-            return SoundEvents.PLAYER_HURT_ON_FIRE;
-        } else if (source == DamageSource.DROWN) {
-            return SoundEvents.PLAYER_HURT_DROWN;
-        } else if (source == DamageSource.SWEET_BERRY_BUSH) {
-            return SoundEvents.PLAYER_HURT_SWEET_BERRY_BUSH;
-        } else {
-            return SoundEvents.PLAYER_HURT;
-        }
+
+        return source.type().effects().sound();
     }
 
     @Override
@@ -414,7 +407,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        tag.putInt("DataVersion", SharedConstants.getCurrentVersion().getWorldVersion());
+        NbtUtils.addCurrentDataVersion(tag);
         tag.put("Inventory", this.inventory.serialize(new ListTag()));
         tag.putBoolean("Muscles", hasMuscles());
         tag.putBoolean("Skin", hasSkin());
@@ -435,12 +428,14 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     public boolean isInvulnerableTo(DamageSource damageSource) {
         if (super.isInvulnerableTo(damageSource)) {
             return true;
-        } else if (damageSource == DamageSource.DROWN) {
+        } else if (damageSource.is(DamageTypeTags.IS_DROWNING)) {
             return !this.level.getGameRules().getBoolean(GameRules.RULE_DROWNING_DAMAGE);
-        } else if (damageSource == DamageSource.FALL) {
+        } else if (damageSource.is(DamageTypeTags.IS_FALL)) {
             return !this.level.getGameRules().getBoolean(GameRules.RULE_FALL_DAMAGE);
-        } else if (damageSource.isFire()) {
+        } else if (damageSource.is(DamageTypeTags.IS_FIRE)) {
             return !this.level.getGameRules().getBoolean(GameRules.RULE_FIRE_DAMAGE);
+        } else if (damageSource.is(DamageTypeTags.IS_FREEZING)) {
+            return !this.level.getGameRules().getBoolean(GameRules.RULE_FREEZE_DAMAGE);
         } else {
             return false;
         }
@@ -472,14 +467,14 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     private float applyAugmentDamageModifiers(DamageSource source, float amount) {
-        if (source.isBypassMagic()) {
+        if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
             return amount;
         }
         if (hasAugment(Augments.FRAGILE)) {
-            if (source.isMagic()) {
+            if (source.is(DamageTypeTags.WITCH_RESISTANT_TO)) {
                 amount /= 4.0F;
             }
-            if (source.isExplosion() || source.isProjectile()) {
+            if (source.is(DamageTypeTags.IS_EXPLOSION) || source.is(DamageTypeTags.IS_PROJECTILE)) {
                 amount *= 3.0F / 2.0F;
             }
         } else if (hasAugment(Augments.IMPOSTER)) {
@@ -488,17 +483,17 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
                 amount *= 0.99F;
             }
         } else if (hasAugment(Augments.SLOW_BURN)) {
-            if (source.isFire()) {
+            if (source.is(DamageTypeTags.IS_FIRE)) {
                 amount *= 0.05F;
             }
         } else if (hasAugment(Augments.STURDY)) {
-            if (!source.isFire() && !source.isMagic()) {
+            if (!source.is(DamageTypeTags.IS_FIRE) && !source.is(DamageTypeTags.WITCH_RESISTANT_TO)) {
                 amount *= 0.75F;
-            } else if (source.isMagic()) {
+            } else if (source.is(DamageTypeTags.WITCH_RESISTANT_TO)) {
                 amount *= 1.5F;
             }
         } else if (hasAugment(Augments.FIREPROOF)) {
-            if (source.isFire()) {
+            if (source.is(DamageTypeTags.IS_FIRE)) {
                 amount = 0;
             } else {
                 amount *= 1.05F;
@@ -593,7 +588,7 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
             double verticalResistance = rotationY < -0.2D ? 0.085D : 0.06D;
             if (rotationY <= 0.0D
                 || this.jumping
-                || !this.level.getBlockState(new BlockPos(this.getX(), this.getY() + 0.9, this.getZ())).getFluidState().isEmpty()
+                || !this.level.getBlockState(BlockPos.containing(this.getX(), this.getY() + 0.9, this.getZ())).getFluidState().isEmpty()
             ) {
                 Vec3 vec3d = this.getDeltaMovement();
                 this.setDeltaMovement(vec3d.add(0.0D, (rotationY - vec3d.y) * verticalResistance, 0.0D));
@@ -807,19 +802,28 @@ public class OwnedSkeletonEntity extends ArmyEntity implements RangedAttackMob, 
     }
 
     private Vector3f getProjectileVelocity(Vec3 vec3d, float multiShotSpray) {
-        Vec3 vec3d2 = vec3d.normalize();
-        Vec3 vec3d3 = vec3d2.cross(new Vec3(0.0D, 1.0D, 0.0D));
-        if (vec3d3.lengthSqr() <= 1.0E-7D) {
-            vec3d3 = vec3d2.cross(this.getUpVector(1.0F));
+        Vector3f vector3f = vec3d.toVector3f().normalize();
+        Vector3f vector3f1 = (new Vector3f(vector3f)).cross(new Vector3f(0.0F, 1.0F, 0.0F));
+        if (vector3f1.lengthSquared() <= 1.0E-7D) {
+            Vec3 vec3 = this.getUpVector(1.0F);
+            vector3f1 = (new Vector3f(vector3f)).cross(vec3.toVector3f());
         }
 
-        Quaternion quaternion = new Quaternion(new Vector3f(vec3d3), 90.0F, true);
-        Vector3f vector3f = new Vector3f(vec3d2);
-        vector3f.transform(quaternion);
-        Quaternion quaternion2 = new Quaternion(vector3f, multiShotSpray, true);
-        Vector3f vector3f2 = new Vector3f(vec3d2);
-        vector3f2.transform(quaternion2);
-        return vector3f2;
+        Vector3f vector3f2 = (new Vector3f(vector3f))
+            .rotateAxis(
+                (float)Math.PI / 2F,
+                vector3f1.x,
+                vector3f1.y,
+                vector3f1.z
+            );
+
+        return (new Vector3f(vector3f))
+            .rotateAxis(
+                multiShotSpray * ((float)Math.PI / 180F),
+                vector3f2.x,
+                vector3f2.y,
+                vector3f2.z
+            );
     }
 
     @Override

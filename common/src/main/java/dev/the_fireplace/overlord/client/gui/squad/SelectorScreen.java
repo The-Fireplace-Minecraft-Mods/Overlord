@@ -64,7 +64,7 @@ public class SelectorScreen extends Screen
     protected void init() {
         selectorWidget = createSquadSelector();
         this.addRenderableWidget(selectorWidget);
-        this.addRenderableWidget(new Button(this.width / 2 - 202, this.height - 30, 200, 20, Component.translatable("gui.overlord.confirm_exit"), (button) -> {
+        Button confirmButton = Button.builder(Component.translatable("gui.overlord.confirm_exit"), (button) -> {
             if (entityId != null) {
                 packetSender.sendToServer(serverboundPackets.setSquad(), setSquadBufferBuilder.buildForEntity(selectedSquad, entityId));
             } else {
@@ -74,16 +74,18 @@ public class SelectorScreen extends Screen
                 OrdersWandItem.getActiveWand(minecraft.player).getOrCreateTag().putUUID("squad", selectedSquad);
             }
             closeScreen();
-        }));
-        this.addRenderableWidget(new Button(this.width / 2 + 2, this.height - 30, 200, 20, Component.translatable("gui.cancel"), (button) -> {
+        }).pos(this.width / 2 - 202, this.height - 30).size(200, 20).build();
+        this.addRenderableWidget(confirmButton);
+        Button cancelButton = Button.builder(Component.translatable("gui.cancel"), (button) -> {
             closeScreen();
-        }));
+        }).pos(this.width / 2 + 2, this.height - 30).size(200, 20).build();
+        this.addRenderableWidget(cancelButton);
         this.addRenderableWidget(editButton = new OverlayButtonWidget(0, this.height - 54, this.width / 3, 20, Component.nullToEmpty(""), (button) -> {
             Collection<ItemStack> squadItems = getSquadItems();
             Squad currentSquad = ownedSquads.stream().filter(squad -> squad.getSquadId().equals(selectedSquad)).findFirst().orElse(null);
             this.minecraft.setScreen(new EditScreen(this, squadItems, currentSquad));
         }));
-        this.addRenderableWidget(deleteButton = new Button(this.width - 102, 2, 100, 20, Component.translatable("gui.overlord.squad_manager.delete_squad"), (button) -> {
+        this.deleteButton = Button.builder(Component.translatable("gui.overlord.squad_manager.delete_squad"), (button) -> {
             packetSender.sendToServer(serverboundPackets.deleteSquad(), deleteSquadBufferBuilder.build(selectedSquad));
             Optional<Squad> selectedSquad = findSquadById(this.selectedSquad);
             if (selectedSquad.isPresent()) {
@@ -92,7 +94,8 @@ public class SelectorScreen extends Screen
             }
             selectorWidget.selectSquad(emptyUUID.get());
             renderedSkeleton.setSquad(emptyUUID.get());
-        }));
+        }).pos(this.width - 102, 2).size(100, 20).build();
+        this.addRenderableWidget(this.deleteButton);
         updateButtons();
 
         openTime = System.currentTimeMillis();

@@ -5,12 +5,12 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
 import dev.the_fireplace.lib.api.network.injectables.PacketSender;
 import dev.the_fireplace.overlord.OverlordConstants;
 import dev.the_fireplace.overlord.blockentity.TombstoneBlockEntity;
 import dev.the_fireplace.overlord.network.ServerboundPackets;
 import dev.the_fireplace.overlord.network.client.builder.SaveTombstoneBufferBuilder;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.Screen;
@@ -18,8 +18,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import org.joml.Matrix4f;
 
 public class TombstoneGui extends Screen
 {
@@ -42,10 +44,10 @@ public class TombstoneGui extends Screen
     @Override
     protected void init() {
         assert this.minecraft != null;
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, Component.translatable("gui.done"), (buttonWidget) -> {
+        Button doneButton = Button.builder(Component.translatable("gui.done"), (buttonWidget) -> {
             this.finishEditing();
-        }));
+        }).pos(this.width / 2 - 100, this.height / 4 + 120).size(200, 20).build();
+        this.addRenderableWidget(doneButton);
         this.selectionManager = new TextFieldHelper(
             this.tombstone::getNameText,
             this.tombstone::setNameText,
@@ -57,8 +59,6 @@ public class TombstoneGui extends Screen
 
     @Override
     public void removed() {
-        //noinspection ConstantConditions
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
         packetSender.sendToServer(
             serverboundPackets.saveTombstone(),
             saveTombstoneBufferBuilder.build(
@@ -108,6 +108,7 @@ public class TombstoneGui extends Screen
 
     @Override
     public void render(PoseStack matrixStack, int mouseX, int mouseY, float delta) {
+        assert this.minecraft != null;
         Lighting.setupForFlatItems();
         this.renderBackground(matrixStack);
         int textColor = 0xFFFFFF;
@@ -127,11 +128,12 @@ public class TombstoneGui extends Screen
         int light = 0xF000F0;
         this.minecraft.getItemRenderer().renderStatic(
             new ItemStack(blockState.getBlock()),
-            ItemTransforms.TransformType.FIXED,
+            ItemDisplayContext.FIXED,
             light,
             OverlayTexture.NO_OVERLAY,
             matrixStack,
             immediate,
+            this.minecraft.level,
             0
         );
 
@@ -153,12 +155,12 @@ public class TombstoneGui extends Screen
         if (!string.isEmpty()) {
             float x = (float) (-this.minecraft.font.width(string) / 2);
             int y = 5;
-            this.minecraft.font.drawInBatch(string, x, y, textColor, false, matrix4f, immediate, false, 0, light);
+            this.minecraft.font.drawInBatch(string, x, y, textColor, false, matrix4f, immediate, Font.DisplayMode.NORMAL, 0, light);
             if (selectionStart >= 0 && isCursorVisible) {
                 u = this.minecraft.font.width(string.substring(0, Math.min(selectionStart, string.length())));
                 cursorX = (u - this.minecraft.font.width(string) / 2) * directionMultiplier;
                 if (selectionStart >= string.length()) {
-                    this.minecraft.font.drawInBatch("_", (float) cursorX, (float) cursorY, textColor, false, matrix4f, immediate, false, 0, light);
+                    this.minecraft.font.drawInBatch("_", (float) cursorX, (float) cursorY, textColor, false, matrix4f, immediate, Font.DisplayMode.NORMAL, 0, light);
                 }
             }
         }
@@ -183,7 +185,7 @@ public class TombstoneGui extends Screen
                 int aa = Math.max(x, y);
                 Tesselator tessellator = Tesselator.getInstance();
                 BufferBuilder bufferBuilder = tessellator.getBuilder();
-                RenderSystem.disableTexture();
+                //RenderSystem.disableTexture();
                 RenderSystem.enableColorLogicOp();
                 RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
                 bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
@@ -195,7 +197,7 @@ public class TombstoneGui extends Screen
                 bufferBuilder.vertex(matrix4f, (float) z, (float) cursorY, 0.0F).color(0, 0, 255, 255).endVertex();
                 BufferUploader.drawWithShader(bufferBuilder.end());
                 RenderSystem.disableColorLogicOp();
-                RenderSystem.enableTexture();
+                //RenderSystem.enableTexture();
             }
         }
 

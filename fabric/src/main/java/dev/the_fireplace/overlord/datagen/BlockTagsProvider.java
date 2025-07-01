@@ -5,20 +5,23 @@ import dev.the_fireplace.overlord.OverlordConstants;
 import dev.the_fireplace.overlord.block.OverlordBlockTags;
 import dev.the_fireplace.overlord.block.OverlordBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 
 import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
 
 public class BlockTagsProvider extends FabricTagProvider.BlockTagProvider
 {
-    public BlockTagsProvider(FabricDataGenerator root) {
-        super(root);
+    public BlockTagsProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+        super(output, registriesFuture);
     }
 
     @Override
-    protected void generateTags() {
+    protected void addTags(HolderLookup.Provider arg) {
         OverlordBlocks overlordBlocks = OverlordConstants.getInjector().getInstance(OverlordBlocks.class);
         Block[] woodCaskets = {
             overlordBlocks.getOakCasket(),
@@ -50,22 +53,22 @@ public class BlockTagsProvider extends FabricTagProvider.BlockTagProvider
             overlordBlocks.getBlackstoneTombstone(),
             overlordBlocks.getDeepslateTombstone(),
         };
-        this.tag(OverlordBlockTags.CASKETS).add(
+        this.getOrCreateTagBuilder(OverlordBlockTags.CASKETS).add(
             woodCaskets
         );
-        this.tag(OverlordBlockTags.GRAVE_MARKERS).add(
+        this.getOrCreateTagBuilder(OverlordBlockTags.GRAVE_MARKERS).add(
             woodGraveMarkers
         );
-        this.tag(BlockTags.MINEABLE_WITH_SHOVEL).add(
+        this.getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_SHOVEL).add(
             overlordBlocks.getBloodSoakedSoil()
         );
-        this.tag(BlockTags.MINEABLE_WITH_AXE).add(
+        this.getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE).add(
             Streams.concat(
                 Arrays.stream(woodCaskets),
                 Arrays.stream(woodGraveMarkers)
             ).toArray(Block[]::new)
         );
-        this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
+        this.getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(
             stoneTombstones
         );
     }

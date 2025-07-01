@@ -46,7 +46,7 @@ public class SelectorEntry extends ObjectSelectionList.Entry<SelectorEntry>
         ItemRenderer itemRenderer = minecraftClient.getItemRenderer();
         matrixStack.pushPose();
         matrixStack.scale(0.5f, 0.5f, 0.5f);
-        itemRenderer.renderAndDecorateFakeItem(squad.getItem(), entryLeft, (int) (entryTop + iconHeight / 5f));
+        itemRenderer.renderAndDecorateFakeItem(matrixStack, squad.getItem(), entryLeft, (int) (entryTop + iconHeight / 5f));
         matrixStack.popPose();
         RenderSystem.disableBlend();
     }

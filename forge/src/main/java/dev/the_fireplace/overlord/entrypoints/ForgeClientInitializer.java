@@ -8,18 +8,16 @@ import dev.the_fireplace.overlord.client.model.OverlordModelLayers;
 import dev.the_fireplace.overlord.client.renderer.OwnedSkeletonRenderer;
 import dev.the_fireplace.overlord.client.renderer.blockentity.ArmySkullBlockEntityRenderer;
 import dev.the_fireplace.overlord.client.renderer.blockentity.TombstoneBlockEntityRenderer;
-import dev.the_fireplace.overlord.container.ContainerEquipmentSlot;
 import dev.the_fireplace.overlord.entity.OverlordEntities;
 import dev.the_fireplace.overlord.entity.OwnedSkeletonContainer;
 import dev.the_fireplace.overlord.impl.advancement.ProgressFinderProxies;
 import dev.the_fireplace.overlord.item.OverlordItems;
+import dev.the_fireplace.overlord.loader.ForgeCreativeTabHelper;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
@@ -31,18 +29,25 @@ public final class ForgeClientInitializer
     private final OverlordItems overlordItems;
     private final OverlordEntities overlordEntities;
     private final OverlordBlockEntities overlordBlockEntities;
+    private final ForgeCreativeTabHelper forgeCreativeTabHelper;
 
     @Inject
-    public ForgeClientInitializer(OverlordItems overlordItems, OverlordEntities overlordEntities, OverlordBlockEntities overlordBlockEntities) {
+    public ForgeClientInitializer(
+        OverlordItems overlordItems,
+        OverlordEntities overlordEntities,
+        OverlordBlockEntities overlordBlockEntities,
+        ForgeCreativeTabHelper forgeCreativeTabHelper
+    ) {
         this.overlordItems = overlordItems;
         this.overlordEntities = overlordEntities;
         this.overlordBlockEntities = overlordBlockEntities;
+        this.forgeCreativeTabHelper = forgeCreativeTabHelper;
     }
 
     public void init() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(EventPriority.LOW, this::registerScreens);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerBlockEntityRenderers);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerSprite);
+        FMLJavaModLoadingContext.get().getModEventBus().register(this.forgeCreativeTabHelper);
         OverlordModelLayers.register();
         ProgressFinderProxies.addFinder(LocalPlayer.class, new ClientProgressFinder());
     }
@@ -55,7 +60,7 @@ public final class ForgeClientInitializer
 
     @SuppressWarnings("RedundantCast")
     public void registerScreens(RegisterEvent event) {
-        if (!event.getRegistryKey().equals(Registry.MENU_REGISTRY)) {
+        if (!event.getRegistryKey().equals(Registries.MENU)) {
             return;
         }
         MenuScreens.register(
@@ -72,11 +77,5 @@ public final class ForgeClientInitializer
         event.registerEntityRenderer(overlordEntities.getOwnedSkeletonType(), OwnedSkeletonRenderer::new);
         event.registerBlockEntityRenderer(overlordBlockEntities.getTombstoneBlockEntityType(), context -> new TombstoneBlockEntityRenderer());
         event.registerBlockEntityRenderer(overlordBlockEntities.getArmySkullBlockEntityType(), ArmySkullBlockEntityRenderer::new);
-    }
-
-    public void registerSprite(TextureStitchEvent.Pre event) {
-        if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
-            event.addSprite(ContainerEquipmentSlot.EMPTY_WEAPON_SLOT_TEXTURE);
-        }
     }
 }

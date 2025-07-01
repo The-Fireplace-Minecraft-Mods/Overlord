@@ -2,6 +2,7 @@ package dev.the_fireplace.overlord.item;
 
 import dev.the_fireplace.overlord.OverlordConstants;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -17,10 +18,10 @@ public final class OverlordItemTags
     public static TagKey<Item> BONES = buildCommon("bones");
 
     private static TagKey<Item> build(String name) {
-        return TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(OverlordConstants.MODID, name));
+        return TagKey.create(Registries.ITEM, new ResourceLocation(OverlordConstants.MODID, name));
     }
 
     private static TagKey<Item> buildCommon(String name) {
-        return TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation("c", name));
+        return TagKey.create(Registries.ITEM, new ResourceLocation("c", name));
     }
 }

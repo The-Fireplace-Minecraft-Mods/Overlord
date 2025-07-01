@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-import static net.minecraft.client.gui.screens.inventory.InventoryScreen.renderEntityInInventory;
+import static net.minecraft.client.gui.screens.inventory.InventoryScreen.renderEntityInInventoryFollowsMouse;
 
 public class OwnedSkeletonGui extends AbstractContainerScreen<OwnedSkeletonContainer>
 {
@@ -38,9 +38,16 @@ public class OwnedSkeletonGui extends AbstractContainerScreen<OwnedSkeletonConta
     @Override
     protected void init() {
         super.init();
-        //x, y, width, height
-        addRenderableWidget(new Button(leftPos + 96, topPos + 58, 74, 20, Component.translatable("gui.overlord.orders"), (b) -> screenOpener.openOrdersGUI(entity)));
-        addRenderableWidget(new Button(leftPos + 96, topPos + 38, 74, 20, Component.translatable("gui.overlord.select_squad"), (b) -> screenOpener.openSquadSelectorGUI(entity)));
+        Button ordersButton = Button.builder(Component.translatable("gui.overlord.orders"), (b) -> screenOpener.openOrdersGUI(entity))
+            .pos(leftPos + 96, topPos + 58)
+            .size(74, 20)
+            .build();
+        Button selectSquadButton = Button.builder(Component.translatable("gui.overlord.select_squad"), (b) -> screenOpener.openSquadSelectorGUI(entity))
+            .pos(leftPos + 96, topPos + 38)
+            .size(74, 20)
+            .build();
+        addRenderableWidget(ordersButton);
+        addRenderableWidget(selectSquadButton);
     }
 
     @Override
@@ -51,7 +58,7 @@ public class OwnedSkeletonGui extends AbstractContainerScreen<OwnedSkeletonConta
         int i = this.leftPos;
         int j = this.topPos;
         this.blit(matrixStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
-        renderEntityInInventory(i + 51, j + 75, 30, (float) (i + 51) - this.mouseX, (float) (j + 75 - 50) - this.mouseY, entity);
+        renderEntityInInventoryFollowsMouse(matrixStack, i + 51, j + 75, 30, (float) (i + 51) - this.mouseX, (float) (j + 75 - 50) - this.mouseY, entity);
     }
 
     @Override

@@ -5,7 +5,7 @@ import dev.the_fireplace.overlord.client.gui.PartialScreen;
 import dev.the_fireplace.overlord.domain.data.objects.Pattern;
 import dev.the_fireplace.overlord.domain.registry.PatternRegistry;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.network.chat.Component;
@@ -41,7 +41,7 @@ public class PatternSelectionScreenPart implements PartialScreen
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends GuiEventListener & Widget & NarratableEntry> List<T> getChildren() {
+    public <T extends GuiEventListener & Renderable & NarratableEntry> List<T> getChildren() {
         List<T> children = new ArrayList<>(patternWidgets.size() + 2);
         children.addAll((Collection<? extends T>) patternWidgets);
         children.add((T) nextButton);
@@ -153,16 +153,16 @@ public class PatternSelectionScreenPart implements PartialScreen
     }
 
     private void createPageChangeButtons() {
-        previousButton = new Button(x, y, this.width / 2 - 2, 20, Component.translatable("gui.overlord.create_squad.previous"), buttonWidget -> {
-            this.state.currentPage--;
-            updatePageChangeButtonUsability();
-            updatePatternVisibility();
-        });
-        nextButton = new Button(x + width / 2 + 4, y, this.width / 2 - 6, 20, Component.translatable("gui.overlord.create_squad.next"), buttonWidget -> {
-            this.state.currentPage++;
-            updatePageChangeButtonUsability();
-            updatePatternVisibility();
-        });
+        previousButton = Button.builder(Component.translatable("gui.overlord.create_squad.previous"), buttonWidget -> {
+                this.state.currentPage--;
+                updatePageChangeButtonUsability();
+                updatePatternVisibility();
+            }).pos(x, y).size(this.width / 2 - 2, 20).build();
+        nextButton = Button.builder(Component.translatable("gui.overlord.create_squad.next"), buttonWidget -> {
+                this.state.currentPage++;
+                updatePageChangeButtonUsability();
+                updatePatternVisibility();
+            }).pos(x + width / 2 + 4, y).size(this.width / 2 - 6, 20).build();
         updatePageChangeButtonUsability();
     }
 

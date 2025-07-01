@@ -5,6 +5,7 @@ import dev.the_fireplace.overlord.datastructure.SingletonFactory;
 import dev.the_fireplace.overlord.loader.EntityLoaderHelper;
 import dev.the_fireplace.overlord.loader.RegistryHelper;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.MenuType;
@@ -20,7 +21,7 @@ public final class OverlordEntities
     private final SingletonFactory<EntityType<OwnedSkeletonEntity>> ownedSkeletonType;
     private MenuType<OwnedSkeletonContainer> ownedSkeletonScreenHandler;
 
-    private RegistryHelper<EntityType<?>> entityRegistry = (id, value) -> Registry.register(Registry.ENTITY_TYPE, id, value);
+    private RegistryHelper<EntityType<?>> entityRegistry = (id, value) -> Registry.register(BuiltInRegistries.ENTITY_TYPE, id, value);
 
     @Inject
     public OverlordEntities(EntityLoaderHelper entityLoaderHelper) {

@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "group": "wooden_casket",
   "key": {
     "#": {
@@ -66,5 +67,6 @@
   ],
   "result": {
     "item": "overlord:birch_casket"
-  }
+  },
+  "show_notification": true
 }
