@@ -27,7 +27,7 @@ public class DrawEntity
         PoseStack matrixStack2 = new PoseStack();
         matrixStack2.translate(0.0D, 0.0D, 1000.0D);
         matrixStack2.scale((float) size, (float) size, (float) size);
-        Quaternionf quaternion = new Quaternionf().rotateZ(180F);
+        Quaternionf quaternion = new Quaternionf().rotateZ((float)Math.PI);
         Quaternionf quaternion2 = new Quaternionf().rotateX(0);
         quaternion.mul(quaternion2);
         matrixStack2.mulPose(quaternion);
