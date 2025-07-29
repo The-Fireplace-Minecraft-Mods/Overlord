@@ -1,5 +1,6 @@
 {
     "modmenu.descriptionTranslation.overlord": "${mod_description}",
+    "item_group.overlord.overlord": "Overlord",
     "block.overlord.blood_soaked_soil": "Blood-Soaked Soil",
     "block.overlord.oak_casket": "Oak Casket",
     "block.overlord.oak_grave_marker": "Oak Grave Marker",

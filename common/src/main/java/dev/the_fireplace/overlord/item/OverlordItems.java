@@ -62,23 +62,17 @@ public final class OverlordItems
                 registerItem("flesh_muscle_skeleton_skull", fleshMuscleSkeletonSkull.get()),
                 registerItem("muscle_skeleton_skull", muscleSkeletonSkull.get())
             };
-            CreativeModeTabs.allTabs().stream().filter(tab -> tab.contains(new ItemStack(Items.WITHER_SKELETON_SKULL))).findFirst().ifPresent(creativeTabGroup ->
-                creativeTabHelper.registerItemAfter(creativeTabGroup, Items.WITHER_SKELETON_SKULL, skulls)
-            );
+            creativeTabHelper.registerItemAfter(Items.WITHER_SKELETON_SKULL, skulls);
             Item[] spawnEggs = new Item[]{
                 registerItem("owned_skeleton_spawn_egg", ownedSkeletonSpawnEgg.get())
             };
-            CreativeModeTabs.allTabs().stream().filter(tab -> tab.contains(new ItemStack(Items.WITHER_SKELETON_SPAWN_EGG))).findFirst().ifPresent(creativeTabGroup ->
-                creativeTabHelper.registerItemAfter(creativeTabGroup, Items.WITHER_SKELETON_SPAWN_EGG, spawnEggs)
-            );
+            creativeTabHelper.registerItemAfter(Items.WITHER_SKELETON_SPAWN_EGG, spawnEggs);
         }
         registerItem("sans_mask", sansMask.get());
         Item[] tools = new Item[]{
             registerItem("orders_wand", ordersWand.get())
         };
-        CreativeModeTabs.allTabs().stream().filter(tab -> tab.contains(new ItemStack(Items.WARPED_FUNGUS_ON_A_STICK))).findFirst().ifPresent(creativeTabGroup ->
-            creativeTabHelper.registerItemAfter(creativeTabGroup, Items.WARPED_FUNGUS_ON_A_STICK, tools)
-        );
+        creativeTabHelper.registerItemAfter(Items.WARPED_FUNGUS_ON_A_STICK, tools);
     }
 
     private Item registerItem(String path, Item item) {

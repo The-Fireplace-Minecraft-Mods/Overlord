@@ -136,14 +136,10 @@ public final class OverlordBlocks
             registerBlockWithItem("blood_soaked_soil", bloodSoakedSoil.get())
         };
         if (functionalBlockItems[0] != null) {
-            CreativeModeTabs.allTabs().stream().filter(tab -> tab.contains(new ItemStack(Items.PINK_BED))).findFirst().ifPresent(creativeTabGroup -> {
-                OverlordConstants.getInjector().getInstance(CreativeTabHelper.class).registerItemAfter(creativeTabGroup, Items.PINK_BED, functionalBlockItems);
-            });
+            OverlordConstants.getInjector().getInstance(CreativeTabHelper.class).registerItemAfter(Items.PINK_BED, functionalBlockItems);
         }
         if (naturalBlockItems[0] != null) {
-            CreativeModeTabs.allTabs().stream().filter(tab -> tab.contains(new ItemStack(Blocks.PODZOL))).findFirst().ifPresent(creativeTabGroup -> {
-                OverlordConstants.getInjector().getInstance(CreativeTabHelper.class).registerItemAfter(creativeTabGroup, Blocks.PODZOL, naturalBlockItems);
-            });
+            OverlordConstants.getInjector().getInstance(CreativeTabHelper.class).registerItemAfter(Blocks.PODZOL, naturalBlockItems);
         }
         registerBlock("flesh_skeleton_skull", fleshSkeletonSkull.get());
         registerBlock("flesh_skeleton_wall_skull", fleshSkeletonWallSkull.get());
