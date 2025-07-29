@@ -11,6 +11,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
+import org.joml.Quaternionf;
 
 import java.util.UUID;
 
@@ -45,7 +46,7 @@ public class SelectorEntry extends ObjectSelectionList.Entry<SelectorEntry>
         Minecraft minecraftClient = Minecraft.getInstance();
         ItemRenderer itemRenderer = minecraftClient.getItemRenderer();
         matrixStack.pushPose();
-        matrixStack.scale(0.5f, 0.5f, 0.5f);
+        //TODO figure out how to scale down the item without translating it
         itemRenderer.renderAndDecorateFakeItem(matrixStack, squad.getItem(), entryLeft, (int) (entryTop + iconHeight / 5f));
         matrixStack.popPose();
         RenderSystem.disableBlend();
